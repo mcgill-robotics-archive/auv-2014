@@ -17,6 +17,10 @@ ROS Groovy
 			</code></pre>
 	</li>
 	<li>
-		To add ROS workspaces, open ~/.bashrc and add path names under <i>"ROS_PACKAGE_PATH"</i>
+		To add ROS workspaces, open ~/.bashrc and add path names under <i>"ROS_PACKAGE_PATH"</i><br>
+		If there is no <i>"ROS_PACKAGE_PATH"</i>, add following line first:
+		<pre><code>
+			export ROS_PACKAGE_PATH=/opt/ros/groovy/stacks:/opt/ros/groovy/share
+		</code></pre>
 	</li>
 </ol>
