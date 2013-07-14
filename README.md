@@ -7,7 +7,7 @@ ROS Groovy
 
 <h3>How to set up ROS</h3>
 <ol>
-	<li>Install ROS and set up the environment following <a href="http://ros.org/wiki/groovy/Installation/Ubuntu">Installation Guide</a></li>
+	<li>Install ROS following <a href="http://ros.org/wiki/groovy/Installation/Ubuntu">Installation Guide</a></li>
 	<li>Follow the required steps to set up <a href="http://ros.org/wiki/groovy/Installation/Ubuntu">Environment Variables</a></li>
 	<li>
 		Edit ~/.bashrc by adding following lines:<br>
