@@ -1,4 +1,4 @@
-McGill LunarEx 2013-2014
+McGill RoboSub 2013-2014
 ===================
 
 <h3>Installed OS & ROS</h3>
