@@ -1,22 +1,40 @@
-__author__ = 'McGill Robotics'
-import sys
-import PyQt4.uic
-import PyQt4.QtCore
-import PyQt4.QtDesigner
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
+"""
+ZetCode PyQt4 tutorial 
+
+This example shows an icon
+in the titlebar of the window.
+
+author: Jan Bodnar
+website: zetcode.com 
+last edited: October 2011
+"""
+
+import sys
 from PyQt4 import QtGui
 
 
+class Example(QtGui.QWidget):
+    
+    def __init__(self):
+        super(Example, self).__init__()
+        
+        self.initUI()
+        
+    def initUI(self):
+        
+        self.setGeometry(300, 300, 250, 150)
+        self.setWindowTitle('Workstation')
+        self.setWindowIcon(QtGui.QIcon('Only-Logo.png'))
+    
+        self.show()
+        
 def main():
-
+    
     app = QtGui.QApplication(sys.argv)
-
-    w = QtGui.QWidget()
-    w.resize(250, 150)
-    w.move(300, 300)
-    w.setWindowTitle('Simple')
-    w.show()
-
+    ex = Example()
     sys.exit(app.exec_())
 
 

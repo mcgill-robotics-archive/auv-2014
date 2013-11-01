@@ -1,4 +1,4 @@
-#!/usr/bin/python
+"""#!/usr/bin/python
 import pygame
 import os
 import time
@@ -170,4 +170,4 @@ if __name__ == "__main__":
                     pygame.draw.polygon(surface, (255, 0, 0), coords[figure], 0)
                 elif figures[figure][0] == 'rectangle':
                     pygame.draw.rect(surface, (255, 0, 0), coords[figure], 0)
-        pygame.display.update()
+        pygame.display.update()"""
