@@ -1,4 +1,2 @@
 catkin_ws/build
-catkin_ws/devel/etc
-catkin_ws/devel/lib
-catkin_ws/devel/share
+catkin_ws/devel

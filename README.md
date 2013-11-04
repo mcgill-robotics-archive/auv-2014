@@ -24,3 +24,15 @@ ROS Hydro
 		</code></pre>
 	</li>
 </ol>
+
+<h3> How to use/develop mock_data and front_end packages </h3>
+<ol>
+	<li>in your favorite folder: git clone git@github.com:McGill-Robotics/McGill_RoboSub_2014.git</li>
+	<li>cd McGill_RoboSub_2014</li>
+	<li>cd catkin_ws</li>
+	<li>catkin_make</li>
+	<li>source devel/setup.bash (this command needs to be run in all terminal windows/tabs, or put it in ~/.bashrc</li>
+	<li>roscore</li>
+	<li>rosrun mock_data posePublisher</li>
+	<li>rosrun front_end poseSubscriber</li>
+</ol>
