@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), change)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.change)
         QtCore.QObject.connect(self.radioButton, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.checkBox.setChecked)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -89,12 +89,15 @@ class Ui_MainWindow(object):
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("MainWindow", "Quit", None, QtGui.QApplication.UnicodeUTF8))
+    
 
-def change():
-    if 1==3:
-        print 'hello'
-    else:
-	print "bye"
+    def change(self):
+	
+	if self.radioButton.isChecked():
+	    print 'same for you'
+	elif self.radioButton_2.isChecked():
+	    print 'wtf is that sqrt(-1)'
+
 
 
 
