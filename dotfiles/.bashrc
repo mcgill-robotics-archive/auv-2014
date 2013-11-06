@@ -88,6 +88,8 @@ alias l='ls -CF'
 alias fucking='sudo'
 alias roscereal='rosrun rosserial_python serial_node.py'
 alias becool='roscore'
+alias whosyourmother='echo your mom'
+alias woman='man'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
