@@ -161,7 +161,7 @@ void loop() {
             servo_yaw.write(yaw + 90);
             pitch *= 180 / 3.1415926535;
             servo_pitch.write(pitch + 90);
-            Serial << yaw + ", " + pitch << endl;
+            Serial << yaw << "," << pitch << endl;
             delay(500);
         } else
             // ignoring degenerate triangles from faulty data
