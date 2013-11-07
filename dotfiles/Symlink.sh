@@ -8,7 +8,7 @@
 
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                # old dotfiles backup directory
-files="vimrc tmux.conf"    # list of files/folders to symlink in homedir
+files="vimrc tmux.conf roboticrc"    # list of files/folders to symlink in homedir
 
 ##########
 
@@ -29,3 +29,20 @@ for file in $files; do
     echo "Creating symlink to $file in home directory."
     ln -s $dir/$file ~/.$file
 done
+
+cd $dir
+cd ..
+
+if [[ `grep "export DOT_PATH" ~/.bashrc | wc -l` -eq 0 ]]; then
+    echo 'DOT_PATH does not existe in bashrc, adding...'
+    echo "export DOT_PATH=$PWD" >> ~/.bashrc
+fi
+
+if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
+    echo 'roboticrc does not existe in bashrc, adding...'
+    echo "source ~/.roboticrc" >> ~/.bashrc
+fi 
+
+
+
+

@@ -138,7 +138,7 @@ void loop() {
         double sy = (double) (dty * SPEED)  / (double) 1000;
 
         /* CALCULATE ORIENTATION */
-        // NOTE: the following was generated and optimized using maple 
+        // NOTE: the following was generated and optimized using Maple 
         double t1 = d * d; double t3 = t1 * sy;
         double t5 = sy * sy; double t7 = sx * sx; double t8 = t7 * t5; double t9 = sy * t5; double t11 = t1 * t1;
         double t16 = t7 * t7; double t21 = t5 * t5; double t27 = sx * t7; double t35 = sx * t16; double t39 = t7 * t16;
