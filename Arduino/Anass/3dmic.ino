@@ -1,6 +1,6 @@
 /**
  *  
- *  ########   THREE-DIMENSIONAL SOUND SOURCE LOCATION SYSTEM   ########
+ *  #######   THREE-DIMENSIONAL SOUND SOURCE LOCATION SYSTEM   #######
  *
  *  @author     Anass Al-Wohoush, Gabriel Cormier-Affleck & Igor Sadikov
  *  @version    0.1 BETA
@@ -136,7 +136,7 @@ void loop() {
         double sz = (double) (dtz * SPEED) / (double) 1000;
 
         /* CALCULATE YAW */
-        // NOTE: the following was generated and optimized using maple 
+        // NOTE: the following was generated and optimized using Maple 
         double t1 = d * d; double t3 = t1 * sy;
         double t5 = sy * sy; double t7 = sx * sx; double t8 = t7 * t5; double t9 = sy * t5; double t11 = t1 * t1;
         double t16 = t7 * t7; double t21 = t5 * t5; double t27 = sx * t7; double t35 = sx * t16; double t39 = t7 * t16;
@@ -146,7 +146,7 @@ void loop() {
         double yaw = atan((t1 * sx + sy * t46 / t48 - t3 + t7 * sy - sx * t5) / sx / t46 * t48);
 
         /* CALCULATE PITCH */
-        // NOTE: the following was generated and optimized using maple 
+        // NOTE: the following was generated and optimized using Maple 
         double t1 = d * d; double t3 = t1 * sz;
         double t5 = sz * sz; double t7 = sx * sx; double t8 = t7 * t5; double t9 = sz * t5; double t11 = t1 * t1;
         double t16 = t7 * t7; double t21 = t5 * t5; double t27 = sx * t7; double t35 = sx * t16; double t39 = t7 * t16;
