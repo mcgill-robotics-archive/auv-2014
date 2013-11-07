@@ -89,7 +89,7 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 			drawContours(currentFrame, detectedContours, i, contourColor, 4, 8);
 			drawContours(frameOnlyWithContours, detectedContours, i, contourColor, 4, 8);
 
-			// Draw each single point that forms the polygon.
+			// Draw each single points that are forming the polygon.
 			for (int j = 0 ; j < numberOfPointsInContour ; j++ ) {
 				cv::Point singlePoint = detectedContours.at(i).at(j);
 				rectangle(currentFrame, singlePoint, singlePoint, cv::Scalar(0, 0, 255), 8, 8);
