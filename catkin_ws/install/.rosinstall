@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/robotics/McGill_RoboSub_2014/catkin_ws/install/setup.sh

@@ -1,0 +1,8 @@
+prefix=/home/robotics/McGill_RoboSub_2014/catkin_ws/install
+
+Name: mock_data
+Description: Description of mock_data
+Version: 1.0.0
+Cflags: 
+Libs: -L/home/robotics/McGill_RoboSub_2014/catkin_ws/install/lib 
+Requires: 
