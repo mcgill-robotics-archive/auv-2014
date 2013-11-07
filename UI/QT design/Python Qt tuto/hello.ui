@@ -24,6 +24,19 @@
       </widget>
      </item>
      <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../RobosubUI.qrc">:/Pictures/Landscape-Logo.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLineEdit" name="lineEdit"/>
@@ -41,7 +54,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../RobosubUI.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton</sender>
