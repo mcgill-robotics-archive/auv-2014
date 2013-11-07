@@ -3,9 +3,11 @@
 #include "iostream"
 
 
-int cannyRatio = 3;
-int cannyLowThreshold = 200;
-int kernelSize = 3;
+const int cannyRatio = 3;
+const int cannyLowThreshold = 200;
+const int kernelSize = 3;
+const cv::Scalar RED_BGRX = cv::Scalar(0, 255, 0);
+const cv::Scalar BLUE_BGRX = cv::Scalar(255, 0, 0);
 
 void executeVideo(cv::VideoCapture cap);
 void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame);
@@ -75,10 +77,9 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 		approxPolyDP(contourToAnalyse, contourAfterPolygonApproximation, 4, true);
 
 		detectedContours.at(i) = contourAfterPolygonApproximation;
-
 		
-		cv::Rect boundingRectangle = boundingRect(contourAfterPolygonApproximation);
-		rectangle(currentFrame, boundingRectangle.tl(), boundingRectangle.br(), cv::Scalar(255, 0, 0), 2, 8, 0);
+		//cv::Rect boundingRectangle = boundingRect(contourAfterPolygonApproximation);
+		//rectangle(currentFrame, boundingRectangle.tl(), boundingRectangle.br(), cv::Scalar(255, 0, 0), 2, 8, 0);
 
 		// Gets the number of points that define this contour.
 		int numberOfPointsInContour = contourAfterPolygonApproximation.size();
