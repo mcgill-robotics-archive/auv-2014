@@ -9,6 +9,9 @@ const int CANNY_LOW_THRESHOLD = 200;
 const int KERNEL_SIZE = 3;
 const int GATE_RATIO = 16; // It's 1:16 for the width and height.
 const int GATE_RATIO_ERROR = 5;
+const float FOCAL_LENGTH = 8;
+const float DOOR_REAL_HEIGHT = 1219.2;
+const float CAMERA_SENSOR_HEIGHT = 6.26;
 
 // Defines the basic colors used in the BGRX color space.
 const cv::Scalar GREEN_BGRX = cv::Scalar(0, 255, 0);
@@ -23,8 +26,9 @@ const std::string CONTOURED_WINDOW = "CONTOURED_WINDOW";
 const std::string FILTERED_WINDOW = "FILTERED_WINDOW";
 
 void executeVideo(cv::VideoCapture cap);
-void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame);
+void applyFilter(cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame);
 float computeRectangleRationDifference(float width, float height);
+float determineHeight(float width, float height);
 
 /**
  * Goes through each frames of the video and loops back to the begining on the last frame.
@@ -58,7 +62,7 @@ void executeVideo(cv::VideoCapture cap) {
 /**
  * Function that will apply filter on the image so we can detect the door.
 */
-void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
+void applyFilter(cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 	std::cout << "[INFO] Applying filter to the current frame" << std::endl;
 	// Creates the Mat object that will contain the filtered image.
 	cv::Mat filteredFrame;
@@ -109,17 +113,20 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 				cv::Point2f vertices[4];
 				foundRectangle.points(vertices);
 
+				float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height)/(determineHeight(width, height) * CAMERA_SENSOR_HEIGHT);
+
+				// Draws text containing the dimensions on each rectangles.
 				std::stringstream ss (std::stringstream::in | std::stringstream::out);
-				ss << "Width=";
-				ss << width;
-				ss << " Height=";
-				ss << height;
+				ss << "Width=" << width << "Height=" << height << " Distance=" << approximateDistanceWithObject << " mm";
 				putText(currentFrame, ss.str(), cv::Point(vertices[0].x,vertices[0].y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, WHITE_BGRX, 1, CV_AA);
 
+				// Goes through each vertex and connects them to write the edges of the rectangle.
 				for(int i = 0; i < 4; ++i) {
 					std::cout << "[DEBUG] (" << i << ") = (" << vertices[i].x << ";" << vertices[i].y << ")" << std::endl;
 					cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
+					cv::line(frameOnlyWithContours, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
 				}
+
 				// Draw each single point that forms the polygon.
 				for (int j = 0 ; j < numberOfPointsInContour ; j++ ) {
 					cv::Point singlePoint = detectedContours.at(i).at(j);
@@ -129,9 +136,6 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 		}
 	}
 
-	// Finds the contour of the image before trying to find the lines in the image.
-	//cv::Canny(filteredFrame, filteredFrame, cannyLowThreshold, (cannyLowThreshold*cannyRatio), kernelSize);
-
 	// OpenCV cannot display HSV images properly since it interprets the image as RGB.
 	cv::imshow(FILTERED_WINDOW, inRangeFrame);
 	cv::imshow(CONTOURED_WINDOW, frameOnlyWithContours);
@@ -139,6 +143,17 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 	cv::imshow(ORIGINAL_WINDOW, currentFrame);
 }
 
+void drawPoints() {
+
+}
+
+float determineHeight(float width, float height) {
+	if (width < height) {
+			return (height);
+	} else {
+			return (width);
+	}
+}
 
 float computeRectangleRationDifference(float width, float height) {
 	if (width < height) {
