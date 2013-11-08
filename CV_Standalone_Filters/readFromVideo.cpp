@@ -1,11 +1,14 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv/cv.h"
 #include "iostream"
+#include "cmath"
 
 // Defines the different constants used:
 const int CANNY_RATIO = 3;
 const int CANNY_LOW_THRESHOLD = 200;
 const int KERNEL_SIZE = 3;
+const int GATE_RATIO = 16; // It's 1:16 for the width and height.
+const int GATE_RATIO_ERROR = 5;
 
 // Defines the basic colors used in the BGRX color space.
 const cv::Scalar GREEN_BGRX = cv::Scalar(0, 255, 0);
@@ -21,6 +24,7 @@ const std::string FILTERED_WINDOW = "FILTERED_WINDOW";
 
 void executeVideo(cv::VideoCapture cap);
 void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame);
+float computeRectangleRationDifference(float width, float height);
 
 /**
  * Goes through each frames of the video and loops back to the begining on the last frame.
@@ -55,9 +59,7 @@ void executeVideo(cv::VideoCapture cap) {
  * Function that will apply filter on the image so we can detect the door.
 */
 void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
-
 	std::cout << "[INFO] Applying filter to the current frame" << std::endl;
-
 	// Creates the Mat object that will contain the filtered image.
 	cv::Mat filteredFrame;
 	cv::Mat frameOnlyWithContours = cv::Mat(hsvCurrentFrame.rows, hsvCurrentFrame.cols, CV_8UC3);
@@ -71,8 +73,8 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 	// Don't forget that we are not using BGRX, but the HSV color space.
 	cv::inRange(hsvCurrentFrame, cv::Scalar(0, 0, 0), cv::Scalar(20, 255, 220), filteredFrame);
 
+	// Finds the contours in the images.
 	cv::Mat inRangeFrame = filteredFrame.clone();
-
 	// So this vector will contain vectors of points that will form shapes in the image.
 	std::vector<std::vector<cv::Point> > detectedContours;
 	cv::findContours(filteredFrame, detectedContours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
@@ -90,45 +92,41 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 		int numberOfPointsInContour = contourAfterPolygonApproximation.size();
 
 		// Displays only the contours that have a number of points in the specified range.
-		if (numberOfPointsInContour >= 4 && numberOfPointsInContour <= 50/* && isContourConvex(cv::Mat(contourAfterPolygonApproximation))*/) {
-			cv::Rect boundingRectangle = boundingRect(contourAfterPolygonApproximation);
-			rectangle(currentFrame, boundingRectangle.tl(), boundingRectangle.br(), BLUE_BGRX, 2, 8, 0);
-
-			drawContours(currentFrame, detectedContours, i, GREEN_BGRX, 4, 8);
-			drawContours(frameOnlyWithContours, detectedContours, i, GREEN_BGRX, 4, 8);
-
+		if (numberOfPointsInContour >= 4 && numberOfPointsInContour <= 50) {
 			std::cout << "[DEBUG] Number of points in this contour= " << numberOfPointsInContour << std::endl;
 
-			int xCenter = 0;
-			int yCenter = 0;
+			// Finds a rotated rectangle that defines the contour of the object.
+			cv::RotatedRect foundRectangle = cv::minAreaRect(cv::Mat(contourAfterPolygonApproximation));
 
-			// Draw each single point that forms the polygon.
-			for (int j = 0 ; j < numberOfPointsInContour ; j++ ) {
-				cv::Point singlePoint = detectedContours.at(i).at(j);
+			float width = foundRectangle.size.width;
+			float height = foundRectangle.size.height;
+			float heightWidthRatio = computeRectangleRationDifference(width, height);
 
-				xCenter += singlePoint.x;
-				yCenter += singlePoint.y;
+			std::cout << "[DEBUG] Width=" << width << " Height=" << height << std::endl;
+			std::cout << "[DEBUG] Ratio=" << width/height << std::endl;
+			if (heightWidthRatio < GATE_RATIO_ERROR) {
+				// Determines if the rectangle found respects the ratio given in the rules.
+				cv::Point2f vertices[4];
+				foundRectangle.points(vertices);
 
-				rectangle(currentFrame, singlePoint, singlePoint, RED_BGRX, 8, 8);
+				std::stringstream ss (std::stringstream::in | std::stringstream::out);
+				ss << "Width=";
+				ss << width;
+				ss << " Height=";
+				ss << height;
+				putText(currentFrame, ss.str(), cv::Point(vertices[0].x,vertices[0].y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, WHITE_BGRX, 1, CV_AA);
+
+				for(int i = 0; i < 4; ++i) {
+					std::cout << "[DEBUG] (" << i << ") = (" << vertices[i].x << ";" << vertices[i].y << ")" << std::endl;
+					cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
+				}
+				// Draw each single point that forms the polygon.
+				for (int j = 0 ; j < numberOfPointsInContour ; j++ ) {
+					cv::Point singlePoint = detectedContours.at(i).at(j);
+					rectangle(currentFrame, singlePoint, singlePoint, GREEN_BGRX, 8, 8);
+				}
 			}
-
-			// Finding the center point of the countour and drawing it as a circle.
-			xCenter = xCenter/numberOfPointsInContour;
-			yCenter = yCenter/numberOfPointsInContour;
-			cv::Point center = cv::Point(xCenter, yCenter);
-			circle(currentFrame, center, 5, MAUVE_BGRX, 3, 8);
 		}
-
-		//if (numberOfContours >= 50 && numberOfContours <= 300) {
-			/*std::cout << "[INFO] Detected a rectangle in the image. Coordinate:" << std::endl;
-			std::vector<cv::Point> detectedRectangle = detectedContours.at(i);
-			std::cout << "[INFO] P1(" << detectedRectangle.at(0).x << ";" << detectedRectangle.at(0).y << ")";
-			std::cout << " P2(" << detectedRectangle.at(1).x << ";" << detectedRectangle.at(1).y << ")";
-			std::cout << " P3(" << detectedRectangle.at(2).x << ";" << detectedRectangle.at(2).y << ")";
-			std::cout << " P4(" << detectedRectangle.at(3).x << ";" << detectedRectangle.at(3).y << ")" << std::endl;*/
-			//drawContours(currentFrame, detectedContours, i, contourColor, 8, 8);
-			//drawContours(frameOnlyWithContours, detectedContours, i, contourColor, 8, 8);
-		//}
 	}
 
 	// Finds the contour of the image before trying to find the lines in the image.
@@ -139,6 +137,15 @@ void applyFilter(const cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 	cv::imshow(CONTOURED_WINDOW, frameOnlyWithContours);
 	// Updates the frame on the window.
 	cv::imshow(ORIGINAL_WINDOW, currentFrame);
+}
+
+
+float computeRectangleRationDifference(float width, float height) {
+	if (width < height) {
+		return (std::abs(height/width - GATE_RATIO));
+	} else {
+		return (std::abs(width/height - GATE_RATIO));
+	}
 }
 
 /**
