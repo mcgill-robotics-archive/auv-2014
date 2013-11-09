@@ -33,9 +33,9 @@ done
 cd $dir
 cd ..
 
-if [[ `grep "export DOT_PATH" ~/.bashrc | wc -l` -eq 0 ]]; then
-    echo 'DOT_PATH does not existe in bashrc, adding...'
-    echo "export DOT_PATH=$PWD" >> ~/.bashrc
+if [[ `grep "export ROBOTIC_PATH" ~/.bashrc | wc -l` -eq 0 ]]; then
+    echo 'ROBOTIC_PATH does not existe in bashrc, adding...'
+    echo "export ROBOTIC_PATH=$PWD" >> ~/.bashrc
 fi
 
 if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
