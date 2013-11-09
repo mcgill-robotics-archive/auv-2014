@@ -14,6 +14,8 @@ const float DOOR_REAL_HEIGHT = 1219.2;
 const float CAMERA_SENSOR_HEIGHT = 6.26;
 const int ESCAPE_KEY = 27;
 const int TIME_BETWEEN_FRAME = 150; // This is in miliseconds.
+const int MIN_NUMBER_EDGES = 4;
+const int MAX_NUMBER_EDGES = 50;
 
 // Defines the basic colors used in the BGRX color space.
 const cv::Scalar GREEN_BGRX = cv::Scalar(0, 255, 0);
@@ -31,8 +33,6 @@ const std::string FILTERED_WINDOW = "FILTERED_WINDOW";
 // Defines the functions used in this cpp file.
 void executeVideo(cv::VideoCapture videoCapture);
 void applyFilter(cv::Mat& currentFrame);
-float computeRectangleRationDifference(float width, float height);
-float determineHeight(float width, float height);
 cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
 std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour);
@@ -128,30 +128,27 @@ void applyFilter(cv::Mat& currentFrame) {
 		std::vector<cv::Point> contourAfterPolygonApproximation;
 		approxPolyDP(contourToAnalyse, contourAfterPolygonApproximation, 3, true);
 
-		detectedContours.at(i) = contourAfterPolygonApproximation;
-
 		// Gets the number of points that define this contour.
 		int numberOfPointsInContour = contourAfterPolygonApproximation.size();
 
 		// Displays only the contours that have a number of points in the specified range and respect the ratio.
-		if (numberOfPointsInContour >= 4 && numberOfPointsInContour <= 50) {
+		if (numberOfPointsInContour >= MIN_NUMBER_EDGES && numberOfPointsInContour <= MAX_NUMBER_EDGES) {
 			std::cout << "[DEBUG] Number of points in this contour= " << numberOfPointsInContour << std::endl;
 
 			// Finds a rotated rectangle that defines the contour of the object.
 			cv::RotatedRect foundRectangle = cv::minAreaRect(cv::Mat(contourAfterPolygonApproximation));
 
-			float width = foundRectangle.size.width;
-			float height = foundRectangle.size.height;
-			float heightWidthRatio = computeRectangleRationDifference(width, height);
+			// Determining the Width, Height and Ratio of the rotated rectangle.
+			float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
+			float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
+			float heightWidthRatio = std::abs(height/width - GATE_RATIO);
 
-			std::cout << "[DEBUG] Width=" << width << " Height=" << height << std::endl;
-			std::cout << "[DEBUG] Ratio=" << width/height << std::endl;
 			if (heightWidthRatio < GATE_RATIO_ERROR) {
 				// Determines if the rectangle found respects the ratio given in the rules.
 				cv::Point2f vertices[4];
 				foundRectangle.points(vertices);
 
-				float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height)/(determineHeight(width, height) * CAMERA_SENSOR_HEIGHT);
+				float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height)/(height * CAMERA_SENSOR_HEIGHT);
 				// Draws text containing the dimensions on each rectangles.
 				std::stringstream ss (std::stringstream::in | std::stringstream::out);
 				ss << "Width=" << width << "Height=" << height << " Distance=" << approximateDistanceWithObject << " mm";
@@ -169,7 +166,12 @@ void applyFilter(cv::Mat& currentFrame) {
 	}
 }
 
-
+/**
+ * Draws the points defining a contour.
+ *
+ * @param frame The cv::Mat object on which the points will be drawn.
+ * @param contour The vector containing the points to be drawn.
+ */
 void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour) {
 	// Draw each single point that forms the polygon.
 	for (int j = 0 ; j < contour.size() ; j++ ) {
@@ -178,30 +180,10 @@ void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour) {
 	}
 }
 
-float determineHeight(float width, float height) {
-	if (width < height) {
-			return (height);
-	} else {
-			return (width);
-	}
-}
-
-float computeRectangleRationDifference(float width, float height) {
-	if (width < height) {
-		return (std::abs(height/width - GATE_RATIO));
-	} else {
-		return (std::abs(width/height - GATE_RATIO));
-	}
-}
-
 /**
  * Main function that does the preamble before the video's execution.
 */
 int main(int argc, char* argv[]) {
-
-	int windowWidth = 500;
-	int windowHeight = 500;
-
 	// Making sure that we have the video provided.
 	if (argc != 2) {
 		std::cout << "[ERROR] The number of parameters is not correct." << std::endl;
