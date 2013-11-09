@@ -75,7 +75,7 @@ void applyFilter(cv::Mat& hsvCurrentFrame, cv::Mat& currentFrame) {
 
 	// Generates a new Mat object that only contains a certain range of HSV values.
 	// Don't forget that we are not using BGRX, but the HSV color space.
-	cv::inRange(hsvCurrentFrame, cv::Scalar(0, 0, 0), cv::Scalar(20, 255, 220), filteredFrame);
+	cv::inRange(hsvCurrentFrame, cv::Scalar(0, 0, 40), cv::Scalar(20, 255, 220), filteredFrame);
 
 	// Finds the contours in the images.
 	cv::Mat inRangeFrame = filteredFrame.clone();
