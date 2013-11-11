@@ -61,8 +61,12 @@ cv::Mat* Camera::captureFrame() {
 
     // Check if frame was read
     if (readFrame == false) {
+    	/*
     	cv::Exception captureFailed(0, "Camera failed to capture frame", "Camera::captureFrame()", "Camera.cpp", 44);
     	throw captureFailed;
+    	*/
+		(*pVideoCapture).set(CV_CAP_PROP_POS_FRAMES, 35);
+        (*pVideoCapture).read(*pLastFrame);
     }
 
     // Return new frame
