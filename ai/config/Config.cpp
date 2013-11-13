@@ -1,5 +1,5 @@
 #include "../pugixml/src/pugixml.hpp"
-#include "Loader.h"
+#include "Config.h"
 
 
 pugi::xml_document roboSub_doc;
@@ -52,7 +52,7 @@ void parse(){
 }
 
 
-void Loader::Loader()
+void Config::Loader()
 {
 	//Constructor:
 	//Open file with name = MapStartOConfigFileName * .txt
@@ -62,23 +62,21 @@ void Loader::Loader()
 	//** must work on both Ubunto and Windows
 }
 
-something Loader::GetMap()
+void Config::GetMap()
 {
 	//Figure out a way to return all the info in the map.
 	//Maybe return vector of pose objects where Id is the 
 	//name of the task
 }
 
-someting Loader::GetTasks()
+void Config::GetTasks()
 {
 	//Figure out a way to return all the info for the task list.
 	//Maybe return vector of strings with the Id of the task
 }
 
-void Loader::newOperation()
+void Config::newOperation()
 {
 }
 
-void Loader::newOperation()
-{
-}
+

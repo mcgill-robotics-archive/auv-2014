@@ -1,27 +1,31 @@
-#ifndef Loader_h
-#define Loader_h
+#ifndef Config_h
+#define Config_h
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
 
+using namespace std;
 
-class Loader {
+class Config {
 
  public:
 
     virtual void Loader();
 
-    virtual something GetMap();
+    virtual void GetMap();
 
-    virtual something GetTasks();
-
-    virtual void newOperation();
+    virtual void GetTasks();
 
     virtual void newOperation();
+
+   
 
 
  private:
-    String MapStartOConfigFileName;
-	String TasksStartOfConfigFileName;
-    File MapFile;
-    File TasksFile;
+    string MapStartOfConfigFileName;
+	string TasksStartOfConfigFileName;
+    string MapFile;
+    string TasksFile;
 };
 
-#endif // Loader_h
+#endif // Config_h
