@@ -1,4 +1,4 @@
-#include "../pugixml/src/pugixml.hpp"
+#include "../pugixml/src/pugixml.cpp"
 #include "Config.h"
 
 
@@ -52,8 +52,9 @@ void parse(){
 }
 
 
-void Config::Loader()
+void Config::Config()
 {
+	//TODO create 
 	//Constructor:
 	//Open file with name = MapStartOConfigFileName * .txt
 	//(so that starts with MapStartOConfigFileName, may have 
@@ -75,8 +76,12 @@ void Config::GetTasks()
 	//Maybe return vector of strings with the Id of the task
 }
 
-void Config::newOperation()
+void Config::newOperation() //TODO Remove
 {
 }
 
-
+int main(){  //TODO Remove/COmment out later
+	loadFile();
+	parse();
+	return 0;
+}
