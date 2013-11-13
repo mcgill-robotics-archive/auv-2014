@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<mesh name='sphere'><bounds>0 0 1 1</bounds></mesh>
+-->
+
+<TASK_LIST>
+	<task name= "task_name" taskFile = "path_to_taskFile"  type = "main"> 
+		<task name = "subTask_name" taskFile = "path_to_taskFile"  type = "sub/backup/background?(priorty)"> </task>
+	</task>
+</TASK_LIST>
+
+<MAP>
+	<Obj name = "obj_name" x= "1" y= "2" z = "3">
+		<size height = "20" width = "10" length = "10"> </size>
+	</Obj>
+</MAP>
+
