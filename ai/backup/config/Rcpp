@@ -1,0 +1,5 @@
+#! /bin/bash
+
+clear
+echo Compiling now: g++ -o Config.o Config.cpp
+g++ -Wall -Wextra -o Config.o Config.cpp
