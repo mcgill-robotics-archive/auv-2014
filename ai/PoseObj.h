@@ -7,15 +7,15 @@ class PoseObj {
 
  public:
 
-    virtual  PoseObj(void  x, void  y, void  depth);
+     PoseObj(double  x, double  y, double  depth);
 
-    virtual  PoseObj(void  x, void  y, void  depth, void  id);
+     PoseObj(double  x, double  y, double  depth, std::string  id);
 
  public:
     double x;
     double y;
     double depth;
-    string Id;
+    std::string Id;
 };
 
 #endif // PoseObj_h

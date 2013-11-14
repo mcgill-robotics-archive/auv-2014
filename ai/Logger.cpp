@@ -1,41 +1,6 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <ctime> //for getTime method
-#include <sys/stat.h> //for make dir1
-#include <sstream> //for int to string conversion
-using namespace std;
-
-//directory storing ai log file
-const char AI_LOG_DIR[] = "./ai_log/";
-
-using namespace std;
-
-//STUB POSEOBJ FOR TESTING
-class PoseObj{
-public:
-  PoseObj(int  x, int  y, int  depth, string  id);
-  double x;
-  double y;
-  double depth;
-  std::string Id;
-};
-
-PoseObj::PoseObj(int X , int Y , int Dep,string ID ){
-  x = X;
-  y = Y;
-  depth = Dep ;
-  Id = ID;
-}
+#include "Logger.h"
 
 
-class Logger {
-public :
-  Logger ();
-  int writeString (string s);
-  int writePose (PoseObj p);
-  string fileName;
-};
 
 /**
  * returns a string that contains current time:
@@ -55,6 +20,8 @@ string getTime(bool hasSec){
 	  return ( currentTime ) ;
 }
 
+
+
 //constructor
 Logger::Logger()
 {
@@ -63,7 +30,7 @@ Logger::Logger()
   //make directory
   if (mkdir(AI_LOG_DIR, S_IRWXU|S_IRGRP|S_IXGRP) != 0)
     {
-      perror("mkdir() error");
+      perror("mkdir() error, directory already exist ");
     }
   else
     {
@@ -76,6 +43,8 @@ Logger::Logger()
   cout << "made file " + fileName +"\n";
 
 }
+
+
 
 int Logger::writeString (string s)
 {
@@ -95,13 +64,15 @@ int Logger::writePose (PoseObj p)
 	//walk round for the to_string bug
     std::ostringstream ss;
 
+    ss.str("");	//empty stream
     ss << p.x ;
     string px = ss.str();
+    ss.str("");
     ss << p.y ;
     string py = ss.str();
+    ss.str("");
     ss << p.depth ;
     string pDepth = ss.str();
-
 
 	writeString("Id: " + p.Id + "\t"+
 			"position x: " + px +"\t"
@@ -112,19 +83,18 @@ int Logger::writePose (PoseObj p)
   return 0 ;
 }
 
-
-int main()
-{
-
-  Logger l;
-  PoseObj p(1,212,3,"hellowe") ;
-  cout << l.fileName;
-  l.writeString("cool");
-  l.writePose (p);
-  cout <<getTime(true) << "\n";
-  cout <<getTime(false) << "\n";
-
-
-
-  return 0;
-}
+//
+//int main()
+//{
+//
+//  Logger l;
+//  PoseObj p(3.14,3.14*2,3.14*3,"String ID") ;
+//  cout << l.fileName;
+//  l.writeString("cool");
+//  l.writePose (p);
+//  cout <<getTime(true) << "\n";
+//  cout <<getTime(false) << "\n";
+//
+//
+//  return 0;
+//}
