@@ -13,3 +13,6 @@
 #gch file
 
 *.*gch
+
+#compiled program
+myProgram
