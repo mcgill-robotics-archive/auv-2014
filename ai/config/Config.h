@@ -3,18 +3,19 @@
 #include <iostream>
 #include <vector>
 
+using namespace std;
 
 class Config {
 
 	public:
 
-	 	Config();
+		Config();
 
-	    virtual void Loader();
+	    void Loader();
 
-		virtual std::vector<std::string> GetMap();
+		void GetMap();
 
-		virtual std::vector<std::string> GetTasks();   
+		void GetTasks();   
 
 	private:
 	    std::string MapStartOfConfigFileName;

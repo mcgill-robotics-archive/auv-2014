@@ -1,6 +1,7 @@
 #include "../pugixml/src/pugixml.cpp"
 #include "Config.h"
 
+using namespace std;
 
 pugi::xml_document roboSub_doc;
 
@@ -56,7 +57,7 @@ Config::Config()
 {
 	//TODO create 
 	//Constructor:
-
+	int x = 0;
 	//Open file with name = MapStartOConfigFileName * .txt
 	//(so that starts with MapStartOConfigFileName, may have 
 	//lots of other descriptive stuff after that and then has .txt
@@ -64,19 +65,17 @@ Config::Config()
 	//** must work on both Ubunto and Windows
 }
 
-vector<string> Config::GetMap()
+void Config::GetMap()
 {
 	//Figure out a way to return all the info in the map.
 	//Maybe return vector of pose objects where Id is the 
 	//name of the task
-	return new vector<string>();
 }
 
-vector<string> Config::GetTasks()
+void Config::GetTasks()
 {
 	//Figure out a way to return all the info for the task list.
 	//Maybe return vector of strings with the Id of the task
-	return new vector<string>();
 }
 
 int main(){  //TODO Remove/COmment out later
