@@ -1,0 +1,9 @@
+class Logger {
+public :
+  Logger ();
+  virtual int writeString (Std:: string s);
+  
+  virtual int writePose(PoseObj::PoseObj pose);
+
+private :
+  std::string FileName ;

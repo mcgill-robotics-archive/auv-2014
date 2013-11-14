@@ -15,7 +15,7 @@ class PoseObj {
     double x;
     double y;
     double depth;
-    String Id;
+    string Id;
 };
 
 #endif // PoseObj_h

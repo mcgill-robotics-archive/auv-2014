@@ -1,0 +1,10 @@
+CC = g++
+CFLAGS = -Wall -g
+LDFLAGS = -lm
+
+logger.o : Logger.cpp
+	${CC} ${CFLAGS} -c Logger.cpp 
+
+loggerheader : Logger
+myprogram : logger.o
+	${CC} ${CFLAGS} logger.o ${LDFLAGS} -o myProgram
