@@ -1,0 +1,18 @@
+#temp file 
+~*.~
+*.~
+*~
+
+#.o file
+*.o
+
+#eclipse workspace file
+.cproject
+.project
+
+#gch file
+
+*.*gch
+
+#compiled program
+myProgram
