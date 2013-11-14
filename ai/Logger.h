@@ -7,17 +7,17 @@ class Logger {
 
  public:
 
-    virtual int Logger();
+    Logger();
 
-    virtual int WriteString(void  s);
+    virtual int WriteString(std::string  s);
 
-    virtual int WritePose(void  pose);
+    virtual int WritePose(PoseObj::PoseObj  pose);
 
-    virtual int WriteLogConfig(void  Loader);
+//    virtual int WriteLogConfig(void  Loader);
 
 
  private:
-    String FileName;
+    std::string FileName;
 };
 
 #endif // Logger_h
