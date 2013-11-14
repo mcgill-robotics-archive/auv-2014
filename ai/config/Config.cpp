@@ -6,11 +6,11 @@ using namespace std;
 const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
 const char* mapFN = "map.xml";
 
-void loadFile(const char filename, pugi::xml_document& roboSub_doc){
+void loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 	pugi::xml_parse_result roboSub_result;
 	//TODO check if the file exists
 	
-	roboSub_result = roboSub_doc.load_file(&filename);
+	roboSub_result = roboSub_doc.load_file(filename);
 	if (roboSub_result){
    		std::cout << "XML [" << filename << "] loaded without errors\n\n";
 	}
