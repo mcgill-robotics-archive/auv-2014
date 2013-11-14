@@ -3,12 +3,12 @@
 
 
 pugi::xml_document roboSub_doc;
-pugi::xml_parse_result roboSub_result;
+
 const char* filename = "tree.xml";
 
 bool loadFile(){
 	bool load_Success = true;
-
+	pugi::xml_parse_result roboSub_result;
 	//TODO check if the file exists
 	
 	roboSub_result = roboSub_doc.load_file(filename);
@@ -52,10 +52,11 @@ void parse(){
 }
 
 
-void Config::Config()
+Config::Config()
 {
 	//TODO create 
 	//Constructor:
+
 	//Open file with name = MapStartOConfigFileName * .txt
 	//(so that starts with MapStartOConfigFileName, may have 
 	//lots of other descriptive stuff after that and then has .txt
@@ -63,21 +64,17 @@ void Config::Config()
 	//** must work on both Ubunto and Windows
 }
 
-void Config::GetMap()
+std::vector<std::string> Config::GetMap()
 {
 	//Figure out a way to return all the info in the map.
 	//Maybe return vector of pose objects where Id is the 
 	//name of the task
 }
 
-void Config::GetTasks()
+std::vector<std::string> Config::GetTasks()
 {
 	//Figure out a way to return all the info for the task list.
 	//Maybe return vector of strings with the Id of the task
-}
-
-void Config::newOperation() //TODO Remove
-{
 }
 
 int main(){  //TODO Remove/COmment out later

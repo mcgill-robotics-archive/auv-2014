@@ -1,31 +1,26 @@
 #ifndef Config_h
 #define Config_h
 #include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
+#include <vector>
 
-using namespace std;
 
 class Config {
 
- public:
+	public:
 
-    virtual void Loader();
+	 	Config();
 
-    virtual void GetMap();
+	    virtual void Loader();
 
-    virtual void GetTasks();
+		virtual std::vector<std::string> GetMap();
 
-    virtual void newOperation();
+		virtual std::vector<std::string> GetTasks();   
 
-   
-
-
- private:
-    string MapStartOfConfigFileName;
-	string TasksStartOfConfigFileName;
-    string MapFile;
-    string TasksFile;
+	private:
+	    std::string MapStartOfConfigFileName;
+		std::string TasksStartOfConfigFileName;
+	    std::string MapFile;
+	    std::string TasksFile;
 };
 
 #endif // Config_h
