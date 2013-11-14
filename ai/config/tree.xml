@@ -3,9 +3,9 @@
 -->
 
 <TASK_LIST>
-	<task name="task_name" id= "task_id" version= "1.0"  type= "main"> 
-		<task name= "subTask_name" id="subTask_id" version="1.0" type="sub"> </task>
-	</task>
+	<task name="task_name" id= "1" version= "1.0"  type= "main"> </task>
+	<task name= "subTask_name" id="2" version="1.0" type="sub"> </task>
+	
 </TASK_LIST>
 
 <MAP>
