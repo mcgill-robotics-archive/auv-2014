@@ -64,17 +64,19 @@ Config::Config()
 	//** must work on both Ubunto and Windows
 }
 
-std::vector<std::string> Config::GetMap()
+vector<string> Config::GetMap()
 {
 	//Figure out a way to return all the info in the map.
 	//Maybe return vector of pose objects where Id is the 
 	//name of the task
+	return new vector<string>();
 }
 
-std::vector<std::string> Config::GetTasks()
+vector<string> Config::GetTasks()
 {
 	//Figure out a way to return all the info for the task list.
 	//Maybe return vector of strings with the Id of the task
+	return new vector<string>();
 }
 
 int main(){  //TODO Remove/COmment out later
