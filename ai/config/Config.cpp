@@ -3,25 +3,22 @@
 
 using namespace std;
 
-pugi::xml_document roboSub_doc;
+const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
+const char* mapFN = "map.xml";
 
-const char* filename = "tree.xml";
-
-bool loadFile(){
-	bool load_Success = true;
+pugi::xml_document loadFile(char* filename){
+	pugi::xml_document roboSub_doc;
 	pugi::xml_parse_result roboSub_result;
 	//TODO check if the file exists
 	
 	roboSub_result = roboSub_doc.load_file(filename);
 	if (roboSub_result){
-   		std::cout << "XML [" << filename << "] parsed without errors\n\n";
+   		std::cout << "XML [" << filename << "] loaded without errors\n\n";
 	}
 	else{
-		std::cout << "XML [" << filename << "] parsed with errors\n";
+		std::cout << "XML [" << filename << "] loaded with errors\n";
 		std::cout << "Error description: " << roboSub_result.description() << "\n";
 		std::cout << "Error offset: " << roboSub_result.offset << " (error at [..." << (filename + roboSub_result.offset) << "]\n\n";
-
-		load_Success = false;
 	}
 
 	//deal with errors outside this to ensure program keeps running and errors are handeled accordingly
@@ -30,21 +27,22 @@ bool loadFile(){
 }
 
 
-void parse(){
+void parse(pugi::xml_document taskDoc, pugi::xml_document mapDoc){
 	pugi::xml_node tasks, task_child, map, map_child;
+	string task_list = "", map_list = "";
 
-	tasks = roboSub_doc.child("TASK_LIST");
-	map = roboSub_doc.child("MAP");
 
-	
+	tasks = taskDoc.child("TASK_LIST");
+	map = mapDoc.child("MAP");	
 	
 	task_child = tasks.child("task");
-	map_child = map.child("Obj");
+	map_child = map.child("obj");
 	//TODO In this area add any parsing needed for the TASK_LIST for example number of attributtes to a tag and maybe number of tasks?
 	
-	std::cout << task_child.value();
 	for(task_child; task_child; task_child = task_child.next_sibling("task")){
-		std::cout << "1" << std::endl;
+		task_list.append(task_child.next_attribute("name").value());
+		//TODO add the other attributes here
+		task_list.append("\n");
 	}		
 	
 	for(map_child; map_child; map_child = map_child.next_sibling("obj")){
@@ -55,6 +53,14 @@ void parse(){
 
 Config::Config()
 {
+
+	pugi::xml_document roboSub_task_doc;
+	pugi::xml_document roboSub_map_doc;
+	
+	roboSub_task_doc = 
+	roboSub_map_doc = 
+
+
 	//TODO create 
 	//Constructor:
 	int x = 0;

@@ -3,20 +3,19 @@
 -->
 
 <TASK_LIST>
-	<task name="task_name" id= "task_id" version= "1.0"  type= "main"> 
-		<task name= "subTask_name" id="subTask_id" version="1.0" type="sub"> </task>
-	</task>
+	<task name="task_name" id= "task_id" version= "1.0"  type= "main"/>
+	<task name="task_name" id= "task_id" version= "1.0"  type= "main"/> 
 </TASK_LIST>
 
 <MAP>
-	<Obj id="1" version="1.0" name= "obj_name" >
+	<obj id="1" version="1.0" name= "obj_name" >
 		<position x= "1" y= "2" z= "3"/>
 		<size deltaX= "20"  deltaY= "10" deltaZ= "10"/>
-	</Obj>
-	<Obj id="2" version="1.0" name= "obj_name2" >
+	</obj>
+	<obj id="2" version="1.0" name= "obj_name2" >
 		<position x= "2" y= "4" z= "6"/>
 		<size deltaX= "20"  deltaY= "40" deltaZ= "60"/>
-	</Obj>
+	</obj>
 
 </MAP>
 
