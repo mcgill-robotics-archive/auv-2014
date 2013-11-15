@@ -1,3 +1,8 @@
+#include "ros/ros.h"
+#include "std_msgs/Float64.h"
+
+#include <sstream>
+
 #ifndef PoseObj_h
 #define PoseObj_h
 
@@ -6,6 +11,7 @@
 class PoseObj {
 
  public:
+     int main(int argc, char **argv);
 
      PoseObj(double  x, double  y, double  depth);
 
@@ -19,3 +25,4 @@ class PoseObj {
 };
 
 #endif // PoseObj_h
+
