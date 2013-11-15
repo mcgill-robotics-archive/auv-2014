@@ -3,6 +3,10 @@
 
 using namespace std;
 
+
+pugi::xml_document roboSub_task_doc;
+pugi::xml_document roboSub_map_doc;
+
 const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
 const char* mapFN = "map.xml";
 
@@ -25,14 +29,14 @@ void loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 }
 
 
-/*void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
+void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	pugi::xml_node tasks, task_child, map, map_child;
 	string task_list = "";
 	string map_list = "";
 
 
-	tasks = taskDoc->child("TASK_LIST");
-	map = mapDoc->child("MAP");	
+	tasks = taskDoc.child("TASK_LIST");
+	map = mapDoc.child("MAP");	
 	
 	task_child = tasks.child("task");
 	map_child = map.child("obj");
@@ -40,6 +44,7 @@ void loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 	
 	for(task_child; task_child; task_child = task_child.next_sibling("task")){
 		task_list.append(task_child.attribute("name").value());
+		task_list.append(task_child.attribute("id").value());
 		//TODO add the other attributes here
 		task_list.append("\n");
 	}		
@@ -47,18 +52,15 @@ void loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 	for(map_child; map_child; map_child = map_child.next_sibling("obj")){
 		std::cout << "2" << std::endl;
 	}
-}*/
+}
 
 
 Config::Config()
 {
-
-	pugi::xml_document roboSub_task_doc;
-	pugi::xml_document roboSub_map_doc;
 	
 	loadFile(taskFN, roboSub_task_doc);
 	loadFile(mapFN, roboSub_map_doc);
-
+	parse(roboSub_task_doc, roboSub_map_doc);
 	//parse(roboSub_task_doc&, roboSub_map_doc&);
 
 	//TODO create 
@@ -83,7 +85,7 @@ void Config::GetTasks()
 }
 
 int main(){  //TODO Remove/COmment out later
-	Config();
+	Config test = Config();
 
 	return 0;
 }
