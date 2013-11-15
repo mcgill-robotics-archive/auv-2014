@@ -43,7 +43,9 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	//TODO In this area add any parsing needed for the TASK_LIST for example number of attributtes to a tag and maybe number of tasks?
 	
 	for(task_child; task_child; task_child = task_child.next_sibling("task")){
+		task_list.append("Task Name:  ");
 		task_list.append(task_child.attribute("name").value());
+		task_list.append("    Task ID:  ");
 		task_list.append(task_child.attribute("id").value());
 		//TODO add the other attributes here
 		task_list.append("\n");
