@@ -49,9 +49,12 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 		task_list.append("\n");
 	}		
 	cout  << task_list;
+	// What is the following loop supposed do?
+	/*
 	for(map_child; map_child; map_child = map_child.next_sibling("obj")){
 		std::cout << "2" << std::endl;
 	}
+	*/
 }
 
 
