@@ -1,6 +1,6 @@
 #include "ROS.h"
 
-
+double Depth;
 
 ROS::ROS()
 {
@@ -24,9 +24,15 @@ ROS::ROS()
 
 }
 
+void setDepth(const std_msgs::Float64::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%f]", msg->data);
+  Depth = msg->data;
+}
+
 double ROS::GetDepth()
 {
-    return 0.0;
+    return Depth;
 }
 
 double ROS::GetX()
@@ -44,11 +50,25 @@ PoseObj ROS::GetPose()
 }
 
 
-
+/*
 Vector ROS::Velocity()
 {
 }
-
-void ROS::GetPressure()
+*/
+double ROS::GetPressure()
 {
+}
+
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "ROS");
+
+  ros::NodeHandle n;
+
+  ros::Subscriber sub = n.subscribe("depth", 1000, setDepth);
+
+  ros::spin();
+
+  return 0;
 }

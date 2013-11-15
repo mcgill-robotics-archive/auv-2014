@@ -1,3 +1,6 @@
+#include "ros/ros.h"
+#include "std_msgs/Float64.h"
+
 #ifndef ROS_h
 #define ROS_h
 
@@ -9,20 +12,21 @@ class ROS {
 
  public:
 
-	virtual ROS();
+    ROS();
 
-    virtual double GetDepth();
+    double GetDepth();
 
-    virtual double GetX();
+    double GetX();
 
-    virtual double GetY();
+    double GetY();
 
-    virtual PoseObj GetPose();
+    PoseObj GetPose();
+/*
+    Vector Velocity();
+*/
+    double GetPressure();
 
-    virtual Vector Velocity();
-
-    virtual double GetPressure();
-
+    int main(int argc,char **argv);
 
  private:
     double Depth;

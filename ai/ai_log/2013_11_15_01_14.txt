@@ -1,0 +1,6 @@
+[2013_11_15_01_14_26] 	cool
+[2013_11_15_01_14_26] 	Id: String ID	position x: 3.14	position y: 6.28	depth : 9.42
+[2013_11_15_01_14_27] 	cool
+[2013_11_15_01_14_27] 	Id: String ID	position x: 3.14	position y: 6.28	depth : 9.42
+[2013_11_15_01_14_41] 	cool
+[2013_11_15_01_14_41] 	Id: String ID	position x: 3.14	position y: 6.28	depth : 9.42
