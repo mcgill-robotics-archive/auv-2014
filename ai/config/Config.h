@@ -2,6 +2,7 @@
 #define Config_h
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -13,13 +14,13 @@ class Config {
 
 	    void Loader();
 
-		void GetMap();
+		vector<string> GetMap();
 
-		void GetTasks();   
+		vector<string> GetTasks();   
 
 	private:
-	    std::string MapStartOfConfigFileName;
-		std::string TasksStartOfConfigFileName;
+	    std::vector<string> taskList;
+	    std::vector<string> mapList;
 	    std::string MapFile;
 	    std::string TasksFile;
 };
