@@ -13,13 +13,18 @@ vector<string> mapList;
 const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
 const char* mapFN = "map.xml";
 
+//this takes as imput a file name and reference to a xml_document used to load the file
 bool loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 	pugi::xml_parse_result roboSub_result;
 	bool is_valid = true;
 	std::ofstream outfile;
 	//TODO check if the file exists
 	
+	//used to check if file was loaded,includes other info
 	roboSub_result = roboSub_doc.load_file(filename);
+
+	//checks if the file was properly loaded and will add to the logger the result whether good or bad
+	//TODO add time?
 	if (roboSub_result){
 		outfile.open("logger.txt", std::ios_base::app); 
    		outfile << "XML [" << filename << "] loaded without errors\n\n";
@@ -49,7 +54,7 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	//below is used to know the size of the outer vector
 	//int task_size = 0, map_size = 0;
 
-
+	//xml_nodes to interate through and get the information
 	tasks = taskDoc.child("TASK_LIST");
 	map = mapDoc.child("MAP");	
 
@@ -68,6 +73,7 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	map_child = map.child("obj");
 	//TODO In this area add any parsing needed for the TASK_LIST for example number of attributtes to a tag and maybe number of tasks?
 	
+	//iterates through the task nodes and adds it to the taskList vector object
 	for(task_child; (task_child); task_child = task_child.next_sibling("task")){
 		taskList.push_back(task_child.attribute("name").value());
 		taskList.push_back(task_child.attribute("id").value());
@@ -94,11 +100,11 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 
 }
 
-
+//constructor for the Config object, invokes the load file and parse methods above to parse the 
+//xml data needed and values will be accessed when requested from loader through getter methods
 Config::Config()
 {
-	
-	loadFile(taskFN, roboSub_task_doc);
+	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
 	loadFile(mapFN, roboSub_map_doc);
 	parse(roboSub_task_doc, roboSub_map_doc);
 }
@@ -117,6 +123,5 @@ vector<string> Config::GetTasks()
 
 int main(){  //TODO Remove/COmment out later
 	Config test = Config();
-	//cout << test.GetTasks().at(1);
 	return 0;
 }
