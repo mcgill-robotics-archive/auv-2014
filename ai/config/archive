@@ -1,4 +1,4 @@
 #! /bin/bash
 
 DATE=`date +%Y-%m-%d_%T`
-tar -zcf ../archive/config/config_$DATE.tar.gz ../config
+tar -zcf ../archive/config/$1_config_$DATE.tar.gz ../config
