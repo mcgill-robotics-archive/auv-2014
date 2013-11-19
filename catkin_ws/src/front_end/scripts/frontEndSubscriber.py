@@ -13,17 +13,17 @@ def pose_callback(pose_data):
     rospy.loginfo(rospy.get_name() + ": orientation : x, y, z, w: %f, %f, %f, %f", x, y, z, w)
 
 def depth_callback(depth_data):
-    depth = depth_data.data;
+    depth = depth_data.data
 
     rospy.loginfo(rospy.get_name() + ": depth : %f", depth)
 
 def pressure_callback(pressure_data):
-    pressure = pressure_data.data;
+    pressure = pressure_data.data
 
     rospy.loginfo(rospy.get_name() + ": pressure : %f", pressure)
 
 def listener():
-    rospy.init_node('frontEndSubscriber', anonymous=True)
+    rospy.init_node('frontEndSubscriber', anonymous=False)
     rospy.Subscriber("pose", Pose, pose_callback)
     rospy.Subscriber("depth", Float32, depth_callback)
     rospy.Subscriber("pressure", Float32, pressure_callback)

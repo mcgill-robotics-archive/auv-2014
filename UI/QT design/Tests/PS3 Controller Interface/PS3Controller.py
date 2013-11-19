@@ -36,17 +36,12 @@ class PS3Controller(object):
         elif numberOfDeviceConnected == 1:
             print "One controller is connected"
             print "All set to go"
-            self.initGlobalVariables()
         else:
             print "There is more than one controller connected. Is this correct?"
             print "Shutting down the process..."
             sys.exit()
 
-    def initGlobalVariables(self):
-        """
-        This method will set all the Global variables used in PS3Controller.
-        """
-        print self.className + "initGlobalVariables()"
+        #This part will set all the Global variables used in PS3Controller.
         self.controller = pygame.joystick.Joystick(0)
         self.controller.init()
         print "The initialized Joystick is: " + self.controller.get_name()
@@ -73,7 +68,6 @@ class PS3Controller(object):
         self.r3 = 0
         self.start = 0
         self.select = 0
-        self.ps = 0
 
     def inverseSquare(self):
         if self.square == 0:

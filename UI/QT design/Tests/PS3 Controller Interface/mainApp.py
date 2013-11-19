@@ -17,7 +17,8 @@ class Main(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.timer = QtCore.QTimer()
-    #create list of buttons as checkboxes
+
+        #create tuple list of checkboxes
         self.ps3 = PS3Controller.PS3Controller()
         self.checkboxList = (self.ui.select, self.ui.l3, self.ui.r3, self.ui.start, self.ui.up, self.ui.right, self.ui.down, self.ui.left, self.ui.l2, self.ui.r2, self.ui.l1, self.ui.r1, self.ui.triangle, self.ui.o, self.ui.x, self.ui.square)
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
@@ -25,7 +26,7 @@ class Main(QtGui.QMainWindow):
         #buttons
         QtCore.QObject.connect(self.ui.changeStatus, QtCore.SIGNAL("clicked()"), self.setTimer)
 
-        # constant timer
+        #timer
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.controllerUpdate)
 
     def setTimer(self):
