@@ -4,8 +4,6 @@
 #include <ctime>
 #include <sstream>
 
-float randomFloa();
-
 float randomFloat() {
   return (float)rand()/(float)RAND_MAX;
 }
