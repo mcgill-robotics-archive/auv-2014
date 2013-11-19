@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
     //CameraNode* pCameraNode = new CameraNode(nodeHandle, "camera_feed", argv[1], 10);
 
 	// This is for Gazebo.
-	CameraNode* pCameraNode = new CameraNode(nodeHandle, "camera_feed", argv[1], 10);
+	CameraNode* pCameraNode = new CameraNode(nodeHandle, "/my_robot/camera1/image_raw", argv[1], 10);
 
     // Start sending images to computer vision node (subscriber)
     pCameraNode->sendImage();
