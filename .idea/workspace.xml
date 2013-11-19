@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="527737cf-e92f-48eb-b4fc-f87b8a28c7aa" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UI/QT design/Tests/PS3 Controller Interface/UI Feedback.ui" afterPath="$PROJECT_DIR$/UI/QT design/Tests/PS3 Controller Interface/UI Feedback.ui" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UI/QT design/Tests/PS3 Controller Interface/PS3Controller.py" afterPath="$PROJECT_DIR$/UI/QT design/Tests/PS3 Controller Interface/PS3Controller.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/catkin_ws/src/front_end/scripts/frontEndSubscriber.py" afterPath="$PROJECT_DIR$/catkin_ws/src/front_end/scripts/frontEndSubscriber.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UI/QT design/Tests/PS3 Controller Interface/mainApp.py" afterPath="$PROJECT_DIR$/UI/QT design/Tests/PS3 Controller Interface/mainApp.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="McGill_RoboSub_2014.iws" />
     <ignored path=".idea/workspace.xml" />
