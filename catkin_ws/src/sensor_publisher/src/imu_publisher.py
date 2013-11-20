@@ -50,7 +50,7 @@ def publish():
 
 		pub.publish(imu_msg)
 		sequence += 1
-		rospy.sleep(1.0)
+		rospy.sleep(0.01)
 
 if __name__ == '__main__':
 	try:
