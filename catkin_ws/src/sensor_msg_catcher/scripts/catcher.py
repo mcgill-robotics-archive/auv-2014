@@ -73,8 +73,8 @@ def accCallback(data):
     imu_msg.orientation_covariance = getCovariance(orientationVariance)
     imu_msg.angular_velocity = omega
     imu_msg.angular_velocity_covariance = getCovariance(gyroVariance)
-    imu_msg.linear_acceleration = listToVector3([0,0,0])
-    imu_msg.linear_acceleration_covariance = getCovariance(0.001)
+    imu_msg.linear_acceleration = data.vector
+    imu_msg.linear_acceleration_covariance = getCovariance(accVariance)
     pub.publish(imu_msg)
 
 def gyroCallback(data):
