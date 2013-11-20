@@ -477,6 +477,9 @@
        <height>18</height>
       </rect>
      </property>
+     <property name="minimum">
+      <number>-99</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -489,6 +492,9 @@
        <width>201</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="minimum">
+      <number>-99</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -503,6 +509,9 @@
        <height>160</height>
       </rect>
      </property>
+     <property name="minimum">
+      <number>-99</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -515,6 +524,9 @@
        <width>18</width>
        <height>160</height>
       </rect>
+     </property>
+     <property name="minimum">
+      <number>-99</number>
      </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -728,7 +740,7 @@
       <string>IMU Raw Readings</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="imugraphics">
+    <widget class="GraphicsLayoutWidget" name="imugraphics">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -1077,7 +1089,7 @@
       <string>Depth</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="depth">
+    <widget class="GraphicsLayoutWidget" name="depth">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -1126,7 +1138,7 @@
       <string>Pressure</string>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="pressure">
+    <widget class="GraphicsLayoutWidget" name="pressure">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -1144,14 +1156,50 @@
      <x>0</x>
      <y>0</y>
      <width>1689</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GraphicsLayoutWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="FinalRobotics.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>RoboticsMain</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>844</x>
+     <y>508</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

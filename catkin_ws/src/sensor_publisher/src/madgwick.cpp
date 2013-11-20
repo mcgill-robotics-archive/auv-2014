@@ -216,7 +216,7 @@ void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 	geometry_msgs::Vector3 gyro = imu->angular_velocity;
 	geometry_msgs::Vector3 acc = imu->linear_acceleration;
 	
-	MadgwickAHRSupdate(gyro.x, gyro.y, gyro.z, acc.x, acc.y, acc.z, NAN, NAN, NAN);
+	MadgwickAHRSupdate(gyro.x, gyro.y, gyro.z, acc.x, acc.y, acc.z, 0.0f, 0.0f, 0.0f);
 	geometry_msgs::Pose pos = geometry_msgs::Pose();
 	pos.orientation.x = q1;
 	pos.orientation.y = q2;
