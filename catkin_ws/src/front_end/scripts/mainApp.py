@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Created on Nov 16th, 2013
 @author : David Lavoie-Boutin
@@ -5,6 +6,7 @@ Created on Nov 16th, 2013
 import PS3Controller
 from UIFeedback import *
 from PyQt4 import QtCore, QtGui
+import ps3_publisher
 import sys
 
 updateFrequency = 50
@@ -58,6 +60,9 @@ class Main(QtGui.QMainWindow):
                 self.checkboxList[i].setChecked(True)
             else:
                 self.checkboxList[i].setChecked(False)
+        publisherText = ps3_publisher.ps3_publisher(self.ps3.lJoyX, self.ps3.lJoyY, 0, self.ps3.rJoyY, self.ps3.rJoyX, 0, updateFrequency)
+        self.ui.textField.append(publisherText)
+
 
 
 if __name__ == "__main__":
