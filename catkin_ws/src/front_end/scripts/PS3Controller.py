@@ -140,11 +140,11 @@ class PS3Controller(object):
             self.select = 0
 
     def increase_vertical_speed(self):
-        if self.max_vertical_speed >= self.vertical_speed >= -self.max_vertical_speed:
+        if self.max_vertical_speed > self.vertical_speed:
             self.vertical_speed += 1
 
     def decrease_vertical_speed(self):
-        if self.max_vertical_speed >= self.vertical_speed >= -self.max_vertical_speed:
+        if self.vertical_speed > -self.max_vertical_speed:
             self.vertical_speed -= 1
 
     def reset_vertical_speed(self):
