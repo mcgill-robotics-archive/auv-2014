@@ -36,39 +36,71 @@ class Main(QtGui.QMainWindow):
 
         #create tuple list of checkboxes
 
-
+        self.length_imu_plot = 25
 
         #IMU PLOTS  #TODO assign to good graphicsView
         self.ui.imugraphics.addPlot()
         self.acc1 = self.ui.imugraphics.addPlot(title = "Accelerometer1")
         self.acc1_curve = self.acc1.plot(pen = "y")
-        self.acc1_data = [0]
+        self.acc1_data = []
+        for i in range(0, self.length_imu_plot, 1):
+            self.acc1_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
         self.acc2 = self.ui.imugraphics.addPlot(title = "Accelerometer2")
         self.acc2_curve = self.acc2.plot(pen = "y")
         self.acc2_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.acc2_data.append(0)
 
         self.acc3 = self.ui.imugraphics.addPlot(title = "Accelerometer3")
         self.acc3_curve = self.acc3.plot(pen = "y")
         self.acc3_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.acc3_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
-        self.gy1 = self.ui.imugraphics.addPlot(title = "Gyro2")
+        self.gy1 = self.ui.imugraphics.addPlot(title = "Gyro1")
         self.gy1_curve = self.gy1.plot(pen = "r")
         self.gy1_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.gy1_data.append(0)
 
         self.gy2 = self.ui.imugraphics.addPlot(title = "Gyro2")
         self.gy2_curve = self.gy2.plot(pen = "r")
         self.gy2_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.gy2_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
         self.gy3 = self.ui.imugraphics.addPlot(title = "Gyro3")
         self.gy3_curve = self.gy3.plot(pen = "r")
         self.gy3_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.gy3_data.append(0)
+
+        self.mag1 = self.ui.imugraphics.addPlot(title = "Magnetometer1")
+        self.mag1_curve = self.mag1.plot(pen = "b")
+        self.mag1_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.mag1_data.append(0)
+
+        self.ui.imugraphics.nextRow()
+
+        self.mag2 = self.ui.imugraphics.addPlot(title = "Magnetometer2")
+        self.mag2_curve = self.mag2.plot(pen = "b")
+        self.mag2_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.mag2_data.append(0)
+
+        self.mag3 = self.ui.imugraphics.addPlot(title = "Magnetometer3")
+        self.mag3_curve = self.mag3.plot(pen = "b")
+        self.mag3_data = [0]
+        for i in range(0, self.length_imu_plot, 1):
+            self.mag3_data.append(0)
 
 
         #PRESSURE GRAPH
@@ -117,36 +149,57 @@ class Main(QtGui.QMainWindow):
     ###############
     def acc1_update(self, data_input):
         self.acc1_data.append(data_input)
+        self.acc1_data.pop(0)
         self.acc1_curve.setData(self.acc1_data)
-        self.acc1.setXRange(len(self.acc1_data)-100, len(self.acc1_data))
+        self.acc1.setXRange(len(self.acc1_data)-self.length_imu_plot, len(self.acc1_data))
     def acc2_update(self, data_input):
         self.acc2_data.append(data_input)
+        self.acc2_data.pop(0)
         self.acc2_curve.setData(self.acc2_data)
-        self.acc2.setXRange(len(self.acc2_data)-100, len(self.acc2_data))
+        self.acc2.setXRange(len(self.acc2_data)-self.length_imu_plot, len(self.acc2_data))
     def acc3_update(self, data_input):
         self.acc3_data.append(data_input)
+        self.acc3_data.pop(0)
         self.acc3_curve.setData(self.acc3_data)
-        self.acc3.setXRange(len(self.acc3_data)-100, len(self.acc3_data))
+        self.acc3.setXRange(len(self.acc3_data)-self.length_imu_plot, len(self.acc3_data))
     def pressure_graph_update(self, data_input):
         self.pressure_data.append(data_input)
         self.pressure_curve.setData(self.pressure_data)
-        self.pressure_graph.setXRange(len(self.pressure_data)-100, len(self.pressure_data))
+        self.pressure_graph.setXRange(len(self.pressure_data)-self.length_imu_plot, len(self.pressure_data))
     def depth_graph_update(self, data_input):
         self.depth_data.append(data_input)
         self.depth_curve.setData(self.depth_data)
-        self.depth_graph.setXRange(len(self.depth_data)-100, len(self.depth_data))
+        self.depth_graph.setXRange(len(self.depth_data)-self.length_imu_plot, len(self.depth_data))
     def gy1_update(self, data_input):
         self.gy1_data.append(data_input)
+        self.gy1_data.pop(0)
         self.gy1_curve.setData(self.gy1_data)
-        self.gy1.setXRange(len(self.gy1_data)-100, len(self.gy1_data))
+        self.gy1.setXRange(len(self.gy1_data)-self.length_imu_plot, len(self.gy1_data))
     def gy2_update(self, data_input):
         self.gy2_data.append(data_input)
+        self.gy2_data.pop(0)
         self.gy2_curve.setData(self.gy2_data)
-        self.gy2.setXRange(len(self.gy2_data)-100, len(self.gy2_data))
+        self.gy2.setXRange(len(self.gy2_data)-self.length_imu_plot, len(self.gy2_data))
     def gy3_update(self, data_input):
         self.gy3_data.append(data_input)
+        self.gy3_data.pop(0)
         self.gy3_curve.setData(self.gy3_data)
-        self.gy3.setXRange(len(self.gy3_data)-100, len(self.gy3_data))
+        self.gy3.setXRange(len(self.gy3_data)-self.length_imu_plot, len(self.gy3_data))
+    def mag1_update(self, data_input):
+        self.mag1_data.append(data_input)
+        self.mag1_data.pop(0)
+        self.mag1_curve.setData(self.mag1_data)
+        self.mag1.setXRange(len(self.mag1_data)-self.length_imu_plot, len(self.mag1_data))
+    def mag2_update(self, data_input):
+        self.mag2_data.append(data_input)
+        self.mag2_data.pop(0)
+        self.mag2_curve.setData(self.mag2_data)
+        self.mag2.setXRange(len(self.mag2_data)-self.length_imu_plot, len(self.mag2_data))
+    def mag3_update(self, data_input):
+        self.mag3_data.append(data_input)
+        self.mag3_data.pop(0)
+        self.mag3_curve.setData(self.mag3_data)
+        self.mag3.setXRange(len(self.mag3_data)-self.length_imu_plot, len(self.mag3_data))
 
     ###############
     #ROS PUBLISHER#
@@ -161,12 +214,15 @@ class Main(QtGui.QMainWindow):
         x = pose_data.orientation.x
         self.acc1_update(x)
         self.gy1_update(x)
+        self.mag1_update(x)
         y = pose_data.orientation.y
         self.acc2_update(y)
         self.gy2_update(y)
+        self.mag2_update(y)
         z = pose_data.orientation.z
         self.acc3_update(z)
         self.gy3_update(z)
+        self.mag3_update(z)
         w = pose_data.orientation.w
 
     def depth_callback(self, depth_data):

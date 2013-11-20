@@ -1,3 +1,6 @@
+#ifndef CV_CAMERA_H
+#define CV_CAMERA_H
+
 #include <iostream>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
@@ -18,3 +21,4 @@ class Camera  {
     cv::Mat* captureFrame();
 };
 
+#endif
