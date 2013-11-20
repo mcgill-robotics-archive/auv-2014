@@ -45,20 +45,18 @@ class PS3Controller(object):
         self.controller = pygame.joystick.Joystick(0)
         self.controller.init()
         print "The initialized Joystick is: " + self.controller.get_name()
-        self.rJoyX = 0
-        self.rJoyY = 0
-        self.lJoyX = 0
-        self.lJoyY = 0
+        self.yaw_speed = 0
+        self.pitch_speed = 0
+        self.horizontal_front_speed = 0
+        self.horizontal_side_speed = 0
 
         self.square = 0
         self.triangle = 0
         self.o = 0
         self.x = 0
 
-        self.up = 0
-        self.left = 0
-        self.down = 0
-        self.right = 0
+        self.vertical_speed = 0
+        self.max_vertical_speed = 10
 
         self.l1 = 0
         self.l2 = 0
@@ -92,30 +90,6 @@ class PS3Controller(object):
                 self.x = 1
             else:
                 self.x = 0
-
-    def inverseUp(self):
-        if self.up == 0:
-            self.up = 1
-        else:
-            self.up = 0
-
-    def inverseLeft(self):
-        if self.left == 1:
-            self.left = 0
-        else:
-            self.left = 1
-
-    def inverseDown(self):
-        if self.down == 1:
-            self.down = 0
-        else:
-            self.down = 1
-
-    def inverseRight(self):
-        if self.right == 0:
-            self.right = 1
-        else:
-            self.right = 0
 
     def inverseR1(self):
         if self.r1 == 0:
@@ -165,6 +139,20 @@ class PS3Controller(object):
         else:
             self.select = 0
 
+    def increase_vertical_speed(self):
+        if self.max_vertical_speed > self.vertical_speed > -self.max_vertical_speed:
+            self.vertical_speed += 1
+
+    def decrease_vertical_speed(self):
+        if self.max_vertical_speed > self.vertical_speed > -self.max_vertical_speed:
+            self.vertical_speed -= 1
+
+    def reset_vertical_speed(self):
+        self.vertical_speed = 0
+
+    def max_vertical_speed_up(self):
+        self.vertical_speed = self.max_vertical_speed
+
     def updateController(self):
         """
         It reads the data from the controller (the queue of event more precisely) and updates the Global data of the instance.
@@ -190,14 +178,16 @@ class PS3Controller(object):
                     self.inverseR2()
                 elif self.controller.get_button(8):
                     self.inverseL2()
-                elif self.controller.get_button(7):
-                    self.inverseLeft()
-                elif self.controller.get_button(6):
-                    self.inverseDown()
-                elif self.controller.get_button(5):
-                    self.inverseRight()
-                elif self.controller.get_button(4):
-                    self.inverseUp()
+
+                elif self.controller.get_button(7):  # left arrow
+                    self.reset_vertical_speed()
+                elif self.controller.get_button(6):  # down arrow
+                    self.decrease_vertical_speed()
+                elif self.controller.get_button(5):  # right arrow
+                    self.max_vertical_speed_up()
+                elif self.controller.get_button(4):  # up arrow
+                    self.increase_vertical_speed()
+
                 elif self.controller.get_button(3):
                     self.inverseStart()
                 elif self.controller.get_button(2):
@@ -207,11 +197,12 @@ class PS3Controller(object):
                 elif self.controller.get_button(0):
                     self.inverseSelect()
 
+#TODO : confirm correct assignment of the axis
             elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                self.lJoyX = self.controller.get_axis(0)
-                self.lJoyY = self.controller.get_axis(1)
-                self.rJoyX = self.controller.get_axis(2)
-                self.rJoyY = self.controller.get_axis(3)
+                self.horizontal_front_speed = self.controller.get_axis(0)  # left front/back axis
+                self.horizontal_side_speed = self.controller.get_axis(1)  #left left/right axis
+                self.yaw_speed = self.controller.get_axis(2)  # right left/right axis
+                self.pitch_speed = self.controller.get_axis(3)  #
 
     def returnButtons(self):
-        return self.select, self.l3, self.r3, self.start, self.up, self.right, self.down, self.left, self.l2, self.r2, self.l1, self.r1, self.triangle, self.o, self.x, self.square
+        return self.select, self.l3, self.r3, self.start, self.l2, self.r2, self.l1, self.r1, self.triangle, self.o, self.x, self.square

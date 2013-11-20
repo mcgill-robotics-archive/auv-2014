@@ -5,15 +5,15 @@ import rospy
 from geometry_msgs.msg import Twist
 
 
-def ps3_publisher(lx, ly, lz, pitch, yaw, roll, frequency):
+def ps3_publisher(linear_x, linear_y, linear_z, pitch, yaw, roll):
     pub = rospy.Publisher('cmd_vel', Twist)
     rospy.init_node('ps3_publisher')
 
     twist = Twist()
     # define the twist message from the joystick input
-    twist.linear.x = lx
-    twist.linear.y = ly
-    twist.linear.z = lz
+    twist.linear.x = linear_x
+    twist.linear.y = linear_y
+    twist.linear.z = linear_z
 
     #TODO --> assign angular parameters to the corresponding axis
     twist.angular.x = roll
@@ -28,6 +28,6 @@ def ps3_publisher(lx, ly, lz, pitch, yaw, roll, frequency):
 
 if __name__ == '__main__':
     try:
-        ps3_publisher(1, 2, 4, 5, 6, 1)
+        ps3_publisher(1, 2, 3, 4, 5, 6,)
     except rospy.ROSInterruptException:
         pass

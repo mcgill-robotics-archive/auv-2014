@@ -22,7 +22,7 @@ class Main(QtGui.QMainWindow):
 
         #create tuple list of checkboxes
         self.ps3 = PS3Controller.PS3Controller()
-        self.checkboxList = (self.ui.select, self.ui.l3, self.ui.r3, self.ui.start, self.ui.up, self.ui.right, self.ui.down, self.ui.left, self.ui.l2, self.ui.r2, self.ui.l1, self.ui.r1, self.ui.triangle, self.ui.o, self.ui.x, self.ui.square)
+        self.checkboxList = (self.ui.select, self.ui.l3, self.ui.r3, self.ui.start, self.ui.l2, self.ui.r2, self.ui.l1, self.ui.r1, self.ui.triangle, self.ui.o, self.ui.x, self.ui.square)
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
 
         #buttons
@@ -48,10 +48,10 @@ class Main(QtGui.QMainWindow):
         self.ps3.updateController()
 
         #react to the joysticks
-        self.ui.verticalSlider.setValue(-100*self.ps3.lJoyY)
-        self.ui.horizontalSlider.setValue(100*self.ps3.lJoyX)
-        self.ui.verticalSlider_2.setValue(-100*self.ps3.rJoyY)
-        self.ui.horizontalSlider_3.setValue(100*self.ps3.rJoyX)
+        self.ui.verticalSlider.setValue(-100*self.ps3.horizontal_side_speed)
+        self.ui.horizontalSlider.setValue(100*self.ps3.horizontal_front_speed)
+        self.ui.verticalSlider_2.setValue(-100*self.ps3.pitch_speed)
+        self.ui.horizontalSlider_3.setValue(100*self.ps3.yaw_speed)
 
         #react to the buttons
         buttonState = self.ps3.returnButtons()
@@ -60,7 +60,7 @@ class Main(QtGui.QMainWindow):
                 self.checkboxList[i].setChecked(True)
             else:
                 self.checkboxList[i].setChecked(False)
-        publisherText = ps3_publisher.ps3_publisher(self.ps3.lJoyX, self.ps3.lJoyY, 0, self.ps3.rJoyY, self.ps3.rJoyX, 0, updateFrequency)
+        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.vertical_speed, self.ps3.pitch_speed, self.ps3.yaw_speed, 0)
         self.ui.textField.append(publisherText)
 
 
