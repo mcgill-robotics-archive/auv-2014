@@ -7,7 +7,10 @@ LFLAGS = -Wall $(DEBUG)
 p1 : $(OBJS)
 	$(CC) $(LFLAGS) $(OBJS) -o p1
 
-Config.o : Config.h ../pugixml/src/pugixml.cpp Config.cpp 
+Config.o : Config.cpp Config.h ../pugixml/src/pugixml.cpp
 	$(CC) $(CFLAGS) Config.cpp
+
+clean :
+	rm -vf *.o
 
 
