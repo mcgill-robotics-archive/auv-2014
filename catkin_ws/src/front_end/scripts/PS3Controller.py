@@ -47,8 +47,8 @@ class PS3Controller(object):
         print "The initialized Joystick is: " + self.controller.get_name()
         self.yaw_speed = 0
         self.pitch_speed = 0
-        self.horizontal_front_speed = 0
         self.horizontal_side_speed = 0
+        self.horizontal_front_speed = 0
 
         self.square = 0
         self.triangle = 0
@@ -199,10 +199,10 @@ class PS3Controller(object):
 
 #TODO : confirm correct assignment of the axis
             elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                self.horizontal_front_speed = self.controller.get_axis(0)  # left front/back axis
-                self.horizontal_side_speed = self.controller.get_axis(1)  #left left/right axis
-                self.yaw_speed = self.controller.get_axis(2)  # right left/right axis
-                self.pitch_speed = self.controller.get_axis(3)  #
+                self.horizontal_side_speed = -self.controller.get_axis(0)  # left left/right axis
+                self.horizontal_front_speed = -self.controller.get_axis(1)  # left front/back axis
+                self.yaw_speed = -self.controller.get_axis(2)  # right left/right axis
+                self.pitch_speed = -self.controller.get_axis(3)  # right front/back axis
 
     def returnButtons(self):
         return self.select, self.l3, self.r3, self.start, self.l2, self.r2, self.l1, self.r1, self.triangle, self.o, self.x, self.square

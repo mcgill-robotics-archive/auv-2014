@@ -48,10 +48,10 @@ class Main(QtGui.QMainWindow):
         self.ps3.updateController()
 
         #react to the joysticks
-        self.ui.verticalSlider.setValue(-100*self.ps3.horizontal_side_speed)
-        self.ui.horizontalSlider.setValue(100*self.ps3.horizontal_front_speed)
+        self.ui.verticalSlider.setValue(100*self.ps3.horizontal_front_speed)
+        self.ui.horizontalSlider.setValue(-100*self.ps3.horizontal_side_speed)
         self.ui.verticalSlider_2.setValue(-100*self.ps3.pitch_speed)
-        self.ui.horizontalSlider_3.setValue(100*self.ps3.yaw_speed)
+        self.ui.horizontalSlider_3.setValue(-100*self.ps3.yaw_speed)
 
         #react to the buttons
         buttonState = self.ps3.returnButtons()
@@ -62,7 +62,6 @@ class Main(QtGui.QMainWindow):
                 self.checkboxList[i].setChecked(False)
         publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.vertical_speed, self.ps3.pitch_speed, self.ps3.yaw_speed, 0)
         self.ui.textField.append(publisherText)
-
 
 
 if __name__ == "__main__":
