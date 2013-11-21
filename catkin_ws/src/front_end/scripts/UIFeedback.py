@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '../../../../UI/QT design/Tests/PS3 Controller Interface/UI Feedback.ui'
 #
-# Created: Tue Nov 19 17:50:16 2013
+# Created: Thu Nov 21 12:53:41 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(807, 512)
+        MainWindow.resize(1063, 580)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/Pictures/Only-Logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -54,7 +54,7 @@ class Ui_MainWindow(object):
         self.verticalSlider_2.setObjectName(_fromUtf8("verticalSlider_2"))
         self.horizontalLayout_2.addWidget(self.verticalSlider_2)
         self.horizontalLayoutWidget = QtGui.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(390, 240, 162, 76))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(260, 230, 162, 76))
         self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
         self.SquO = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
         self.SquO.setMargin(0)
@@ -74,27 +74,6 @@ class Ui_MainWindow(object):
         self.o = QtGui.QCheckBox(self.horizontalLayoutWidget)
         self.o.setObjectName(_fromUtf8("o"))
         self.SquO.addWidget(self.o)
-        self.horizontalLayoutWidget_2 = QtGui.QWidget(self.centralwidget)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(60, 260, 181, 78))
-        self.horizontalLayoutWidget_2.setObjectName(_fromUtf8("horizontalLayoutWidget_2"))
-        self.horizontalLayout_4 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_4.setMargin(0)
-        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
-        self.left = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
-        self.left.setObjectName(_fromUtf8("left"))
-        self.horizontalLayout_4.addWidget(self.left)
-        self.UpDown = QtGui.QVBoxLayout()
-        self.UpDown.setObjectName(_fromUtf8("UpDown"))
-        self.up = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
-        self.up.setObjectName(_fromUtf8("up"))
-        self.UpDown.addWidget(self.up)
-        self.down = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
-        self.down.setObjectName(_fromUtf8("down"))
-        self.UpDown.addWidget(self.down)
-        self.horizontalLayout_4.addLayout(self.UpDown)
-        self.right = QtGui.QCheckBox(self.horizontalLayoutWidget_2)
-        self.right.setObjectName(_fromUtf8("right"))
-        self.horizontalLayout_4.addWidget(self.right)
         self.layoutWidget1 = QtGui.QWidget(self.centralwidget)
         self.layoutWidget1.setGeometry(QtCore.QRect(20, 90, 211, 121))
         self.layoutWidget1.setObjectName(_fromUtf8("layoutWidget1"))
@@ -120,7 +99,7 @@ class Ui_MainWindow(object):
         self.verticalSlider.setObjectName(_fromUtf8("verticalSlider"))
         self.horizontalLayout.addWidget(self.verticalSlider)
         self.layoutWidget2 = QtGui.QWidget(self.centralwidget)
-        self.layoutWidget2.setGeometry(QtCore.QRect(140, 360, 213, 54))
+        self.layoutWidget2.setGeometry(QtCore.QRect(40, 360, 213, 54))
         self.layoutWidget2.setObjectName(_fromUtf8("layoutWidget2"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout(self.layoutWidget2)
         self.horizontalLayout_3.setMargin(0)
@@ -141,7 +120,7 @@ class Ui_MainWindow(object):
         self.changeStatus.setObjectName(_fromUtf8("changeStatus"))
         self.horizontalLayout_3.addWidget(self.changeStatus)
         self.layoutWidget_2 = QtGui.QWidget(self.centralwidget)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(270, 240, 101, 108))
+        self.layoutWidget_2.setGeometry(QtCore.QRect(30, 230, 101, 108))
         self.layoutWidget_2.setObjectName(_fromUtf8("layoutWidget_2"))
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.layoutWidget_2)
         self.verticalLayout_5.setMargin(0)
@@ -159,7 +138,7 @@ class Ui_MainWindow(object):
         self.l2.setObjectName(_fromUtf8("l2"))
         self.verticalLayout_5.addWidget(self.l2)
         self.layoutWidget3 = QtGui.QWidget(self.centralwidget)
-        self.layoutWidget3.setGeometry(QtCore.QRect(420, 330, 101, 108))
+        self.layoutWidget3.setGeometry(QtCore.QRect(150, 230, 101, 108))
         self.layoutWidget3.setObjectName(_fromUtf8("layoutWidget3"))
         self.verticalLayout_4 = QtGui.QVBoxLayout(self.layoutWidget3)
         self.verticalLayout_4.setMargin(0)
@@ -177,11 +156,14 @@ class Ui_MainWindow(object):
         self.r3.setObjectName(_fromUtf8("r3"))
         self.verticalLayout_4.addWidget(self.r3)
         self.textField = QtGui.QTextEdit(self.centralwidget)
-        self.textField.setGeometry(QtCore.QRect(550, 80, 221, 141))
+        self.textField.setGeometry(QtCore.QRect(280, 320, 221, 141))
         self.textField.setObjectName(_fromUtf8("textField"))
+        self.graphicsView = GraphicsLayoutWidget(self.centralwidget)
+        self.graphicsView.setGeometry(QtCore.QRect(530, 60, 511, 431))
+        self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 807, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1063, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -205,10 +187,6 @@ class Ui_MainWindow(object):
         self.triangle.setText(QtGui.QApplication.translate("MainWindow", "Tri", None, QtGui.QApplication.UnicodeUTF8))
         self.x.setText(QtGui.QApplication.translate("MainWindow", "X", None, QtGui.QApplication.UnicodeUTF8))
         self.o.setText(QtGui.QApplication.translate("MainWindow", "O", None, QtGui.QApplication.UnicodeUTF8))
-        self.left.setText(QtGui.QApplication.translate("MainWindow", "<-", None, QtGui.QApplication.UnicodeUTF8))
-        self.up.setText(QtGui.QApplication.translate("MainWindow", "Up", None, QtGui.QApplication.UnicodeUTF8))
-        self.down.setText(QtGui.QApplication.translate("MainWindow", "Down", None, QtGui.QApplication.UnicodeUTF8))
-        self.right.setText(QtGui.QApplication.translate("MainWindow", "->", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Left", None, QtGui.QApplication.UnicodeUTF8))
         self.AutonomusRB.setText(QtGui.QApplication.translate("MainWindow", "Autonomous", None, QtGui.QApplication.UnicodeUTF8))
         self.ManualRB.setText(QtGui.QApplication.translate("MainWindow", "Manual", None, QtGui.QApplication.UnicodeUTF8))
@@ -231,4 +209,5 @@ class Ui_MainWindow(object):
         self.actionQuit.setToolTip(QtGui.QApplication.translate("MainWindow", "Close the window", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+W", None, QtGui.QApplication.UnicodeUTF8))
 
+from pyqtgraph import GraphicsLayoutWidget
 import RobosubUI_rc

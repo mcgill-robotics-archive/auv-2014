@@ -8,6 +8,7 @@ from UIFeedback import *
 from PyQt4 import QtCore, QtGui
 import ps3_publisher
 import sys
+import numpy
 
 updateFrequency = 50
 
@@ -23,9 +24,15 @@ class Main(QtGui.QMainWindow):
         #create tuple list of checkboxes
         self.ps3 = PS3Controller.PS3Controller()
         self.checkboxList = (self.ui.select, self.ui.l3, self.ui.r3, self.ui.start, self.ui.l2, self.ui.r2, self.ui.l1, self.ui.r1, self.ui.triangle, self.ui.o, self.ui.x, self.ui.square)
-        QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
+
+        #FILL THE PLOT
+        p2 = self.ui.graphicsView.addPlot(title="Multiple curves")
+        p2.plot(numpy.random.normal(size=100), pen=(255,0,0))
+        p2.plot(numpy.random.normal(size=100)+5, pen=(0,255,0))
+        p2.plot(numpy.random.normal(size=100)+10, pen=(0,0,255))
 
         #buttons
+        QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.changeStatus, QtCore.SIGNAL("clicked()"), self.setTimer)
 
         #timer
