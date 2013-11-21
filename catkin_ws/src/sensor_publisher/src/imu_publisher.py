@@ -29,7 +29,7 @@ def publish():
 	quat.x = quat.y = quat.z = 0.0
 	quat.w = 1.0
 
-	no_cov = [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+	no_cov = [-1.0 for i in range(0, 9)]
 	cov_matr = [ang_cov, 0.0, 0.0, 0.0, ang_cov, 0.0, 0.0, 0.0, ang_cov]
 
 	imu_msg = Imu()
@@ -44,7 +44,7 @@ def publish():
 	while not rospy.is_shutdown():
 		pub_head.seq = sequence
 		pub_head.stamp = rospy.Time.now()
-		pub_head.frame_id = "0"
+		pub_head.frame_id = "base_footprint"
 
 		imu_msg.header = pub_head
 

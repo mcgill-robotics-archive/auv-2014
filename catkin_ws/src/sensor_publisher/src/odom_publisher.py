@@ -14,23 +14,28 @@ def repub(odom):
 def communicate():
 	pub = rospy.Publisher('vo', Odometry)
 	rospy.init_node('odom_publisher')
-	rospy.Subscriber('/robot_pose_ekf/odom_combined', PoseWithCovarianceStamped, repub)
 
 	sequence = 0
 	odometry = Odometry()
-	no_cov = [0.0 for i in range(0, 36)]
-	no_cov[0] = -1.0
+	ang_cov = [0.0 for i in range(0, 36)]
+	ang_cov[21] = ang_cov[28] = ang_cov[35] = 0.38
+	large_cov = [0.1 for i in range(0, 36)]
 
-	odometry.pose.covariance = no_cov
-	odometry.twist.covariance = no_cov
+	odometry.child_frame_id = ""
 
-	odometry.header.frame_id = "0"
+	odometry.pose.covariance = large_cov
+	odometry.twist.covariance = ang_cov
+
+	odometry.header.frame_id = "odom"
 	odometry.twist.twist.angular.z = 0.1
 	
-	pub.publish(odometry)
+	odometry.pose.pose.orientation.w = 1.0
 
-	rospy.spin()
+	while not rospy.is_shutdown():
+		pub.publish(odometry)
+		sequence += 1
 
+		rospy.sleep(0.01)
 
 if __name__ == '__main__':
 	try:
