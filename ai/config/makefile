@@ -1,14 +1,17 @@
 OBJS = Config.o
 CC = g++
 DEBUG = -g
-CFLAGS = -Wall -Wextra -c
+CFLAGS = -Wall
 LFLAGS = -Wall $(DEBUG)
 
-p1 : $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o p1
+Config.out : Config.o pugixml.o
+	$(CC) $(CFLAGS) -o Config.out Config.o pugixml.o
 
-Config.o : Config.cpp Config.h ../pugixml/src/pugixml.h
-	$(CC) $(CFLAGS) -c Config.cpp Config.h ../pugixml/src/pugixml.h
+Config.o : Config.cpp Config.h
+	$(CC) $(CFLAGS) -c Config.cpp
+
+pugixml.o : ../pugixml/src/pugixml.cpp ../pugixml/src/pugixml.hpp
+	$(CC) $(CFLAGS) -c ../pugixml/src/pugixml.cpp
 
 clean :
 	rm -vf *.o
