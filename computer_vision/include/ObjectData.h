@@ -1,3 +1,6 @@
+#ifndef CV_OBJECT_DATA_H
+#define CV_OBJECT_DATA_H
+
 enum ObjectType { DOOR, BOEY, GROUND_TARGET };
 
 class ObjectData {
@@ -13,3 +16,5 @@ class ObjectData {
 
 	ObjectData(ObjectType objectType, double distance, double verticalAngle, double horizontalAngle);
 };
+
+#endif
