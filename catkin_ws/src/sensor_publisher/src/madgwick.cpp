@@ -1,16 +1,18 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Vector3.h"
 #include "MadgwickAHRS.h"
 #include <math.h>
 
 ros::Publisher pub;
 ros::Subscriber sub;
+static int sequence = 0;
 //---------------------------------------------------------------------------------------------------
 // Definitions
 
-#define sampleFreq	200.0f		// sample frequency in Hz
+#define sampleFreq	10.0f		// sample frequency in Hz
 #define betaDef		0.1f		// 2 * proportional gain
 
 //---------------------------------------------------------------------------------------------------
@@ -223,7 +225,13 @@ void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 	pos.orientation.z = q3;
 	pos.orientation.w = q0;
 	
-	pub.publish(pos);
+	geometry_msgs::PoseStamped posStamped = geometry_msgs::PoseStamped();
+	posStamped.pose = pos;
+	posStamped.header.seq = sequence++;
+	posStamped.header.stamp = ros::Time::now();
+	posStamped.header.frame_id = "base_footprint";
+	
+	pub.publish(posStamped);
 }
 
 int main (int argc, char **argv)
@@ -231,7 +239,7 @@ int main (int argc, char **argv)
 	ros::init(argc, argv, "madgwick_pose");
 	ros::NodeHandle node;
 
-	 pub = node.advertise<geometry_msgs::Pose>("madgewick", 100);
+	 pub = node.advertise<geometry_msgs::PoseStamped>("madgewick", 100);
 	 sub = node.subscribe("imu_data", 100, madgwickFilter);
 
 	ros::spin();
