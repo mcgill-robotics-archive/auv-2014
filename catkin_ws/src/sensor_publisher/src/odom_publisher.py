@@ -21,7 +21,7 @@ def communicate():
 	ang_cov[21] = ang_cov[28] = ang_cov[35] = 0.38
 	large_cov = [0.1 for i in range(0, 36)]
 
-	odometry.child_frame_id = ""
+	odometry.child_frame_id = "base_footprint"
 
 	odometry.pose.covariance = large_cov
 	odometry.twist.covariance = ang_cov

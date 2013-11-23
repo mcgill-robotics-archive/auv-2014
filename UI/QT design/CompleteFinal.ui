@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RoboticsMain</class>
+ <widget class="QMainWindow" name="RoboticsMain">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1689</width>
+    <height>1017</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Robotics Diagnostics and Testing</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="FinalRobotics.qrc">
+    <normaloff>:/Images/Only-Logo.png</normaloff>:/Images/Only-Logo.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="VideoOuter">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>200</y>
+      <width>771</width>
+      <height>761</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QGraphicsView" name="preLeft">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>371</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>371</width>
+       <height>241</height>
+      </size>
+     </property>
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="preRight">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>10</y>
+       <width>371</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>371</width>
+       <height>241</height>
+      </size>
+     </property>
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="postLeft">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>371</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>371</width>
+       <height>241</height>
+      </size>
+     </property>
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="postRight">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>260</y>
+       <width>371</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>371</width>
+       <height>241</height>
+      </size>
+     </property>
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="preBottom">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>510</y>
+       <width>371</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>371</width>
+       <height>241</height>
+      </size>
+     </property>
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="postBottom">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>510</y>
+       <width>371</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>371</width>
+       <height>241</height>
+      </size>
+     </property>
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>351</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="FinalRobotics.qrc">:/Images/Landscape-Logo.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QFrame" name="StatusBar">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>10</y>
+      <width>1311</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>50</y>
+       <width>151</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="FinalRobotics.qrc">:/Images/cg_playstation_3_controller_2.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="manualControl">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>40</y>
+       <width>141</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Manual Control</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="autonomousControl">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>60</y>
+       <width>161</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Autonomous Control</string>
+     </property>
+    </widget>
+    <widget class="QProgressBar" name="Battery">
+     <property name="geometry">
+      <rect>
+       <x>910</x>
+       <y>60</y>
+       <width>141</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>670</x>
+       <y>10</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Control</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>940</x>
+       <y>10</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Battery</string>
+     </property>
+    </widget>
+    <widget class="Line" name="line">
+     <property name="geometry">
+      <rect>
+       <x>890</x>
+       <y>10</y>
+       <width>20</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_2">
+     <property name="geometry">
+      <rect>
+       <x>1050</x>
+       <y>10</y>
+       <width>20</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="attemptPS3">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>90</y>
+       <width>161</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Connect PS3 Contoller</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>140</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Controller Status:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="colourStatus">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>130</y>
+       <width>41</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="FinalRobotics.qrc">:/Images/red.jpg</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>1170</x>
+       <y>10</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>State</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="stateData">
+     <property name="geometry">
+      <rect>
+       <x>1070</x>
+       <y>56</y>
+       <width>231</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>No State Data Recieved</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="Line" name="line_3">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>10</y>
+       <width>20</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_4">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>10</y>
+       <width>20</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>10</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Angular</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>10</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Linear</string>
+     </property>
+    </widget>
+    <widget class="QSlider" name="angularHorizantal">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>150</y>
+       <width>191</width>
+       <height>18</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-99</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="linearHorizantal">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>150</y>
+       <width>201</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-99</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="linearVertical">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>10</y>
+       <width>18</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-99</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QSlider" name="angularVertical">
+     <property name="geometry">
+      <rect>
+       <x>510</x>
+       <y>10</y>
+       <width>18</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>-99</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>X</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>90</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Y</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="linearX">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>60</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="linearY">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>90</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_18">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>120</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="linearZ">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>120</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>90</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Y</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="angularZ">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>120</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_17">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>60</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>X</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_19">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>120</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="angularY">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>90</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="angularX">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>60</y>
+       <width>171</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QTextEdit" name="logObject">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>700</y>
+      <width>551</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QFrame" name="IMUraws">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>199</y>
+      <width>331</width>
+      <height>761</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>0</y>
+       <width>221</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>18</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>IMU Raw Readings</string>
+     </property>
+    </widget>
+    <widget class="GraphicsLayoutWidget" name="imugraphics">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>40</y>
+       <width>331</width>
+       <height>721</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="DVLFrame">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>540</y>
+      <width>551</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>41</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>DVL</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_20">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>80</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Y</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_21">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>50</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>X</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="dvlLinearZ">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>110</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="dvlLinearX">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>50</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_22">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>110</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="dvlLinearY">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>80</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_23">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>50</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>X</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_24">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>110</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Z</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="dvlAngularX">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>50</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="dvlAngularZ">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>110</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_25">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>80</y>
+       <width>16</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Y</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="dvlAngularY">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>80</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_26">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>10</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>false</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Linear</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_27">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>10</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>false</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Angular</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="dvlLinear">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>40</y>
+       <width>161</width>
+       <height>111</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="dvlAngular">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>40</y>
+       <width>161</width>
+       <height>111</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="IMUdirectional">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>380</y>
+      <width>551</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>41</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>IMU</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="Depth">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>200</y>
+      <width>271</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Depth</string>
+     </property>
+    </widget>
+    <widget class="GraphicsLayoutWidget" name="depth">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>271</width>
+       <height>141</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QFrame" name="Pressure">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>200</y>
+      <width>271</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>91</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>true</underline>
+      </font>
+     </property>
+     <property name="text">
+      <string>Pressure</string>
+     </property>
+    </widget>
+    <widget class="GraphicsLayoutWidget" name="pressure">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>271</width>
+       <height>141</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1689</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionQuit"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GraphicsLayoutWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="FinalRobotics.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>RoboticsMain</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>844</x>
+     <y>508</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
