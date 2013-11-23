@@ -1,0 +1,3 @@
+[submodule "Underwater-Simulator"]
+	path = Underwater-Simulator
+	url = https://github.com/dbhage/Underwater-Simulator.git
