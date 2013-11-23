@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sensor_publisher)
+project(sensor_msg_catcher)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  nav_msgs
-  roscpp
+  geometry_msgs
   rospy
-  sensor_msgs
   std_msgs
 )
 
@@ -69,7 +67,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   nav_msgs#   sensor_msgs#   std_msgs
+#   geometry_msgs#   std_msgs
 # )
 
 ###################################
@@ -83,8 +81,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES sensor_publisher
-#  CATKIN_DEPENDS nav_msgs roscpp rospy sensor_msgs std_msgs
+#  LIBRARIES sensor_msg_catcher
+#  CATKIN_DEPENDS geometry_msgs rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -100,19 +98,19 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(sensor_publisher
-#   src/${PROJECT_NAME}/sensor_publisher.cpp
+# add_library(sensor_msg_catcher
+#   src/${PROJECT_NAME}/sensor_msg_catcher.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(sensor_publisher_node src/sensor_publisher_node.cpp)
+# add_executable(sensor_msg_catcher_node src/sensor_msg_catcher_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(sensor_publisher_node sensor_publisher_generate_messages_cpp)
+# add_dependencies(sensor_msg_catcher_node sensor_msg_catcher_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(sensor_publisher_node
+# target_link_libraries(sensor_msg_catcher_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -131,7 +129,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS sensor_publisher sensor_publisher_node
+# install(TARGETS sensor_msg_catcher sensor_msg_catcher_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -156,16 +154,10 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_sensor_publisher.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_sensor_msg_catcher.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-add_executable(madgwick src/madgwick.cpp)
-target_link_libraries(madgwick ${catkin_LIBRARIES})
-add_dependencies(madgwick sensor_publisher_generate_messages_cpp)
