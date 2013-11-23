@@ -10,7 +10,7 @@ ros::Subscriber sub;
 //---------------------------------------------------------------------------------------------------
 // Definitions
 
-#define sampleFreq	512.0f		// sample frequency in Hz
+#define sampleFreq	200.0f		// sample frequency in Hz
 #define betaDef		0.1f		// 2 * proportional gain
 
 //---------------------------------------------------------------------------------------------------
@@ -218,20 +218,20 @@ void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 	
 	MadgwickAHRSupdate(gyro.x, gyro.y, gyro.z, acc.x, acc.y, acc.z, NAN, NAN, NAN);
 	geometry_msgs::Pose pos = geometry_msgs::Pose();
-	pos.orientation.x = q0;
-	pos.orientation.y = q1;
-	pos.orientation.z = q2;
-	pos.orientation.w = q3;
+	pos.orientation.x = q1;
+	pos.orientation.y = q2;
+	pos.orientation.z = q3;
+	pos.orientation.w = q0;
 	
 	pub.publish(pos);
 }
 
 int main (int argc, char **argv)
 {
-	ros::init(argc, argv, "robot_pose_ekf");
+	ros::init(argc, argv, "madgwick_pose");
 	ros::NodeHandle node;
 
-	 pub = node.advertise<geometry_msgs::Pose>("pose_ekf", 100);
+	 pub = node.advertise<geometry_msgs::Pose>("madgewick", 100);
 	 sub = node.subscribe("imu_data", 100, madgwickFilter);
 
 	ros::spin();
