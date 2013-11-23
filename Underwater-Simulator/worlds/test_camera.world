@@ -1,0 +1,148 @@
+<?xml version ='1.0'?>
+<sdf version ='1.4'>
+  <world name='default'>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 0</gravity>
+    </physics>
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+	<!-- scene not done yet, need to figure out color numbers for gazebo -->
+	<scene>
+		<background>0.079 .285 .940 1</background>
+		<shadows>1</shadows>
+		<fog>
+			<color>0.079 .285 .940 1</color>
+			<type>linear</type>
+			<start>1</start>
+			<end>100</end>
+			<density>50</density>
+		</fog>
+	</scene>
+
+    <model name="gate">
+       <pose>-1 -2 1  1.5 0 0</pose>
+      <static>false</static>
+      <link name="body">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+	     <uri>file://../models/gate.dae</uri>
+	     <scale> .008 .008 .008</scale>
+	    </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <plugin name="move_model" filename="libmove_model.so"></plugin>
+    </model>
+
+    <model name="my_robot">
+    
+    	<static>false</static>
+		<pose>0 0 0 0 0 -.7</pose>
+
+		<link name='body'>
+			<pose>0 0 0 0 0 -.7</pose>-->
+
+			<collision name='collision'>
+			  <geometry>
+	            <mesh>
+			     <uri>file://../models/lightRobot.dae</uri>
+			     <scale> .008 .008 .008</scale>
+			    </mesh>
+			  </geometry>
+			</collision>
+			
+			<visual name='visual'>
+			  <geometry>
+	            <mesh>
+			     <uri>file://../models/lightRobot.dae</uri>
+			     <scale> .008 .008 .008</scale>
+			    </mesh>
+			  </geometry>
+			</visual>
+
+		</link>
+
+		<!-- need to do more research on joint -->			
+		<joint name='camera_robot' type='revolute'>
+			<parent>body</parent>
+			<child>camera_link</child>
+			<axis>1 0 0</axis>
+			<pose>0.3 -0.2 .1 0 0 -.7</pose>
+		</joint>	
+			
+		<link name='camera_link'>
+			<pose>0.3 -0.2 .1 0 0 -.7</pose>
+
+			<collision name='collision'>
+			  <geometry>
+			    <box>
+			      <size>.03 .03 .03</size>
+			    </box>
+			  </geometry>
+			</collision>
+
+			<visual name='visual'>
+			  <geometry>
+			    <box>
+			      <size>.03 .03 .03</size>
+			    </box>
+			  </geometry>
+			</visual>
+				
+			<sensor type="camera" name="camera1">
+			  <update_rate>300.0</update_rate>
+			  
+			  <camera name="head">
+				<horizontal_fov>1.3962634</horizontal_fov>
+				<image>
+				  <width>800</width>
+				  <height>800</height>
+				  <format>R8G8B8</format>
+				</image>
+				<clip>
+				  <near>0.02</near>
+				  <far>300</far>
+				</clip>
+				<noise>
+				  <type>gaussian</type> 
+				  <!-- Noise is sampled independently per pixel on each frame.  
+				       That pixel's noise value is added to each of its color
+				       channels, which at that point lie in the range [0,1]. --> 
+				  <mean>0.0</mean>
+				  <stddev>0.007</stddev>
+				</noise>
+			  </camera>
+			  
+			  <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+				<alwaysOn>true</alwaysOn>
+				<updateRate>0.0</updateRate>
+				<cameraName>my_robot/camera1</cameraName>
+				<imageTopicName>image_raw</imageTopicName>
+				<cameraInfoTopicName>camera_info</cameraInfoTopicName>
+				<frameName>camera_link</frameName>
+				<hackBaseline>0.07</hackBaseline>
+				<distortionK1>0.0</distortionK1>
+				<distortionK2>0.0</distortionK2>
+				<distortionK3>0.0</distortionK3>
+				<distortionT1>0.0</distortionT1>
+				<distortionT2>0.0</distortionT2>
+			  </plugin>
+			  
+			</sensor>				
+	      </link>    	
+          
+    </model>
+  
+  </world>
+</sdf>

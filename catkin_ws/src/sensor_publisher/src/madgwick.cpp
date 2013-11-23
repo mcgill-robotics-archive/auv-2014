@@ -231,7 +231,7 @@ void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 	posStamped.header.stamp = ros::Time::now();
 	posStamped.header.frame_id = "base_footprint";
 	
-	pub.publish(pos);
+	pub.publish(posStamped);
 }
 
 int main (int argc, char **argv)
@@ -239,7 +239,7 @@ int main (int argc, char **argv)
 	ros::init(argc, argv, "madgwick_pose");
 	ros::NodeHandle node;
 
-	 pub = node.advertise<geometry_msgs::Pose>("madgewick", 100);
+	 pub = node.advertise<geometry_msgs::PoseStamped>("madgewick", 100);
 	 sub = node.subscribe("imu_data", 100, madgwickFilter);
 
 	ros::spin();
