@@ -1,12 +1,14 @@
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Vector3.h"
 #include "MadgwickAHRS.h"
 #include <math.h>
 
 ros::Publisher pub;
 ros::Subscriber sub;
+static int sequence = 0;
 //---------------------------------------------------------------------------------------------------
 // Definitions
 
@@ -222,6 +224,12 @@ void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 	pos.orientation.y = q2;
 	pos.orientation.z = q3;
 	pos.orientation.w = q0;
+	
+	geometry_msgs::PoseStamped posStamped = geometry_msgs::PoseStamped();
+	posStamped.pose = pos;
+	posStamped.header.seq = sequence++;
+	posStamped.header.stamp = ros::Time::now();
+	posStamped.header.frame_id = "base_footprint";
 	
 	pub.publish(pos);
 }
