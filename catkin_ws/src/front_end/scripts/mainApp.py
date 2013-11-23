@@ -9,6 +9,11 @@ from PyQt4 import QtCore, QtGui
 import ps3_publisher
 import sys
 import numpy
+import frontEndSubscriber
+import rospy
+from std_msgs.msg import String
+from std_msgs.msg import Float32
+from geometry_msgs.msg import Pose
 
 updateFrequency = 50
 
@@ -20,8 +25,11 @@ class Main(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.controller_timer = QtCore.QTimer()
-        self.plot_timer = QtCore.QTimer()
-        self.plot_timer.start(50)
+        #self.plot_timer = QtCore.QTimer()
+        #self.plot_timer.start(50)
+
+        self.ros_timer = QtCore.QTimer.singleShot(50, self.ros_subscriber)
+
 
         #create tuple list of checkboxes
         self.ps3 = PS3Controller.PS3Controller()
@@ -51,7 +59,7 @@ class Main(QtGui.QMainWindow):
 
         #timer connect
         QtCore.QObject.connect(self.controller_timer, QtCore.SIGNAL("timeout()"), self.controllerUpdate)
-        QtCore.QObject.connect(self.plot_timer, QtCore.SIGNAL("timeout()"), self.plot_update)
+        #QtCore.QObject.connect(self.plot_timer, QtCore.SIGNAL("timeout()"), self.plot_update)
 
     def setTimer(self):
         """
@@ -74,7 +82,7 @@ class Main(QtGui.QMainWindow):
         self.ui.horizontalSlider.setValue(-100*self.ps3.horizontal_side_speed)
         self.ui.verticalSlider_2.setValue(-100*self.ps3.pitch_speed)
         self.ui.horizontalSlider_3.setValue(-100*self.ps3.yaw_speed)
-
+#TODO: change vertical speed(+ goes down)
         #react to the buttons
         buttonState = self.ps3.returnButtons()
         for i in range(0, len(buttonState), 1):
@@ -82,15 +90,42 @@ class Main(QtGui.QMainWindow):
                 self.checkboxList[i].setChecked(True)
             else:
                 self.checkboxList[i].setChecked(False)
-        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.vertical_speed, self.ps3.pitch_speed, self.ps3.yaw_speed, 0)
+
+        #publish to ros topic
+        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, self.ps3.pitch_speed, self.ps3.yaw_speed, 0, 'turtle1/cmd_vel')
+
+        #display cmd_vel command to screen (on main ui not console)
         self.ui.textField.append(publisherText)
 
-    def plot_update(self):
+    def plot_update(self, data_input):
         global med_curve, med_curve_data, updating_plot
-        med_curve_data.append((med_curve_data[len(med_curve_data)-1]+1)*23%31)
+        med_curve_data.append(data_input)
         med_curve.setData(med_curve_data)
         updating_plot.setXRange(len(med_curve_data)-100, len(med_curve_data))
 
+    def ros_subscriber(self):
+        rospy.init_node('frontEndSubscriber', anonymous=True)
+        rospy.Subscriber("pose", Pose, self.pose_callback)
+        rospy.Subscriber("depth", Float32, self.depth_callback)
+        rospy.Subscriber("pressure", Float32, self.pressure_callback)
+
+    def pose_callback(self, pose_data):
+        x = pose_data.orientation.x
+        y = pose_data.orientation.y
+        z = pose_data.orientation.z
+        w = pose_data.orientation.w
+
+        rospy.loginfo(rospy.get_name() + ": orientation : x, y, z, w: %f, %f, %f, %f", x, y, z, w)
+
+    def depth_callback(self, depth_data):
+        depth = depth_data.data
+        self.plot_update(depth)
+        #rospy.loginfo(rospy.get_name() + ": depth : %f", depth)
+
+    def pressure_callback(self, pressure_data):
+        pressure = pressure_data.data
+
+        rospy.loginfo(rospy.get_name() + ": pressure : %f", pressure)
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
