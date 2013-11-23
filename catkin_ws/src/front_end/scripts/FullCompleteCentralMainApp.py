@@ -67,7 +67,7 @@ class Main(QtGui.QMainWindow):
         self.ui.imugraphics.nextRow()
 
         self.gy3 = self.ui.imugraphics.addPlot(title = "Gyro3")
-        self.gy3_curve = self.gy3.plot(pen = "R")
+        self.gy3_curve = self.gy3.plot(pen = "r")
         self.gy3_data = [0]
 
 
