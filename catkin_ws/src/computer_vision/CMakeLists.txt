@@ -150,6 +150,11 @@ target_link_libraries(Door VisibleObject)
 target_link_libraries(Door ObjectData)
 target_link_libraries(Door ${catkin_LIBRARIES})
 
+add_library(MarkerTarget src/MarkerTarget.cpp)
+target_link_libraries(MarkerTarget VisibleObject)
+target_link_libraries(MarkerTarget ObjectData)
+target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
+
 add_library(Camera src/Camera.cpp)
 target_link_libraries(Camera ${catkin_LIBRARIES})
 
