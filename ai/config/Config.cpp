@@ -1,4 +1,4 @@
-#include "../pugixml/src/pugixml.cpp"
+#include "../pugixml/src/pugixml.hpp"
 #include "Config.h"
 
 using namespace std;

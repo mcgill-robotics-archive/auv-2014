@@ -55,8 +55,8 @@ class PS3Controller(object):
         self.o = 0
         self.x = 0
 
-        self.vertical_speed = 0
-        self.max_vertical_speed = 10
+        self.z_value = 0
+        self.z_max_value = 10
 
         self.l1 = 0
         self.l2 = 0
@@ -140,18 +140,18 @@ class PS3Controller(object):
             self.select = 0
 
     def increase_vertical_speed(self):
-        if self.max_vertical_speed > self.vertical_speed:
-            self.vertical_speed += 1
+        if self.z_max_value > self.z_value:
+            self.z_value += 1
 
     def decrease_vertical_speed(self):
-        if self.vertical_speed > -self.max_vertical_speed:
-            self.vertical_speed -= 1
+        if self.z_value > -self.z_max_value:
+            self.z_value -= 1
 
     def reset_vertical_speed(self):
-        self.vertical_speed = 0
+        self.z_value = 0
 
     def max_vertical_speed_up(self):
-        self.vertical_speed = self.max_vertical_speed
+        self.z_value = -self.z_max_value
 
     def updateController(self):
         """
@@ -182,11 +182,11 @@ class PS3Controller(object):
                 elif self.controller.get_button(7):  # left arrow
                     self.reset_vertical_speed()
                 elif self.controller.get_button(6):  # down arrow
-                    self.decrease_vertical_speed()
+                    self.increase_vertical_speed()
                 elif self.controller.get_button(5):  # right arrow
                     self.max_vertical_speed_up()
                 elif self.controller.get_button(4):  # up arrow
-                    self.increase_vertical_speed()
+                    self.decrease_vertical_speed()
 
                 elif self.controller.get_button(3):
                     self.inverseStart()

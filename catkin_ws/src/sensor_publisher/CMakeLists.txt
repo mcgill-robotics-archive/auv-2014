@@ -163,3 +163,9 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(madgwick src/madgwick.cpp)
+target_link_libraries(madgwick ${catkin_LIBRARIES})
+add_dependencies(madgwick sensor_publisher_generate_messages_cpp)

@@ -1,3 +1,6 @@
+#ifndef CV_NODE_H
+#define CV_NODE_H
+
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
 #include <image_transport/image_transport.h>
@@ -30,5 +33,5 @@ class CVNode {
 	void receiveImage(const sensor_msgs::ImageConstPtr& message);
 };
 	
-
+#endif
 
