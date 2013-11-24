@@ -139,7 +139,7 @@ class Main(QtGui.QMainWindow):
         self.ui.angularHorizantal.setValue(-100*self.ps3.yaw_speed)
 
         #publish to ros topic
-        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, self.ps3.pitch_speed, self.ps3.yaw_speed, 0, 'turtle1/cmd_vel')
+        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, self.ps3.pitch_speed, self.ps3.yaw_speed, 0, 'gazebo/robot_twist')
 
         #display cmd_vel command to screen (on main ui not console)
         self.ui.logObject.append(publisherText)
