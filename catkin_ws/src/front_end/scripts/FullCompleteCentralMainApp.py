@@ -133,10 +133,18 @@ class Main(QtGui.QMainWindow):
         self.ps3.updateController()
 
         #react to the joysticks
-        self.ui.linearVertical.setValue(100*self.ps3.horizontal_front_speed)
-        self.ui.linearHorizantal.setValue(-100*self.ps3.horizontal_side_speed)
-        self.ui.angularVertical.setValue(-100*self.ps3.pitch_speed)
-        self.ui.angularHorizantal.setValue(-100*self.ps3.yaw_speed)
+        self.ui.linearVertical.setValue(1000*self.ps3.horizontal_front_speed)
+        self.ui.linearHorizantal.setValue(-1000*self.ps3.horizontal_side_speed)
+        self.ui.angularVertical.setValue(-1000*self.ps3.pitch_speed)
+        self.ui.angularHorizantal.setValue(-1000*self.ps3.yaw_speed)
+
+        self.ui.linearX.setText(str(self.ps3.horizontal_front_speed))
+        self.ui.linearY.setText(str(self.ps3.horizontal_side_speed))
+        self.ui.linearZ.setText(str(self.ps3.z_value))
+        self.ui.angularX.setText(str(0))
+        self.ui.angularY.setText(str(self.ps3.pitch_speed))
+        self.ui.angularZ.setText((str(self.ps3.yaw_speed)))
+
 
         #publish to ros topic
         publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, self.ps3.pitch_speed, self.ps3.yaw_speed, 0, 'gazebo/robot_twist')
