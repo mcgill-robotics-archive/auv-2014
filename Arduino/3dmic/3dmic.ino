@@ -147,12 +147,12 @@ void loop() {
 
         /* CALCULATE PITCH */
         // NOTE: the following was generated and optimized using Maple 
-        double t1 = d * d; double t3 = t1 * sz;
-        double t5 = sz * sz; double t7 = sx * sx; double t8 = t7 * t5; double t9 = sz * t5; double t11 = t1 * t1;
-        double t16 = t7 * t7; double t21 = t5 * t5; double t27 = sx * t7; double t35 = sx * t16; double t39 = t7 * t16;
-        double t44 = 2 * t7 * t1 * t11 - 3 * t16 * t11 - 3 * t8 * t11 + t21 * t7 * t1 + 4 * t16 * t5 * t1 - 2 * t27 * t9 * t1 + 2 * t27 * sz * t11 - t16 * t21 - 2 * t35 * t1 * sz + t39 * t1 + 2 * t35 * t9 - t39 * t5;
-        double t45 = sqrt(t44); double t46 = t3 * sx - t1 * t5 +  t8 - t9 * sx + t11 - t1 * t7 + t45;
-        double t48 = t1 - t5 - t7;
+        t1 = d * d; t3 = t1 * sz;
+        t5 = sz * sz; t7 = sx * sx; t8 = t7 * t5; t9 = sz * t5; t11 = t1 * t1;
+        t16 = t7 * t7; t21 = t5 * t5; t27 = sx * t7; t35 = sx * t16; t39 = t7 * t16;
+        t44 = 2 * t7 * t1 * t11 - 3 * t16 * t11 - 3 * t8 * t11 + t21 * t7 * t1 + 4 * t16 * t5 * t1 - 2 * t27 * t9 * t1 + 2 * t27 * sz * t11 - t16 * t21 - 2 * t35 * t1 * sz + t39 * t1 + 2 * t35 * t9 - t39 * t5;
+        t45 = sqrt(t44); double t46 = t3 * sx - t1 * t5 +  t8 - t9 * sx + t11 - t1 * t7 + t45;
+        t48 = t1 - t5 - t7;
         double pitch = atan((t1 * sx + sz * t46 / t48 - t3 + t7 * sz - sx * t5) / sx / t46 * t48);
 
         /* ROTATE SERVOS AND DISPLAY ANGLES SUCH THAT -90 < ANGLE < 90 */

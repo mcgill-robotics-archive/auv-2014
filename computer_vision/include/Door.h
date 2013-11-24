@@ -1,3 +1,6 @@
+#ifndef CV_DOOR_H
+#define CV_DOOR_H
+
 #include "VisibleObject.h"
 
 // Defines the different constants used:
@@ -40,3 +43,6 @@ class Door : public VisibleObject {
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour);
 };
+
+#endif
+
