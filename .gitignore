@@ -1,7 +1,9 @@
 catkin_ws/build
 catkin_ws/devel
 UI/QT\ Designs\Tests
-.idea
-
+*.idea
+*.project
+*.cproject
+*.log
 *.pyc
 *~
