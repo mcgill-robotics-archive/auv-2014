@@ -44,7 +44,9 @@ class PS3Controller(object):
         #This part will set all the Global variables used in PS3Controller.
         self.controller = pygame.joystick.Joystick(0)
         self.controller.init()
-        print "The initialized Joystick is: " + self.controller.get_name()
+        self.controller_name =  self.controller.get_name()
+        print "The initialized Joystick is: " + self.controller_name
+
         self.yaw_speed = 0
         self.pitch_speed = 0
         self.horizontal_side_speed = 0
@@ -197,7 +199,6 @@ class PS3Controller(object):
                 elif self.controller.get_button(0):
                     self.inverseSelect()
 
-#TODO : confirm correct assignment of the axis
             elif anEvent.type == pygame.locals.JOYAXISMOTION:
                 self.horizontal_side_speed = -0.1*self.controller.get_axis(0)  # left left/right axis
                 self.horizontal_front_speed = -0.1*self.controller.get_axis(1)  # left front/back axis
