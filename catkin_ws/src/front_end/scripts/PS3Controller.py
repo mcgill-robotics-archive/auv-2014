@@ -180,15 +180,15 @@ class PS3Controller(object):
                     self.inverseR2()
                 elif self.controller.get_button(8):
                     self.inverseL2()
-
+#TODO: change back to right axies
                 elif self.controller.get_button(7):  # left arrow
                     self.reset_vertical_speed()
                 elif self.controller.get_button(6):  # down arrow
-                    self.increase_vertical_speed()
+                    self.decrease_vertical_speed()
                 elif self.controller.get_button(5):  # right arrow
                     self.max_vertical_speed_up()
                 elif self.controller.get_button(4):  # up arrow
-                    self.decrease_vertical_speed()
+                    self.increase_vertical_speed()
 
                 elif self.controller.get_button(3):
                     self.inverseStart()
@@ -200,8 +200,8 @@ class PS3Controller(object):
                     self.inverseSelect()
 
             elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                self.horizontal_side_speed = -0.1*self.controller.get_axis(0)  # left left/right axis
-                self.horizontal_front_speed = -0.1*self.controller.get_axis(1)  # left front/back axis
+                self.horizontal_side_speed = -0.1*self.controller.get_axis(1)  # left left/right axis
+                self.horizontal_front_speed = -0.1*self.controller.get_axis(0)  # left front/back axis
                 self.yaw_speed = -0.1*self.controller.get_axis(2)  # right left/right axis
                 self.pitch_speed = -0.1*self.controller.get_axis(3)  # right front/back axis
 
