@@ -165,9 +165,10 @@ class Main(QtGui.QMainWindow):
         self.ui.angularY.setText(str(self.ps3.pitch_speed))
         self.ui.angularZ.setText((str(self.ps3.yaw_speed)))
 
+# TODO : note to self, modified the axies for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'gazebo/robot_twist')
+        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'gazebo/robot_twist')
 
         #display cmd_vel command to screen (on main ui not console)
         self.ui.logObject.append(publisherText)
