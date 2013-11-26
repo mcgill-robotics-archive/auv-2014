@@ -1,0 +1,13 @@
+/home/alex/catkin_ws/install/.catkin
+/home/alex/catkin_ws/install/_setup_util.py
+/home/alex/catkin_ws/install/env.sh
+/home/alex/catkin_ws/install/setup.bash
+/home/alex/catkin_ws/install/setup.sh
+/home/alex/catkin_ws/install/setup.zsh
+/home/alex/catkin_ws/install/.rosinstall
+/home/alex/catkin_ws/install/etc/catkin/profile.d/05.catkin_make.bash
+/home/alex/catkin_ws/install/etc/catkin/profile.d/05.catkin_make_isolated.bash
+/home/alex/catkin_ws/install/lib/pkgconfig/beginner_tutorials.pc
+/home/alex/catkin_ws/install/share/beginner_tutorials/cmake/beginner_tutorialsConfig.cmake
+/home/alex/catkin_ws/install/share/beginner_tutorials/cmake/beginner_tutorialsConfig-version.cmake
+/home/alex/catkin_ws/install/share/beginner_tutorials/package.xml

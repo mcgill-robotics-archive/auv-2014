@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "sprint1")
+set(sprint1_MAINTAINER "alex <alex@todo.todo>")
+set(sprint1_DEPRECATED "")
+set(sprint1_VERSION "0.0.0")
+set(sprint1_BUILD_DEPENDS "roscpp" "std_msgs" "geometry_msgs" "message_generation")
+set(sprint1_RUN_DEPENDS "message_runtime" "roscpp" "std_msgs" "geometry_msgs")
+set(sprint1_BUILDTOOL_DEPENDS "catkin")
