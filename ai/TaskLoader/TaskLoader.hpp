@@ -10,7 +10,7 @@
 #include "TaskConcrete.hpp"
 //#include "Task.cpp"
 
-	void makeTask(std::string id);
+	Task* makeTask(std::string id);
 
 #endif
 

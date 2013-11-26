@@ -1,8 +1,7 @@
 //TaskConcrete.cpp
-#include <iostream>
+
 #include "TaskConcrete.hpp"
-#include <string>
-#include "Task.cpp"
+
 
 		 void Task_1v1::execute()
 		 {

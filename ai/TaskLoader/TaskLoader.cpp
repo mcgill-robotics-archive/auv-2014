@@ -2,7 +2,7 @@
 	// takes string taskID (from xml file)  and returns corresponding task object
 #include "TaskLoader.hpp"
 
-void makeTask(std::string id){
+Task* makeTask(std::string id){
 
 	int t = parseTask(id);
 	int v = parseVersion(id);
@@ -12,7 +12,7 @@ void makeTask(std::string id){
 
 			switch(v){
 				case 1:
-					 std::cout << 1;//return new Task1v1();
+					 return new Task_1v1();//return new Task1v1();
 					 break;
 			}
 			break;
@@ -21,14 +21,18 @@ void makeTask(std::string id){
 		case 2: 
 			switch(v){
 				case 1:
-					std::cout << 2;
+					return new Task_1v2();
 					 //return new Task2v1();
 					 break;
 			}
 			break;
+		
 	}
+	return NULL;
 }
 
 int main(){
-	makeTask("1v1");
+	Task* MyTask = makeTask("1v1");
+	MyTask->execute();
+	return 0;
 }
