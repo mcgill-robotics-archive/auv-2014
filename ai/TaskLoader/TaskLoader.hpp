@@ -7,18 +7,10 @@
 #include <iostream>
 #include <string>
 #include "quick_parse.hpp"
-//#include "TaskConcrete.cpp"
+#include "TaskConcrete.hpp"
 //#include "Task.cpp"
 
-	//TaskLoader();
-
-	//int parseTask(std::string x);
-	//	int parseVersion(std::string x);
-	void makeTask(std::string x);
-
-
-	int t;
-	int v;
+	void makeTask(std::string id);
 
 #endif
 
