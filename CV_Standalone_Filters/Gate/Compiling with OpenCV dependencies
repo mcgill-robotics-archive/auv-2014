@@ -1,1 +1,0 @@
-g++ -o outputExecutable cPlusPlusFileToCompile.cpp `pkg-config opencv --cflags --libs`
