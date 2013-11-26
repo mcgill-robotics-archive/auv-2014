@@ -4,7 +4,10 @@ class TaskLoader{
 	public:	
 	// takes string taskID (from xml file)  and returns corresponding task object
 		Task* makeTask(std::string id){
-			TaskLoader::parse(id);
+
+			int t = TaskLoader::parseTask(id);
+			int v = TaskLoader::parseVersion(id);
+
 			switch(t){
 				case 1:
 
