@@ -5,13 +5,13 @@
 #include <string>
 #include "quick_parse.hpp"
 //#include "TaskConcrete.cpp"
-#include "Task.cpp"
+//#include "Task.cpp"
 
-
-	TaskLoader();
+//TaskLoader();
 	//int parseTask(std::string x);
 	//	int parseVersion(std::string x);
 	void makeTask(std::string x);
-private:
+
+
 	int t;
 	int v;

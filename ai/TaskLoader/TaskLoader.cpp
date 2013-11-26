@@ -10,17 +10,18 @@ void makeTask(std::string id){
 	switch(t){
 		case 1:
 
-			switch(v)
-			{
+			switch(v){
 				case 1:
-					 //return new Task1v1();
+					 std::cout << 1;//return new Task1v1();
 					 break;
+			}
 			break;
 
+
 		case 2: 
-			switch(v)
-			{
+			switch(v){
 				case 1:
+					std::cout << 2;
 					 //return new Task2v1();
 					 break;
 			}
