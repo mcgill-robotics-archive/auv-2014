@@ -3,5 +3,5 @@
 class Task
 {
 	public: 
-		void execute();
+		virtual void execute() {}
 };
