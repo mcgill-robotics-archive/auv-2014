@@ -4,8 +4,8 @@
 
 void makeTask(std::string id){
 
-	int t = TaskLoader::parseTask(id);
-	int v = TaskLoader::parseVersion(id);
+	int t = parseTask(id);
+	int v = parseVersion(id);
 
 	switch(t){
 		case 1:
