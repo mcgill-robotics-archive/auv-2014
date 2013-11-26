@@ -13,7 +13,7 @@ def pose_callback(pose_data):
     rospy.loginfo(rospy.get_name() + ": orientation : x, y, z, w: %f, %f, %f, %f", x, y, z, w)
 
 def depth_callback(depth_data):
-    rospy.loginfo(rospy.get_name() + ": depth : %f", depth)
+    rospy.loginfo(rospy.get_name() + ": depth : %f", depth_data)
 
 def pressure_callback(pressure_data):
     pressure = pressure_data.data

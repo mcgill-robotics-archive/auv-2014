@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1689</width>
+    <width>1683</width>
     <height>1017</height>
    </rect>
   </property>
@@ -21,9 +21,9 @@
    <widget class="QFrame" name="VideoOuter">
     <property name="geometry">
      <rect>
-      <x>910</x>
+      <x>970</x>
       <y>200</y>
-      <width>771</width>
+      <width>711</width>
       <height>761</height>
      </rect>
     </property>
@@ -38,13 +38,13 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </size>
      </property>
@@ -55,15 +55,15 @@
     <widget class="QGraphicsView" name="preRight">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>360</x>
        <y>10</y>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </size>
      </property>
@@ -76,13 +76,13 @@
       <rect>
        <x>10</x>
        <y>260</y>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </size>
      </property>
@@ -93,15 +93,15 @@
     <widget class="QGraphicsView" name="postRight">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>360</x>
        <y>260</y>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </size>
      </property>
@@ -114,13 +114,13 @@
       <rect>
        <x>10</x>
        <y>510</y>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </size>
      </property>
@@ -131,15 +131,15 @@
     <widget class="QGraphicsView" name="postBottom">
      <property name="geometry">
       <rect>
-       <x>390</x>
+       <x>360</x>
        <y>510</y>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </rect>
      </property>
      <property name="maximumSize">
       <size>
-       <width>371</width>
+       <width>344</width>
        <height>241</height>
       </size>
      </property>
@@ -154,7 +154,7 @@
       <x>10</x>
       <y>40</y>
       <width>351</width>
-      <height>131</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="text">
@@ -692,7 +692,7 @@
    <widget class="QTextEdit" name="logObject">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>420</x>
       <y>700</y>
       <width>551</width>
       <height>261</height>
@@ -707,7 +707,7 @@
      <rect>
       <x>9</x>
       <y>199</y>
-      <width>331</width>
+      <width>401</width>
       <height>761</height>
      </rect>
     </property>
@@ -745,7 +745,7 @@
       <rect>
        <x>0</x>
        <y>40</y>
-       <width>331</width>
+       <width>401</width>
        <height>721</height>
       </rect>
      </property>
@@ -754,9 +754,9 @@
    <widget class="QFrame" name="DVLFrame">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>420</x>
       <y>540</y>
-      <width>551</width>
+      <width>550</width>
       <height>151</height>
      </rect>
     </property>
@@ -1015,9 +1015,9 @@
    <widget class="QFrame" name="IMUdirectional">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>420</x>
       <y>380</y>
-      <width>551</width>
+      <width>550</width>
       <height>151</height>
      </rect>
     </property>
@@ -1054,9 +1054,9 @@
    <widget class="QFrame" name="Depth">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>420</x>
       <y>200</y>
-      <width>271</width>
+      <width>270</width>
       <height>171</height>
      </rect>
     </property>
@@ -1103,9 +1103,9 @@
    <widget class="QFrame" name="Pressure">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>700</x>
       <y>200</y>
-      <width>271</width>
+      <width>270</width>
       <height>171</height>
      </rect>
     </property>
@@ -1155,7 +1155,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1689</width>
+     <width>1683</width>
      <height>25</height>
     </rect>
    </property>
@@ -1171,6 +1171,9 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
  </widget>

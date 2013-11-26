@@ -68,9 +68,12 @@ def accCallback(data):
     header = Header()
     header.stamp = data.header.stamp
 
+    orientationCovariance = getCovariance(orientationVariance)
+    orientationCovariance[8] = 1000000
+	
     imu_msg.header = header
     imu_msg.orientation = listToQuaternion(q)
-    imu_msg.orientation_covariance = getCovariance(orientationVariance)
+    imu_msg.orientation_covariance = orientationCovariance
     imu_msg.angular_velocity = omega
     imu_msg.angular_velocity_covariance = getCovariance(gyroVariance)
     imu_msg.linear_acceleration = data.vector

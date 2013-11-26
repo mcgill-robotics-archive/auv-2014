@@ -1,4 +1,5 @@
 #include "ros/ros.h"
+
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
@@ -13,14 +14,18 @@ static int sequence = 0;
 // Definitions
 
 #define sampleFreq	10.0f		// sample frequency in Hz
-#define betaDef		0.1f		// 2 * proportional gain
+#define betaDef		0.33f		// 2 * proportional gain
 
 //---------------------------------------------------------------------------------------------------
 // Variable definitions
 
-volatile float beta = betaDef;								// 2 * proportional gain (Kp)
-volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;	// quaternion of sensor frame relative to auxiliary frame
-
+volatile float beta = betaDef;								
+// 2 * proportional gain (Kp)
+volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;	
+// quaternion of sensor frame relative to auxiliary frame
+volatile float delta_t = 0;
+int firstTimeThrough = 1;
+ros::Time lasttime;
 //---------------------------------------------------------------------------------------------------
 // Function declarations
 
@@ -186,10 +191,10 @@ void MadgwickAHRSupdateIMU(float gx, float gy, float gz, float ax, float ay, flo
 	}
 
 	// Integrate rate of change of quaternion to yield quaternion
-	q0 += qDot1 * (1.0f / sampleFreq);
-	q1 += qDot2 * (1.0f / sampleFreq);
-	q2 += qDot3 * (1.0f / sampleFreq);
-	q3 += qDot4 * (1.0f / sampleFreq);
+	q0 += qDot1 * delta_t;
+	q1 += qDot2 * delta_t;
+	q2 += qDot3 * delta_t;
+	q3 += qDot4 * delta_t;
 
 	// Normalise quaternion
 	recipNorm = invSqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
@@ -215,6 +220,18 @@ float invSqrt(float x) {
 
 void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 {
+	if (firstTimeThrough) {
+        firstTimeThrough = 0;
+        lasttime = imu->header.stamp;
+        return;
+    }
+
+    ros::Duration timeChange = imu->header.stamp - lasttime;
+    delta_t = (float) timeChange.toSec();
+    lasttime = imu->header.stamp;
+
+
+	
 	geometry_msgs::Vector3 gyro = imu->angular_velocity;
 	geometry_msgs::Vector3 acc = imu->linear_acceleration;
 	
@@ -231,7 +248,7 @@ void madgwickFilter(const sensor_msgs::Imu::ConstPtr& imu)
 	posStamped.header.stamp = ros::Time::now();
 	posStamped.header.frame_id = "base_footprint";
 	
-	pub.publish(pos);
+	pub.publish(posStamped);
 }
 
 int main (int argc, char **argv)
@@ -239,7 +256,7 @@ int main (int argc, char **argv)
 	ros::init(argc, argv, "madgwick_pose");
 	ros::NodeHandle node;
 
-	 pub = node.advertise<geometry_msgs::Pose>("madgewick", 100);
+	 pub = node.advertise<geometry_msgs::PoseStamped>("madgewick", 100);
 	 sub = node.subscribe("imu_data", 100, madgwickFilter);
 
 	ros::spin();
