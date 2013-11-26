@@ -1,4 +1,6 @@
 //TaskConcrete.cpp
+#include "Task.cpp"
+
 class Task_1v1 : public Task
 {
 	public: 
