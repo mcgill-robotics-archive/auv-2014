@@ -3,5 +3,5 @@
 class Task
 {
 	public: 
-		virtual void execute() {}
+		virtual void Task::execute() {}
 };
