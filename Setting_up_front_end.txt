@@ -4,5 +4,5 @@
 4. cd to catkin workspace and run catkin_make
 5. source devel/setup.bash
 6. connect PS3 controller
-7. rosrun front_end FullCompleteCentralMainApp.py  (temporary name!)
+7. rosrun front_end FullCompleteCentralMainApp.py
 8. click on "connect PS3 controller"

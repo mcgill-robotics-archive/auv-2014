@@ -1,9 +1,76 @@
+# Build #
+#########
+MANIFEST.MF
+dependency-reduced-pom.xml
+
+# Compiled #
+############
+bin
+build
+dist
+lib
+out
+target
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+
+# Databases #
+#############
+*.db
+*.sql
+*.sqlite
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Repository #
+##############
+.git
 catkin_ws/build
 catkin_ws/devel
-UI/QT\ Designs\Tests
-*.idea
-*.project
-*.cproject
+
+# Logging #
+###########
+/logs
 *.log
-*.pyc
+
+# Misc #
+########
+*.bak
 *~
+UI/QT\ Designs\Tests
+
+# System #
+##########
+.DS_Store
+ehthumbs.db
+Thumbs.db
+
+# Project #
+###########
+.classpath
+.externalToolBuilders
+.idea
+.project
+*.cproject
+.settings
+nbproject
+atlassian-ide-plugin.xml
+build.xml
+nb-configuration.xml
+*.iml
+*.ipr
+*.iws
