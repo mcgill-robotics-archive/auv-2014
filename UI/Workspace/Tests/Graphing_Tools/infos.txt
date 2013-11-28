@@ -1,0 +1,15 @@
+For these tests, I will use the python oackage PyQtGraph.
+
+to install:
+
+in terminal: $sudo vi /etc/apt/sources.list
+add "deb http://luke.campagnola.me/debian dev/" to the file
+save
+close
+$ sudo apt-get update
+$sudo apt-get install python-pygtgraph
+
+It comes with a series of examples
+to run examples:
+in terminal:
+$python -m pyqtgraph.examples
