@@ -58,7 +58,7 @@ class PS3Controller(object):
         self.x = 0
 
         self.z_value = 0
-        self.z_max_value = 0.1
+        self.z_max_value = 0.2
 
         self.l1 = 0
         self.l2 = 0
@@ -200,10 +200,10 @@ class PS3Controller(object):
                     self.inverseSelect()
 
             elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                self.horizontal_side_speed = -0.1*self.controller.get_axis(1)  # left left/right axis
-                self.horizontal_front_speed = -0.1*self.controller.get_axis(0)  # left front/back axis
-                self.yaw_speed = -0.1*self.controller.get_axis(2)  # right left/right axis
-                self.pitch_speed = -0.1*self.controller.get_axis(3)  # right front/back axis
+                self.horizontal_side_speed = -0.2*self.controller.get_axis(1)  # left left/right axis
+                self.horizontal_front_speed = -0.2*self.controller.get_axis(0)  # left front/back axis
+                self.yaw_speed = -0.2*self.controller.get_axis(2)  # right left/right axis
+                self.pitch_speed = -0.2*self.controller.get_axis(3)  # right front/back axis
 
     def returnButtons(self):
         return self.select, self.l3, self.r3, self.start, self.l2, self.r2, self.l1, self.r1, self.triangle, self.o, self.x, self.square
