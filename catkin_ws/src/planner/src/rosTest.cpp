@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 
   ros::Publisher CV_pub = n.advertise<geometry_msgs::Twist>("CV", 1000);
 
-  ros::Publisher IMU_pub = n.advertise<geometry_msgs::Pose>("imu_data", 1000);
+  ros::Publisher IMU_pub = n.advertise<geometry_msgs::Quaternion>("imu_data", 1000);
 
   ros::Rate loop_rate(10);
   int count = 0;
