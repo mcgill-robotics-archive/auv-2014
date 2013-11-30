@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   ros::Subscriber CV_sub = n.subscribe("CV", 1000, TODO);
 
   ros::Publisher velocity_pub = n.advertise<geometry_msgs::Twist>("AI", 1000);
-  ros::Publisher CV_objs_pub = n.advertise<sprint1::CVQuery>("CV_Objs", 1000); 
+  ros::Publisher CV_objs_pub = n.advertise<planner::CVQuery>("CV_Objs", 1000); 
 
   ros::Rate loop_rate(10);
   
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     msgAI.angular.y = 1.0;
     msgAI.angular.z = 1.0;
 
-    sprint1::CVQuery msgCV;
+    planner::CVQuery msgCV;
     msgCV.queries.push_back(1);
     msgCV.queries.push_back(2);
  

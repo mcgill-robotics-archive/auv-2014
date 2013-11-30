@@ -85,7 +85,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   #CATKING_DEPENDS message_runtime
 #  INCLUDE_DIRS include
-#  LIBRARIES sprint1
+#  LIBRARIES planner
   CATKIN_DEPENDS roscpp std_msgs geometry_msgs
 #  DEPENDS system_lib
 )
@@ -107,19 +107,19 @@ add_executable(Planner src/Interface.cpp)
 target_link_libraries(Planner ${catkin_LIBRARIES})
 
 ## Declare a cpp library
-# add_library(sprint1
-#   src/${PROJECT_NAME}/sprint1.cpp
+# add_library(planner
+#   src/${PROJECT_NAME}/planner.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(sprint1_node src/sprint1_node.cpp)
+# add_executable(planner_node src/planner_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(sprint1_node sprint1_generate_messages_cpp)
+# add_dependencies(planner_node planner_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(sprint1_node
+# target_link_libraries(planner_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -138,7 +138,7 @@ target_link_libraries(Planner ${catkin_LIBRARIES})
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS sprint1 sprint1_node
+# install(TARGETS planner planner_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -163,7 +163,7 @@ target_link_libraries(Planner ${catkin_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_sprint1.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_planner.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
