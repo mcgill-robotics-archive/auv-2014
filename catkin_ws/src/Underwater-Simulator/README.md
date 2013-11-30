@@ -28,17 +28,13 @@ RECOMMENDED READING: http://gazebosim.org/wiki/Tutorials/1.9/Creating_ROS_plugin
 Underwater-Simulator Directory Structure:
 	
 	launch/
-
 		contains .launch files which launch an environment based on a world file
 	worlds/
-
 		contains .world files which are used by the launch files
 	models/
-
 		contains the models.
 		DO NOT CHANGE THE MODEL NAMES! 
 	src/
-
 		contains plugins
 
 
