@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <random>
 #include <cv.h>
 #include <highgui.h>
@@ -10,8 +11,8 @@ using namespace std;
 using namespace cv;
 
 // Video files
-#define FILE "RoboSub 2013 Buoy.mp4"
-//#define FILE "RoboSub 2013 Buoy Closeup.mp4"
+#define FILE "res/RoboSub 2013 Buoy.mp4"
+//#define FILE "res/RoboSub 2013 Buoy Closeup.mp4"
 
 // The color of a white sample in the footage for color correction
 static const Scalar colorSample(170, 160, 170);
@@ -19,6 +20,12 @@ static const Scalar colorSample(170, 160, 170);
 static const Scalar targetColor(20, 40, 220);
 // The color correction to apply to get correct whites
 static Scalar colorCorrection;
+// Camera focal length
+static const float FOCAL_LENGTH = 8;
+// Camera sensor height
+static const float SENSOR_HEIGHT = 6.26f;
+// Buoy radius, in millimeters
+static const float BUOY_RADIUS = 114.3f;
 
 // A struct for the buoy color range (in HSV)
 struct BuoyColorProfile {
@@ -37,6 +44,7 @@ static const BuoyColorProfile YELLOW_BUOY(Scalar(10, 30, 40), Scalar(55, 255, 25
 struct DetectedBuoy {
 	Point center;
 	int radius;
+	float distance;
 
 	DetectedBuoy(Point center, int radius)
 		: center(center), radius(radius) {}
@@ -166,6 +174,11 @@ static bool checkDisk(Mat* image, Point* center, int radius, int sampleCount, fl
  	return density >= minDensity;
 }
 
+// Returns the approximate distance from the buoy in meters based its radius in the image, and the height of the said image
+static float getDistance(float radius, int imageHeight) {
+	return (FOCAL_LENGTH * BUOY_RADIUS * imageHeight) / (radius * SENSOR_HEIGHT) / 1000;
+}
+
 // The main method of the detection algorithm, use RED_BUOY or YELLOW_BUOY for color profiles
 static vector<DetectedBuoy> detectBuoys(Mat* image, BuoyColorProfile buoy) {
 	// Compute color correction data from the color sample and target color once
@@ -190,7 +203,10 @@ static vector<DetectedBuoy> detectBuoys(Mat* image, BuoyColorProfile buoy) {
  		int radius = cvRound(circles[i][2]);
  		// Check that we have a well defined disk
  		if (checkDisk(&thresholdImage, &center, radius, 30, 0.90f)) {
- 			buoys.push_back(DetectedBuoy(center, radius));
+ 			DetectedBuoy detected(center, radius);
+ 			// Calculate distance
+ 			detected.distance = getDistance(radius, image->rows);
+ 			buoys.push_back(detected);
  		}
  	}
  	return buoys;
@@ -226,6 +242,10 @@ int main(int argc, char* argv[]) {
 	 		// Draw the circle markers
  		 	circle(frame, detected[i].center, 3, Scalar(0, 255, 0), -1, 8, 0);
  			circle(frame, detected[i].center, detected[i].radius, Scalar(0, 0, 255), 3, 8, 0);
+ 			stringstream stringStream(stringstream::in | stringstream::out);
+ 			stringStream << detected[i].distance << "m";
+ 			Point position = detected[i].center + Point(0, -detected[i].radius - 10);
+ 			putText(frame, stringStream.str(), position, FONT_HERSHEY_COMPLEX_SMALL, 0.8, Scalar(0, 0, 0), 1, CV_AA);
 		}
 		// Show the image with the detection markers
 		imshow("Detection", frame);
