@@ -14,6 +14,7 @@ INSTALLATION INSTRUCTIONS:
 2.	Clone the Underwater-Simulator in your catkin workspace and run: $catkin_make
 
 	In our case, the package is already in a catkin workspace! So just pull "McGill_RoboSub_2014/catkin_ws"
+	
 	Run: $source devel/setup.bash
 	
 	$catkin_make
@@ -25,6 +26,7 @@ INSTALLATION INSTRUCTIONS:
 RECOMMENDED READING: http://gazebosim.org/wiki/Tutorials/1.9/Creating_ROS_plugins_for_Gazebo
 
 Underwater-Simulator Directory Structure:
+	
 	launch/
 
 		contains .launch files which launch an environment based on a world file
