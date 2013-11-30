@@ -53,6 +53,7 @@ To subscribe to the image from the camera pointing downwards:
 Make sure your ROS node subscribes to "/my_robot/camera_down/image_raw"
 
 The topics published by the camera are:
+
 /my_robot/camera_down/camera_info
 /my_robot/camera_down/image_raw
 /my_robot/camera_down/image_raw/compressed
