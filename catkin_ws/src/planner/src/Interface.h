@@ -2,7 +2,7 @@
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
 #include "std_msgs/Float64.h"
-#include "sprint1/CVQuery.h"
+#include "planner/CVQuery.h"
 
 #ifndef Interface_h
 #define Interface_h
