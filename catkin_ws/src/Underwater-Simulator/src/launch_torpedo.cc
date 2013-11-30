@@ -43,9 +43,12 @@ namespace gazebo
 
 		double roll = pose.rot.GetRoll();
 		double pitch = pose.rot.GetPitch();
+		//double roll = pose.rot.GetPitch();
+		//double pitch = pose.rot.GetRoll();
+
 		double yaw = pose.rot.GetYaw();
-		//std::cout<<" | roll :"<<roll
-		//<<", pitch: "<<pitch<<", yaw: "<<yaw<<std::endl;
+		std::cout<<" | roll :"<<roll
+		<<", pitch: "<<pitch<<", yaw: "<<yaw<<std::endl;
 
 		/* Note:
 		   -at roll, pitch and yaw 0,0,0
@@ -60,25 +63,21 @@ namespace gazebo
 
 		/*
 		 */
-		if(iteration < 4285) {
+		int test = 500;
+		if(iteration < test) {
 		    fsm = FSM_ROTATE;
-		} else if (iteration == 4286){
+		} else if (iteration == (test+1)){
 		    fsm = FSM_STOP;
 		}
 		++iteration;
 
-		if (abs(roll - PI) < 0.01) {
-		    //std::cout<<"----->"<<iteration<<std::endl;
-		    //std::cout<<fsm<<std::endl;
-		}
-
 		if (fsm == FSM_ROTATE) {
-		    this->model->SetAngularVel(math::Vector3(0.5, 0, 0));
+		    this->model->SetAngularVel(math::Vector3(0.5, 0.5, 0.5));
 		} else if (fsm == FSM_MOVE_FORWARD) {
 		    xvel = cos(yaw) * cos(roll) * SPEED;
 		    yvel = sin(yaw) * cos(roll) * SPEED;
 		    zvel = sin(roll) * SPEED;
-		    //std::cout<<"x: "<<xvel<<" y: "<<" z: "<<zvel<<std::endl;
+		    //std::cout<<"x: "<<xvel<<" y: "<<yvel<<" z: "<<zvel<<std::endl;
 		    this->model->SetLinearVel(math::Vector3(
 						  xvel,
 						  yvel,
@@ -88,7 +87,6 @@ namespace gazebo
 		    this->model->SetLinearVel(math::Vector3(0, 0, 0));
 		    fsm = FSM_MOVE_FORWARD;
 		}
-		//this->model->SetLinearVel(math::Vector3(0, 0.1, 0));
 	    }
 	};
 

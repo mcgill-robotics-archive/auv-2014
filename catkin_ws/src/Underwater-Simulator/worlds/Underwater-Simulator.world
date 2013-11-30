@@ -143,7 +143,7 @@
 	    </mesh>
           </geometry>
         </collision>
-      
+
         <visual name="visual">
           <geometry>
             <mesh>
@@ -152,7 +152,7 @@
 	    </mesh>
           </geometry>
         </visual>
-        
+
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
     </model>
@@ -161,7 +161,7 @@
       <pose>0 3 0 0 0 0</pose>
       <static>false</static>
       <link name="body">
-      
+
         <collision name="visual">
           <geometry>
             <mesh>
@@ -170,7 +170,7 @@
 	    </mesh>
           </geometry>
         </collision>
-      
+
         <visual name="visual">
           <geometry>
             <mesh>
@@ -179,7 +179,7 @@
 	    </mesh>
           </geometry>
         </visual>
-        
+
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
     </model>
@@ -197,7 +197,7 @@
 	    </mesh>
           </geometry>
         </collision>
-      
+
         <visual name="visual">
           <geometry>
             <mesh>
@@ -206,11 +206,14 @@
 	    </mesh>
           </geometry>
         </visual>
-        
+
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
     </model>
 
+    <!--
+	Now created by create_torpedo plugin
+    -->
     <model name="torpedo">
       <pose>-2 -2 1 0 0 0</pose>
       <static>false</static>
@@ -224,7 +227,7 @@
 	    </mesh>
           </geometry>
         </collision>
-      
+
         <visual name="visual">
           <geometry>
             <mesh>
@@ -233,7 +236,7 @@
 	    </mesh>
           </geometry>
         </visual>
-        
+
       </link>
       <plugin name="launch_torpedo" filename="liblaunch_torpedo.so"></plugin>
     </model>
@@ -265,12 +268,12 @@
       <!--
       -->
     </model>
-	<!--    
+	<!--
     <model name="traffic lights">
       <pose>6 1 2 0 0 1</pose>
       <static>false</static>
       <link name="body">
-      
+
         <collision name="visual">
           <geometry>
             <mesh>
@@ -292,9 +295,11 @@
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
     </model>-->
-    
-    
-    
-    
+
+
+
+	<plugin name="create_torpedo" filename="libcreate_torpedo.so"></plugin>
+    <!--
+    -->
   </world>
 </sdf>
