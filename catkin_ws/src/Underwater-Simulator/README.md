@@ -15,23 +15,30 @@ INSTALLATION INSTRUCTIONS:
 
 	In our case, the package is already in a catkin workspace! So just pull "McGill_RoboSub_2014/catkin_ws"
 	Run: $source devel/setup.bash
-		 $catkin_make
+	
+	$catkin_make
 
 3.	Run: $roslaunch Underwater-Simulator Underwater-Simulator.launch
+	
 	If it does not run, try sourcing setup.bash again and re-run the simulator.
 
 RECOMMENDED READING: http://gazebosim.org/wiki/Tutorials/1.9/Creating_ROS_plugins_for_Gazebo
 
 Underwater-Simulator Directory Structure:
 	launch/
+
 		contains .launch files which launch an environment based on a world file
 	worlds/
+
 		contains .world files which are used by the launch files
 	models/
+
 		contains the models.
 		DO NOT CHANGE THE MODEL NAMES! 
 	src/
+
 		contains plugins
+
 
 There is a test package "robot_move_test" in the workspace. This can be used to pass a twist message to the robot and 
 move it in the simulator. Run: "rosrun robot_move_test robot_move_test"
