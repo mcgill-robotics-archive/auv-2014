@@ -262,9 +262,9 @@ int main(int argc, char* argv[]) {
 		// Get the elapsed time
 		gettimeofday(&currentTime, NULL);
 		seconds = currentTime.tv_sec - lastTime.tv_sec;
-    	useconds = currentTime.tv_usec - lastTime.tv_usec;
-    	int elapsedTime = seconds * 1000 + useconds / 1000.0 + 0.5;
-    	// Set the last time as the curent one
+		useconds = currentTime.tv_usec - lastTime.tv_usec;
+		int elapsedTime = seconds * 1000 + useconds / 1000.0 + 0.5;
+		// Set the last time as the curent one
 		lastTime = currentTime;
 		// Wait 50ms for the escape key, compensating for elapsed time used for computations
 		int key = waitKey(max(frameDelay - elapsedTime, 1));
