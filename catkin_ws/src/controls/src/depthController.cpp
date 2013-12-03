@@ -3,6 +3,8 @@
 This is the first attempt at integrating a control system into the robosub simulation.
 It subscribes to desired and estimated velocity topics and publishes a new velocity topic according to the dynamics of the vehicle.
 
+Handwritten notes in page 79 of Nick's design notebook for P&C.
+
 Written by Nick Speal Dec 3.
 */
 
@@ -25,7 +27,22 @@ publishers
 
 */
 #include "ros/ros.h"
-#include 
+#include depthController.h
+
+void cmdVelCallback;
+
+void main(int argc, char **argv)
+{
+	ros::init(argc,argv,"depthController");
+	ros::NodeHandle n;
+	ros::Subscriber sub = n.subscribe("cmd_vel", 1000, cmdVelCallback);
+	ros::spin();
+	return 0;
+
+}
+
+
+
 
 // Subscribers
 
