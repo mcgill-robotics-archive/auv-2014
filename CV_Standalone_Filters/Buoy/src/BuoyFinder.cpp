@@ -4,6 +4,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include <math.h>
+#include <sys/time.h>
 
 #define _USE_MATH_DEFINES
 
@@ -237,6 +238,10 @@ int main(int argc, char* argv[]) {
 	Mat frame;
 	bool hasFrames = video.grab();
 	video.retrieve(frame);
+	// Track time used to compute the frame to ensure a proper frame rate
+	timeval lastTime, currentTime;
+	long seconds, useconds;
+	gettimeofday(&lastTime, NULL);
 	// As long as we have a frame
 	while (hasFrames) {
 		// Detect the buoys
@@ -254,8 +259,15 @@ int main(int argc, char* argv[]) {
 		}
 		// Show the image with the detection markers
 		imshow("Detection", frame);
-		// Wait 50ms for the escape key
-		int key = waitKey(frameDelay);
+		// Get the elapsed time
+		gettimeofday(&currentTime, NULL);
+		seconds = currentTime.tv_sec - lastTime.tv_sec;
+    	useconds = currentTime.tv_usec - lastTime.tv_usec;
+    	int elapsedTime = seconds * 1000 + useconds / 1000.0 + 0.5;
+    	// Set the last time as the curent one
+		lastTime = currentTime;
+		// Wait 50ms for the escape key, compensating for elapsed time used for computations
+		int key = waitKey(max(frameDelay - elapsedTime, 1));
 		if (key == 27 || key == 1048603) {
 			// If escape was pressed, exit
 			break;
