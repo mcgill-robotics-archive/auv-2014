@@ -27,10 +27,13 @@ publishers
 
 */
 #include "ros/ros.h"
+#include "geometry_msgs"
 #include depthController.h
 
-void cmdVelCallback;
-
+void cmdVelCallback(const geometry_msgs::Twist)
+{
+	ROS_INFO("Subscriber received twist")
+}
 void main(int argc, char **argv)
 {
 	ros::init(argc,argv,"depthController");
