@@ -492,4 +492,4 @@ class Ui_RoboticsMain(object):
         self.actionQuit.setShortcut(QtGui.QApplication.translate("RoboticsMain", "Ctrl+W", None, QtGui.QApplication.UnicodeUTF8))
 
 from pyqtgraph import GraphicsLayoutWidget
-import FinalRobotics_rc
+import Robotics_graphical_ressources

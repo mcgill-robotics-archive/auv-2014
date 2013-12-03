@@ -6,7 +6,7 @@ Created on Nov 16th, 2013
 import PS3Controller
 from CompleteFinale import *
 from PyQt4 import QtCore, QtGui
-import ps3_publisher
+import ps3_data_publisher
 import sys
 import rospy
 from std_msgs.msg import String
@@ -92,7 +92,7 @@ class Main(QtGui.QMainWindow):
                 self.checkboxList[i].setChecked(False)
 
         #publish to ros topic
-        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, self.ps3.pitch_speed, self.ps3.yaw_speed, 0, 'turtle1/cmd_vel')
+        publisherText = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, self.ps3.z_value, self.ps3.pitch_speed, self.ps3.yaw_speed, 0, 'turtle1/cmd_vel')
 
         #display cmd_vel command to screen (on main ui not console)
         self.ui.textField.append(publisherText)

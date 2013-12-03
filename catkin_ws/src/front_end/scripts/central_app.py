@@ -4,9 +4,9 @@ Created on Nov 16th, 2013
 @author : David Lavoie-Boutin
 """
 import PS3Controller
-from CompleteFinal import *
+from CompleteUI_declaration import *
 from PyQt4 import QtCore, QtGui
-import ps3_publisher
+import ps3_data_publisher
 import sys
 import rospy
 from std_msgs.msg import String
@@ -16,6 +16,7 @@ from geometry_msgs.msg import Pose
 updateFrequency = 50
 
 #TODO: alarm for internal pressure drop
+
 
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -168,10 +169,10 @@ class Main(QtGui.QMainWindow):
 # TODO : note to self, modified the axies for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        publisherText = ps3_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'gazebo/robot_twist')
+        publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'gazebo/robot_twist')
 
         #display cmd_vel command to screen (on main ui not console)
-        self.ui.logObject.append(publisherText)
+        self.ui.logObject.append(publisher_text)
 
     ###############
     #GRAPH UPDATER#
