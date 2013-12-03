@@ -150,6 +150,11 @@ static void getThresholdImage(Mat* image, BuoyColorProfile buoy, Mat* destinatio
 	inRangeWrapped(&HSVImage, buoy.lowColor, buoy.highColor, destination);
 }
 
+// Returns the number of samples to get the desired coverage (as a percentage) of the area of the disk of the provided radius
+static int getSampleCount(float radius, float coverage) {
+	return coverage * M_PI * radius * radius;
+}
+
 // Uses a Monte-Carlo method to check is the disk is at least as dense (in the sense of no missing pieces) as the desired density (as a percentage)
 // It's used to discard invalid circles formed by random contours 
 static bool checkDisk(Mat* image, Point* center, int radius, int sampleCount, float minDensity) {
@@ -202,7 +207,7 @@ static vector<DetectedBuoy> detectBuoys(Mat* image, BuoyColorProfile buoy) {
   		Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
  		int radius = cvRound(circles[i][2]);
  		// Check that we have a well defined disk
- 		if (checkDisk(&thresholdImage, &center, radius, 30, 0.90f)) {
+ 		if (checkDisk(&thresholdImage, &center, radius, getSampleCount(radius, 0.15f), 0.90f)) {
  			DetectedBuoy detected(center, radius);
  			// Calculate distance
  			detected.distance = getDistance(radius, image->rows);
