@@ -33,6 +33,7 @@ publishers
 void cmdVelCallback(const geometry_msgs::Twist)
 {
 	ROS_INFO("Subscriber received twist")
+	//random comment
 }
 void main(int argc, char **argv)
 {
