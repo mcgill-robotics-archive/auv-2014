@@ -4,7 +4,7 @@ Created on Nov 16th, 2013
 @author : David Lavoie-Boutin
 """
 import PS3Controller
-from CompleteFinale import *
+from CompleteUI_declaration import *
 from PyQt4 import QtCore, QtGui
 import ps3_data_publisher
 import sys
