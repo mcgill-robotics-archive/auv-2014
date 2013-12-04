@@ -27,6 +27,7 @@ publishers
 */
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
+#include "geometry_msgs/Pose.h"
 #include "std_msgs/Float64.h"
 #include "depthController.h"
 
@@ -52,7 +53,7 @@ void partial_cmd_vel_callback(const geometry_msgs::Twist twistMsg)
 	input_zdot = twistMsg.linear.z;
 	input_alphadot = twistMsg.angular.x;
 	input_betadot = twistMsg.angular.y;
-	input_gammadot = twistMsg.angular.z;
+	input_gammadot = twistMsg.angular.z;                
 }
 
 void zdes_callback(const std_msgs::Float64 data)
@@ -61,7 +62,7 @@ void zdes_callback(const std_msgs::Float64 data)
 	z_des = data.data;
 }
 
-void pose_callback(const geometry_msgs::Pose& data)
+void pose_callback(const geometry_msgs::Pose data)
 
 {
 	ROS_INFO("Subscriber received zest");
@@ -117,7 +118,7 @@ int main(int argc, char **argv)
 		std::stringstream ss;
 		ss << "Speed: " << zdot_new;
 		//ROS_INFO("%s", ss.str());
-                ROS_INFO("%s", zdot_new);
+                ROS_INFO("%f", zdot_new);
 
 
 		
