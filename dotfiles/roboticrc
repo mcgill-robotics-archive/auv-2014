@@ -6,5 +6,4 @@ alias woman='man'
 
 source /opt/ros/hydro/setup.bash
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
-source $HOME/catkin_ws/devel/setup.bash
 export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
