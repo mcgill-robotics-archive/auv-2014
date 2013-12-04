@@ -162,3 +162,12 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+## copied from writingPublisherSubscriber tutorial
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(depthController src/depthController.cpp)
+target_link_libraries(depthController ${catkin_LIBRARIES})
+add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
+
+

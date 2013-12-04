@@ -27,18 +27,18 @@ publishers
 
 */
 #include "ros/ros.h"
-#include "geometry_msgs"
-#include depthController.h
+#include "geometry_msgs/Twist.h"
+#include "depthController.h"
 
-void cmdVelCallback(const geometry_msgs::Twist)
+void cmdVelCallback(const geometry_msgs::Twist twistMsg)
 {
-	ROS_INFO("Subscriber received twist")
+	ROS_INFO("Subscriber received twist");
 }
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	ros::init(argc,argv,"depthController");
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("cmd_vel", 1000, cmdVelCallback);
+	ros::Subscriber sub = n.subscribe("/gazebo/robot_twist", 1000, cmdVelCallback);
 	ros::spin();
 	return 0;
 
