@@ -103,12 +103,14 @@ int main(int argc, char **argv)
 	bool ready = 0;
 	while (ready == 0)
 	{
+		ROS_INFO("DepthController waiting for all subscribers to have content...");
 		ready = 1;		 
 		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) ready = 0;
 		if (zdes_subscriber.getNumPublishers() == 0) ready = 0;
 		if (pose_subscriber.getNumPublishers() == 0) ready = 0;
 	}
 
+	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
 		ros::spinOnce();	//is it a problem to have this at the top not the bottom?
@@ -129,10 +131,10 @@ int main(int argc, char **argv)
 
 
 		// publish here
-		std::stringstream ss;
-		ss << "Speed: " << zdot_new;
+		//std::stringstream ss;
+		//ss << "Speed: " << zdot_new;
 		//ROS_INFO("%s", ss.str());
-                ROS_INFO("%f", zdot_new);
+        ROS_INFO("%f", zdot_new);
 
 		cmd_vel_publisher.publish(twistMsg);
 		loop_rate.sleep();
