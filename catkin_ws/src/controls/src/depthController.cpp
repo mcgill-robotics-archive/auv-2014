@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 	float cd = 0.1; //arbitrary drag coefficient
 	float buoyancy = 0.02; // %percent buoyancy
 	float dt = 0.01; //temporary! TODO update this dynamically
-	float kp = 100; //proportional controller
+	float kp = 1000; //proportional controller
 
 	//initializations
 	float zdot_old = 0; //initial velocity
