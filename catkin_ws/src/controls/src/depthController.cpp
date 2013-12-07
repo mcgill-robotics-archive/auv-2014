@@ -65,8 +65,9 @@ void zdes_callback(const std_msgs::Float64 data)
 void pose_callback(const geometry_msgs::Pose data)
 
 {
+	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model with [0]
 	ROS_INFO("Subscriber received zest");
-	z_est = data.position.z;
+	z_est = data[0].position.z;
 }
 
 
@@ -90,11 +91,11 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 	ros::Subscriber partial_cmd_vel_subscriber = n.subscribe("partial_cmd_vel", 1000, partial_cmd_vel_callback);
 	ros::Subscriber zdes_subscriber = n.subscribe("zdes", 1000, zdes_callback);
-	ros::Subscriber pose_subscriber = n.subscribe("pose", 1000, pose_callback);
+	ros::Subscriber pose_subscriber = n.subscribe("gazebo/model_states/pose", 1000, pose_callback);
 	//add clock subscription
 
 	//ROS Publisher setup
-	ros::Publisher cmd_vel_publisher = n.advertise<geometry_msgs::Twist>("cmd_vel", 100);
+	ros::Publisher cmd_vel_publisher = n.advertise<geometry_msgs::Twist>("/gazebo/robot_twist", 100);
 	geometry_msgs::Twist twistMsg; //define variable
 
 	ros::Rate loop_rate(1/dt); //100 hz??
