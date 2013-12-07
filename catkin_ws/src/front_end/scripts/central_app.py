@@ -11,6 +11,7 @@ import sys
 import rospy
 from std_msgs.msg import String
 from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 from geometry_msgs.msg import Pose
 
 updateFrequency = 50
@@ -164,7 +165,9 @@ class Main(QtGui.QMainWindow):
 # TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'gazebo/robot_twist')
+        publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel')
+        self.zdes_pub = rospy.Publisher("zdes", Float64)
+        self.zdes_pub.publish(self.ps3.z_value)
 
         #display cmd_vel command to screen (on main ui not console)
         self.ui.logObject.append(publisher_text)

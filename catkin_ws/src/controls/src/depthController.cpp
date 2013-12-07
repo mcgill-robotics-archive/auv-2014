@@ -30,6 +30,7 @@ publishers
 #include "geometry_msgs/Pose.h"
 #include "std_msgs/Float64.h"
 #include "depthController.h"
+#include "gazebo_msgs/ModelStates.h"
 
 // using namespace std; //what does this do?!?!
 
@@ -63,12 +64,13 @@ void zdes_callback(const std_msgs::Float64 data)
 	ROS_INFO("zdes: %f", z_des);
 }
 
-void pose_callback(const geometry_msgs::Pose data)
+void pose_callback(const gazebo_msgs::ModelStates data)
 
 {
 	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model with [0]
 	ROS_INFO("Subscriber received zest");
-	z_est = data[0].position.z;
+    z_est = data.pose[0].position.z;
+    ROS_INFO("z_est: %f", z_est);
 }
 
 
@@ -80,7 +82,7 @@ int main(int argc, char **argv)
 	float cd = 0.1; //arbitrary drag coefficient
 	float buoyancy = 0.02; // %percent buoyancy
 	float dt = 0.01; //temporary! TODO update this dynamically
-	float kp = 0.1; //proportional controller
+	float kp = 100; //proportional controller
 
 	//initializations
 	float zdot_old = 0; //initial velocity
@@ -92,7 +94,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 	ros::Subscriber partial_cmd_vel_subscriber = n.subscribe("partial_cmd_vel", 1000, partial_cmd_vel_callback);
 	ros::Subscriber zdes_subscriber = n.subscribe("zdes", 1000, zdes_callback);
-	ros::Subscriber pose_subscriber = n.subscribe("gazebo/model_states/pose", 1000, pose_callback);
+	ros::Subscriber pose_subscriber = n.subscribe("gazebo/model_states", 1000, pose_callback);
 	//add clock subscription
 
 	//ROS Publisher setup
