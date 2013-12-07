@@ -94,8 +94,8 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	ros::Publisher cmd_vel_publisher = n.advertise<goemetry_msgs::Twist>("cmd_vel", 100);
-	geometry_msgs::Twist twistMsg //define variable
+	ros::Publisher cmd_vel_publisher = n.advertise<geometry_msgs::Twist>("cmd_vel", 100);
+	geometry_msgs::Twist twistMsg; //define variable
 
 	ros::Rate loop_rate(1/dt); //100 hz??
 	
