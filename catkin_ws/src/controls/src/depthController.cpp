@@ -105,9 +105,12 @@ int main(int argc, char **argv)
 	{
 		ROS_INFO("DepthController waiting for all subscribers to have content...");
 		ready = 1;		 
-		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) ready = 0;
-		if (zdes_subscriber.getNumPublishers() == 0) ready = 0;
-		if (pose_subscriber.getNumPublishers() == 0) ready = 0;
+		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) {ready = 0;}
+		else {ROS_INFO("missing partial cmd vel");}
+		if (zdes_subscriber.getNumPublishers() == 0) {ready = 0;}
+		else {ROS_INFO("missing zdes");}
+		if (pose_subscriber.getNumPublishers() == 0) {ready = 0;}
+		else {ROS_INFO("missing pose");}
 	}
 
 	ROS_INFO("All Subscribers Live. Starting Controller!");
