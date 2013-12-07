@@ -60,6 +60,7 @@ void zdes_callback(const std_msgs::Float64 data)
 {
 	ROS_INFO("Subscriber received zdes");
 	z_des = data.data;
+	ROS_INFO("zdes: %f", z_des);
 }
 
 void pose_callback(const geometry_msgs::Pose data)
@@ -106,11 +107,11 @@ int main(int argc, char **argv)
 		ROS_INFO("DepthController waiting for all subscribers to have content...");
 		ready = 1;		 
 		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_INFO("missing partial cmd vel");}
+		else {ROS_INFO("got partial cmd vel");}
 		if (zdes_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_INFO("missing zdes");}
+		else {ROS_INFO("got zdes");}
 		if (pose_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_INFO("missing pose");}
+		else {ROS_INFO("got pose");}
 	}
 
 	ROS_INFO("All Subscribers Live. Starting Controller!");
@@ -137,7 +138,7 @@ int main(int argc, char **argv)
 		//std::stringstream ss;
 		//ss << "Speed: " << zdot_new;
 		//ROS_INFO("%s", ss.str());
-        ROS_INFO("%f", zdot_new);
+        ROS_INFO("zdot_new: %f", zdot_new);
 
 		cmd_vel_publisher.publish(twistMsg);
 		loop_rate.sleep();
