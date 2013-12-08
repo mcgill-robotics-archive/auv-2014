@@ -13,8 +13,17 @@ vector<string> mapList;
 const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
 const char* mapFN = "map.xml";
 
+//constructor for the Config object, invokes the load file and parse methods above to parse the 
+//xml data needed and values will be accessed when requested from loader through getter methods
+Config::Config()
+{
+	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
+	loadFile(mapFN, roboSub_map_doc);
+	parse(roboSub_task_doc, roboSub_map_doc);
+}
+
 //this takes as imput a file name and reference to a xml_document used to load the file
-bool loadFile(const char* filename, pugi::xml_document& roboSub_doc){
+bool Config::loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 	pugi::xml_parse_result roboSub_result;
 	bool is_valid = true;
 	std::ofstream outfile;
@@ -47,7 +56,7 @@ bool loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 }
 
 
-void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
+void Config::parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	pugi::xml_node tasks, task_child, map, map_child, map_gchild;
 	string task_list = "";
 	string map_list = "";
@@ -75,10 +84,10 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	
 	//iterates through the task nodes and adds it to the taskList vector object
 	for(task_child; (task_child); task_child = task_child.next_sibling("task")){
-		taskList.push_back(task_child.attribute("name").value());
+		//taskList.push_back(task_child.attribute("name").value());
 		taskList.push_back(task_child.attribute("id").value());
-		taskList.push_back(task_child.attribute("version").value());
-		taskList.push_back(task_child.attribute("type").value());
+		//taskList.push_back(task_child.attribute("version").value());
+		//taskList.push_back(task_child.attribute("type").value());
 		//TODO add the other attributes here also try to make this more efficient/neater including the below for loop
 	}		
 	
@@ -100,14 +109,6 @@ void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 
 }
 
-//constructor for the Config object, invokes the load file and parse methods above to parse the 
-//xml data needed and values will be accessed when requested from loader through getter methods
-Config::Config()
-{
-	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
-	loadFile(mapFN, roboSub_map_doc);
-	parse(roboSub_task_doc, roboSub_map_doc);
-}
 
 vector<string> Config::GetMap()
 {
@@ -121,7 +122,7 @@ vector<string> Config::GetTasks()
 	return taskList;
 }
 
-int main(){  //TODO Remove/COmment out later
-	Config test = Config();
-	return 0;
-}
+//int main(){  //TODO Remove/COmment out later
+//	Config test = Config();
+//	return 0;
+//}

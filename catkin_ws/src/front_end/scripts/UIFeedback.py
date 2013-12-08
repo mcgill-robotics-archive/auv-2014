@@ -210,4 +210,4 @@ class Ui_MainWindow(object):
         self.actionQuit.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+W", None, QtGui.QApplication.UnicodeUTF8))
 
 from pyqtgraph import GraphicsLayoutWidget
-import RobosubUI_rc
+import test_ressources_UI_rc
