@@ -5,6 +5,7 @@ Created on Nov 16th, 2013
 """
 import PS3Controller
 from CompleteUI_declaration import *
+from leak_warning import*
 from PyQt4 import QtCore, QtGui
 import ps3_data_publisher
 import sys
@@ -17,7 +18,6 @@ from geometry_msgs.msg import Pose
 updateFrequency = 50
 
 #TODO: alarm for internal pressure drop
-
 
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
@@ -38,7 +38,7 @@ class Main(QtGui.QMainWindow):
 
         self.length_plot = 25
 
-        #IMU PLOTS  #TODO assign to good graphicsView
+        #IMU PLOTS  #TODO assign data sets to good graphicsView
         self.ui.imugraphics.addPlot()
 
         self.acc1 = self.ui.imugraphics.addPlot(title="Accelerometer1")
@@ -230,6 +230,43 @@ class Main(QtGui.QMainWindow):
         self.mag3_data.pop(0)
         self.mag3_curve.setData(self.mag3_data)
 
+    def imu_graph_updater(self, x, y, z, w):
+        self.acc1_data.append(x)
+        self.acc1_data.pop(0)
+        self.acc1_curve.setData(self.acc1_data)
+
+        self.acc2_data.append(y)
+        self.acc2_data.pop(0)
+        self.acc2_curve.setData(self.acc2_data)
+
+        self.acc3_data.append(z)
+        self.acc3_data.pop(0)
+        self.acc3_curve.setData(self.acc3_data)
+
+        self.gy1_data.append(y)
+        self.gy1_data.pop(0)
+        self.gy1_curve.setData(self.gy1_data)
+
+        self.gy2_data.append(z)
+        self.gy2_data.pop(0)
+        self.gy2_curve.setData(self.gy2_data)
+
+        self.gy3_data.append(w)
+        self.gy3_data.pop(0)
+        self.gy3_curve.setData(self.gy3_data)
+
+        self.mag1_data.append(x)
+        self.mag1_data.pop(0)
+        self.mag1_curve.setData(self.mag1_data)
+
+        self.mag2_data.append(y)
+        self.mag2_data.pop(0)
+        self.mag2_curve.setData(self.mag2_data)
+
+        self.mag3_data.append(z)
+        self.mag3_data.pop(0)
+        self.mag3_curve.setData(self.mag3_data)
+
     ###############
     #ROS PUBLISHER#
     ###############
@@ -238,21 +275,24 @@ class Main(QtGui.QMainWindow):
         rospy.Subscriber("pose", Pose, self.pose_callback)
         rospy.Subscriber("depth", Float32, self.depth_callback)
         rospy.Subscriber("pressure", Float32, self.pressure_callback)
+        #rospy.Subscriber("internal_pressure", Float64,self.internal_pressure_check )
 
     def pose_callback(self, pose_data):
         x = pose_data.orientation.x
-        self.acc1_update(x)
-        self.gy1_update(x)
-        self.mag1_update(x)
+        #self.acc1_update(x)
+        #self.gy1_update(x)
+        #self.mag1_update(x)
         y = pose_data.orientation.y
-        self.acc2_update(y)
-        self.gy2_update(y)
-        self.mag2_update(y)
+        #self.acc2_update(y)
+        #self.gy2_update(y)
+        #self.mag2_update(y)
         z = pose_data.orientation.z
-        self.acc3_update(z)
-        self.gy3_update(z)
-        self.mag3_update(z)
+        #self.acc3_update(z)
+        #self.gy3_update(z)
+        #self.mag3_update(z)
         w = pose_data.orientation.w
+        self.imu_graph_updater(x, y, z, w)
+
 
     def depth_callback(self, depth_data):
         self.depth_graph_update(depth_data.data)
