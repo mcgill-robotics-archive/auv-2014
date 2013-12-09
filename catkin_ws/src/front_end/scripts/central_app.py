@@ -145,9 +145,9 @@ class Main(QtGui.QMainWindow):
         Start the timer
         """
         if self.ui.manualControl.isChecked():
-            self.controller_timer.start(updateFrequency)
             if self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
+                self.controller_timer.start(updateFrequency)
             else:
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
         elif self.ui.autonomousControl.isChecked():
@@ -247,17 +247,8 @@ class Main(QtGui.QMainWindow):
 
     def pose_callback(self, pose_data):
         x = pose_data.orientation.x
-        #self.acc1_update(x)
-        #self.gy1_update(x)
-        #self.mag1_update(x)
         y = pose_data.orientation.y
-        #self.acc2_update(y)
-        #self.gy2_update(y)
-        #self.mag2_update(y)
         z = pose_data.orientation.z
-        #self.acc3_update(z)
-        #self.gy3_update(z)
-        #self.mag3_update(z)
         w = pose_data.orientation.w
         self.imu_graph_updater(x, y, z, w)
 
