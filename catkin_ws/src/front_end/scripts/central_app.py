@@ -47,6 +47,9 @@ class central_ui(QtGui.QMainWindow):
         # place holder variable for internal leak status
         self.leak = False
 
+        #z destination publisher declaration
+        self.zdes_pub = rospy.Publisher("zdes", Float64)
+
         #buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
@@ -59,7 +62,7 @@ class central_ui(QtGui.QMainWindow):
 
         self.length_plot = 25
 
-        #IMU PLOTS  #TODO assign data sets to good graphicsView
+        #IMU PLOTS
 
         # create initial data sets for imu, depth and pressure graphs
         self.acc1_data = []
@@ -182,7 +185,7 @@ class central_ui(QtGui.QMainWindow):
 
         #publish to ros topic
         publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel')
-        self.zdes_pub = rospy.Publisher("zdes", Float64)
+
         self.zdes_pub.publish(self.ps3.z_value)
 
         #display cmd_vel command to screen (on main ui not console)
@@ -267,6 +270,8 @@ class central_ui(QtGui.QMainWindow):
         if (not self.leak) and internal_pressure_data.data<2:
             self.leak = True
             self.leaking_signal.emit()
+        elif self.leak:
+            self.zdes_pub.publish(0)
 
     def open_dialog(self):
         self.leak_ui.exec_()
