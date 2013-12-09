@@ -10,6 +10,7 @@ from PyQt4 import QtCore, QtGui
 import ps3_data_publisher
 import sys
 import rospy
+import pygame
 from std_msgs.msg import String
 from std_msgs.msg import Float32
 from std_msgs.msg import Float64
@@ -20,26 +21,38 @@ updateFrequency = 50
 #TODO: alarm for internal pressure drop
 
 
-class leak_warning(QtGui.QDialog):
+class leak_warning_ui(QtGui.QDialog):
     def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
-        self.ui = Ui_warning()
-        self.ui.setupUi(self)
+        super(leak_warning_ui, self).__init__(parent)
+        self.leak_ui = Ui_warning()
+        self.leak_ui.setupUi(self)
 
 
-class Main(QtGui.QMainWindow):
+
+class central_ui(QtGui.QMainWindow):
+
+    leaking_signal = QtCore.pyqtSignal()
+
     def __init__(self, parent=None):
+
         #build parent user interface
-        QtGui.QWidget.__init__(self, parent)
+        super(central_ui, self).__init__(parent)
         self.ui = Ui_RoboticsMain()  # create the ui object
         self.ui.setupUi(self)
         self.controller_timer = QtCore.QTimer()
         self.ros_timer = QtCore.QTimer.singleShot(50, self.ros_subscriber)  # call the start of the ros subscriber
         self.ps3 = PS3Controller.PS3Controller()  # create the ps3 controller object
+        self.leak_ui = leak_warning_ui(self)  # leak ui
+
+        # place holder variable for internal leak status
+        self.leak = False
 
         #buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
-        QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_timer)
+        QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
+
+        #leak connect
+        self.leaking_signal.connect(self.open_dialog)
 
         #timer connect
         QtCore.QObject.connect(self.controller_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
@@ -47,100 +60,91 @@ class Main(QtGui.QMainWindow):
         self.length_plot = 25
 
         #IMU PLOTS  #TODO assign data sets to good graphicsView
+
+        # create initial data sets for imu, depth and pressure graphs
+        self.acc1_data = []
+        self.acc2_data = []
+        self.acc3_data = []
+        self.gy1_data = []
+        self.gy2_data = []
+        self.gy3_data = []
+        self.mag1_data = []
+        self.mag2_data = []
+        self.mag3_data = []
+        self.pressure_data = []
+        self.depth_data = []
+
+        for i in range(0, self.length_plot, 1):
+            self.acc1_data.append(0)
+            self.acc2_data.append(0)
+            self.acc3_data.append(0)
+            self.gy1_data.append(0)
+            self.gy2_data.append(0)
+            self.gy3_data.append(0)
+            self.mag1_data.append(0)
+            self.mag2_data.append(0)
+            self.mag3_data.append(0)
+            self.pressure_data.append(0)
+            self.depth_data.append(0)
+
+        #create and layout imu graphics
         self.ui.imugraphics.addPlot()
 
         self.acc1 = self.ui.imugraphics.addPlot(title="Accelerometer1")
         self.acc1_curve = self.acc1.plot(pen="y")
         self.acc1.setXRange(0, self.length_plot)
-        self.acc1_data = []
-        for i in range(0, self.length_plot, 1):
-            self.acc1_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
         self.acc2 = self.ui.imugraphics.addPlot(title="Accelerometer2")
         self.acc2_curve = self.acc2.plot(pen="y")
         self.acc2.setXRange(0, self.length_plot)
-        self.acc2_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.acc2_data.append(0)
 
         self.acc3 = self.ui.imugraphics.addPlot(title="Accelerometer3")
         self.acc3_curve = self.acc3.plot(pen="y")
         self.acc3.setXRange(0, self.length_plot)
-        self.acc3_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.acc3_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
         self.gy1 = self.ui.imugraphics.addPlot(title="Gyro1")
         self.gy1_curve = self.gy1.plot(pen="r")
         self.gy1.setXRange(0, self.length_plot)
-        self.gy1_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.gy1_data.append(0)
 
         self.gy2 = self.ui.imugraphics.addPlot(title="Gyro2")
         self.gy2_curve = self.gy2.plot(pen="r")
         self.gy2.setXRange(0, self.length_plot)
-        self.gy2_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.gy2_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
         self.gy3 = self.ui.imugraphics.addPlot(title="Gyro3")
         self.gy3_curve = self.gy3.plot(pen="r")
         self.gy3.setXRange(0, self.length_plot)
-        self.gy3_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.gy3_data.append(0)
 
         self.mag1 = self.ui.imugraphics.addPlot(title="Magnetometer1")
         self.mag1_curve = self.mag1.plot(pen="b")
         self.mag1.setXRange(0, self.length_plot)
-        self.mag1_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.mag1_data.append(0)
 
         self.ui.imugraphics.nextRow()
 
         self.mag2 = self.ui.imugraphics.addPlot(title="Magnetometer2")
         self.mag2_curve = self.mag2.plot(pen="b")
         self.mag2.setXRange(0, self.length_plot)
-        self.mag2_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.mag2_data.append(0)
 
         self.mag3 = self.ui.imugraphics.addPlot(title="Magnetometer3")
         self.mag3_curve = self.mag3.plot(pen="b")
         self.mag3.setXRange(0, self.length_plot)
-        self.mag3_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.mag3_data.append(0)
 
         #PRESSURE GRAPH
         self.pressure_graph = self.ui.pressure.addPlot(title="Pressure")
         self.pressure_curve = self.pressure_graph.plot(pen="y")
         self.pressure_graph.setXRange(0, self.length_plot)
-        self.pressure_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.pressure_data.append(0)
 
         #DEPTH GRAPH
         self.depth_graph = self.ui.depth.addPlot(title="Depth")
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, self.length_plot)
-        self.depth_data = [0]
-        for i in range(0, self.length_plot, 1):
-            self.depth_data.append(0)
 
-
-        # place holder variable for internal leak
-        self.leak = False
-
-    def set_timer(self):
+    def set_ps3_timer(self):
         """
         Start the timer
         """
@@ -259,14 +263,16 @@ class Main(QtGui.QMainWindow):
         self.pressure_graph_update(pressure_data.data)
 
     def internal_pressure_check(self, internal_pressure_data):
-        if not self.leak and internal_pressure_data.data<2:
+        # TODO: create the pressure drop verification algorithm
+        if (not self.leak) and internal_pressure_data.data<2:
             self.leak = True
-            self.warning = leak_warning
-            self.warning.exec_()
+            self.leaking_signal.emit()
 
+    def open_dialog(self):
+        self.leak_ui.exec_()
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    AppWindow = Main()
+    AppWindow = central_ui()
     AppWindow.show()
     sys.exit(app.exec_())
