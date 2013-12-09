@@ -19,6 +19,14 @@ updateFrequency = 50
 
 #TODO: alarm for internal pressure drop
 
+
+class leak_warning(QtGui.QDialog):
+    def __init__(self, parent=None):
+        QtGui.QDialog.__init__(self, parent)
+        self.ui = Ui_warning()
+        self.ui.setupUi(self)
+
+
 class Main(QtGui.QMainWindow):
     def __init__(self, parent=None):
         #build parent user interface
@@ -128,6 +136,10 @@ class Main(QtGui.QMainWindow):
         for i in range(0, self.length_plot, 1):
             self.depth_data.append(0)
 
+
+        # place holder variable for internal leak
+        self.leak = False
+
     def set_timer(self):
         """
         Start the timer
@@ -175,20 +187,6 @@ class Main(QtGui.QMainWindow):
     ###############
     #GRAPH UPDATER#
     ###############
-    def acc1_update(self, data_input):
-        self.acc1_data.append(data_input)
-        self.acc1_data.pop(0)
-        self.acc1_curve.setData(self.acc1_data)
-
-    def acc2_update(self, data_input):
-        self.acc2_data.append(data_input)
-        self.acc2_data.pop(0)
-        self.acc2_curve.setData(self.acc2_data)
-
-    def acc3_update(self, data_input):
-        self.acc3_data.append(data_input)
-        self.acc3_data.pop(0)
-        self.acc3_curve.setData(self.acc3_data)
 
     def pressure_graph_update(self, data_input):
         self.pressure_data.append(data_input)
@@ -199,36 +197,6 @@ class Main(QtGui.QMainWindow):
         self.depth_data.append(data_input)
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
-
-    def gy1_update(self, data_input):
-        self.gy1_data.append(data_input)
-        self.gy1_data.pop(0)
-        self.gy1_curve.setData(self.gy1_data)
-
-    def gy2_update(self, data_input):
-        self.gy2_data.append(data_input)
-        self.gy2_data.pop(0)
-        self.gy2_curve.setData(self.gy2_data)
-
-    def gy3_update(self, data_input):
-        self.gy3_data.append(data_input)
-        self.gy3_data.pop(0)
-        self.gy3_curve.setData(self.gy3_data)
-
-    def mag1_update(self, data_input):
-        self.mag1_data.append(data_input)
-        self.mag1_data.pop(0)
-        self.mag1_curve.setData(self.mag1_data)
-
-    def mag2_update(self, data_input):
-        self.mag2_data.append(data_input)
-        self.mag2_data.pop(0)
-        self.mag2_curve.setData(self.mag2_data)
-
-    def mag3_update(self, data_input):
-        self.mag3_data.append(data_input)
-        self.mag3_data.pop(0)
-        self.mag3_curve.setData(self.mag3_data)
 
     def imu_graph_updater(self, x, y, z, w):
         self.acc1_data.append(x)
@@ -275,7 +243,7 @@ class Main(QtGui.QMainWindow):
         rospy.Subscriber("pose", Pose, self.pose_callback)
         rospy.Subscriber("depth", Float32, self.depth_callback)
         rospy.Subscriber("pressure", Float32, self.pressure_callback)
-        #rospy.Subscriber("internal_pressure", Float64,self.internal_pressure_check )
+        rospy.Subscriber("internal_pressure", Float64, self.internal_pressure_check)
 
     def pose_callback(self, pose_data):
         x = pose_data.orientation.x
@@ -293,12 +261,18 @@ class Main(QtGui.QMainWindow):
         w = pose_data.orientation.w
         self.imu_graph_updater(x, y, z, w)
 
-
     def depth_callback(self, depth_data):
         self.depth_graph_update(depth_data.data)
 
     def pressure_callback(self, pressure_data):
         self.pressure_graph_update(pressure_data.data)
+
+    def internal_pressure_check(self, internal_pressure_data):
+        if not self.leak and internal_pressure_data.data<2:
+            self.leak = True
+            self.warning = leak_warning
+            self.warning.exec_()
+
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
