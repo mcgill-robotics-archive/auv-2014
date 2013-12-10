@@ -107,9 +107,10 @@ int main(int argc, char **argv)
 	ros::Rate loop_rate(1/dt); //100 hz??
 	
 	bool ready = 0;
+	ROS_INFO("DepthController waiting for all subscribers to have content...");
 	while (ready == 0)
 	{
-		ROS_INFO(2,"DepthController waiting for all subscribers to have content...");
+	       
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		ready = 1;		 
 		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) {ready = 0;}
