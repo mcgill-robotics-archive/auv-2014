@@ -15,7 +15,7 @@ def leak_publisher():
     while not rospy.is_shutdown():
         if not leak:
             pressure = 5
-            if random.random()>0.95:
+            if random.random()>0.97:
                 leak = True
         else:
             pressure = 1

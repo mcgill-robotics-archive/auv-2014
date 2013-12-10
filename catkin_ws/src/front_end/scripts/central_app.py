@@ -18,14 +18,16 @@ from geometry_msgs.msg import Pose
 
 updateFrequency = 50
 
-#TODO: alarm for internal pressure drop
-
-
 class leak_warning_ui(QtGui.QDialog):
     def __init__(self, parent=None):
         super(leak_warning_ui, self).__init__(parent)
         self.leak_ui = Ui_warning()
         self.leak_ui.setupUi(self)
+
+        QtCore.QObject.connect(self.leak_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
+
+    def stop_alarm(self):
+        pygame.mixer.music.stop()
 
 
 
@@ -46,6 +48,11 @@ class central_ui(QtGui.QMainWindow):
 
         # place holder variable for internal leak status
         self.leak = False
+        pygame.init()
+        pygame.mixer.init()
+
+        #TODO: change path to a machine specific path, I can't get this thing to work with a relative path
+        self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
         #z destination publisher declaration
         self.zdes_pub = rospy.Publisher("zdes", Float64)
@@ -270,8 +277,18 @@ class central_ui(QtGui.QMainWindow):
         if (not self.leak) and internal_pressure_data.data<2:
             self.leak = True
             self.leaking_signal.emit()
+            self.play_alarm()
+
         elif self.leak:
             self.zdes_pub.publish(0)
+
+    def play_alarm(self):
+        pygame.mixer.music.load(self.alarm_file)
+        pygame.mixer.music.play(-1, 0)
+
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
+
 
     def open_dialog(self):
         self.leak_ui.exec_()
