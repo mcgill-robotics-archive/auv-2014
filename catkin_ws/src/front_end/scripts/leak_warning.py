@@ -44,4 +44,4 @@ class Ui_warning(object):
         warning.setWindowTitle(QtGui.QApplication.translate("warning", "Leak Warning", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("warning", "<html><head/><body><p>Internal pressure drop detected</p><p>Initiating re-surfacing protocols</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
 
-import FinalRobotics_rc
+import Robotics_graphical_ressources_rc
