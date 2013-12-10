@@ -83,11 +83,14 @@ int main(int argc, char **argv)
 	float buoyancy = 0.02; // %percent buoyancy
 	float dt = 0.01; //temporary! TODO update this dynamically
 	float kp = 1000; //proportional controller
+        float ki = 100;
 
 	//initializations
 	float zdot_old = 0; //initial velocity
 	float zdot_new = 0;
 	float Tz = 0;
+        float ep = 0; //error
+        float ei = 0; //integral error
 
 	// ROS subscriber setup
 	ros::init(argc,argv,"depthController");
@@ -122,7 +125,9 @@ int main(int argc, char **argv)
 		ros::spinOnce();	//is it a problem to have this at the top not the bottom?
 		
 		// Position Controller
-		Tz = kp*(z_des-z_est);
+                ep = z_des-z_est;
+                ei += ep*dt; //integral error
+		Tz = kp*ep + ki*ei;
 
 		//Dynamics simulator
 		zdot_new = dt*(Tz/m - buoyancy*g - cd*zdot_old/m) + zdot_old;	//TODO update dt dynamically with clock
