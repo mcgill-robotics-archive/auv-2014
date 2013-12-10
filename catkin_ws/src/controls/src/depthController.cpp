@@ -48,7 +48,7 @@ float input_gammadot = 0;
 void partial_cmd_vel_callback(const geometry_msgs::Twist twistMsg)
 {
 	//from frontend, missing z velocity for now
-	ROS_INFO("Subscriber received twist");
+	ROS_DEBUG("Subscriber received twist");
 	input_xdot = twistMsg.linear.x;
 	input_ydot = twistMsg.linear.y;
 	input_zdot = twistMsg.linear.z;
@@ -59,18 +59,18 @@ void partial_cmd_vel_callback(const geometry_msgs::Twist twistMsg)
 
 void zdes_callback(const std_msgs::Float64 data)
 {
-	ROS_INFO("Subscriber received zdes");
+	ROS_DEBUG("Subscriber received zdes");
 	z_des = data.data;
-	ROS_INFO("zdes: %f", z_des);
+	ROS_DEBUG("zdes: %f", z_des);
 }
 
 void pose_callback(const gazebo_msgs::ModelStates data)
 
 {
 	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model with [0]
-	ROS_INFO("Subscriber received zest");
+	ROS_DEBUG("Subscriber received zest");
     z_est = data.pose[0].position.z;
-    ROS_INFO("z_est: %f", z_est);
+    ROS_DEBUG("z_est: %f", z_est);
 }
 
 
@@ -109,14 +109,15 @@ int main(int argc, char **argv)
 	bool ready = 0;
 	while (ready == 0)
 	{
-		ROS_INFO("DepthController waiting for all subscribers to have content...");
+		ROS_INFO(2,"DepthController waiting for all subscribers to have content...");
+		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		ready = 1;		 
 		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_INFO("got partial cmd vel");}
+		else {ROS_DEBUG_THROTTLE(2,"got partial cmd vel");}
 		if (zdes_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_INFO("got zdes");}
+		else {ROS_DEBUG_THROTTLE(2,"got zdes");}
 		if (pose_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_INFO("got pose");}
+		else {ROS_DEBUG_THROTTLE(2,"got pose");}
 	}
 
 	ROS_INFO("All Subscribers Live. Starting Controller!");
@@ -144,8 +145,8 @@ int main(int argc, char **argv)
 		// publish here
 		//std::stringstream ss;
 		//ss << "Speed: " << zdot_new;
-		//ROS_INFO("%s", ss.str());
-        ROS_INFO("zdot_new: %f", zdot_new);
+		//ROS_DEBUG("%s", ss.str());
+        ROS_DEBUG("zdot_new: %f", zdot_new);
 
 		cmd_vel_publisher.publish(twistMsg);
 		loop_rate.sleep();
