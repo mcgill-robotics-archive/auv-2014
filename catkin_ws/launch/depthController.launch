@@ -7,8 +7,8 @@
 			<arg name="world_name" value="$(find Underwater-Simulator)/worlds/Underwater-Simulator.world"/>
 		</include>
 	<!-- front-end -->
-		<node name="front_end" pkg="front_end" type="mainapp.py" respawn="false" output="screen"/>
+	      <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
 
 	<!-- depthController -->
-		<node name="depthController" pkg="controls" type="depthController.cpp"  respawn="false" output="screen"/>
+	        <node name="depthController" pkg="controls" type="depthController"  respawn="false" output="screen"/>          
 </launch>
