@@ -7,26 +7,26 @@ from std_msgs.msg import Float64
 import random
 
 
-def leak_publisher():
-    pub = rospy.Publisher("internal_pressure", Float64)
-    rospy.init_node('internal_pressure')
+def voltage_publisher():
+    pub = rospy.Publisher("battery_voltage", Float64)
+    rospy.init_node('battery_voltage')
     leak = False
 
     while not rospy.is_shutdown():
         if not leak:
-            pressure = 5
+            voltage = 5
             if random.random()>0.97:
                 leak = True
         else:
-            pressure = 1
+            voltage = 1
 
-        rospy.loginfo(pressure)
+        rospy.loginfo(voltage)
 
-        pub.publish(pressure)
+        pub.publish(voltage)
         rospy.sleep(0.1)
-    return str(pressure)
+    return str(voltage)
 if __name__ == '__main__':
     try:
-        leak_publisher()
+        voltage_publisher()
     except rospy.ROSInterruptException:
         pass

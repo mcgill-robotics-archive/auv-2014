@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'internal_leak_warning.ui'
+# Form implementation generated from reading ui file 'low_battery_warning.ui'
 #
-# Created: Sun Dec  8 17:13:58 2013
+# Created: Tue Dec 10 19:07:08 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,8 +32,12 @@ class Ui_warning(object):
         self.buttonBox.setCenterButtons(False)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
         self.label = QtGui.QLabel(warning)
-        self.label.setGeometry(QtCore.QRect(30, 40, 221, 91))
+        self.label.setGeometry(QtCore.QRect(30, 40, 301, 91))
         self.label.setObjectName(_fromUtf8("label"))
+        self.progressBar = QtGui.QProgressBar(warning)
+        self.progressBar.setGeometry(QtCore.QRect(30, 130, 301, 91))
+        self.progressBar.setProperty("value", 24)
+        self.progressBar.setObjectName(_fromUtf8("progressBar"))
 
         self.retranslateUi(warning)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), warning.accept)
@@ -41,7 +45,7 @@ class Ui_warning(object):
         QtCore.QMetaObject.connectSlotsByName(warning)
 
     def retranslateUi(self, warning):
-        warning.setWindowTitle(QtGui.QApplication.translate("warning", "Leak Warning", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("warning", "<html><head/><body><p>Internal pressure drop detected</p><p>Initiating re-surfacing protocols</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        warning.setWindowTitle(QtGui.QApplication.translate("warning", "Low Battery Warning", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("warning", "<html><head/><body><p>Battery voltage below acceptable threshold</p><p>Initiating re-surfacing protocols</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
 
 import Robotics_graphical_ressources_rc
