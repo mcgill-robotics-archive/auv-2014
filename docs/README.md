@@ -1,10 +1,10 @@
 <h1>How to set up ROS</h1>
 Last Edited Dec 11, 2013, Bei Liu
 
-<h3>Install ROS following Installation Guide and skip part 1.6:</h3>
+<h4>Install ROS following Installation Guide and skip part 1.6:</h4>
 http://wiki.ros.org/hydro/Installation/Ubuntu
 	
-<h3>Pull the McGill_RoboSub_2014 from github if you have not done so:</h3>
+<h4>Pull the McGill_RoboSub_2014 from github if you have not done so:</h4>
 In terminal run the following command:
 <pre><code>sudo apt-get install git
 cd ~
@@ -16,7 +16,7 @@ git pull origin master
 </code></pre>
 		
 	
-<h3>Run the Symlink.sh in the dotfiles folder.</h3>
+<h4>Run the Symlink.sh in the dotfiles folder.</h4>
 <p>This will copy configuration file for tmux and vim; copy roboticrc to your home directory and source it in .bashrc.</p><p>(You don't to read the rest if you don't want to).</p><p>The roboticrc will have several functions:</p> 
 <ol>
 <li>add some alias that are somewhat useful (ask Anass), you can add your own alias to this list; </li>
