@@ -1,0 +1,17 @@
+How to set up ROS
+Last Edited Dec 10, 2013, Nick Speal
+
+
+Install ROS following Installation Guide:
+	http://wiki.ros.org/hydro/Installation/Ubuntu
+
+Follow the required steps to set up Environment Variables:
+	http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment
+
+Edit ~/.bashrc by adding following lines:
+	export ROS_IP=127.0.0.1
+	export ROS_HOSTNAME=your_machine_name
+	
+To add ROS workspaces, open ~/.bashrc and add path names under "ROS_PACKAGE_PATH"
+If there is no "ROS_PACKAGE_PATH", add following line first:
+	export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share
