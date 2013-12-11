@@ -29,10 +29,10 @@
    <enum>Qt::PreventContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>Leak Warning</string>
+   <string>Low Battery Warning</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="FinalRobotics.qrc">
+   <iconset resource="Robotics_graphical_ressources.qrc">
     <normaloff>:/Images/Only-Logo.png</normaloff>:/Images/Only-Logo.png</iconset>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
@@ -59,17 +59,30 @@
     <rect>
      <x>30</x>
      <y>40</y>
-     <width>221</width>
+     <width>301</width>
      <height>91</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Internal pressure drop detected&lt;/p&gt;&lt;p&gt;Initiating re-surfacing protocols&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Battery voltage below acceptable threshold&lt;/p&gt;&lt;p&gt;Initiating re-surfacing protocols&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>130</y>
+     <width>301</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>24</number>
    </property>
   </widget>
  </widget>
  <resources>
-  <include location="FinalRobotics.qrc"/>
+  <include location="Robotics_graphical_ressources.qrc"/>
  </resources>
  <connections>
   <connection>

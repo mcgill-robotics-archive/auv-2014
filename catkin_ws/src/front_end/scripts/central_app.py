@@ -5,7 +5,7 @@ Created on Nov 16th, 2013
 """
 import PS3Controller
 from CompleteUI_declaration import *
-from leak_warning import*
+from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 import ps3_data_publisher
 import sys
@@ -17,15 +17,19 @@ from std_msgs.msg import Float64
 from geometry_msgs.msg import Pose
 
 updateFrequency = 50
+low_battery_threshold = 2.0
+max_voltage = 24.0
 
-class leak_warning_ui(QtGui.QDialog):
+class battery_warning_ui(QtGui.QDialog):
     def __init__(self, parent=None):
-        super(leak_warning_ui, self).__init__(parent)
-        self.leak_ui = Ui_warning()
-        self.leak_ui.setupUi(self)
+        super(battery_warning_ui, self).__init__(parent)
+        self.battery_warning_ui = Ui_warning()
+        self.battery_warning_ui.setupUi(self)
 
-        QtCore.QObject.connect(self.leak_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
+        QtCore.QObject.connect(self.battery_warning_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
 
+        self.battery_warning_ui.progressBar.setValue(low_battery_threshold/max_voltage*100)
+        print low_battery_threshold/max_voltage
     def stop_alarm(self):
         pygame.mixer.music.stop()
 
@@ -33,7 +37,7 @@ class leak_warning_ui(QtGui.QDialog):
 
 class central_ui(QtGui.QMainWindow):
 
-    leaking_signal = QtCore.pyqtSignal()
+    empty_battery_signal = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
 
@@ -44,10 +48,10 @@ class central_ui(QtGui.QMainWindow):
         self.controller_timer = QtCore.QTimer()
         self.ros_timer = QtCore.QTimer.singleShot(50, self.ros_subscriber)  # call the start of the ros subscriber
         self.ps3 = PS3Controller.PS3Controller()  # create the ps3 controller object
-        self.leak_ui = leak_warning_ui(self)  # leak ui
+        self.warning_ui = battery_warning_ui(self)  # battery depleted ui
 
-        # place holder variable for internal leak status
-        self.leak = False
+        # place holder variable for internal battery status
+        self.battery_empty = False
         pygame.init()
         pygame.mixer.init()
 
@@ -62,7 +66,7 @@ class central_ui(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
 
         #leak connect
-        self.leaking_signal.connect(self.open_dialog)
+        self.empty_battery_signal.connect(self.open_dialog)
 
         #timer connect
         QtCore.QObject.connect(self.controller_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
@@ -249,15 +253,15 @@ class central_ui(QtGui.QMainWindow):
         self.mag3_data.pop(0)
         self.mag3_curve.setData(self.mag3_data)
 
-    ###############
-    #ROS PUBLISHER#
-    ###############
+    ################
+    #ROS SUBSCRIBER#
+    ################
     def ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
         rospy.Subscriber("pose", Pose, self.pose_callback)
         rospy.Subscriber("depth", Float32, self.depth_callback)
         rospy.Subscriber("pressure", Float32, self.pressure_callback)
-        rospy.Subscriber("internal_pressure", Float64, self.internal_pressure_check)
+        rospy.Subscriber("battery_voltage", Float64, self.battery_voltage_check)
 
     def pose_callback(self, pose_data):
         x = pose_data.orientation.x
@@ -272,14 +276,14 @@ class central_ui(QtGui.QMainWindow):
     def pressure_callback(self, pressure_data):
         self.pressure_graph_update(pressure_data.data)
 
-    def internal_pressure_check(self, internal_pressure_data):
-        # TODO: create the pressure drop verification algorithm
-        if (not self.leak) and internal_pressure_data.data<2:
-            self.leak = True
-            self.leaking_signal.emit()
+    def battery_voltage_check(self, voltage_data):
+        #TODO: set threshold for depleted battery
+        if (not self.battery_empty) and voltage_data.data<low_battery_threshold:
+            self.battery_empty = True
+            self.empty_battery_signal.emit()
             self.play_alarm()
 
-        elif self.leak:
+        elif self.battery_empty:
             self.zdes_pub.publish(0)
 
     def play_alarm(self):
@@ -291,7 +295,7 @@ class central_ui(QtGui.QMainWindow):
 
 
     def open_dialog(self):
-        self.leak_ui.exec_()
+        self.warning_ui.exec_()
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
