@@ -1,0 +1,8 @@
+How to setup Arduino
+
+The Arduino is connect to the ROS using rosserial package.
+After setting up your ROS, you can install the rosserial package by running the command "sudo apt-get install ros-hydro-rosserial ros-hydro-rosserial-arduino". 
+
+If you haven't install Arduino IDE, "sudo apt-get install arduino arduino-core".
+
+After installing the IDE, you should set the sketchbook library by opening File -> Preferences, on the new windows, click Browse and select the Arduino folder under McGill_Robotic_2014.
