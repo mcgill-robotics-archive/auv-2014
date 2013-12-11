@@ -17,8 +17,7 @@ git pull origin master
 		
 	
 <h3>Run the Symlink.sh in the dotfiles folder.</h3>
-this will copy roboticrc to your home directory and source it in .bashrc.  (You don't to read the rest if you don't want to).
-The roboticrc will have several functions: 
+<p>this will copy roboticrc to your home directory and source it in .bashrc.</p><p>(You don't to read the rest if you don't want to).</p><p>The roboticrc will have several functions:</p> 
 <ol>
 <li>It will add some alias that are somewhat useful (ask Anass), you can add your own alias to this list; </li>
 <li>sources /opt/ros/hydro/setup.bash so you can use ros command directly on any new terminal windows; </li>
