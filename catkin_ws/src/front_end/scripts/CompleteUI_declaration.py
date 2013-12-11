@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CompleteFinal.ui'
 #
-# Created: Mon Dec  9 12:10:54 2013
+# Created: Tue Dec 10 23:01:21 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -266,6 +266,22 @@ class Ui_RoboticsMain(object):
         self.DVLFrame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.DVLFrame.setFrameShadow(QtGui.QFrame.Raised)
         self.DVLFrame.setObjectName(_fromUtf8("DVLFrame"))
+        self.label_13 = QtGui.QLabel(self.DVLFrame)
+        self.label_13.setGeometry(QtCore.QRect(10, 10, 131, 21))
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Sans Serif"))
+        font.setPointSize(16)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setUnderline(True)
+        font.setWeight(50)
+        self.label_13.setFont(font)
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.z_mode = QtGui.QComboBox(self.DVLFrame)
+        self.z_mode.setGeometry(QtCore.QRect(10, 40, 151, 27))
+        self.z_mode.setObjectName(_fromUtf8("z_mode"))
+        self.z_mode.addItem(_fromUtf8(""))
+        self.z_mode.addItem(_fromUtf8(""))
         self.IMUdirectional = QtGui.QFrame(self.centralwidget)
         self.IMUdirectional.setGeometry(QtCore.QRect(420, 380, 550, 151))
         self.IMUdirectional.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -358,6 +374,9 @@ class Ui_RoboticsMain(object):
         self.label_17.setText(QtGui.QApplication.translate("RoboticsMain", "X", None, QtGui.QApplication.UnicodeUTF8))
         self.label_19.setText(QtGui.QApplication.translate("RoboticsMain", "Z", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Raw Readings", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_13.setText(QtGui.QApplication.translate("RoboticsMain", "Z axis mode", None, QtGui.QApplication.UnicodeUTF8))
+        self.z_mode.setItemText(0, QtGui.QApplication.translate("RoboticsMain", "Control position", None, QtGui.QApplication.UnicodeUTF8))
+        self.z_mode.setItemText(1, QtGui.QApplication.translate("RoboticsMain", "Control speed", None, QtGui.QApplication.UnicodeUTF8))
         self.label_12.setText(QtGui.QApplication.translate("RoboticsMain", "IMU", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("RoboticsMain", "Depth", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("RoboticsMain", "Pressure", None, QtGui.QApplication.UnicodeUTF8))

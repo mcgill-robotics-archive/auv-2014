@@ -29,7 +29,7 @@ class battery_warning_ui(QtGui.QDialog):
         QtCore.QObject.connect(self.battery_warning_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
 
         self.battery_warning_ui.progressBar.setValue(low_battery_threshold/max_voltage*100)
-        print low_battery_threshold/max_voltage
+
     def stop_alarm(self):
         pygame.mixer.music.stop()
 
@@ -64,9 +64,10 @@ class central_ui(QtGui.QMainWindow):
         #buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
+        QtCore.QObject.connect(self.ui.z_mode, QtCore.SIGNAL("currentIndexChanged(int)"), self.change_z_mode)
 
-        #leak connect
-        self.empty_battery_signal.connect(self.open_dialog)
+        #low battery connect
+        self.empty_battery_signal.connect(self.open_low_battery_dialog)
 
         #timer connect
         QtCore.QObject.connect(self.controller_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
@@ -158,11 +159,14 @@ class central_ui(QtGui.QMainWindow):
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, self.length_plot)
 
+    def change_z_mode(self):
+        self.ps3.z_mode = self.ui.z_mode.currentIndex()
+
     def set_ps3_timer(self):
         """
         Start the timer
         """
-        if self.ui.manualControl.isChecked():
+        if self.ui.manualControl.isChecked() and self.ps3.controller_isPresent:
             if self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.controller_timer.start(updateFrequency)
@@ -187,7 +191,7 @@ class central_ui(QtGui.QMainWindow):
 
         self.ui.linearX.setText(str(self.ps3.horizontal_front_speed))
         self.ui.linearY.setText(str(self.ps3.horizontal_side_speed))
-        self.ui.linearZ.setText(str(self.ps3.z_value))
+        self.ui.linearZ.setText(str(self.ps3.z_speed))
         self.ui.angularX.setText(str(0))
         self.ui.angularY.setText(str(self.ps3.pitch_speed))
         self.ui.angularZ.setText((str(self.ps3.yaw_speed)))
@@ -195,9 +199,13 @@ class central_ui(QtGui.QMainWindow):
 # TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_value, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel')
+        if self.ps3.z_mode == 1: # z speed control
+            publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_speed, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel')
 
-        self.zdes_pub.publish(self.ps3.z_value)
+        elif self.ps3.z_mode == 0: # z position control
+            publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, None, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, "partial_cmd_vel")
+
+            self.zdes_pub.publish(self.ps3.z_position)
 
         #display cmd_vel command to screen (on main ui not console)
         self.ui.logObject.append(publisher_text)
@@ -294,7 +302,7 @@ class central_ui(QtGui.QMainWindow):
             pygame.time.Clock().tick(10)
 
 
-    def open_dialog(self):
+    def open_low_battery_dialog(self):
         self.warning_ui.exec_()
 
 if __name__ == "__main__":

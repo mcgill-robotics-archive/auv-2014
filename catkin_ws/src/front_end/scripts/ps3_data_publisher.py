@@ -13,6 +13,7 @@ def ps3_publisher(linear_x, linear_y, linear_z, pitch, yaw, roll, topic):
     # define the twist message from the joystick input
     twist.linear.x = linear_x
     twist.linear.y = linear_y
+    twist.linear.z = linear_z
 
     #TODO --> assign angular parameters to the corresponding axis
     twist.angular.x = roll

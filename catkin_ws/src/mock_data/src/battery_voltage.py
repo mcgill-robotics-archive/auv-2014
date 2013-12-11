@@ -23,7 +23,7 @@ def voltage_publisher():
         rospy.loginfo(voltage)
 
         pub.publish(voltage)
-        rospy.sleep(0.1)
+        rospy.sleep(1)
     return str(voltage)
 if __name__ == '__main__':
     try:
