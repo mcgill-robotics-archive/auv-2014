@@ -61,7 +61,6 @@ class central_ui(QtGui.QMainWindow):
         #buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
-        QtCore.QObject.connect(self.ui.z_mode, QtCore.SIGNAL("currentIndexChanged(int)"), self.change_z_mode)
 
         #low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -156,9 +155,6 @@ class central_ui(QtGui.QMainWindow):
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, self.length_plot)
 
-    def change_z_mode(self):
-        self.ps3.z_mode = self.ui.z_mode.currentIndex()
-
     def set_ps3_timer(self):
         """
         Start the timer
@@ -196,7 +192,7 @@ class central_ui(QtGui.QMainWindow):
 # TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_position, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel')
+        ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_position, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel', 'zdes')
 
         self.zdes_pub.publish(self.ps3.z_position)
 

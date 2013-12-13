@@ -115,8 +115,8 @@ class PS3Controller(object):
                     #elif self.controller.get_button(1):
                     #elif self.controller.get_button(0):
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                    self.horizontal_side_speed = -0.2*self.controller.get_axis(1)  # left left/right axis
-                    self.horizontal_front_speed = -0.2*self.controller.get_axis(0)  # left front/back axis
+                    self.horizontal_side_speed = -0.2*self.controller.get_axis(0)  # left left/right axis
+                    self.horizontal_front_speed = -0.2*self.controller.get_axis(1)  # left front/back axis
                     self.yaw_speed = -0.2*self.controller.get_axis(2)  # right left/right axis
                     self.pitch_speed = -0.2*self.controller.get_axis(3)  # right front/back axis
 
