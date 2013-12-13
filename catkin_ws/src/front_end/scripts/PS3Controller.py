@@ -54,12 +54,6 @@ class PS3Controller(object):
         self.o = 0
         self.x = 0
 
-        self.z_speed = 0
-        self.z_max_speed = 0.2
-        self.z_speed_step = 0.01
-
-        self.z_mode = 0
-
         self.z_position = 0.0 # position in meters
         self.z_position_step = 0.5
 
@@ -72,8 +66,6 @@ class PS3Controller(object):
         self.start = 0
         self.select = 0
 
-
-
     def initialize_controller(self):
         #This part will set all the Global variables used in PS3Controller.
         #It is only called if the constructor finds only 1 joystick
@@ -81,21 +73,6 @@ class PS3Controller(object):
         self.controller.init()
         self.controller_name =  self.controller.get_name()
         print "The initialized Joystick is: " + self.controller_name
-
-
-    def increase_z_speed(self): # goes more down
-        if self.z_max_speed >= self.z_speed:
-            self.z_speed += self.z_speed_step
-
-    def decrease_z_speed(self): # goes more up
-        if self.z_speed > -self.z_max_speed:
-            self.z_speed -= self.z_speed_step
-
-    def reset_z_speed(self):
-        self.z_speed = 0
-
-    def max_z_speed_up(self):
-        self.z_speed = -self.z_max_speed
 
     def z_lower(self):
         self.z_position += self.z_position_step
@@ -125,34 +102,21 @@ class PS3Controller(object):
                     #elif self.controller.get_button(9):
                     #elif self.controller.get_button(8):
 
-                    if self.z_mode==0:
-                        if self.controller.get_button(7):  # left arrow
-                            self.z_surface()
-                        elif self.controller.get_button(6):  # down arrow
-                            self.z_lower()
-                        #elif self.controller.get_button(5):  # right arrow
-                        elif self.controller.get_button(4):  # up arrow
-                            self.z_rise()
-
-                    if self.z_mode==1:
-                        if self.controller.get_button(7):  # left arrow
-                            self.reset_z_speed()
-                        elif self.controller.get_button(6):  # down arrow
-                            self.decrease_z_speed()
-                        elif self.controller.get_button(5):  # right arrow
-                            self.max_z_speed_up()
-                        elif self.controller.get_button(4):  # up arrow
-                            self.increase_z_speed()
-
+                    if self.controller.get_button(7):  # left arrow
+                        self.z_surface()
+                    elif self.controller.get_button(6):  # down arrow
+                        self.z_lower()
+                    #elif self.controller.get_button(5):  # right arrow
+                    elif self.controller.get_button(4):  # up arrow
+                        self.z_rise()
 
                     #elif self.controller.get_button(3):
                     #elif self.controller.get_button(2):
                     #elif self.controller.get_button(1):
                     #elif self.controller.get_button(0):
-
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                    self.horizontal_side_speed = -0.2*self.controller.get_axis(1)  # left left/right axis
-                    self.horizontal_front_speed = -0.2*self.controller.get_axis(0)  # left front/back axis
+                    self.horizontal_side_speed = -0.2*self.controller.get_axis(0)  # left left/right axis
+                    self.horizontal_front_speed = -0.2*self.controller.get_axis(1)  # left front/back axis
                     self.yaw_speed = -0.2*self.controller.get_axis(2)  # right left/right axis
                     self.pitch_speed = -0.2*self.controller.get_axis(3)  # right front/back axis
 

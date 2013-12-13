@@ -58,13 +58,9 @@ class central_ui(QtGui.QMainWindow):
         #TODO: change path to a machine specific path, I can't get this thing to work with a relative path
         self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
-        #z destination publisher declaration
-        self.zdes_pub = rospy.Publisher("zdes", Float64)
-
         #buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
-        QtCore.QObject.connect(self.ui.z_mode, QtCore.SIGNAL("currentIndexChanged(int)"), self.change_z_mode)
 
         #low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -159,9 +155,6 @@ class central_ui(QtGui.QMainWindow):
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, self.length_plot)
 
-    def change_z_mode(self):
-        self.ps3.z_mode = self.ui.z_mode.currentIndex()
-
     def set_ps3_timer(self):
         """
         Start the timer
@@ -191,7 +184,7 @@ class central_ui(QtGui.QMainWindow):
 
         self.ui.linearX.setText(str(self.ps3.horizontal_front_speed))
         self.ui.linearY.setText(str(self.ps3.horizontal_side_speed))
-        self.ui.linearZ.setText(str(self.ps3.z_speed))
+        self.ui.linearZ.setText(str(self.ps3.z_position))
         self.ui.angularX.setText(str(0))
         self.ui.angularY.setText(str(self.ps3.pitch_speed))
         self.ui.angularZ.setText((str(self.ps3.yaw_speed)))
@@ -199,16 +192,12 @@ class central_ui(QtGui.QMainWindow):
 # TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        if self.ps3.z_mode == 1: # z speed control
-            publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_speed, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel')
+        ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_position, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel', 'zdes')
 
-        elif self.ps3.z_mode == 0: # z position control
-            publisher_text = ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, self.ps3.horizontal_side_speed, None, 0, self.ps3.yaw_speed, self.ps3.pitch_speed, "partial_cmd_vel")
-
-            self.zdes_pub.publish(self.ps3.z_position)
+        self.zdes_pub.publish(self.ps3.z_position)
 
         #display cmd_vel command to screen (on main ui not console)
-        self.ui.logObject.append(publisher_text)
+        #self.ui.logObject.append(publisher_text)
 
     ###############
     #GRAPH UPDATER#
@@ -300,7 +289,6 @@ class central_ui(QtGui.QMainWindow):
 
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
-
 
     def open_low_battery_dialog(self):
         self.warning_ui.exec_()
