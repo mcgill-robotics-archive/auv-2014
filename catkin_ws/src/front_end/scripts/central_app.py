@@ -280,9 +280,6 @@ class central_ui(QtGui.QMainWindow):
             self.empty_battery_signal.emit()
             self.play_alarm()
 
-        elif self.battery_empty:
-            self.zdes_pub.publish(0)
-
     def play_alarm(self):
         pygame.mixer.music.load(self.alarm_file)
         pygame.mixer.music.play(-1, 0)
