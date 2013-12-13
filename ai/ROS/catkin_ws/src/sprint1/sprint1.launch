@@ -1,4 +1,0 @@
-<launch>
-  <node name="ROS" pkg="sprint1" type="ROS" />
-  <node name="rosTest" pkg="sprint1" type="rosTest" />
-</launch>
