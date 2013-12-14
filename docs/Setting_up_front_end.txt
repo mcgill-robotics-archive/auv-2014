@@ -1,0 +1,13 @@
+I THINK THIS IS OUTDATED.
+	step 7 should be replaced with roslaunch front_end2.launch
+
+(as of dec 5 2013, this is the proper procedure) - David L-B
+
+1. sudo apt-get install python-pygame
+2. sudo apt-get install pyqt4-dev-tools
+3. go to http://www.pyqtgraph.org/ and install by clicking python-pyqtgraph_0.9.8-1_all.deb
+4. cd to catkin workspace and run catkin_make
+5. source devel/setup.bash
+6. connect PS3 controller
+7. rosrun front_end FullCompleteCentralMainApp.py
+8. click on "connect PS3 controller"

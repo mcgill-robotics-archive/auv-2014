@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Config {
+class Config{
 
 	public:
 
@@ -16,7 +16,11 @@ class Config {
 
 		vector<string> GetMap();
 
-		vector<string> GetTasks();   
+		vector<string> GetTasks();
+
+		bool loadFile(const char* filename, pugi::xml_document& roboSub_doc);
+
+		void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc);
 
 	private:
 	    std::vector<string> taskList;

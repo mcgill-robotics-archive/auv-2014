@@ -1,2 +1,0 @@
-[2013_11_14_10_08_59] 	cool
-[2013_11_14_10_08_59] 	Id: String ID	position x: 1	position y: 1212.223	depth : 1212.2233

@@ -1,8 +1,0 @@
-prefix=/home/alex/catkin_ws/devel
-
-Name: sprint1
-Description: Description of sprint1
-Version: 0.0.0
-Cflags: -I/home/alex/catkin_ws/devel/include
-Libs: -L/home/alex/catkin_ws/devel/lib 
-Requires: roscpp std_msgs geometry_msgs

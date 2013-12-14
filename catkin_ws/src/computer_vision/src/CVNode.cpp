@@ -5,10 +5,10 @@ int main(int argc, char **argv) {
     ros::NodeHandle nodeHandle;
     
     // Creates a new CVNode object
-    CVNode* pCVNode = new CVNode(nodeHandle, "camera_feed");
+    //CVNode* pCVNode = new CVNode(nodeHandle, "camera_feed");
 
 	// This is for the simulation environment.
-	//CVNode* pCVNode = new CVNode(nodeHandle, "/my_robot/camera1/image_raw");
+	CVNode* pCVNode = new CVNode(nodeHandle, "/my_robot/camera1/image_raw");
 
     // Start receiving images from the camera node (publisher)
     while (ros::ok()) {
