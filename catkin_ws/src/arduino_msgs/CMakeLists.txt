@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(motor_msgs)
+project(arduino_msgs)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -43,11 +43,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##     and list every .msg/.srv/.action file to be processed
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
-
 ## Generate messages in the 'msg' folder
  add_message_files(
-   FILES 
+   FILES
    motor.msg
+   solenoid.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -65,7 +65,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages()
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -78,7 +81,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES motor_msgs
+#  LIBRARIES arduino_msgs
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
    CATKIN_DEPENDS message_runtime
@@ -96,19 +99,19 @@ include_directories(
 )
 
 ## Declare a cpp library
-# add_library(motor_msgs
-#   src/${PROJECT_NAME}/motor_msgs.cpp
+# add_library(arduino_msgs
+#   src/${PROJECT_NAME}/arduino_msgs.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(motor_msgs_node src/motor_msgs_node.cpp)
+# add_executable(arduino_msgs_node src/arduino_msgs_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(motor_msgs_node motor_msgs_generate_messages_cpp)
+# add_dependencies(arduino_msgs_node arduino_msgs_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(motor_msgs_node
+# target_link_libraries(arduino_msgs_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -127,7 +130,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS motor_msgs motor_msgs_node
+# install(TARGETS arduino_msgs arduino_msgs_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -152,7 +155,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_motor_msgs.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_arduino_msgs.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
