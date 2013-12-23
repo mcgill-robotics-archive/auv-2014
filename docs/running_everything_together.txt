@@ -1,0 +1,24 @@
+Running Everything Together
+=============================
+
+As of <TODAYS DATE> "everything together" consited of:
+
+<update this file here>
+
+
+-----------------------------------------------------
+As of Dec 10, 2013 "everything together" consisted of:
+
+front_end
+depth_controller
+Underwater_Simulator
+
+Note, computer vision is not included here, but should be on the next iteration
+
+run everything together from the following directory:
+
+~/McGill_RoboSub_2014/catkin_ws/launch
+
+execute:
+
+roslaunch depthController.launch

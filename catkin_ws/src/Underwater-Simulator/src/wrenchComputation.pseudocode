@@ -1,0 +1,34 @@
+//Subscribe to Thrust values for each of the 6 thrusters:
+
+Tx1 = ?
+Tx2 = ?
+Ty1 = ?
+Ty2 = ?
+Tz1 = ?
+Tz2 = ?
+
+//parametrize the distance between the center of mass and each of the thrusters here: It is defined once and won't change.
+
+rx1 = .3; 
+rx2 = -.3;
+ry1 = .3;
+ry2 = -.3;
+rz1 = .3;
+rz2 = -.3;
+
+
+//map from individual thrusts to net wrench
+
+A = [2 0 0 0 0; 0 1 1 0 0; 0 0 0 1 1; 0 0 0 rz1 rz2; rx1+rx2 ry1 ry2 0 0];
+
+Fx = Tx1 + Tx2;
+Fy = Ty1 + Ty2;
+Fz = Tz1 + Tz2;
+Taox = 0;
+Taoy = rz1*Tz1 + rz2+Tz2;
+Taoz = rx1*Tx1 + rx2*tx2 + ry1*Ty1 + Ty2*Ty2;
+
+//Apply wrench
+// need to lookup syntax, but this is a vague interpretation of the command line syntax:
+
+rosservice call /gazebo/apply_body_wrenches '{body_name: "robot" , wrench: { force: {x: Fx y: Fy z: Fz} ,torque: { x: taox, y: taoy , z: taoz } } , }'

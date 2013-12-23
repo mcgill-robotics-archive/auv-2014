@@ -1,6 +1,13 @@
 underwater-simulator
 ====================
 
+EVERYTHING FROM THIS FILE COPIED TO /docs ON DEC 10, 2013. I think that should be the most updated version and this should be obsolte - Nick Speal
+
+
+
+
+
+
 Underwater simulator built on top of Gazebo to simulate a pool environment for tasks for the RoboSub 2014 international competition.
 
 INSTALLATION INSTRUCTIONS:

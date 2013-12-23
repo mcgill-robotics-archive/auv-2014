@@ -47,9 +47,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   Depth.msg
-   Pressure.msg
-   CVQuery.msg
+#   Depth.msg
+#   Pressure.msg
+    CVQuery.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -86,7 +86,7 @@ catkin_package(
   #CATKING_DEPENDS message_runtime
 #  INCLUDE_DIRS include
 #  LIBRARIES planner
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs
+   CATKIN_DEPENDS roscpp std_msgs geometry_msgs message_runtime
 #  DEPENDS system_lib
 )
 
