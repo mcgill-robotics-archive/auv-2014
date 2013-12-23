@@ -78,4 +78,6 @@ Pass it x:0, y:0.05, z:0
 
 The robot will move over the bins and you can see if your filters are working.
 
+A negative z should lower the robot, in case that's needed.
+
 -----------------------------------------------------------------
