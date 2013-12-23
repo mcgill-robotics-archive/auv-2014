@@ -1,12 +1,5 @@
-underwater-simulator
+simulator
 ====================
-
-EVERYTHING FROM THIS FILE COPIED TO /docs ON DEC 10, 2013. I think that should be the most updated version and this should be obsolte - Nick Speal
-
-
-
-
-
 
 Underwater simulator built on top of Gazebo to simulate a pool environment for tasks for the RoboSub 2014 international competition.
 
@@ -18,7 +11,7 @@ INSTALLATION INSTRUCTIONS:
 		  Then it explains how to install the Gazebo-ROS Packages.
 		  Follow all the instructions carefully. If you have already have ROS Hydro, skip that part.
 
-2.	Clone the Underwater-Simulator in your catkin workspace and run: $catkin_make
+2.	Clone the simulator in your catkin workspace and run: $catkin_make
 
 	In our case, the package is already in a catkin workspace! So just pull "McGill_RoboSub_2014/catkin_ws"
 	
@@ -26,13 +19,13 @@ INSTALLATION INSTRUCTIONS:
 	
 	$catkin_make
 
-3.	Run: $roslaunch Underwater-Simulator Underwater-Simulator.launch
+3.	Run: $roslaunch simulator simulator.launch
 	
 	If it does not run, try sourcing setup.bash again and re-run the simulator.
 
 RECOMMENDED READING: http://gazebosim.org/wiki/Tutorials/1.9/Creating_ROS_plugins_for_Gazebo
 
-Underwater-Simulator Directory Structure:
+simulator Directory Structure:
 	
 	launch/
 		contains .launch files which launch an environment based on a world file
@@ -52,7 +45,7 @@ move it in the simulator. Run: "rosrun robot_move_test robot_move_test"
 
 Bin Task:
 
-Run: $roslaunch Underwater-Simulator bin_task.launch
+Run: $roslaunch simulator bin_task.launch
 
 This will create a world with robot and the 4 bins aligned.
 
