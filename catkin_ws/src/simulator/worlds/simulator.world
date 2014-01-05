@@ -39,25 +39,22 @@
       <pose>2.7 -3.5 1 0 0 3.14</pose>
 
       <link name='body'>
-
-	<collision name='collision'>
-	  <geometry>
-	    <mesh>
-	      <uri>file://../models/RobotColorGazebo.dae</uri>
-	      <scale> .008 .008 .008</scale>
-	    </mesh>
-	  </geometry>
-	</collision>
-
-	<visual name='visual'>
-	  <geometry>
-	    <mesh>
-	      <uri>file://../models/RobotColorGazebo.dae</uri>
-	      <scale> .008 .008 .008</scale>
-	    </mesh>
-	  </geometry>
-	</visual>
-
+		<collision name='collision'>
+		  <geometry>
+			<mesh>
+			  <uri>file://../models/RobotColorGazebo.dae</uri>
+			  <scale> .008 .008 .008</scale>
+			</mesh>
+		  </geometry>
+		</collision>
+		<visual name='visual'>
+		  <geometry>
+			<mesh>
+			  <uri>file://../models/RobotColorGazebo.dae</uri>
+			  <scale> .008 .008 .008</scale>
+			</mesh>
+		  </geometry>
+		</visual>
       </link>
 
       <!-- need to do more research on joint -->
@@ -183,7 +180,7 @@
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
     </model>
-
+	<!--
     <model name="wheeltask">
       <pose>0 2 3 0 0 1</pose>
       <static>false</static>
@@ -210,7 +207,7 @@
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
     </model>
-
+	-->
     <!--
 	Now created by create_torpedo plugin
     <model name="torpedo">
@@ -240,7 +237,7 @@
       <plugin name="launch_torpedo" filename="liblaunch_torpedo.so"></plugin>
     </model>
     -->
-
+	<!--
     <model name="torpedo target">
       <pose>1 1 2 0 0 1</pose>
       <static>false</static>
@@ -265,9 +262,10 @@
 
       </link>
       <plugin name="move_model" filename="libmove_model.so"></plugin>
-      <!--
-      -->
+      
+      
     </model>
+	-->
 	<!--
     <model name="traffic lights">
       <pose>6 1 2 0 0 1</pose>

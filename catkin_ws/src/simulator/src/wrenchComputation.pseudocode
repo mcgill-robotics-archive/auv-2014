@@ -25,10 +25,46 @@ Fx = Tx1 + Tx2;
 Fy = Ty1 + Ty2;
 Fz = Tz1 + Tz2;
 Taox = 0;
-Taoy = rz1*Tz1 + rz2+Tz2;
-Taoz = rx1*Tx1 + rx2*tx2 + ry1*Ty1 + Ty2*Ty2;
+Taoy = rz1*Tz1 + rz2*Tz2;
+Taoz = rx1*Tx1 + rx2*tx2 + ry1*Ty1 + ry2*Ty2;
 
 //Apply wrench
 // need to lookup syntax, but this is a vague interpretation of the command line syntax:
 
 rosservice call /gazebo/apply_body_wrenches '{body_name: "robot" , wrench: { force: {x: Fx y: Fy z: Fz} ,torque: { x: taox, y: taoy , z: taoz } } , }'
+
+
+
+// latex
+force=\begin{bmatrix}
+F_{x}\\ 
+F{y}\\ 
+F{z}
+\end{bmatrix}
+=
+
+\begin{bmatrix}
+T_{x_{1}} + T_{x_{2}}\\ 
+T_{y_{1}} + T_{y_{2}}\\ 
+T_{z_{1}} + T_{z_{2}}
+\end{bmatrix}
+
+\\\\\\
+torque=
+\begin{bmatrix}
+\tau_{x}\\ 
+\tau_{y}\\ 
+\tau_{z}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0\\ 
+r_{z_{1}} * T_{z_{1}} + r_{z_{2}} * T_{z_{2}}\\ 
+r_{x_{1}} * T_{x_{1}} + r_{x_{2}} * T_{x_{2}} + r_{y_{1}} * T_{y_{1}} + r_{y_{2}} * T_{y_{2}}
+\end{bmatrix}
+
+\\\\\
+\\*
+T_{i_{j}} \rightarrow \ thruster\ force\ input \\*
+r_{i_{j}} \rightarrow \ parametrized\ distance\ between\ center\ of\ mass\ and\ thruster\ T_{i_{j}}\\*
+i\in \{x,y,z\}, j\in \{1,2\}

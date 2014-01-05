@@ -5,6 +5,9 @@ project(simulator)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   gazebo_ros
+  rospy
+  std_msgs
+  message_generation
 )
 
 # Depend on system install of Gazebo
@@ -15,10 +18,18 @@ include_directories(${roscpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${catkin_INCLUDE
 include(cmake/rospack.cmake)
 
 
+add_message_files(
+  FILES
+  ThrusterForces.msg
+)
+
+generate_messages()
+
 catkin_package(
   DEPENDS
     roscpp
     gazebo_ros
+    message_runtime
 )
 
 add_library(move_model src/move_model.cc)
@@ -37,3 +48,4 @@ set_target_properties(robot PROPERTIES COMPILE_FLAGS "${roscpp_CFLAGS_OTHER}")
 set_target_properties(robot PROPERTIES LINK_FLAGS "${roscpp_LDFLAGS_OTHER}")
 
 target_link_libraries(robot ${roscpp_LIBRARIES} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
