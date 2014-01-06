@@ -20,7 +20,7 @@ def velocity_publisher(linear_x, linear_y, z_position, pitch, yaw, vel_topic, z_
     twist.angular.y = pitch
     twist.angular.z = yaw
 
-    rospy.loginfo(twist)
+    #rospy.loginfo(twist)
 
     vel_pub.publish(twist)
     zdes_pub.publish(z_position)

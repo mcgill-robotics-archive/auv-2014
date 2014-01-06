@@ -29,6 +29,7 @@ low_battery_threshold = 2.0
 max_voltage = 24.0
 GUI_UPDATE_PERIOD = 20 #ms
 
+
 ############
 #ROS TOPICS#
 ############
@@ -37,7 +38,20 @@ pressure="pressure"
 depth="depth"
 left_pre_topic = "/my_robot/camera1/image_raw"
 
+# Here we define the keyboard map for our controller
+class KeyMapping(object):
+    PitchForward = QtCore.Qt.Key_I
+    PitchBackward = QtCore.Qt.Key_K
+    YawLeft = QtCore.Qt.Key_J
+    YawRight = QtCore.Qt.Key_L
+    IncreaseDepth = QtCore.Qt.Key_U
+    DecreaseDepth = QtCore.Qt.Key_O
+    IncreaseX = QtCore.Qt.Key_S
+    DecreaseX = QtCore.Qt.Key_F
+    IncreaseY = QtCore.Qt.Key_E
+    DecreaseY = QtCore.Qt.Key_D
 
+    Surface = QtCore.Qt.Key_H
 
 class battery_warning_ui(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -52,8 +66,6 @@ class battery_warning_ui(QtGui.QDialog):
     def stop_alarm(self):
         pygame.mixer.music.stop()
 
-
-
 class central_ui(QtGui.QMainWindow):
 
     empty_battery_signal = QtCore.pyqtSignal()
@@ -67,6 +79,15 @@ class central_ui(QtGui.QMainWindow):
 
         self.create_plots()
         self.start_ros_subscriber()
+
+        self.pitch_velocity = 0
+        self.yaw_velocity = 0
+        self.x_velocity = 0
+        self.y_velocity = 0
+        self.z_velocity = 0
+        self.z_position = 0
+
+        self.keyboard_control = False
 
         # Holds the image frame received from the drone and later processed by the GUI
         self.left_pre_image = None
@@ -95,7 +116,7 @@ class central_ui(QtGui.QMainWindow):
 
         #buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
-        QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_ps3_timer)
+        QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
 
         #low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -103,12 +124,75 @@ class central_ui(QtGui.QMainWindow):
         #controller timer connect
         QtCore.QObject.connect(self.ps3_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
         #TODO: set timout function for keyboard
-       # QtCore.QObject.connect(self.keyTimer, QtCore.SIGNAL("timeout()"), self.controller_update)
+        QtCore.QObject.connect(self.keyTimer, QtCore.SIGNAL("timeout()"), self.keyboard_update)
 
         # A timer to redraw the GUI
         self.redrawTimer = QtCore.QTimer(self)
         self.redrawTimer.timeout.connect(self.RedrawVideoCallback)
         self.redrawTimer.start(GUI_UPDATE_PERIOD)
+
+    # We add a keyboard handler to the DroneVideoDisplay to react to keypress
+    def keyPressEvent(self, event):
+        key = event.key()
+
+        # If the key is not generated from an auto-repeating key
+        if self.keyboard_control and not event.isAutoRepeat():
+        # Handle the important cases first!
+            if key == KeyMapping.Surface:
+                self.z_position=0
+            else:
+                # Now we handle moving, notice that this section is the opposite (+=) of the keyrelease section
+                if key == KeyMapping.YawLeft:
+                    self.yaw_velocity += 1
+                elif key == KeyMapping.YawRight:
+                    self.yaw_velocity += -1
+
+                elif key == KeyMapping.PitchForward:
+                    self.pitch_velocity += 1
+                elif key == KeyMapping.PitchBackward:
+                    self.pitch_velocity += -1
+
+                elif key == KeyMapping.IncreaseDepth:
+                    self.z_position += 1
+                elif key == KeyMapping.DecreaseDepth:
+                    self.z_position += -1
+
+                elif key == KeyMapping.IncreaseX:
+                    self.x_velocity += 1
+                elif key == KeyMapping.DecreaseX:
+                    self.x_velocity += -1
+
+                elif key == KeyMapping.IncreaseY:
+                    self.y_velocity += 1
+                elif key == KeyMapping.DecreaseY:
+                    self.y_velocity += -1
+
+    def keyReleaseEvent(self, event):
+        key = event.key()
+
+        # If the key is not generated from an auto-repeating key
+        if self.keyboard_control and not event.isAutoRepeat():
+            # Note that we don't handle the release of emergency/takeoff/landing keys here, there is no need.
+            # Now we handle moving, notice that this section is the opposite (-=) of the keypress section
+            if key == KeyMapping.YawLeft:
+                self.yaw_velocity -= 1
+            elif key == KeyMapping.YawRight:
+                self.yaw_velocity -= -1
+
+            elif key == KeyMapping.PitchForward:
+                self.pitch_velocity -= 1
+            elif key == KeyMapping.PitchBackward:
+                self.pitch_velocity -= -1
+
+            elif key == KeyMapping.IncreaseX:
+                self.x_velocity -= 1
+            elif key == KeyMapping.DecreaseX:
+                self.x_velocity -= -1
+
+            elif key == KeyMapping.IncreaseY:
+                self.y_velocity -= 1
+            elif key == KeyMapping.DecreaseY:
+                self.y_velocity -= -1
 
     def create_plots(self):
         self.length_plot = 25
@@ -198,20 +282,51 @@ class central_ui(QtGui.QMainWindow):
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, self.length_plot)
 
-    def set_ps3_timer(self):
+    def set_controller_timer(self):
         """
         Start the timer
         """
         if self.ui.manualControl.isChecked() and self.ps3.controller_isPresent:
+            self.keyboard_control=False
             if self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(controller_updateFrequency)
+            else:
+                self.keyboard_control=False
+                self.ps3_timer.stop()
+                self.keyTimer.stop()
+                self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
-       # elif self.ui.keyboardControl.isChecked():
+        elif self.ui.keyboardControl.isChecked():
+            self.keyboard_control = True
+            self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
+            self.keyTimer.start(controller_updateFrequency)
 
         elif self.ui.autonomousControl.isChecked():
+            self.keyboard_control=False
             self.ps3_timer.stop()
+            self.keyTimer.stop()
             self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+
+    def keyboard_update(self):
+
+        #react to the keys
+        self.ui.linearVertical.setValue(100*self.y_velocity)
+        self.ui.linearHorizantal.setValue(100*self.x_velocity)
+        self.ui.angularVertical.setValue(100*self.pitch_velocity)
+        self.ui.angularHorizantal.setValue(100*-self.yaw_velocity)
+
+        self.ui.linearX.setText(str(self.x_velocity))
+        self.ui.linearY.setText(str(self.y_velocity))
+        self.ui.linearZ.setText(str(self.z_position))
+        self.ui.angularX.setText(str(0))
+        self.ui.angularY.setText(str(self.pitch_velocity))
+        self.ui.angularZ.setText((str(self.yaw_velocity)))
+
+# TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
+
+        #publish to ros topic
+        velocity_publisher.velocity_publisher(self.x_velocity, self.y_velocity, self.z_position, self.pitch_velocity, self.yaw_velocity, 'partial_cmd_vel', 'zdes')
 
     def controller_update(self):
         """
@@ -243,17 +358,14 @@ class central_ui(QtGui.QMainWindow):
     ###############
     #GRAPH UPDATER#
     ###############
-
     def pressure_graph_update(self, data_input):
         self.pressure_data.append(data_input)
         self.pressure_data.pop(0)
         self.pressure_curve.setData(self.pressure_data)
-
     def depth_graph_update(self, data_input):
         self.depth_data.append(data_input)
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
-
     def imu_graph_updater(self, x, y, z, w):
         self.acc1_data.append(x)
         self.acc1_data.pop(0)
@@ -303,6 +415,7 @@ class central_ui(QtGui.QMainWindow):
         rospy.Subscriber(battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(left_pre_topic, Image, self.pre_left_callback)
 
+    #VIDEO FRAME CALLBACKS
     def pre_left_callback(self, data):
         # We have some issues with locking between the GUI update thread and the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.imageLock.acquire()
@@ -399,33 +512,31 @@ class central_ui(QtGui.QMainWindow):
         else:
             self.ui.posBottom.setText("No video feed")
 
+    #GRAPHS CALLBACKS
     def imu_callback(self, pose_data):
         x = pose_data.orientation.x
         y = pose_data.orientation.y
         z = pose_data.orientation.z
         w = pose_data.orientation.w
         self.imu_graph_updater(x, y, z, w)
-
     def depth_callback(self, depth_data):
         self.depth_graph_update(depth_data.data)
-
     def pressure_callback(self, pressure_data):
         self.pressure_graph_update(pressure_data.data)
 
+    #LOW BATTERY ALARM
     def battery_voltage_check(self, voltage_data):
         #TODO: set threshold for depleted battery
         if (not self.battery_empty) and voltage_data.data<low_battery_threshold:
             self.battery_empty = True
             self.empty_battery_signal.emit()
             self.play_alarm()
-
     def play_alarm(self):
         pygame.mixer.music.load(self.alarm_file)
         pygame.mixer.music.play(-1, 0)
 
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
-
     def open_low_battery_dialog(self):
         self.warning_ui.exec_()
 
