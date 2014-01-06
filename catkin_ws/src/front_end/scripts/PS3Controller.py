@@ -93,14 +93,6 @@ class PS3Controller(object):
         if self.controller_isPresent:
             for anEvent in pygame.event.get():
                 if anEvent.type == pygame.locals.JOYBUTTONDOWN:
-                    #if self.controller.get_button(15):
-                    #elif self.controller.get_button(14):
-                    #elif self.controller.get_button(13):
-                    #elif self.controller.get_button(12):
-                    #elif self.controller.get_button(11):
-                    #elif self.controller.get_button(10):
-                    #elif self.controller.get_button(9):
-                    #elif self.controller.get_button(8):
 
                     if self.controller.get_button(7):  # left arrow
                         self.z_surface()
@@ -110,10 +102,6 @@ class PS3Controller(object):
                     elif self.controller.get_button(4):  # up arrow
                         self.z_rise()
 
-                    #elif self.controller.get_button(3):
-                    #elif self.controller.get_button(2):
-                    #elif self.controller.get_button(1):
-                    #elif self.controller.get_button(0):
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
                     self.horizontal_side_speed = -0.2*self.controller.get_axis(0)  # left left/right axis
                     self.horizontal_front_speed = -0.2*self.controller.get_axis(1)  # left front/back axis

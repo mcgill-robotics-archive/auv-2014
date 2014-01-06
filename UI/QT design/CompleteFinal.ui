@@ -33,7 +33,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QGraphicsView" name="preLeft">
+    <widget class="QLabel" name="preLeft">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -42,17 +42,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="preRight">
+    <widget class="QLabel" name="preRight">
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -61,17 +55,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="postLeft">
+    <widget class="QLabel" name="postLeft">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -80,17 +68,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="postRight">
+    <widget class="QLabel" name="postRight">
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -99,17 +81,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="preBottom">
+    <widget class="QLabel" name="preBottom">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -118,17 +94,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="postBottom">
+    <widget class="QLabel" name="posBottom">
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -137,14 +107,8 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>
@@ -211,23 +175,26 @@
       </rect>
      </property>
      <property name="text">
-      <string>Manual Control</string>
+      <string>PS3 Control</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QRadioButton" name="autonomousControl">
      <property name="geometry">
       <rect>
        <x>730</x>
-       <y>60</y>
-       <width>161</width>
+       <y>80</y>
+       <width>181</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
       <string>Autonomous Control</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QProgressBar" name="Battery">
@@ -319,7 +286,7 @@
      <property name="geometry">
       <rect>
        <x>730</x>
-       <y>90</y>
+       <y>110</y>
        <width>161</width>
        <height>27</height>
       </rect>
@@ -332,7 +299,7 @@
      <property name="geometry">
       <rect>
        <x>720</x>
-       <y>140</y>
+       <y>145</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -345,9 +312,9 @@
      <property name="geometry">
       <rect>
        <x>850</x>
-       <y>130</y>
+       <y>140</y>
        <width>41</width>
-       <height>41</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
@@ -686,6 +653,22 @@
      </property>
      <property name="readOnly">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="keyboardControl">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>60</y>
+       <width>151</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Keyboard Control</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>

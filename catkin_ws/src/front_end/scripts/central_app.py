@@ -4,21 +4,40 @@ Created on Nov 16th, 2013
 @author : David Lavoie-Boutin
 """
 import PS3Controller
+#Ui declarations and GUI libraries
 from CompleteUI_declaration import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
-import ps3_data_publisher
+
+import velocity_publisher
+
 import sys
 import rospy
 import pygame
+#ros message types
 from std_msgs.msg import String
 from std_msgs.msg import Float32
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Pose
+from sensor_msgs.msg import Image
 
-updateFrequency = 50
+# We need to use resource locking to handle synchronization between GUI thread and ROS topic callbacks
+from threading import Lock
+
+controller_updateFrequency = 50
 low_battery_threshold = 2.0
 max_voltage = 24.0
+GUI_UPDATE_PERIOD = 20 #ms
+
+############
+#ROS TOPICS#
+############
+battery_voltage="battery_voltage"
+pressure="pressure"
+depth="depth"
+left_pre_topic = "/my_robot/camera1/image_raw"
+
+
 
 class battery_warning_ui(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -45,8 +64,24 @@ class central_ui(QtGui.QMainWindow):
         super(central_ui, self).__init__(parent)
         self.ui = Ui_RoboticsMain()  # create the ui object
         self.ui.setupUi(self)
-        self.controller_timer = QtCore.QTimer()
-        self.ros_timer = QtCore.QTimer.singleShot(50, self.ros_subscriber)  # call the start of the ros subscriber
+
+        self.create_plots()
+        self.start_ros_subscriber()
+
+        # Holds the image frame received from the drone and later processed by the GUI
+        self.left_pre_image = None
+        self.right_pre_image = None
+        self.bottom_pre_image = None
+        self.left_post_image = None
+        self.right_post_image = None
+        self.bottom_post_image = None
+        self.im_frame_array = (self.left_pre_image, self.right_pre_image, self.bottom_pre_image, self.left_post_image, self.right_post_image, self.bottom_post_image)
+
+        self.imageLock = Lock()
+
+        self.ps3_timer = QtCore.QTimer()
+        self.keyTimer = QtCore.QTimer()
+
         self.ps3 = PS3Controller.PS3Controller()  # create the ps3 controller object
         self.warning_ui = battery_warning_ui(self)  # battery depleted ui
 
@@ -65,9 +100,17 @@ class central_ui(QtGui.QMainWindow):
         #low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
 
-        #timer connect
-        QtCore.QObject.connect(self.controller_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
+        #controller timer connect
+        QtCore.QObject.connect(self.ps3_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
+        #TODO: set timout function for keyboard
+       # QtCore.QObject.connect(self.keyTimer, QtCore.SIGNAL("timeout()"), self.controller_update)
 
+        # A timer to redraw the GUI
+        self.redrawTimer = QtCore.QTimer(self)
+        self.redrawTimer.timeout.connect(self.RedrawVideoCallback)
+        self.redrawTimer.start(GUI_UPDATE_PERIOD)
+
+    def create_plots(self):
         self.length_plot = 25
 
         #IMU PLOTS
@@ -162,11 +205,12 @@ class central_ui(QtGui.QMainWindow):
         if self.ui.manualControl.isChecked() and self.ps3.controller_isPresent:
             if self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
-                self.controller_timer.start(updateFrequency)
-            else:
-                self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
+                self.ps3_timer.start(controller_updateFrequency)
+
+       # elif self.ui.keyboardControl.isChecked():
+
         elif self.ui.autonomousControl.isChecked():
-            self.controller_timer.stop()
+            self.ps3_timer.stop()
             self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
     def controller_update(self):
@@ -192,12 +236,9 @@ class central_ui(QtGui.QMainWindow):
 # TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
 
         #publish to ros topic
-        ps3_data_publisher.ps3_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_position, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel', 'zdes')
+        velocity_publisher.velocity_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_position, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel', 'zdes')
 
         self.zdes_pub.publish(self.ps3.z_position)
-
-        #display cmd_vel command to screen (on main ui not console)
-        #self.ui.logObject.append(publisher_text)
 
     ###############
     #GRAPH UPDATER#
@@ -253,14 +294,112 @@ class central_ui(QtGui.QMainWindow):
     ################
     #ROS SUBSCRIBER#
     ################
-    def ros_subscriber(self):
+    def start_ros_subscriber(self):
+        #TODO: get real ros topic list
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber("pose", Pose, self.pose_callback)
-        rospy.Subscriber("depth", Float32, self.depth_callback)
-        rospy.Subscriber("pressure", Float32, self.pressure_callback)
-        rospy.Subscriber("battery_voltage", Float64, self.battery_voltage_check)
+        rospy.Subscriber("pose", Pose, self.imu_callback)
+        rospy.Subscriber(depth, Float32, self.depth_callback)
+        rospy.Subscriber(pressure, Float32, self.pressure_callback)
+        rospy.Subscriber(battery_voltage, Float64, self.battery_voltage_check)
+        rospy.Subscriber(left_pre_topic, Image, self.pre_left_callback)
 
-    def pose_callback(self, pose_data):
+    def pre_left_callback(self, data):
+        # We have some issues with locking between the GUI update thread and the ROS messaging thread due to the size of the image, so we need to lock the resources
+        self.imageLock.acquire()
+        try:
+            self.left_pre_image = data # Save the ros image for processing by the display thread
+        finally:
+            self.imageLock.release()
+    def pre_right_callback(self, data):
+        # We have some issues with locking between the GUI update thread and the ROS messaging thread due to the size of the image, so we need to lock the resources
+        self.imageLock.acquire()
+        try:
+            self.right_pre_image = data # Save the ros image for processing by the display thread
+        finally:
+            self.imageLock.release()
+    def pre_bottom_callback(self, data):
+        # We have some issues with locking between the GUI update thread and the ROS messaging thread due to the size of the image, so we need to lock the resources
+        self.imageLock.acquire()
+        try:
+            self.bottom_pre_image = data # Save the ros image for processing by the display thread
+        finally:
+            self.imageLock.release()
+
+    def RedrawVideoCallback(self):
+
+        if self.left_pre_image is not None:
+            self.imageLock.acquire()
+            try:
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_pre_image.data, self.left_pre_image.width, self.left_pre_image.height, QtGui.QImage.Format_RGB888))
+            finally:
+                self.imageLock.release()
+
+            self.resize(image.width(),image.height())
+            self.ui.preLeft.setPixmap(image)
+        else:
+            self.ui.preLeft.setText("No video feed")
+
+        if self.right_pre_image is not None:
+            self.imageLock.acquire()
+            try:
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
+            finally:
+                self.imageLock.release()
+
+            self.resize(image.width(),image.height())
+            self.ui.preRight.setPixmap(image)
+        else:
+            self.ui.preRight.setText("No video feed")
+
+        if self.bottom_pre_image is not None:
+            self.imageLock.acquire()
+            try:
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
+            finally:
+                self.imageLock.release()
+
+            self.resize(image.width(),image.height())
+            self.ui.preBottom.setPixmap(image)
+        else:
+            self.ui.preBottom.setText("No video feed")
+
+        if self.left_post_image is not None:
+            self.imageLock.acquire()
+            try:
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image, self.left_post_image.height, QtGui.QImage.Format_RGB888))
+            finally:
+                self.imageLock.release()
+
+            self.resize(image.width(),image.height())
+            self.ui.postLeft.setPixmap(image)
+        else:
+            self.ui.postLeft.setText("No video feed")
+
+        if self.right_post_image is not None:
+            self.imageLock.acquire()
+            try:
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image, self.right_post_image.height, QtGui.QImage.Format_RGB888))
+            finally:
+                self.imageLock.release()
+
+            self.resize(image.width(),image.height())
+            self.ui.postRight.setPixmap(image)
+        else:
+            self.ui.postRight.setText("No video feed")
+
+        if self.bottom_post_image is not None:
+            self.imageLock.acquire()
+            try:
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
+            finally:
+                self.imageLock.release()
+
+            self.resize(image.width(),image.height())
+            self.ui.posBottom.setPixmap(image)
+        else:
+            self.ui.posBottom.setText("No video feed")
+
+    def imu_callback(self, pose_data):
         x = pose_data.orientation.x
         y = pose_data.orientation.y
         z = pose_data.orientation.z
