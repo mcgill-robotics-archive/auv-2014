@@ -49,7 +49,9 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
 #   Depth.msg
 #   Pressure.msg
-    CVQuery.msg
+#   CVQuery.msg
+    ValueControl.msg
+    MotorControl.msg
  )
 
 ## Generate services in the 'srv' folder
