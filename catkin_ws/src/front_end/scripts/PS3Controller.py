@@ -8,6 +8,7 @@ __author__: Jean-Sebastien Dery
 
 import os
 import sys
+from VARIABLES import vel_vars
 
 try:
     from pygame import locals
@@ -44,18 +45,10 @@ class PS3Controller(object):
             print "Shutting down the process..."
             self.controller_isPresent = False
 
-        self.yaw_speed = 0
-        self.pitch_speed = 0
-        self.horizontal_side_speed = 0
-        self.horizontal_front_speed = 0
-
         self.square = 0
         self.triangle = 0
         self.o = 0
         self.x = 0
-
-        self.z_position = 0.0 # position in meters
-        self.z_position_step = 0.5
 
         self.l1 = 0
         self.l2 = 0
@@ -75,14 +68,14 @@ class PS3Controller(object):
         print "The initialized Joystick is: " + self.controller_name
 
     def z_lower(self):
-        self.z_position += self.z_position_step
+        vel_vars.z_position += vel_vars.z_position_step
 
     def z_rise(self):
-        if self.z_position>0:
-            self.z_position -= self.z_position_step
+        if vel_vars.z_position>0:
+            vel_vars.z_position -= vel_vars.z_position_step
 
     def z_surface(self):
-        self.z_position = 0
+        vel_vars.z_position = 0
 
     def updateController(self):
         """
@@ -103,7 +96,7 @@ class PS3Controller(object):
                         self.z_rise()
 
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                    self.horizontal_side_speed = -0.2*self.controller.get_axis(0)  # left left/right axis
-                    self.horizontal_front_speed = -0.2*self.controller.get_axis(1)  # left front/back axis
-                    self.yaw_speed = -0.2*self.controller.get_axis(2)  # right left/right axis
-                    self.pitch_speed = -0.2*self.controller.get_axis(3)  # right front/back axis
+                    vel_vars.x_velocity = -0.2*self.controller.get_axis(0)  # left left/right axis
+                    vel_vars.y_velocity = -0.2*self.controller.get_axis(1)  # left front/back axis
+                    vel_vars.yaw_velocity = -0.2*self.controller.get_axis(2)  # right left/right axis
+                    vel_vars.pitch_velocity = -0.2*self.controller.get_axis(3)  # right front/back axis
