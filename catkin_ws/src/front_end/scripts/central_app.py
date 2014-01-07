@@ -10,10 +10,11 @@ from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
 import velocity_publisher
-
+from VARIABLES import *
 import sys
 import rospy
 import pygame
+
 #ros message types
 from std_msgs.msg import String
 from std_msgs.msg import Float32
@@ -24,35 +25,10 @@ from sensor_msgs.msg import Image
 # We need to use resource locking to handle synchronization between GUI thread and ROS topic callbacks
 from threading import Lock
 
-controller_updateFrequency = 50
-low_battery_threshold = 2.0
-max_voltage = 24.0
-GUI_UPDATE_PERIOD = 20 #ms
-
-
 ############
 #ROS TOPICS#
 ############
-battery_voltage="battery_voltage"
-pressure="pressure"
-depth="depth"
-left_pre_topic = "/my_robot/camera1/image_raw"
-imu_pose = "pose"
 
-# Here we define the keyboard map for our controller
-class KeyMapping(object):
-    PitchForward = QtCore.Qt.Key_I
-    PitchBackward = QtCore.Qt.Key_K
-    YawLeft = QtCore.Qt.Key_J
-    YawRight = QtCore.Qt.Key_L
-    IncreaseDepth = QtCore.Qt.Key_U
-    DecreaseDepth = QtCore.Qt.Key_O
-    IncreaseX = QtCore.Qt.Key_S
-    DecreaseX = QtCore.Qt.Key_F
-    IncreaseY = QtCore.Qt.Key_E
-    DecreaseY = QtCore.Qt.Key_D
-
-    Surface = QtCore.Qt.Key_H
 
 class battery_warning_ui(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -80,13 +56,6 @@ class central_ui(QtGui.QMainWindow):
 
         self.create_plots()
         self.start_ros_subscriber()
-
-        self.pitch_velocity = 0
-        self.yaw_velocity = 0
-        self.x_velocity = 0
-        self.y_velocity = 0
-        self.z_velocity = 0
-        self.z_position = 0
 
         self.keyboard_control = False
 
@@ -129,7 +98,7 @@ class central_ui(QtGui.QMainWindow):
         # A timer to redraw the GUI
         self.redrawTimer = QtCore.QTimer(self)
         self.redrawTimer.timeout.connect(self.RedrawVideoCallback)
-        self.redrawTimer.start(GUI_UPDATE_PERIOD)
+        self.redrawTimer.start(misc_vars.GUI_UPDATE_PERIOD)
 
     # We add a keyboard handler to the DroneVideoDisplay to react to keypress
     def keyPressEvent(self, event):
@@ -139,33 +108,33 @@ class central_ui(QtGui.QMainWindow):
         if self.keyboard_control and not event.isAutoRepeat():
         # Handle the important cases first!
             if key == KeyMapping.Surface:
-                self.z_position=0
+                vel_vars.z_position=0
             else:
                 # Now we handle moving, notice that this section is the opposite (+=) of the keyrelease section
                 if key == KeyMapping.YawLeft:
-                    self.yaw_velocity += 1
+                    vel_vars.yaw_velocity += 1
                 elif key == KeyMapping.YawRight:
-                    self.yaw_velocity += -1
+                    vel_vars.yaw_velocity += -1
 
                 elif key == KeyMapping.PitchForward:
-                    self.pitch_velocity += 1
+                    vel_vars.pitch_velocity += 1
                 elif key == KeyMapping.PitchBackward:
-                    self.pitch_velocity += -1
+                    vel_vars.pitch_velocity += -1
 
                 elif key == KeyMapping.IncreaseDepth:
-                    self.z_position += 1
+                    vel_vars.z_position += 1
                 elif key == KeyMapping.DecreaseDepth:
-                    self.z_position += -1
+                    vel_vars.z_position += -1
 
                 elif key == KeyMapping.IncreaseX:
-                    self.x_velocity += 1
+                    vel_vars.x_velocity += 1
                 elif key == KeyMapping.DecreaseX:
-                    self.x_velocity += -1
+                    vel_vars.x_velocity += -1
 
                 elif key == KeyMapping.IncreaseY:
-                    self.y_velocity += 1
+                    vel_vars.y_velocity += 1
                 elif key == KeyMapping.DecreaseY:
-                    self.y_velocity += -1
+                    vel_vars.y_velocity += -1
 
     def keyReleaseEvent(self, event):
         key = event.key()
@@ -175,24 +144,24 @@ class central_ui(QtGui.QMainWindow):
             # Note that we don't handle the release of emergency/takeoff/landing keys here, there is no need.
             # Now we handle moving, notice that this section is the opposite (-=) of the keypress section
             if key == KeyMapping.YawLeft:
-                self.yaw_velocity -= 1
+                vel_vars.yaw_velocity -= 1
             elif key == KeyMapping.YawRight:
-                self.yaw_velocity -= -1
+                vel_vars.yaw_velocity -= -1
 
             elif key == KeyMapping.PitchForward:
-                self.pitch_velocity -= 1
+                vel_vars.pitch_velocity -= 1
             elif key == KeyMapping.PitchBackward:
-                self.pitch_velocity -= -1
+                vel_vars.pitch_velocity -= -1
 
             elif key == KeyMapping.IncreaseX:
-                self.x_velocity -= 1
+                vel_vars.x_velocity -= 1
             elif key == KeyMapping.DecreaseX:
-                self.x_velocity -= -1
+                vel_vars.x_velocity -= -1
 
             elif key == KeyMapping.IncreaseY:
-                self.y_velocity -= 1
+                vel_vars.y_velocity -= 1
             elif key == KeyMapping.DecreaseY:
-                self.y_velocity -= -1
+                vel_vars.y_velocity -= -1
 
     def create_plots(self):
         self.length_plot = 25
@@ -290,7 +259,7 @@ class central_ui(QtGui.QMainWindow):
             self.keyboard_control=False
             if self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
-                self.ps3_timer.start(controller_updateFrequency)
+                self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
                 self.keyboard_control=False
                 self.ps3_timer.stop()
@@ -300,7 +269,7 @@ class central_ui(QtGui.QMainWindow):
         elif self.ui.keyboardControl.isChecked():
             self.keyboard_control = True
             self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
-            self.keyTimer.start(controller_updateFrequency)
+            self.keyTimer.start(misc_vars.controller_updateFrequency)
 
         elif self.ui.autonomousControl.isChecked():
             self.keyboard_control=False
@@ -311,20 +280,20 @@ class central_ui(QtGui.QMainWindow):
     def keyboard_update(self):
 
         #react to the keys
-        self.ui.linearVertical.setValue(100*self.y_velocity)
-        self.ui.linearHorizantal.setValue(100*self.x_velocity)
-        self.ui.angularVertical.setValue(100*self.pitch_velocity)
-        self.ui.angularHorizantal.setValue(100*-self.yaw_velocity)
+        self.ui.linearVertical.setValue(100*vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(100*vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(100*vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(100*-vel_vars.yaw_velocity)
 
-        self.ui.linearX.setText(str(self.x_velocity))
-        self.ui.linearY.setText(str(self.y_velocity))
-        self.ui.linearZ.setText(str(self.z_position))
+        self.ui.linearX.setText(str(vel_vars.x_velocity))
+        self.ui.linearY.setText(str(vel_vars.y_velocity))
+        self.ui.linearZ.setText(str(vel_vars.z_position))
         self.ui.angularX.setText(str(0))
-        self.ui.angularY.setText(str(self.pitch_velocity))
-        self.ui.angularZ.setText(str(self.yaw_velocity))
+        self.ui.angularY.setText(str(vel_vars.pitch_velocity))
+        self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         #publish to ros topic
-        velocity_publisher.velocity_publisher(self.x_velocity, self.y_velocity, self.z_position, self.pitch_velocity, self.yaw_velocity, 'partial_cmd_vel', 'zdes')
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
 
     def controller_update(self):
         """
@@ -334,22 +303,20 @@ class central_ui(QtGui.QMainWindow):
         self.ps3.updateController()
 
         #react to the joysticks
-        self.ui.linearVertical.setValue(1000*self.ps3.horizontal_front_speed)
-        self.ui.linearHorizantal.setValue(-1000*self.ps3.horizontal_side_speed)
-        self.ui.angularVertical.setValue(-1000*self.ps3.pitch_speed)
-        self.ui.angularHorizantal.setValue(-1000*self.ps3.yaw_speed)
+        self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(-1000*vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(-1000*vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(-1000*vel_vars.yaw_velocity)
 
-        self.ui.linearX.setText(str(self.ps3.horizontal_side_speed))
-        self.ui.linearY.setText(str(self.ps3.horizontal_front_speed))
-        self.ui.linearZ.setText(str(self.ps3.z_position))
+        self.ui.linearX.setText(str(vel_vars.x_velocity))
+        self.ui.linearY.setText(str(vel_vars.y_velocity))
+        self.ui.linearZ.setText(str(vel_vars.z_position))
         self.ui.angularX.setText(str(0))
-        self.ui.angularY.setText(str(self.ps3.pitch_speed))
-        self.ui.angularZ.setText(str(self.ps3.yaw_speed))
+        self.ui.angularY.setText(str(vel_vars.pitch_velocity))
+        self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         #publish to ros topic
-        velocity_publisher.velocity_publisher(self.ps3.horizontal_side_speed, -self.ps3.horizontal_front_speed, self.ps3.z_position, self.ps3.pitch_speed, self.ps3.yaw_speed, 'partial_cmd_vel', 'zdes')
-
-        self.zdes_pub.publish(self.ps3.z_position)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
 
     ###############
     #GRAPH UPDATER#
@@ -405,11 +372,11 @@ class central_ui(QtGui.QMainWindow):
     def start_ros_subscriber(self):
 
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber(imu_pose, Pose, self.imu_callback)
-        rospy.Subscriber(depth, Float32, self.depth_callback)
-        rospy.Subscriber(pressure, Float32, self.pressure_callback)
-        rospy.Subscriber(battery_voltage, Float64, self.battery_voltage_check)
-        rospy.Subscriber(left_pre_topic, Image, self.pre_left_callback)
+        rospy.Subscriber(ROS_Topics.imu_pose, Pose, self.imu_callback)
+        rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
+        rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
+        rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
+        rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
 
     #VIDEO FRAME CALLBACKS
     def pre_left_callback(self, data):
@@ -524,7 +491,7 @@ class central_ui(QtGui.QMainWindow):
     def battery_voltage_check(self, voltage_data):
         #TODO: set threshold for depleted battery
         #self.ui.Battery.setValue(voltage_data.data)
-        if (not self.battery_empty) and voltage_data.data<low_battery_threshold:
+        if (not self.battery_empty) and voltage_data.data<misc_vars.low_battery_threshold:
             self.battery_empty = True
             self.empty_battery_signal.emit()
             self.play_alarm()
