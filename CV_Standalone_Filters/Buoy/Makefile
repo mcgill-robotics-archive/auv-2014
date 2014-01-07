@@ -1,6 +1,6 @@
 COMPILER=G++
 C = cpp
-OUTPUT_PATH =
+OUTPUT_PATH = bin/
 SOURCE_PATH = src/
 EXE = $(OUTPUT_PATH)CV-Buoy
 MKDIR_P = mkdir -p
