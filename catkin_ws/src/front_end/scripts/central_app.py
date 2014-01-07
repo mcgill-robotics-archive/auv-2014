@@ -38,7 +38,7 @@ class battery_warning_ui(QtGui.QDialog):
 
         QtCore.QObject.connect(self.battery_warning_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
 
-        self.battery_warning_ui.progressBar.setValue(low_battery_threshold/max_voltage*100)
+        self.battery_warning_ui.progressBar.setValue(misc_vars.low_battery_threshold/misc_vars.max_voltage*100)
 
     def stop_alarm(self):
         pygame.mixer.music.stop()
