@@ -3,7 +3,7 @@
 # .make.sh
 # This script creates symlinks from the home directory to any desired dotfiles in ~/dotfiles
 ############################
-
+source /opt/ros/hydro/setup.bash 
 ########## Variables
 
 dir=$PWD   # dotfiles directory
@@ -43,6 +43,10 @@ if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
     echo "source ~/.roboticrc" >> ~/.bashrc
 fi 
 
+cd $dir
+cd ..
+cd catkin_ws
+catkin_make
 
 
 

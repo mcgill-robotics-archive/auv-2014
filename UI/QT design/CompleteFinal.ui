@@ -14,7 +14,7 @@
    <string>Robotics Diagnostics and Testing</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="FinalRobotics.qrc">
+   <iconset resource="Robotics_graphical_ressources.qrc">
     <normaloff>:/Images/Only-Logo.png</normaloff>:/Images/Only-Logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -33,7 +33,7 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QGraphicsView" name="preLeft">
+    <widget class="QLabel" name="preLeft">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -42,17 +42,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="preRight">
+    <widget class="QLabel" name="preRight">
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -61,17 +55,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="postLeft">
+    <widget class="QLabel" name="postLeft">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -80,17 +68,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="postRight">
+    <widget class="QLabel" name="postRight">
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -99,17 +81,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="preBottom">
+    <widget class="QLabel" name="preBottom">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -118,17 +94,11 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
-    <widget class="QGraphicsView" name="postBottom">
+    <widget class="QLabel" name="posBottom">
      <property name="geometry">
       <rect>
        <x>360</x>
@@ -137,14 +107,8 @@
        <height>241</height>
       </rect>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>344</width>
-       <height>241</height>
-      </size>
-     </property>
-     <property name="interactive">
-      <bool>false</bool>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>
@@ -161,7 +125,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="FinalRobotics.qrc">:/Images/Landscape-Logo.png</pixmap>
+     <pixmap resource="Robotics_graphical_ressources.qrc">:/Images/Landscape-Logo.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -195,7 +159,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="FinalRobotics.qrc">:/Images/cg_playstation_3_controller_2.png</pixmap>
+      <pixmap resource="Robotics_graphical_ressources.qrc">:/Images/cg_playstation_3_controller_2.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -211,23 +175,26 @@
       </rect>
      </property>
      <property name="text">
-      <string>Manual Control</string>
+      <string>PS3 Control</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QRadioButton" name="autonomousControl">
      <property name="geometry">
       <rect>
        <x>730</x>
-       <y>60</y>
-       <width>161</width>
+       <y>80</y>
+       <width>181</width>
        <height>22</height>
       </rect>
      </property>
      <property name="text">
       <string>Autonomous Control</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QProgressBar" name="Battery">
@@ -319,7 +286,7 @@
      <property name="geometry">
       <rect>
        <x>730</x>
-       <y>90</y>
+       <y>110</y>
        <width>161</width>
        <height>27</height>
       </rect>
@@ -332,7 +299,7 @@
      <property name="geometry">
       <rect>
        <x>720</x>
-       <y>140</y>
+       <y>145</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -345,16 +312,16 @@
      <property name="geometry">
       <rect>
        <x>850</x>
-       <y>130</y>
+       <y>140</y>
        <width>41</width>
-       <height>41</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="FinalRobotics.qrc">:/Images/red.jpg</pixmap>
+      <pixmap resource="Robotics_graphical_ressources.qrc">:/Images/red.jpg</pixmap>
      </property>
     </widget>
     <widget class="QLabel" name="label_6">
@@ -587,14 +554,14 @@
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>5</x>
        <y>120</y>
-       <width>16</width>
-       <height>17</height>
+       <width>41</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>Z</string>
+      <string>Depth</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="linearZ">
@@ -613,14 +580,14 @@
     <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
-       <x>300</x>
+       <x>285</x>
        <y>90</y>
-       <width>16</width>
-       <height>17</height>
+       <width>41</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>Y</string>
+      <string>Pitch</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="angularZ">
@@ -639,27 +606,27 @@
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
-       <x>300</x>
+       <x>285</x>
        <y>60</y>
-       <width>16</width>
-       <height>17</height>
+       <width>31</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>X</string>
+      <string>Roll</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_19">
      <property name="geometry">
       <rect>
-       <x>300</x>
+       <x>285</x>
        <y>120</y>
-       <width>16</width>
-       <height>17</height>
+       <width>31</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>Z</string>
+      <string>Yaw</string>
      </property>
     </widget>
     <widget class="QTextEdit" name="angularY">
@@ -686,6 +653,22 @@
      </property>
      <property name="readOnly">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="keyboardControl">
+     <property name="geometry">
+      <rect>
+       <x>730</x>
+       <y>60</y>
+       <width>151</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Keyboard Control</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
      </property>
     </widget>
    </widget>
@@ -751,274 +734,13 @@
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="DVLFrame">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>540</y>
-      <width>550</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLabel" name="label_13">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>41</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>16</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-       <underline>true</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>DVL</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_20">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>80</y>
-       <width>16</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Y</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_21">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>50</y>
-       <width>16</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>X</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="dvlLinearZ">
-     <property name="geometry">
-      <rect>
-       <x>180</x>
-       <y>110</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="dvlLinearX">
-     <property name="geometry">
-      <rect>
-       <x>180</x>
-       <y>50</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_22">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>110</y>
-       <width>16</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Z</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="dvlLinearY">
-     <property name="geometry">
-      <rect>
-       <x>180</x>
-       <y>80</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_23">
-     <property name="geometry">
-      <rect>
-       <x>430</x>
-       <y>50</y>
-       <width>16</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>X</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_24">
-     <property name="geometry">
-      <rect>
-       <x>430</x>
-       <y>110</y>
-       <width>16</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Z</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="dvlAngularX">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>50</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="dvlAngularZ">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>110</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_25">
-     <property name="geometry">
-      <rect>
-       <x>430</x>
-       <y>80</y>
-       <width>16</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Y</string>
-     </property>
-    </widget>
-    <widget class="QTextEdit" name="dvlAngularY">
-     <property name="geometry">
-      <rect>
-       <x>460</x>
-       <y>80</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_26">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>10</y>
-       <width>71</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>16</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>Linear</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_27">
-     <property name="geometry">
-      <rect>
-       <x>400</x>
-       <y>10</y>
-       <width>81</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>16</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-       <underline>false</underline>
-      </font>
-     </property>
-     <property name="text">
-      <string>Angular</string>
-     </property>
-    </widget>
-    <widget class="QGraphicsView" name="dvlLinear">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>40</y>
-       <width>161</width>
-       <height>111</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QGraphicsView" name="dvlAngular">
-     <property name="geometry">
-      <rect>
-       <x>270</x>
-       <y>40</y>
-       <width>161</width>
-       <height>111</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
    <widget class="QFrame" name="IMUdirectional">
     <property name="geometry">
      <rect>
       <x>420</x>
       <y>380</y>
       <width>550</width>
-      <height>151</height>
+      <height>311</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -1185,7 +907,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="FinalRobotics.qrc"/>
+  <include location="Robotics_graphical_ressources.qrc"/>
  </resources>
  <connections>
   <connection>

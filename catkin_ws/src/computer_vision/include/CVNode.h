@@ -24,7 +24,7 @@ class CVNode {
 	
 	public:
 	
-	CVNode(ros::NodeHandle& nodeHandle, const char* topicName);
+	CVNode(ros::NodeHandle& nodeHandle, const std::string& topicName);
 	~CVNode();
 	int getNumPublisher();
 	
@@ -34,4 +34,3 @@ class CVNode {
 };
 	
 #endif
-

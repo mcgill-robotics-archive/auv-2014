@@ -1,0 +1,5 @@
+Software Versions for McGill Robotics
+Last Updated Dec 10 2013, Nick Speal
+
+Ubuntu 12.04 LTS
+ROS Hydro
