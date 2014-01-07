@@ -1,9 +1,36 @@
+/**
+ * @file CVNode.cpp
+ * @author Renaud Dagenais
+ * @author Jean-Sebastien Dery
+ * @author Haris Haidary
+ * @version 1.0.0
+ * @date December 17th 2013
+ * @brief TODO since it will be renamed and its purpose will change a bit lulzy lulzo.
+*/
 #include "CVNode.h"
 
+/**
+ * Defines the number of seconds between every delays when the node is waiting for someone to publish the topic.
+ */
 #define DELAY_BETWEEN_INFOS 5
 
+/**
+ * Defines what is the name of the topic on which the node will be listening to for the image feeds.
+ */
 const std::string VIDEO_FEED_TOPIC_NAME = "camera_feed";
 
+/**
+ * Defines the topic name used by the planner to control what object the forward cameras will be searching for.
+ */
+const std::string FORWARD_CAMERAS_TOPIC_NAME = "forward_cameras_object";
+
+/**
+ * @brief Main method used by ROS when the node is launched.
+ *
+ * @param argc The number of arguments passed when the process is stared.
+ * @param argv The arguments passed when the process is started.
+ * @return The termination status of the processe's execution.
+ */
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "cv_node");
 	ros::NodeHandle nodeHandle;
@@ -16,7 +43,6 @@ int main(int argc, char **argv) {
 
 	// Start receiving images from the camera node (publisher)
 	while (ros::ok()) {
-
 		// Check if the camera node is still sending images
 		if (pCVNode->getNumPublisher() > 0)
 			ros::getGlobalCallbackQueue()->callAvailable();
@@ -43,6 +69,8 @@ int main(int argc, char **argv) {
 CVNode::CVNode(ros::NodeHandle& nodeHandle, const std::string& topicName) {
 	// Subscribe to the "camera_feed" topic
 	pImageTransport = new image_transport::ImageTransport(nodeHandle);
+
+	// Instanciates the subscribers.
 	subscriber = pImageTransport->subscribe(topicName, 1, &CVNode::receiveImage, this);
 
 	// Construct the list of VisibleObjects
@@ -83,7 +111,7 @@ CVNode::~CVNode() {
 }
 
 /**
- * Function that is called when an image is received.
+ * @brief Function that is called when an image is received.
  *
  * @param rosMessage The ROS message that contains the image
  */
