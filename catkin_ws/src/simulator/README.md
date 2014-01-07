@@ -19,6 +19,14 @@ INSTALLATION INSTRUCTIONS:
 	
 	$catkin_make
 
+
+	Note: If you don't want to source your Catkin workspace everytime you want to run ROS, you can add the sourcing
+	step in your ~/.bashrc file. This file is executed whenever ROS starts when you log into your Ubuntu session.
+	Under is an example of this:
+
+	source /opt/ros/hydro/setup.bash
+	source ~/Git_Repositories/McGill_RoboSub_2014/catkin_ws/devel/setup.bash
+
 3.	Run: $roslaunch simulator simulator.launch
 	
 	If it does not run, try sourcing setup.bash again and re-run the simulator.
