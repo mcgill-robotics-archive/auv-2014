@@ -37,6 +37,7 @@ battery_voltage="battery_voltage"
 pressure="pressure"
 depth="depth"
 left_pre_topic = "/my_robot/camera1/image_raw"
+imu_pose = "pose"
 
 # Here we define the keyboard map for our controller
 class KeyMapping(object):
@@ -111,7 +112,7 @@ class central_ui(QtGui.QMainWindow):
         pygame.init()
         pygame.mixer.init()
 
-        #TODO: change path to a machine specific path, I can't get this thing to work with a relative path
+        #change path to a machine specific path, I can't get this thing to work with a relative path
         self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
         #buttons connects
@@ -123,7 +124,6 @@ class central_ui(QtGui.QMainWindow):
 
         #controller timer connect
         QtCore.QObject.connect(self.ps3_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
-        #TODO: set timout function for keyboard
         QtCore.QObject.connect(self.keyTimer, QtCore.SIGNAL("timeout()"), self.keyboard_update)
 
         # A timer to redraw the GUI
@@ -321,9 +321,7 @@ class central_ui(QtGui.QMainWindow):
         self.ui.linearZ.setText(str(self.z_position))
         self.ui.angularX.setText(str(0))
         self.ui.angularY.setText(str(self.pitch_velocity))
-        self.ui.angularZ.setText((str(self.yaw_velocity)))
-
-# TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
+        self.ui.angularZ.setText(str(self.yaw_velocity))
 
         #publish to ros topic
         velocity_publisher.velocity_publisher(self.x_velocity, self.y_velocity, self.z_position, self.pitch_velocity, self.yaw_velocity, 'partial_cmd_vel', 'zdes')
@@ -341,17 +339,15 @@ class central_ui(QtGui.QMainWindow):
         self.ui.angularVertical.setValue(-1000*self.ps3.pitch_speed)
         self.ui.angularHorizantal.setValue(-1000*self.ps3.yaw_speed)
 
-        self.ui.linearX.setText(str(self.ps3.horizontal_front_speed))
-        self.ui.linearY.setText(str(self.ps3.horizontal_side_speed))
+        self.ui.linearX.setText(str(self.ps3.horizontal_side_speed))
+        self.ui.linearY.setText(str(self.ps3.horizontal_front_speed))
         self.ui.linearZ.setText(str(self.ps3.z_position))
         self.ui.angularX.setText(str(0))
         self.ui.angularY.setText(str(self.ps3.pitch_speed))
-        self.ui.angularZ.setText((str(self.ps3.yaw_speed)))
-
-# TODO : note to self, modified the axis for the demo, we need to set them back to the right ones!!!
+        self.ui.angularZ.setText(str(self.ps3.yaw_speed))
 
         #publish to ros topic
-        velocity_publisher.velocity_publisher(self.ps3.horizontal_front_speed, -self.ps3.horizontal_side_speed, self.ps3.z_position, self.ps3.yaw_speed, self.ps3.pitch_speed, 'partial_cmd_vel', 'zdes')
+        velocity_publisher.velocity_publisher(self.ps3.horizontal_side_speed, -self.ps3.horizontal_front_speed, self.ps3.z_position, self.ps3.pitch_speed, self.ps3.yaw_speed, 'partial_cmd_vel', 'zdes')
 
         self.zdes_pub.publish(self.ps3.z_position)
 
@@ -407,9 +403,9 @@ class central_ui(QtGui.QMainWindow):
     #ROS SUBSCRIBER#
     ################
     def start_ros_subscriber(self):
-        #TODO: get real ros topic list
+
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber("pose", Pose, self.imu_callback)
+        rospy.Subscriber(imu_pose, Pose, self.imu_callback)
         rospy.Subscriber(depth, Float32, self.depth_callback)
         rospy.Subscriber(pressure, Float32, self.pressure_callback)
         rospy.Subscriber(battery_voltage, Float64, self.battery_voltage_check)
@@ -527,6 +523,7 @@ class central_ui(QtGui.QMainWindow):
     #LOW BATTERY ALARM
     def battery_voltage_check(self, voltage_data):
         #TODO: set threshold for depleted battery
+        #self.ui.Battery.setValue(voltage_data.data)
         if (not self.battery_empty) and voltage_data.data<low_battery_threshold:
             self.battery_empty = True
             self.empty_battery_signal.emit()

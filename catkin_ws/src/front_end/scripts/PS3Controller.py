@@ -107,6 +107,3 @@ class PS3Controller(object):
                     self.horizontal_front_speed = -0.2*self.controller.get_axis(1)  # left front/back axis
                     self.yaw_speed = -0.2*self.controller.get_axis(2)  # right left/right axis
                     self.pitch_speed = -0.2*self.controller.get_axis(3)  # right front/back axis
-
-    def returnButtons(self):
-        return self.select, self.l3, self.r3, self.start, self.l2, self.r2, self.l1, self.r1, self.triangle, self.o, self.x, self.square
