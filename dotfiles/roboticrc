@@ -1,8 +1,21 @@
+blue='\033[0;34m'
+red='\033[0;31m'
+NC='\033[0m' # No Color
+
+alias pipes='bash ~/Documents/pipes.sh'
+alias matrix='bash ~/Documents/matrix.sh'
 alias fucking='sudo'
-alias roscereal='rosrun rosserial_python serial_node.py'
-alias becool='roscore'
-alias whosyourmother='echo your mom'
+alias ls='ls -G'
+alias whosyourmother='echo -e "${red}your mom${NC}"'
 alias woman='man'
+alias robot='cd ~/Documents/robotics/Documents/McGill_RoboSub_2014/'
+alias comp='cd ~/Documents/robotics/Documents/COMP\ 202/'
+alias docs='cd ~/Documents/robotics/Documents/'
+alias yinghanwang='echo is beautiful'
+alias showmeyourgenitals='echo -e "${blue}say please${NC}"'
+alias please='echo -e "${blue}bend over${NC}"'
+
+PS1='\[\e[1;34m\]\u\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\]\$ '
 
 source /opt/ros/hydro/setup.bash
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
