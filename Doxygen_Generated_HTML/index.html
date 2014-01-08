@@ -77,10 +77,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock"><h2><a class="anchor" id="introduction_section"></a>
 Introduction</h2>
-<p>This is the introduction section.</p>
+<p>TODO: This is the introduction section.</p>
 <h2><a class="anchor" id="github_section"></a>
 Github</h2>
-<p>This is the github section </p>
+<p>TODO: This is the github section</p>
+<h2><a class="anchor" id="updatedoc_section"></a>
+How to update the documentation</h2>
+<h3><a class="anchor" id="where_to_locate_files"></a>
+Where to locate the configuration files</h3>
+<p>The Doxygen configuration file used to generate this HTML page (and all the others) is located under the folder "Doxygen_Setup" (in our team's Git repository) under the name of "Doxygen_Configuration_for_McGill_Robotics".</p>
+<h3><a class="anchor" id="modify_mainpage"></a>
+How to modify this mainpage</h3>
+<p>Go in the "Doxygen_Setup" folder and open the file "mainpage.dox" and you will be able to modify the mainpage. After that, generate the documentation with the aid of Doxygen.</p>
+<h3><a class="anchor" id="useful_parameters"></a>
+Useful parameters in the configuration file</h3>
+<p>INPUT - Determines all the source folder that Doxygen will consider for the documentation generation.<br/>
+ HTML_OUTPUT - Determines where all the HTML pages will be saved after the generation.<br/>
+ FILE_PATTERNS - Determines which file extensions are considered by Doxygen.<br/>
+</p>
+<h3><a class="anchor" id="how_to_run_doxygen"></a>
+How to run Doxygen to generate/update the HTML documentation</h3>
+<p>All the source folders are set in the configuration file, and the only thing you need to do in order to update this documentation is to execute doxygen with the configuration file as input like this:<br/>
+<br/>
+ $ doxygen Doxygen_Configuration_for_McGill_Robotics </p>
 </div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -99,7 +118,7 @@ Github</h2>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 7 2014 18:28:00 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jan 7 2014 19:15:53 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

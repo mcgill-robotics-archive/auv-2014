@@ -3,9 +3,30 @@
 
 @section introduction_section Introduction
 
-This is the introduction section.
+TODO: This is the introduction section.
 
 @section github_section Github
 
-This is the github section
+TODO: This is the github section
+
+@section updatedoc_section How to update the documentation
+
+@subsection where_to_locate_files Where to locate the configuration files
+
+The Doxygen configuration file used to generate this HTML page (and all the others) is located under the folder "Doxygen_Setup" (in our team's Git repository) under the name of "Doxygen_Configuration_for_McGill_Robotics".
+
+@subsection modify_mainpage How to modify this mainpage
+
+Go in the "Doxygen_Setup" folder and open the file "mainpage.dox" and you will be able to modify the mainpage. After that, generate the documentation with the aid of Doxygen.
+
+@subsection useful_parameters Useful parameters in the configuration file
+
+INPUT - Determines all the source folder that Doxygen will consider for the documentation generation.\n
+HTML_OUTPUT - Determines where all the HTML pages will be saved after the generation.\n
+FILE_PATTERNS - Determines which file extensions are considered by Doxygen.\n
+
+@subsection how_to_run_doxygen How to run Doxygen to generate/update the HTML documentation
+
+All the source folders are set in the configuration file, and the only thing you need to do in order to update this documentation is to execute doxygen with the configuration file as input like this:\n\n
+$ doxygen Doxygen_Configuration_for_McGill_Robotics
 */
