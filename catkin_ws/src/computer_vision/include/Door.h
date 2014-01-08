@@ -4,17 +4,53 @@
 #include "VisibleObject.h"
 
 // Defines the different constants used:
+/**
+ * The ratio used in the canny transform to determine shape contours.
+ */
 const int CANNY_RATIO = 3;
+/**
+ * The lowest threshold used in the canny transform to determine shape contours.
+ */
 const int CANNY_LOW_THRESHOLD = 200;
+/**
+ * The Kernel size used for the Gaussian Blur filter (used to compensate camera sensor noise).
+ */
 const int KERNEL_SIZE = 3;
+/**
+ * The gate's orange height/width ratio used to filter false positive readings on a frame.
+ */
 const int GATE_RATIO = 16; // It's 1:16 for the width and height.
+/**
+ * The deviation tolerance
+ */
 const int GATE_RATIO_ERROR = 5;
+/**
+ * The focal length of the lenses.
+ */
 const float FOCAL_LENGTH = 8;
+/**
+ * The height of the gate in millimeters.
+ */
 const float DOOR_REAL_HEIGHT = 1219.2;
+/**
+ * The eight of the sensor of the camera in millimeters.
+ */
 const float CAMERA_SENSOR_HEIGHT = 6.26;
+/**
+ * The escape key's ID.
+ */
 const int ESCAPE_KEY = 27;
-const int TIME_BETWEEN_FRAME = 150; // This is in miliseconds.
+/**
+ * The delay between each frame on the stream, in milliseconds.
+ */
+const int TIME_BETWEEN_FRAME = 150; // This is in milliseconds.
+/**
+ * The minimum number of edges that a shape must have in order to be accepted for further filtering.
+ */
 const int MIN_NUMBER_EDGES = 4;
+/**
+ * The maximum number of edges that a shape must have in order to be accepted for further filtering.
+ */
 const int MAX_NUMBER_EDGES = 50;
 
 // Defines the basic colors used in the BGRX color space.

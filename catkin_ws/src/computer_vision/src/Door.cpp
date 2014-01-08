@@ -1,3 +1,11 @@
+/**
+ * This object is used to detect the gate object.
+ *
+ * @author Jean-Sebastien Dery
+ * @author Renaud Dagenais
+ * @author Haris Haidary
+ */
+
 #include "Door.h"
 
 Door::~Door() {
