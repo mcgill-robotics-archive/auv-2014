@@ -61,10 +61,6 @@ class CentralUi(QtGui.QMainWindow):
         self.ui = Ui_RoboticsMain()  # create the ui object
         self.ui.setupUi(self)
         
-        #create the plots and start the ros subscribers
-        self.create_plots()
-        self.start_ros_subscriber()
-        
         #dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
 
@@ -88,6 +84,10 @@ class CentralUi(QtGui.QMainWindow):
         self.mag3_data = []
         self.pressure_data = []
         self.depth_data = []
+
+        #create the plots and start the ros subscribers
+        self.create_plots()
+        self.start_ros_subscriber()
 
         #object to acquire lock on a thread to eliminate race conditions when updating the images
         self.image_lock = Lock()
@@ -278,15 +278,14 @@ class CentralUi(QtGui.QMainWindow):
         for the keyboard controller, simply start the keyboard timer
         """
         #radio button PS3
-        if self.ui.manualControl.isChecked() and self.ps3.controller_isPresent:
+        if self.ui.manualControl.isChecked():
             self.keyboard_control=False
             self.key_timer.stop()
             #checks if the ps3 controller is present before starting the acquisition
-            if self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
+            if self.ps3.controller_isPresent and self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
-                self.ps3_timer.stop()
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
         #radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
