@@ -13,7 +13,7 @@ TODO: This is the github section
 
 @subsection where_to_locate_files Where to locate the configuration files
 
-The Doxygen configuration file used to generate this HTML page (and all the others) is located under the folder "Doxygen_Setup" (in our team's Git repository) under the name of "Doxygen_Configuration_for_McGill_Robotics".
+The Doxygen configuration file used to generate this HTML page (and all the others) is located under the folder "Doxygen_Setup" (in our team's Git repository) under the name of "Doxygen_Configs".
 
 @subsection modify_mainpage How to modify this mainpage
 
@@ -28,5 +28,5 @@ FILE_PATTERNS - Determines which file extensions are considered by Doxygen.\n
 @subsection how_to_run_doxygen How to run Doxygen to generate/update the HTML documentation
 
 All the source folders are set in the configuration file, and the only thing you need to do in order to update this documentation is to execute doxygen with the configuration file as input like this:\n\n
-$ doxygen Doxygen_Configuration_for_McGill_Robotics
+$ doxygen Doxygen_Configs
 */
