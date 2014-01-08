@@ -56,12 +56,12 @@ class CentralUi(QtGui.QMainWindow):
         
         it integrates the actual window as well as variables for the graphing areas and the video monitoring array
         """
-        #build parent user interface
+        # build parent user interface
         super(CentralUi, self).__init__(parent)
         self.ui = Ui_RoboticsMain()  # create the ui object
         self.ui.setupUi(self)
         
-        #dummy variable to enable or disable the keyboard monitoring
+        # dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
 
         # Holds the image frame received from the sub and later processed by the GUI
@@ -85,14 +85,14 @@ class CentralUi(QtGui.QMainWindow):
         self.pressure_data = []
         self.depth_data = []
 
-        #create the plots and start the ros subscribers
+        # create the plots and start the ros subscribers
         self.create_plots()
         self.start_ros_subscriber()
 
-        #object to acquire lock on a thread to eliminate race conditions when updating the images
+        # object to acquire lock on a thread to eliminate race conditions when updating the images
         self.image_lock = Lock()
 
-        #creates the timers to enable or disable the ps3 and keyboard controllers
+        # creates the timers to enable or disable the ps3 and keyboard controllers
         self.ps3_timer = QtCore.QTimer()
         self.key_timer = QtCore.QTimer()
 
@@ -102,22 +102,22 @@ class CentralUi(QtGui.QMainWindow):
         # place holder variable for internal battery status
         self.battery_empty = False
         
-        #initiate pygame for the battery alarm
+        # initiate pygame for the battery alarm
         pygame.init()
         pygame.mixer.init()
 
-        #load alarm sound
+        # load alarm sound
         #change path to a machine specific path, I can't get this thing to work with a relative path
         self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
-        #buttons connects
+        # buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
 
-        #low battery connect
+        # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
 
-        #controller timer connect
+        # controller timer connect
         QtCore.QObject.connect(self.ps3_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
         QtCore.QObject.connect(self.key_timer, QtCore.SIGNAL("timeout()"), self.keyboard_update)
 
@@ -195,7 +195,7 @@ class CentralUi(QtGui.QMainWindow):
                 vel_vars.y_velocity -= -1
 
     def create_plots(self):
-        #fill the data sets with dummy data
+        # fill the data sets with dummy data
         for i in range(0, misc_vars.length_plot, 1):
             self.acc1_data.append(0)
             self.acc2_data.append(0)
@@ -209,9 +209,9 @@ class CentralUi(QtGui.QMainWindow):
             self.pressure_data.append(0)
             self.depth_data.append(0)
 
-        #IMU PLOTS
+        # IMU PLOTS
 
-        #create and layout imu graphics
+        # create and layout imu graphics
         self.ui.imugraphics.addPlot()
 
         self.acc1 = self.ui.imugraphics.addPlot(title="Accelerometer1")
@@ -258,12 +258,12 @@ class CentralUi(QtGui.QMainWindow):
         self.mag3_curve = self.mag3.plot(pen="b")
         self.mag3.setXRange(0, misc_vars.length_plot)
 
-        #PRESSURE GRAPH
+        # PRESSURE GRAPH
         self.pressure_graph = self.ui.pressure.addPlot(title="Pressure")
         self.pressure_curve = self.pressure_graph.plot(pen="y")
         self.pressure_graph.setXRange(0, misc_vars.length_plot)
 
-        #DEPTH GRAPH
+        # DEPTH GRAPH
         self.depth_graph = self.ui.depth.addPlot(title="Depth")
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, misc_vars.length_plot)
@@ -277,22 +277,22 @@ class CentralUi(QtGui.QMainWindow):
         the initialisation and starts the ps3 timer
         for the keyboard controller, simply start the keyboard timer
         """
-        #radio button PS3
+        # radio button PS3
         if self.ui.manualControl.isChecked():
             self.keyboard_control=False
             self.key_timer.stop()
-            #checks if the ps3 controller is present before starting the acquisition
+            # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent and self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
-        #radio button KEYBOARD
+        # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
             self.keyboard_control = True
             self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
-        #radio button AUTONOMOUS
+        # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
             self.keyboard_control = False
             self.ps3_timer.stop()
@@ -306,7 +306,7 @@ class CentralUi(QtGui.QMainWindow):
         updates the ui with the values of the keyboard controller data
         publishes to the correct topic
         """
-        #set ui
+        # set ui
         self.ui.linearVertical.setValue(100*vel_vars.y_velocity)
         self.ui.linearHorizantal.setValue(100*vel_vars.x_velocity)
         self.ui.angularVertical.setValue(100*vel_vars.pitch_velocity)
@@ -319,7 +319,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularY.setText(str(vel_vars.pitch_velocity))
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
-        #publish to ros topic
+        # publish to ros topic
         velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
 
     def controller_update(self):
@@ -330,10 +330,10 @@ class CentralUi(QtGui.QMainWindow):
         updates the ui with the values of the ps3 controller data
         publishes to the correct topic
         """
-        #update the state of the controller
+        # update the state of the controller
         self.ps3.updateController()
 
-        #set ui
+        # set ui
         self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
         self.ui.linearHorizantal.setValue(-1000*vel_vars.x_velocity)
         self.ui.angularVertical.setValue(-1000*vel_vars.pitch_velocity)
@@ -346,13 +346,13 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularY.setText(str(vel_vars.pitch_velocity))
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
-        #publish to ros topic
+        # publish to ros topic
         velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
 
     ###############
     #GRAPH UPDATER#
     ###############
-    #the following update the data sets displayed by each graph
+    # the following update the data sets displayed by each graph
 
     def pressure_graph_update(self, data_input):
         """
@@ -422,7 +422,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
 
-    #VIDEO FRAME CALLBACKS
+    # VIDEO FRAME CALLBACKS
     def pre_left_callback(self, data):
         """
         when a frame is received, all the data is recorded in the appropriate variable
@@ -574,7 +574,7 @@ class CentralUi(QtGui.QMainWindow):
         else:
             self.ui.posBottom.setText("No video feed")
 
-    #GRAPHS CALLBACKS
+    # GRAPHS CALLBACKS
     def imu_callback(self, pose_data):
         """
         stores the data received in variable
@@ -598,7 +598,7 @@ class CentralUi(QtGui.QMainWindow):
         """
         self.pressure_graph_update(pressure_data.data)
 
-    #LOW BATTERY ALARM
+    # LOW BATTERY ALARM
     def battery_voltage_check(self, voltage_data):
         """
         when voltage data is received, check if the voltage is ok,

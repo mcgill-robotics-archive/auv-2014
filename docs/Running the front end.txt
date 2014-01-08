@@ -19,6 +19,8 @@ edit the topic names in 'VARIABLES.py'
 to use random data publishers, there is a package 'mock_data' containing the folowing random number publisher of various message types
 
 depthPublisher.cpp -> Float64 to /depth
+battery_voltage.py -> Float64 (either 1 of 5) to /battery_voltage 
+
 
 
 
