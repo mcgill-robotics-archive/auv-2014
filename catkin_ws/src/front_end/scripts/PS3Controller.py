@@ -3,7 +3,9 @@
 Created on Aug 10th 2013
 
 __author__: Jean-Sebastien Dery
- revision by David Lavoie-Boutin
+adaptation for McGill Robotics by David Lavoie-Boutin
+
+Class containing all relevant commands to fetch data from a ps3 controller
 """
 
 import os
@@ -45,23 +47,11 @@ class PS3Controller(object):
             print "Shutting down the process..."
             self.controller_isPresent = False
 
-        self.square = 0
-        self.triangle = 0
-        self.o = 0
-        self.x = 0
-
-        self.l1 = 0
-        self.l2 = 0
-        self.l3 = 0
-        self.r1 = 0
-        self.r2 = 0
-        self.r3 = 0
-        self.start = 0
-        self.select = 0
-
     def initialize_controller(self):
-        #This part will set all the Global variables used in PS3Controller.
-        #It is only called if the constructor finds only 1 joystick
+        """
+        This part will set all the Global variables used in PS3Controller.
+        It is only called if the constructor finds only 1 joystick
+        """
         self.controller = pygame.joystick.Joystick(0)
         self.controller.init()
         self.controller_name =  self.controller.get_name()
@@ -71,7 +61,7 @@ class PS3Controller(object):
         vel_vars.z_position += vel_vars.z_position_step
 
     def z_rise(self):
-        if vel_vars.z_position>0:
+        if vel_vars.z_position > 0:
             vel_vars.z_position -= vel_vars.z_position_step
 
     def z_surface(self):

@@ -1,0 +1,26 @@
+Instruction on how to use the front end
+Version 1.0 - David L-B - Jan 8, 2014
+
+(1)
+$ rosrun front_end central_app.py
+-OR-
+$ cd McGill_RoboSub_2014/catkin_ws
+$ roslaunch launch/front_end2.launch
+
+(2) 
+start your nodes or the simulation environment to see the data on the ui
+
+you may need to assign correct topic names 
+$ roscd front_end/scripts
+
+edit the topic names in 'VARIABLES.py'
+
+(3) 
+to use random data publishers, there is a package 'mock_data' containing the folowing random number publisher of various message types
+
+depthPublisher.cpp -> Float64 to /depth
+battery_voltage.py -> Float64 (either 1 of 5) to /battery_voltage 
+
+
+
+
