@@ -13,6 +13,9 @@ cv::Mat VisibleObject::convertFromBGRXToHSV(const cv::Mat& currentFrame) {
         return (currentFrameInHSV);
 }
 
+/**
+ * Destructor.
+*/
 VisibleObject::~VisibleObject() {
 	/* There is an empty destructor here because the VisibleObject destructor has to be virtual,
 	 * since we are using polymorphic pointers of VisibleObjects. */
