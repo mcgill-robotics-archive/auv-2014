@@ -18,9 +18,20 @@ edit the topic names in 'VARIABLES.py'
 (3) 
 to use random data publishers, there is a package 'mock_data' containing the folowing random number publisher of various message types
 
-depthPublisher.cpp -> Float64 to /depth
+depthPublisher.cpp -> Float32 to /depth
+pressurePublisher.cpp -> Float32 to /pressure
 battery_voltage.py -> Float64 (either 1 of 5) to /battery_voltage 
+posePublisher.cpp -> Pose to /pose
 
+(4) 
+to manually drive the robot, first choose which controller to use
+note that the ps3 will only work it no other devices are connected and if it was connected  when the front end was launched
+click the 'Connect PS3 controller' button and start driving
+also note the keys to drive the robot:
+{S, E, F, D} to controll linear speed
+{J, I, L, K} to controll angular speed
+{U, O} to controll depth
+H for emergency surfacing
 
 
 
