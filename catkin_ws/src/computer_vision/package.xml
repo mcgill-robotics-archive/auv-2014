@@ -29,6 +29,11 @@
   <author email="thuy-anh.le@mail.mcgill.ca">Thuy-Anh Le</author>
   <author email="yoann@battyani.com">Yoann Battyani</author>
 
+  <!-- This will allow ROS to generate the custom ROS Message type for different languages (C++, Python, etc.) -->
+  <build_depend>message_generation</build_depend>
+  <!-- This will allow ROS to use the generated custom ROS Message type during runtime by this and other packages. -->
+  <run_depend>message_runtime</run_depend>
+
   <!-- Package's dependencies. -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>cv_bridge</build_depend>
