@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   geometry_msgs
+  simulator
   message_generation
 )
 
@@ -50,6 +51,7 @@ find_package(catkin REQUIRED COMPONENTS
 #   Depth.msg
 #   Pressure.msg
     CVQuery.msg
+#    ThrusterForces.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -71,6 +73,7 @@ find_package(catkin REQUIRED COMPONENTS
    DEPENDENCIES
    std_msgs
    planner
+   simulator
  )
 
 ###################################
