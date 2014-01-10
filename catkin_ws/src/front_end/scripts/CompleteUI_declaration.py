@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CompleteFinal.ui'
 #
-# Created: Mon Jan  6 14:59:10 2014
-#      by: PyQt4 UI code generator 4.9.1
+# Created: Fri Jan 10 10:13:30 2014
+#      by: PyQt4 UI code generator 4.9.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_RoboticsMain(object):
     def setupUi(self, RoboticsMain):
         RoboticsMain.setObjectName(_fromUtf8("RoboticsMain"))
-        RoboticsMain.resize(1683, 1017)
+        RoboticsMain.resize(1280, 752)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/Images/Only-Logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         RoboticsMain.setWindowIcon(icon)
@@ -53,7 +53,7 @@ class Ui_RoboticsMain(object):
         self.posBottom.setText(_fromUtf8(""))
         self.posBottom.setObjectName(_fromUtf8("posBottom"))
         self.label = QtGui.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(10, 40, 351, 111))
+        self.label.setGeometry(QtCore.QRect(10, 10, 351, 111))
         self.label.setText(_fromUtf8(""))
         self.label.setPixmap(QtGui.QPixmap(_fromUtf8(":/Images/Landscape-Logo.png")))
         self.label.setScaledContents(True)
@@ -314,9 +314,21 @@ class Ui_RoboticsMain(object):
         self.pressure = GraphicsLayoutWidget(self.Pressure)
         self.pressure.setGeometry(QtCore.QRect(0, 30, 271, 141))
         self.pressure.setObjectName(_fromUtf8("pressure"))
+        self.label_13 = QtGui.QLabel(self.centralwidget)
+        self.label_13.setGeometry(QtCore.QRect(40, 120, 121, 71))
+        self.label_13.setText(_fromUtf8(""))
+        self.label_13.setPixmap(QtGui.QPixmap(_fromUtf8(":/Keys/Screen Shot 2014-01-10 at 10.05.30 AM.png")))
+        self.label_13.setScaledContents(True)
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.label_20 = QtGui.QLabel(self.centralwidget)
+        self.label_20.setGeometry(QtCore.QRect(200, 120, 121, 71))
+        self.label_20.setText(_fromUtf8(""))
+        self.label_20.setPixmap(QtGui.QPixmap(_fromUtf8(":/Keys/Screen Shot 2014-01-10 at 10.06.36 AM.png")))
+        self.label_20.setScaledContents(True)
+        self.label_20.setObjectName(_fromUtf8("label_20"))
         RoboticsMain.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(RoboticsMain)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1683, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 22))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))

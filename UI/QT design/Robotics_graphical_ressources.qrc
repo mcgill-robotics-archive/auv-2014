@@ -1,13 +1,14 @@
 <RCC>
   <qresource prefix="Images">
-    <file>Coral view 1.jpg</file>
-    <file>Nemo view.JPG</file>
-    <file>Submarine-coral view.JPG</file>
     <file>red.jpg</file>
     <file>green.gif</file>
     <file>cg_playstation_3_controller_2.png</file>
     <file>yellow.gif</file>
     <file>Landscape-Logo.png</file>
     <file>Only-Logo.png</file>
+  </qresource>
+  <qresource prefix="Keys">
+    <file>Screen Shot 2014-01-10 at 10.05.30 AM.png</file>
+    <file>Screen Shot 2014-01-10 at 10.06.36 AM.png</file>
   </qresource>
 </RCC>
