@@ -37,8 +37,9 @@ Roadmap
 #include "depthController.h"
 #include "gazebo_msgs/ModelStates.h"
 
-#include "planner/setPoints.h"	//custom message type, not yet properly defined
-
+//#include "planner/ValueControl.h"
+#include "planner/MotorControl.h"	//custom message type, not yet properly defined
+#include "planner/ValueControl.h"
 // using namespace std; //what does this do?!?!
 
 //global vars
