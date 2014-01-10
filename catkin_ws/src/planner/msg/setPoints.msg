@@ -1,0 +1,8 @@
+ValueControl XPos
+ValueControl YPos
+ValueControl ZPos
+ValueControl Yaw
+ValueControl Pitch
+ValueControl XSpeed
+ValueControl YSpeed
+ValueControl YawSpeed
