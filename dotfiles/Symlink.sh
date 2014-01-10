@@ -5,7 +5,7 @@
 ############################
 source /opt/ros/hydro/setup.bash 
 ########## Variables
-
+sudo cp -f -v 49-teensy.rules /etc/udev/rules.d/49-teensy.rules
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                # old dotfiles backup directory
 files="vimrc tmux.conf roboticrc"    # list of files/folders to symlink in homedir
