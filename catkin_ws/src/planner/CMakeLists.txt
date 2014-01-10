@@ -18,6 +18,7 @@ project(planner)
    FILES
    MotorControl.msg
    setPoints.msg
+   ValueControl.msg
  )
 
 ## Generate services in the 'srv' folder
