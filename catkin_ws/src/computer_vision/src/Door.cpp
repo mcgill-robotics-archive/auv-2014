@@ -62,6 +62,10 @@ void Door::applyFilter(cv::Mat& currentFrame) {
         // Finds all the contours in the image and store them in a vector containing vectors of points.
         std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV);
 
+
+
+
+
         for (int i = 0 ; i < detectedContours.size() ; i++) {
                 // Gets the contour to analyse in this loop iteration.
                 std::vector<cv::Point> contourToAnalyse = detectedContours.at(i);
