@@ -37,9 +37,9 @@ Roadmap
 #include "depthController.h"
 #include "gazebo_msgs/ModelStates.h"
 
-//#include "planner/ValueControl.h"
-#include "planner/MotorControl.h"	//custom message type, not yet properly defined
+#include "planner/setPoints.h"	
 #include "planner/ValueControl.h"
+
 // using namespace std; //what does this do?!?!
 
 //global vars
@@ -70,7 +70,7 @@ float estimated_ZPos = 0;
 float estimated_Pitch = 0;
 float estimated_Roll = 0;
 
-void setPoints_callback(const setPoints setPointsMsg)
+void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	ROS_DEBUG("Subscriber received set points");
 	setPoint_XPos = setPointsMsg.XPos.data;
@@ -120,11 +120,18 @@ int main(int argc, char **argv)
     float ki = 100;
 
 	//initializations
-	float zdot_old = 0; //initial velocity
-	float zdot_new = 0;
 	
-    float ep = 0; //error
-    float ei = 0; //integral error
+
+    float ep_XPos = 0; //error
+    float ei_XPos = 0; //integral error
+    float ep_YPos = 0;
+    float ei_YPos = 0;
+    float ep_ZPos = 0;
+    float ei_ZPos = 0;
+    float ep_Pitch = 0;
+    float ei_Pitch = 0;
+    float ep_Yaw = 0;
+    float ei_Yaw = 0;
 
     float Fx = 0;
     float Fy = 0;
@@ -139,8 +146,8 @@ int main(int argc, char **argv)
 	// ROS subscriber setup
 	ros::init(argc,argv,"control");
 	ros::NodeHandle n;
-	ros::Subscriber partial_cmd_vel_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber pose_subscriber = n.subscribe("gazebo/model_states", 1000, estimatedState_callback);
+	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
+	ros::Subscriber estimatedState_subscriber = n.subscribe("gazebo/model_states", 1000, estimatedState_callback);
 	//add clock subscription
 
 	//ROS Publisher setup
@@ -156,12 +163,10 @@ int main(int argc, char **argv)
 	       
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		ready = 1;		 
-		if (partial_cmd_vel_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_DEBUG_THROTTLE(2,"got partial cmd vel");}
-		if (zdes_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_DEBUG_THROTTLE(2,"got zdes");}
-		if (pose_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_DEBUG_THROTTLE(2,"got pose");}
+		if (setPoints_subscriber.getNumPublishers() == 0) {ready = 0;}
+		else {ROS_DEBUG_THROTTLE(2,"got setPoints");}
+		if (estimatedState_subscriber.getNumPublishers() == 0) {ready = 0;}
+		else {ROS_DEBUG_THROTTLE(2,"got estimated State");}
 	}
 
 	ROS_INFO("All Subscribers Live. Starting Controller!");
@@ -182,14 +187,14 @@ int main(int argc, char **argv)
 		if (isActive_Xpos)
 		{
 			ep_XPos = setPoint_XPos - estimated_XPos;
-			ei_xPos += ep_XPos*dt;
+			ei_XPos += ep_XPos*dt;
 			Fx = kp*ep_XPos + ki*ei_XPos;
 		}
         
         if (isActive_XSpeed)
         {
         	OL_coef_x = 1;
-        	Fx = OL_coef_x*setPoint_XSpeed
+        	Fx = OL_coef_x*setPoint_XSpeed;
         }
 
         //Y 
@@ -203,7 +208,7 @@ int main(int argc, char **argv)
         if (isActive_YSpeed)
         {
         	OL_coef_y = 1;
-        	Fy = OL_coef_y*setPoint_YSpeed
+        	Fy = OL_coef_y*setPoint_YSpeed;
         }
 
         //Z 
@@ -234,7 +239,7 @@ int main(int argc, char **argv)
 		if (isActive_YawSpeed)
         {
         	OL_coef_yaw = 1;
-        	Ty = OL_coef_yaw*setPoint_YawSpeed
+        	Ty = OL_coef_yaw*setPoint_YawSpeed;
         }
 
 		// Assemble Wrench
@@ -245,7 +250,7 @@ int main(int argc, char **argv)
 		wrenchMsg.torque.y = Ty;
 		wrenchMsg.torque.z = Tz;
 
-		cmd_vel_publisher.publish(twistMsg);
+		wrench_publisher.publish(wrenchMsg);
 		loop_rate.sleep();
 	}
 	return 0;
