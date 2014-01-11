@@ -1,11 +1,8 @@
 /**
- * @file CVNode.cpp
- * @author Renaud Dagenais
+ * @file CVTestNode.cpp
  * @author Jean-Sebastien Dery
- * @author Haris Haidary
- * @version 1.0.0
- * @date December 17th 2013
- * @brief TODO since it will be renamed and its purpose will change a bit lulzy lulzo.
+ * @date January 11th 2014
+ * @brief This is a ROS node used to test basic things for the computer vision.
 */
 #include "CVTestNode.h"
 
@@ -27,13 +24,14 @@ int main(int argc, char **argv) {
 
 	ROS_INFO("%s", "Starting CVTestNode.");
 
-	// Creates a new CVNode object.
+	// Creates a new CVTestNode object.
 	CVTestNode* pCVTestNode = new CVTestNode(nodeHandle);
 
-	// Start receiving images from the camera node (publisher)
 	while (ros::ok()) {
 		;
 	}
+
+	ROS_INFO("%s", "Terminating CVTestNode.");
 
 	// Destroy the CVNode object
 	delete pCVTestNode;
