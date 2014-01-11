@@ -8,6 +8,13 @@ var searchData=
   ['pre_5fleft_5fcallback',['pre_left_callback',['../classcentral__app_1_1CentralUi.html#ad6659d14e09ff6e46e888e34d20cd960',1,'central_app::CentralUi']]],
   ['pre_5fright_5fcallback',['pre_right_callback',['../classcentral__app_1_1CentralUi.html#acea3a5dc773af1bf8b02e0d6f462a02c',1,'central_app::CentralUi']]],
   ['pressure_5fcallback',['pressure_callback',['../classcentral__app_1_1CentralUi.html#a1ffb749a838686ef7caf6e52ee274793',1,'central_app::CentralUi']]],
+<<<<<<< Updated upstream
   ['pressure_5fgraph_5fupdate',['pressure_graph_update',['../classcentral__app_1_1CentralUi.html#a6de14f066107b2042968d88681fc3553',1,'central_app::CentralUi']]],
+=======
+  ['pressure_5fdata',['pressure_data',['../classcentral__app_1_1CentralUi.html#a41245edb30ebb4da27e6fc7fa25d12f7',1,'central_app::CentralUi']]],
+  ['pressure_5fgraph_5fupdate',['pressure_graph_update',['../classcentral__app_1_1CentralUi.html#a6de14f066107b2042968d88681fc3553',1,'central_app::CentralUi']]],
+  ['ps3',['ps3',['../classcentral__app_1_1CentralUi.html#a896284146be4e5cc758359bfcb710485',1,'central_app::CentralUi']]],
+  ['ps3_5ftimer',['ps3_timer',['../classcentral__app_1_1CentralUi.html#a675369a057fbba2ae6e8ab7c4e6fdf7d',1,'central_app::CentralUi']]],
+>>>>>>> Stashed changes
   ['ps3controller',['PS3Controller',['../classPS3Controller_1_1PS3Controller.html',1,'PS3Controller']]]
 ];
