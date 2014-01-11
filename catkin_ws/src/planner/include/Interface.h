@@ -26,6 +26,12 @@ class Interface {
 
     void setOrientation(const geometry_msgs::Quaternion msg);
 
+    void setPoints(double pointControl[]);
+
+    void setPosition(double x_pos, double y_pos, double z_pos, double pitch_angle, double yaw_angle);
+
+    void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth);
+
     int main(int argc,char **argv);
 };
 

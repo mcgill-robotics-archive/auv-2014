@@ -56,3 +56,5 @@ project(planner)
  target_link_libraries(Planner ${catkin_LIBRARIES})
 
  include_directories(include ${catkin_INCLUDE_DIRS})
+
+
