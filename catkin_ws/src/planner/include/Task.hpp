@@ -13,11 +13,13 @@ public:
 	// 	// logger log -> created the 
 	// }
 	std::string id;
+	Interface* cur_interface;
 
-	Task();
+	Task(Interface* inf);
 	Task(std::string myid);
 
 	virtual int Execute();
+
 };
 
 #endif

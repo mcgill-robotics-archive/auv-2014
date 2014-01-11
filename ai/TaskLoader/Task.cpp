@@ -12,4 +12,5 @@ Task::Task(std::string myid){
 
 int Task::Execute() {
 	std::cout << id;
+	return 0;
 };

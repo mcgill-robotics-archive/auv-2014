@@ -8,14 +8,17 @@
 #include <string>
 #include "quick_parse.hpp"
 #include "TaskConcrete.hpp"
+#include "Interface.h"
 //#include "Config.hpp"
 
 //#include "Task.cpp"
 class TaskFactory{
  public:
 
- 	TaskFactory();
+ 	TaskFactory(Interface* inf);
 	Task* makeTask(std::string id);
+
+	Interface* inf;
 
 };
 
