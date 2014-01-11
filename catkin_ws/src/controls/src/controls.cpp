@@ -17,7 +17,7 @@ Subscribers:
 
 Publishers:
 
-/control/wrench geometry_msgs/Wrench
+/controls/wrench geometry_msgs/Wrench
 
 */
 
@@ -34,7 +34,6 @@ Roadmap
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64.h"
-#include "depthController.h"
 #include "gazebo_msgs/ModelStates.h"
 
 #include "planner/setPoints.h"	
@@ -144,20 +143,20 @@ int main(int argc, char **argv)
     float OL_coef_yaw;
 
 	// ROS subscriber setup
-	ros::init(argc,argv,"control");
+	ros::init(argc,argv,"controls");
 	ros::NodeHandle n;
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
 	ros::Subscriber estimatedState_subscriber = n.subscribe("gazebo/model_states", 1000, estimatedState_callback);
 	//add clock subscription
 
 	//ROS Publisher setup
-	ros::Publisher wrench_publisher = n.advertise<geometry_msgs::Wrench>("/control/wrench", 100);
+	ros::Publisher wrench_publisher = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 100);
 	geometry_msgs::Wrench wrenchMsg; //define variable to publish
 
 	ros::Rate loop_rate(1/dt); //100 hz??
 	
 	bool ready = 0;
-	ROS_INFO("DepthController waiting for all subscribers to have content...");
+	ROS_INFO("controls waiting for all subscribers to have content...");
 	while (ready == 0)
 	{
 	       

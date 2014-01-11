@@ -172,10 +172,10 @@ include_directories(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(depthController src/depthController.cpp)
-add_executable(control src/control.cpp)
+add_executable(controls src/controls.cpp)
 target_link_libraries(depthController ${catkin_LIBRARIES})
 add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
-target_link_libraries(control ${catkin_LIBRARIES})
-add_dependencies(control ${catkin_EXPORTED_TARGETS})
+target_link_libraries(controls ${catkin_LIBRARIES})
+add_dependencies(controls ${catkin_EXPORTED_TARGETS})
 
 
