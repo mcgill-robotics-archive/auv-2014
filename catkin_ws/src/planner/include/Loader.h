@@ -4,6 +4,7 @@
 #include "Invoker.h"
 #include "Config.h"
 #include "TaskFactory.hpp"
+#include "Interface.h"
 
 class Loader {
 
@@ -24,6 +25,7 @@ class Loader {
     void newOperation();
 
  private:
+ 	
     Invoker* main_Invoker;
     Config* main_Config;
     TaskFactory* main_Taskfactory;
