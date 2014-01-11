@@ -31,7 +31,6 @@ def init():
     global pub
     pub = rospy.Publisher('gyro_offsets', String)
     rospy.spin()
-    rospy.spin()
 
 if __name__ == '__main__':
     try:
