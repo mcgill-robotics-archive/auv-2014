@@ -1,6 +1,8 @@
 float64 yaw_angle
 float64 pitch_angle
-float64 distance
+float64 x_distance
+float64 y_distance
+float64 z_distance
 uint8 object_type
 uint8 DOOR=0
 uint8 BUOY=1
@@ -8,3 +10,4 @@ uint8 GROUND_TARGET_1=2
 uint8 GROUND_TARGET_2=3
 uint8 GROUND_TARGET_3=4
 uint8 GROUND_TARGET_4=5
+uint8 LANE=6
