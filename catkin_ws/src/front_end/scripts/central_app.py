@@ -3,6 +3,7 @@
 Created on Nov 16th, 2013
 @author : David Lavoie-Boutin
 """
+from pose_view_widget import PoseViewWidget
 import PS3Controller
 from CompleteUI_declaration import *
 from low_battery_warning import*
@@ -49,6 +50,10 @@ class central_ui(QtGui.QMainWindow):
         self.ros_timer = QtCore.QTimer.singleShot(50, self.ros_subscriber)  # call the start of the ros subscriber
         self.ps3 = PS3Controller.PS3Controller()  # create the ps3 controller object
         self.warning_ui = battery_warning_ui(self)  # battery depleted ui
+        self.pose_ui = PoseViewWidget(self)
+
+        #TODO: change name of verticalLayout to prevent potential naming conflicts
+        self.ui.verticalLayout.addWidget(self.pose_ui)
 
         # place holder variable for internal battery status
         self.battery_empty = False
@@ -259,6 +264,7 @@ class central_ui(QtGui.QMainWindow):
         rospy.Subscriber("depth", Float32, self.depth_callback)
         rospy.Subscriber("pressure", Float32, self.pressure_callback)
         rospy.Subscriber("battery_voltage", Float64, self.battery_voltage_check)
+        self.pose_ui.subscribe_topic("pose")
 
     def pose_callback(self, pose_data):
         x = pose_data.orientation.x
