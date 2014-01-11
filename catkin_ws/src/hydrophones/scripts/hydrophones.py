@@ -11,27 +11,36 @@ def publish(str):
     rospy.loginfo(str)
     pub.publish(String(str))
 
-print 'connecting to teensy...'
+def connect():
+    print 'connecting to teensy...'
 
-done = False
+    done = False
 
-while not done:
-    try:
-        ser = serial.Serial('/dev/teensy')
-        ser.open()
-        done = True
-    except serial.serialutil.SerialException:
-        print 'connection failed'
-        time.sleep(1)
+    while not done:
+        try:
+            ser = serial.Serial('/dev/teensy')
+            ser.open()
+            done = True
+        except serial.serialutil.SerialException:
+            print 'connection failed'
+            time.sleep(1)
 
-print 'connected!'
+    print 'connected!'
+
+    return ser
+
+ser = connect()
 
 while True:
-    line = ser.readline().rstrip()
-    if line is '.':
-        continue
-    if __name__ == '__main__':
-        try:
-            publish(line)
-        except rospy.ROSInterruptException:
-            pass
+    try:
+        line = ser.readline().rstrip()
+        if __name__ == '__main__':
+            try:
+                publish(line)
+            except rospy.ROSInterruptException:
+                pass
+    except serial.serialutil.SerialException:
+        print 'connection dropped'
+        time.sleep(1)
+        print 'exiting...'
+        exit()
