@@ -42,10 +42,12 @@ target_link_libraries(launch_torpedo ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 add_library(create_torpedo src/create_torpedo.cc)
 target_link_libraries(create_torpedo ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
+#add_library(robot src/robot.cc)
+#target_link_libraries(robot ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
 set(CMAKE_INSTALL_RPATH "${roscpp_LIBRARY_DIRS}")
 add_library(robot SHARED src/robot.cc)
 set_target_properties(robot PROPERTIES COMPILE_FLAGS "${roscpp_CFLAGS_OTHER}")
 set_target_properties(robot PROPERTIES LINK_FLAGS "${roscpp_LDFLAGS_OTHER}")
 
 target_link_libraries(robot ${roscpp_LIBRARIES} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
-
