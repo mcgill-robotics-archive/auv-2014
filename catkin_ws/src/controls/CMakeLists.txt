@@ -175,5 +175,7 @@ add_executable(depthController src/depthController.cpp)
 add_executable(control src/control.cpp)
 target_link_libraries(depthController ${catkin_LIBRARIES})
 add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
+target_link_libraries(control ${catkin_LIBRARIES})
+add_dependencies(control ${catkin_EXPORTED_TARGETS})
 
 

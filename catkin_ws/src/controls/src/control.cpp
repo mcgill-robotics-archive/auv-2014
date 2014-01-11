@@ -68,14 +68,14 @@ float estimated_XPos = 0;
 float estimated_YPos = 0;
 float estimated_ZPos = 0;
 float estimated_Pitch = 0;
-float estimated_Roll = 0;
+float estimated_Yaw = 0;
 
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	ROS_DEBUG("Subscriber received set points");
 	setPoint_XPos = setPointsMsg.XPos.data;
-	setPoint_YPos = setPointsMsg.Ypos.data;
-	setPoint_ZPos = setPointsMsg.Zpos.data;
+	setPoint_YPos = setPointsMsg.YPos.data;
+	setPoint_ZPos = setPointsMsg.ZPos.data;
 	setPoint_Yaw = setPointsMsg.Yaw.data;
 	setPoint_Pitch = setPointsMsg.Pitch.data;
 	setPoint_XSpeed = setPointsMsg.XSpeed.data;
@@ -83,8 +83,8 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	setPoint_YawSpeed = setPointsMsg.YawSpeed.data;
 
 	isActive_XPos = setPointsMsg.XPos.isActive;
-	isActive_YPos = setPointsMsg.Ypos.isActive;
-	isActive_ZPos = setPointsMsg.Zpos.isActive;
+	isActive_YPos = setPointsMsg.YPos.isActive;
+	isActive_ZPos = setPointsMsg.ZPos.isActive;
 	isActive_Yaw = setPointsMsg.Yaw.isActive;
 	isActive_Pitch = setPointsMsg.Pitch.isActive;
 	isActive_XSpeed = setPointsMsg.XSpeed.isActive;
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
     	Tz = 0;
 
 		//X 
-		if (isActive_Xpos)
+		if (isActive_XPos)
 		{
 			ep_XPos = setPoint_XPos - estimated_XPos;
 			ei_XPos += ep_XPos*dt;
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
         }
 
         //Y 
-		if (isActive_Ypos)
+		if (isActive_YPos)
 		{
 			ep_YPos = setPoint_YPos - estimated_YPos;
 			ei_YPos += ep_YPos*dt;
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
         }
 
         //Z 
-		if (isActive_Zpos)
+		if (isActive_ZPos)
 		{
 			ep_ZPos = setPoint_ZPos - estimated_ZPos;
 			ei_ZPos += ep_ZPos*dt;
