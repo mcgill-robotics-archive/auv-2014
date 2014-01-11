@@ -94,51 +94,53 @@ void setVisionObj(std::string obj) {
   CV_objs_pub.publish(msgCV);
 }
 
-void setPoints(int pointControl[]) {
+
+void setPoints(double pointControl[]) {
   planner::setPoints msgControl;
 
-  XPosControl = pointControl[0];
-  XPos = pointControl[1];
-  msgControl.XPos.isActive = XPosControl;
-  msgControl.XPos.data = XPos;
+  msgControl.XPos.isActive = pointControl[0];
+  msgControl.XPos.data = pointControl[1];;
   
-  YPosControl = pointControl[2];
-  YPos = pointControl[3];
-  msgControl.YPos.isActive = YPosControl;
-  msgControl.YPos.data = YPos;
+  msgControl.YPos.isActive = pointControl[2];
+  msgControl.YPos.data = pointControl[3];
   
-  ZPosControl = pointControl[4];
-  ZPos = pointControl[5];
-  msgControl.ZPos.isActive = ZPosControl;
-  msgControl.ZPos.data = ZPos;
+  msgControl.ZPos.isActive = pointControl[4];
+  msgControl.ZPos.data = pointControl[5];
   
-  YawControl = pointControl[6];
-  Yaw = pointControl[7];
-  msgControl.Yaw.isActive = YawControl;
-  msgControl.Yaw.data = Yaw;
-  
-  PitchControl = pointControl[8];
-  Pitch = pointControl[9];
-  msgControl.Pitch.isActive = PitchControl;
-  msgControl.Pitch.data = Pitch;
-  
-  XSpeedControl = pointControl[10];
-  XSpeed = pointControl[11];
-  msgControl.XSpeed.isActive = XSpeedControl;
-  msgControl.XSpeed.data = XSpeed;
+  msgControl.Yaw.isActive = pointControl[6];
+  msgControl.Yaw.data = pointControl[7];
 
-  YSpeedControl = pointControl[12];
-  YSpeed = pointControl[13];
-  msgControl.YSpeed.isActive = YSpeedControl;
-  msgControl.YSpeed.data = YSpeed;
+  msgControl.Pitch.isActive = pointControl[8];
+  msgControl.Pitch.data = pointControl[9];
+  
+  msgControl.XSpeed.isActive = pointControl[10];
+  msgControl.XSpeed.data = pointControl[11];
 
-  YawSpeedControl = pointControl[14];
-  YawSpeed = pointControl[15];
-  msgControl.YawSpeed.isActive = YawSpeedControl;
-  msgControl.YawSpeed.data = YawSpeed;
+  msgControl.YSpeed.isActive = pointControl[12];
+  msgControl.YSpeed.data = pointControl[13];
+
+  msgControl.YawSpeed.isActive = pointControl[14];
+  msgControl.YawSpeed.data = pointControl[15];
+
+  msgControl.Depth.isActive = pointControl[16];
+  msgControl.Depth.data = pointControl[17];
 
   control_pub.publish(msgControl);
 }
+
+void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth){
+	
+	double pointControl[18] = {0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,x_speed ,1,y_speed ,1, yaw_speed, 1,depth};
+	setPoints(pointControl);
+}
+
+
+void setPosition(double x_pos, double y_pos, double z_pos, double pitch_angle, double yaw_angle){
+	double pointControl[18] = {1, x_pos, 1, y_pos, 1, z_pos, 1, pitch_angle, 1, yaw_angle, 0, 0, 0, 0, 0, 0, 0, 0};
+	setPoints(pointControl);
+}
+
+
 
 void ps3Control() {
   simulator::ThrusterForces msgPS3;
@@ -169,7 +171,7 @@ int main(int argc, char **argv) {
   while ( ros::ok() ) {
     ps3Control();
     setVisionObj("FW-Gate");
- 
+    setVelocity(1, 1, 1, 1);
     ros::spinOnce();
     loop_rate.sleep();
   }
