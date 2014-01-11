@@ -12,6 +12,7 @@ Door::~Door() {
 
 }
 
+
 /**
  * Applies the necessary filters to the current frame, checks if the door
  * object is present and, if it is, extracts the necessary information.
