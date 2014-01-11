@@ -12,15 +12,10 @@ class CVTestNode {
 
 	private:
 	
-	
 	public:
-	
-	CVTestNode(ros::NodeHandle& nodeHandle);
-	~CVTestNode();
 	
 	private:
 	
-
 };
 	
 #endif
