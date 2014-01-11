@@ -31,23 +31,28 @@ def connect():
     print 'connected!'
 
     return ser
+try:
+    # CONNECT
+    ser = connect()
 
-# CONNECT
-ser = connect()
-
-# FRUIT LOOPS
-while True:
-    try:
-        # READ SERIAL DATA AND PUBLISH TOPIC
-        line = ser.readline().rstrip()
-        if __name__ == '__main__':
-            try:
-                publish(line)
-            except rospy.ROSInterruptException:
-                pass
-    except serial.serialutil.SerialException:
-        # PEACE OUT IF CONNECTION DROPS
-        print 'connection dropped'
-        time.sleep(1)
-        print 'exiting...'
-        exit()
+    # FRUIT LOOPS
+    while True:
+        try:
+            # READ SERIAL DATA AND PUBLISH TOPIC
+            line = ser.readline().rstrip()
+            if __name__ == '__main__':
+                try:
+                    publish(line)
+                except rospy.ROSInterruptException:
+                    pass
+        except serial.serialutil.SerialException:
+            # PEACE OUT IF CONNECTION DROPS
+            print 'connection dropped'
+            time.sleep(1)
+            print 'exiting...'
+            exit(0)
+except KeyboardInterrupt:
+    print ''
+    print 'goodbye!'
+    time.sleep(1)
+    exit(0)
