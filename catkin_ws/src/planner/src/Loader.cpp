@@ -1,15 +1,17 @@
 #include "Loader.h"
 
+void ps3Control(); 
 
-Loader::Loader(Interface* inf){
+Loader::Loader(){
 	//Initialize the objects
-	main_Interface = inf;
 	main_Invoker = new Invoker();
 	main_Config = new Config();
-	main_Taskfactory = new TaskFactory(inf);
-	
+	main_Taskfactory = new TaskFactory();
 	//loads the invoker
 	isInvokerLoaded = false;
+int i = 0;
+while(i < 1000000){
+	ps3Control(); i++;}
 	loadInvoker();
 }
 

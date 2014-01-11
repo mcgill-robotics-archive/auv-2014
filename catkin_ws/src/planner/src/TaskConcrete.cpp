@@ -1,10 +1,12 @@
 //TaskConcrete.cpp
 
 #include "TaskConcrete.hpp"
+
 //add implementaion of the tasks here don't forget to include the 
 //header in the header file also include the task choice in the task factory.
  
-TorpedoTask::TorpedoTask(Interface* inf){
+
+TorpedoTask::TorpedoTask(){
 	id = "Rocket_Task";
 }
 int TorpedoTask::Execute(){
@@ -12,7 +14,7 @@ int TorpedoTask::Execute(){
 	return 0;
 }
 
-Task_1v1::Task_1v1(Interface* inf){
+Task_1v1::Task_1v1(){
 	id = "Rocket_Task";
 }
 int Task_1v1::Execute()
@@ -21,7 +23,7 @@ int Task_1v1::Execute()
 	return 0;
 }
 
-Task_1v2::Task_1v2(Interface* inf){
+Task_1v2::Task_1v2(){
 	id = "Rocket_Task";
 }
 int Task_1v2::Execute()
@@ -30,7 +32,7 @@ int Task_1v2::Execute()
 	return 0;
 }
 
-Task_2v1::Task_2v1(Interface* inf){
+Task_2v1::Task_2v1(){
 	id = "Rocket_Task";
 }
 int Task_2v1::Execute()

@@ -2,14 +2,12 @@
 //Task Interface (abstract)
 #include "Task.hpp" 
 
-Task::Task(Interface* inf){
-	cur_interface = inf;
+Task::Task(){
 	id = "default_id";
 }
 
-Task::Task(std::string myid, Interface* interface){
+Task::Task(std::string myid){
 	id = myid;
-	cur_interface = interface;
 }
 
 int Task::Execute() {

@@ -15,10 +15,9 @@
 class TaskFactory{
  public:
 
- 	TaskFactory(Interface* inf);
+ 	TaskFactory();
 	Task* makeTask(std::string id);
 
-	Interface* inf;
 
 };
 

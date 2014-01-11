@@ -16,7 +16,7 @@ class Loader {
 
  	Invoker* getInvoker();
 
-    Loader(Interface* inf);
+    Loader();
 
     void GetMap();
 
@@ -25,7 +25,7 @@ class Loader {
     void newOperation();
 
  private:
- 	Interface* main_Interface;
+ 	
     Invoker* main_Invoker;
     Config* main_Config;
     TaskFactory* main_Taskfactory;

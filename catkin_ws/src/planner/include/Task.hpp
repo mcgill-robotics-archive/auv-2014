@@ -13,9 +13,8 @@ public:
 	// 	// logger log -> created the 
 	// }
 	std::string id;
-	Interface* cur_interface;
 
-	Task(Interface* inf);
+	Task();
 	Task(std::string myid);
 
 	virtual int Execute();
