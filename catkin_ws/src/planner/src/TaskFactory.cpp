@@ -2,7 +2,8 @@
 	// takes string taskID (from xml file)  and returns corresponding task object
 #include "TaskFactory.hpp"
 
-TaskFactory::TaskFactory(){
+TaskFactory::TaskFactory(Interface* inf){
+	main_interface = inf;
 
 }
 
@@ -21,17 +22,17 @@ Task* TaskFactory::makeTask(std::string id){
 
 			switch(v){
 				case 1:
-					 return new Task_1v1();//return new Task1v1();
+					 return new Task_1v1(main_interface);//return new Task1v1();
 					 break;
 
 				case 2:
-					return new Task_1v2();
+					return new Task_1v2(main_interface);
 
 				case 3: 
-					return new TorpedoTask();
+					return new TorpedoTask(main_interface);
 
 				default:
-					return new Task();
+					return new Task(main_interface);
 					break;
 			}
 			break;
@@ -41,18 +42,18 @@ Task* TaskFactory::makeTask(std::string id){
 			switch(v){
 			
 				case 1:
-					return new Task_2v1();
+					return new Task_2v1(main_interface);
 					 //return new Task2v1();
 					 break;
 			
 				default:
-					return new Task();
+					return new Task(main_interface);
 					break;
 			}
 			break;
 
 		default:
-			return new Task();
+			return new Task(main_interface);
 			break;
 	}
 	return new Task();

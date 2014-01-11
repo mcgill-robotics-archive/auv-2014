@@ -1,11 +1,12 @@
 #include "Loader.h"
 
 
-Loader::Loader(){
+Loader::Loader(Interface* inf){
 	//Initialize the objects
+	main_Interface = inf;
 	main_Invoker = new Invoker();
 	main_Config = new Config();
-	main_Taskfactory = new TaskFactory();
+	main_Taskfactory = new TaskFactory(inf);
 	
 	//loads the invoker
 	isInvokerLoaded = false;

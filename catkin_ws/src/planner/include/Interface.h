@@ -5,6 +5,7 @@
 #include "std_msgs/String.h"
 #include "std_msgs/Int64.h"
 #include "simulator/ThrusterForces.h"
+#include "planner/setPoints.h"
 
 #ifndef Interface_h
 #define Interface_h
