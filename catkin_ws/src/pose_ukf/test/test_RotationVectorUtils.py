@@ -12,22 +12,28 @@ class TestRotationVectorUtils(TestCase):
     x = numpy.matrix([[1],[0],[0]])
     y = numpy.matrix([[0],[1],[0]])
     z = numpy.matrix([[0],[0],[1]])
+    tolerance = 10**(-10)
 
+    def assertMatrixEqual(self, A, B):
+        diff = A-B
+        size = diff.transpose()*diff
+        self.assertTrue(size < self.tolerance)
 
     def test_rotateThisByThat_identityRotation(self):
         random = numpy.matrix([[r.random()],[r.random()],[r.random()]])
         result = RotationVectorUtils.rotateThisByThat(random, self.identity)
-        self.assertEquals(random, result)
+        self.assertMatrixEqual(random, result)
 
     def test_rotateThisByThat_simpleRotation(self):
-        self.assertEquals(self.y, RotationVectorUtils.rotateThisByThat(self.x, self.z*math.pi/2))
+        temp = RotationVectorUtils.rotateThisByThat(self.x, self.z*math.pi/2)
+        self.assertMatrixEqual(self.y, temp)
 
     def test_rotateThisByThat_multipleRotations(self):
         temp = self.x
         temp = RotationVectorUtils.rotateThisByThat(temp, self.z*math.pi/2)
         temp = RotationVectorUtils.rotateThisByThat(temp, self.x*math.pi/2)
         temp = RotationVectorUtils.rotateThisByThat(temp, self.y*math.pi/2)
-        self.assertEquals(temp, self.x)
+        self.assertMatrixEqual(temp, self.x)
 
     def test_norm(self):
         x = r.random()
@@ -38,19 +44,19 @@ class TestRotationVectorUtils(TestCase):
         self.assertEquals(norm*norm,x*x+y*y+z*z)
 
     def test_dot(self):
-        self.assertEquals(0, RotationVectorUtils.dot(self.x, self.y))
+        self.assertMatrixEqual(0, RotationVectorUtils.dot(self.x, self.y))
 
     def test_cross(self):
-        self.assertEquals(self.z, RotationVectorUtils.cross(self.x,self.y))
+        self.assertMatrixEqual(self.z, RotationVectorUtils.cross(self.x,self.y))
 
     def test_inverse(self):
         vector = numpy.matrix([[r.random()],[r.random()],[r.random()]])
         test = RotationVectorUtils.rotateThisByThat(vector, self.x)
         test = RotationVectorUtils.rotateThisByThat(test, RotationVectorUtils.inverse(self.x))
-        self.assertEquals(vector, test)
+        self.assertMatrixEqual(vector, test)
 
     def test_composeRotations_identityRotation(self):
-        self.assertEquals(self.x, RotationVectorUtils.composeRotations(self.x, self.identity))
+        self.assertMatrixEqual(self.x, RotationVectorUtils.composeRotations(self.x, self.identity))
 
     def test_composeRotations_multipleRotationsSameDirection(self):
         self.fail()
