@@ -6,3 +6,4 @@ ValueControl Pitch
 ValueControl XSpeed
 ValueControl YSpeed
 ValueControl YawSpeed
+ValueControl Depth

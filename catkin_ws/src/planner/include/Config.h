@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include "../pugixml/src/pugixml.hpp"
+#include "./pugixml/src/pugixml.hpp"
 
 using namespace std;
 

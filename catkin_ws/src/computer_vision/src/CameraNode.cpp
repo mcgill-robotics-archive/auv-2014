@@ -6,13 +6,10 @@ int main(int argc, char **argv) {
     ros::NodeHandle nodeHandle;
     
     // Create a new CameraNode object
-    //CameraNode* pCameraNode = new CameraNode(nodeHandle, "camera_feed", argv[1], 10);
-
-	// This is for Gazebo.
 	CameraNode* pCameraNode = new CameraNode(nodeHandle, "camera_feed", argv[1], 10);
 
     // Start sending images to computer vision node (subscriber)
-    pCameraNode->sendImage();
+    pCameraNode->sendImages();
 
     // Destroy the CameraNode object
     delete pCameraNode;
@@ -50,26 +47,26 @@ CameraNode::~CameraNode() {
 /**
  * Takes a frame from the camera and sends it to the computer vision node.
  */
-void CameraNode::sendImage() {
+void CameraNode::sendImages() {
 	ros::Rate loop_rate(transmissionRate);
-	cv::Mat* pFrame;
+	cv::Mat* pCurrentFrame;
 
 	while (ros::ok()) {
 
 		try {
 			// Read frame from camera
-			pFrame = pCamera->captureFrame();
+			pCurrentFrame = pCamera->captureFrame();
 		}
 		catch (cv::Exception& e) {
 			ROS_ERROR("opencv exception: %s", e.what());
 			return;
 		}
 
-		// Convert camera frame to a cv_bridge image
-		encodeFrame(pFrame);
+		// Convert camera frame to a cv_bridge::CvImage
+		toCvImage(pCurrentFrame);
 
 		try {
-			// Convert cv_bridge image to ROS image message and publish
+			// Convert cv_bridge::CvImage image to ROS image message and publish
 			publisher.publish(pLastImage->toImageMsg());
 		}
 		catch (cv_bridge::Exception& e) {
@@ -86,7 +83,7 @@ void CameraNode::sendImage() {
  * Helper function used to convert an opencv image to cv_bridge image.
  * @param pFrame Pointer to the opencv image to convert
  */
-void CameraNode::encodeFrame(cv::Mat* pFrame) {
+void CameraNode::toCvImage(cv::Mat* pFrame) {
 
 	// Delete last image and create a new one
 	delete pLastImage;

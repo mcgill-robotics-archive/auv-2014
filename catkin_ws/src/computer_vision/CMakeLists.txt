@@ -168,6 +168,10 @@ target_link_libraries(CVNode VisibleObject)
 target_link_libraries(CVNode Door)
 target_link_libraries(CVNode ${catkin_LIBRARIES})
 
+add_executable(CVTestNode src/CVTestNode.cpp)
+target_link_libraries(CVTestNode ${catkin_LIBRARIES})
+
 # This makes sure message headers are generated before being used
 add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
+add_dependencies(CVTestNode computer_vision_gencpp)

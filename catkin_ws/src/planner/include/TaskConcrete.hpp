@@ -3,6 +3,7 @@
 #define TASKCONCRETE_H
 #include <string>
 #include "Task.hpp"
+#include "Interface.h"
 #include <iostream>
 
 class TorpedoTask: public Task{

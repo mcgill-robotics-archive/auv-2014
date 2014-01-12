@@ -1,6 +1,7 @@
 #ifndef TASK_H
 #define TASK_H
 #include <iostream>
+#include "Interface.h"
 
 class Task{
 public:
@@ -17,6 +18,7 @@ public:
 	Task(std::string myid);
 
 	virtual int Execute();
+
 };
 
 #endif

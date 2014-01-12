@@ -21,11 +21,11 @@ class CameraNode {
 	
 	CameraNode(ros::NodeHandle& nodeHandle, const char* topicName, const char* captureSource, int transmissionRate);
 	~CameraNode();
-	void sendImage();
+	void sendImages();
 
 	private:
 
-	void encodeFrame(cv::Mat* pFrame);
+	void toCvImage(cv::Mat* pFrame);
 };
 
 #endif
