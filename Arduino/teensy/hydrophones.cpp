@@ -1,10 +1,14 @@
 /* DEFINES */
-#define SIZE_OF_ARRAY   400
-#define PERIOD          1000000
-#define NUMBER_OF_MICS  4
+#define SIZE_OF_ARRAY   400         // STORES TIMES OF INTERRUPTS
+#define NUMBER_OF_MICS  4           // SELF-EXPLANATORY
+#define PERIOD          1000000     // PERIOD AT WHICH TO POLL FOR SERIAL DATA
+#define RESOLUTION      10          // RESOLUTION OF PWM
+#define FREQUENCY       46875       // FREQUENCY OF PWM
+#define DEFAULT_THRESH  256         // THRESHOLD AT STARTUP
 
 /* PINS */
-const int pins[NUMBER_OF_MICS] = { 0, 1, 2, 3 };
+const int micPins[NUMBER_OF_MICS] = { 0, 1, 2, 3 };
+const int threshPins[NUMBER_OF_MICS] = { 20, 21, 22, 23 };
 
 /* TIMES OF EACH HYDROPHONE */
 volatile unsigned long micO[SIZE_OF_ARRAY];
@@ -27,20 +31,25 @@ void setup() {
 
     /* SETUP INPUT PINS */
     for (int i = 0; i < NUMBER_OF_MICS; i++)
-        pinMode(pins[i], INPUT);
+        pinMode(micPins[i], INPUT);
+
+    /* SETUP IDEAL FREQUENCY AND RESOLUTION */
+    // NOTE: pulled from http://www.pjrc.com/teensy/td_pulse.html
+    analogWriteResolution(RESOLUTION);
+    analogWriteFrequency(threshPins[0], FREQUENCY);
 
     /* SETUP INTERRUPTS */
-    attachInterrupt(pins[0], micOISR, CHANGE);
-    attachInterrupt(pins[1], micXISR, CHANGE);
-    attachInterrupt(pins[2], micYISR, CHANGE);
-    attachInterrupt(pins[3], micZISR, CHANGE);
+    attachInterrupt(micPins[0], micOISR, CHANGE);
+    attachInterrupt(micPins[1], micXISR, CHANGE);
+    attachInterrupt(micPins[2], micYISR, CHANGE);
+    attachInterrupt(micPins[3], micZISR, CHANGE);
 
     /* WAIT UNTIL FIRST PING */
     while (counterO == 0);
     delay(500);
 
     /* SETUP SERIAL TO TRANSFER EVERY SECOND */
-    serialTimer.begin(send, PERIOD);
+    serialTimer.begin(socialize, PERIOD);
 }
 
 void loop() {
@@ -68,8 +77,16 @@ void micZISR() {
     micZ[counterZ++] = micros();
 }
 
-void send() {
-    /* SEND AND RESET DATA */
+void socialize() {
+    /* RECEIVE THRESHOLDS */
+    // if (Serial.available())
+    //     for (int i = 0; i < NUMBER_OF_MICS; i++) {
+
+    //         int threshold = 
+    //         analogWrite(threshPins[i], (int)Serial.read());
+    //     }
+
+    /* SEND AND RESET TIMES */
     for (int i = 0; i < counterO; i++) {
         Serial.println("O" + (String)micO[i]);
         micO[i] = 0;
@@ -86,6 +103,9 @@ void send() {
         Serial.println("Z" + (String)micZ[i]);
         micZ[i] = 0;
     }
+
+    /* INDICATE END OF STREAM */
+    Serial.println(".");
 
     /* RESET COUNTERS */
     counterO = 0;
