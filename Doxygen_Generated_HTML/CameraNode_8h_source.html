@@ -3,11 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<<<<<<< Updated upstream
-<title>McGill Robotics: RoboSub 2014: /home/dery/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CameraNode.h Source File</title>
-=======
 <title>McGill Robotics: RoboSub 2014: /home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CameraNode.h Source File</title>
->>>>>>> Stashed changes
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -83,11 +79,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<<<<<<< Updated upstream
-<div class="title">/home/dery/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CameraNode.h</div>  </div>
-=======
 <div class="title">/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CameraNode.h</div>  </div>
->>>>>>> Stashed changes
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef CV_CAMERA_NODE_H</span>
@@ -113,11 +105,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00021"></a>00021         
 <a name="l00022"></a>00022         <a class="code" href="classCameraNode.html#a72f371aedef6ce69302331b94fe50143" title="Constructs a CameraNode object.">CameraNode</a>(ros::NodeHandle&amp; nodeHandle, <span class="keyword">const</span> <span class="keywordtype">char</span>* topicName, <span class="keyword">const</span> <span class="keywordtype">char</span>* captureSource, <span class="keywordtype">int</span> transmissionRate);
 <a name="l00023"></a>00023         <a class="code" href="classCameraNode.html#ab3a466dc9357b5200fb6843a6d64c5c8" title="Releases the memory used by the CameraNode object.">~CameraNode</a>();
-<a name="l00024"></a>00024         <span class="keywordtype">void</span> <a class="code" href="classCameraNode.html#a85cbd1144f28e6aca13b426d200d60aa" title="Takes a frame from the camera and sends it to the computer vision node.">sendImage</a>();
+<a name="l00024"></a>00024         <span class="keywordtype">void</span> <a class="code" href="classCameraNode.html#aa81ee53bd35608308071047604b60e88" title="Takes a frame from the camera and sends it to the computer vision node.">sendImages</a>();
 <a name="l00025"></a>00025 
 <a name="l00026"></a>00026         <span class="keyword">private</span>:
 <a name="l00027"></a>00027 
-<a name="l00028"></a>00028         <span class="keywordtype">void</span> encodeFrame(cv::Mat* pFrame);
+<a name="l00028"></a>00028         <span class="keywordtype">void</span> toCvImage(cv::Mat* pFrame);
 <a name="l00029"></a>00029 };
 <a name="l00030"></a>00030 
 <a name="l00031"></a>00031 <span class="preprocessor">#endif</span>
@@ -139,11 +131,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< Updated upstream
-Generated on Sat Jan 11 2014 10:26:32 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 11 2014 13:31:15 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> Stashed changes
+Generated on Sat Jan 11 2014 23:26:56 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
