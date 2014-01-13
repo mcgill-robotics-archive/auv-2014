@@ -285,7 +285,9 @@ class CentralUi(QtGui.QMainWindow):
     # activated when the ps3_timer times out
     #
     # updates the value of the ps3 controller data
+    #
     # updates the ui with the values of the ps3 controller data
+    #
     # publishes to the correct topic
     #  @param self the object pointer
     def controller_update(self):
@@ -407,9 +409,6 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     #@param data_input data returned by the depth_callback
     def depth_graph_update(self, data_input):
-        """
-        changes the displayed data set
-        """
         self.depth_data.append(data_input)
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
@@ -423,9 +422,6 @@ class CentralUi(QtGui.QMainWindow):
     #@param z data third data in the pose message returned by the imu callback
     #@param w data last data in the pose message returned by the imu callback
     def imu_graph_updater(self, x, y, z, w):
-        """
-        changes the displayed data set
-        """
         self.acc1_data.append(x)
         self.acc1_data.pop(0)
         self.acc1_curve.setData(self.acc1_data)
@@ -477,10 +473,12 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
 
     # VIDEO FRAME CALLBACKS
+    ## when a frame is received, all the data is recorded in the appropriate variable
+    #
+    #takes the data received on the ros topic and records it to a variable
+    #@param self the object pointer
+    #@param data the data received by the subscriber
     def pre_left_callback(self, data):
-        """
-        when a frame is received, all the data is recorded in the appropriate variable
-        """
         # We have some issues with locking between the GUI update thread
         # and the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.image_lock.acquire()
@@ -488,11 +486,12 @@ class CentralUi(QtGui.QMainWindow):
             self.left_pre_image = data  # Save the ros image for processing by the display thread
         finally:
             self.image_lock.release()
-
+    ## when a frame is received, all the data is recorded in the appropriate variable
+    #
+    #takes the data received on the ros topic and records it to a variable
+    #@param self the object pointer
+    #@param data the data received by the subscriber
     def pre_right_callback(self, data):
-        """
-        when a frame is received, all the data is recorded in the appropriate variable
-        """
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.image_lock.acquire()
@@ -501,10 +500,12 @@ class CentralUi(QtGui.QMainWindow):
         finally:
             self.image_lock.release()
 
+    ## when a frame is received, all the data is recorded in the appropriate variable
+    #
+    #takes the data received on the ros topic and records it to a variable
+    #@param self the object pointer
+    #@param data the data received by the subscriber
     def pre_bottom_callback(self, data):
-        """
-        when a frame is received, all the data is recorded in the appropriate variable
-        """
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.image_lock.acquire()
@@ -513,10 +514,12 @@ class CentralUi(QtGui.QMainWindow):
         finally:
             self.image_lock.release()
 
+    ## when a frame is received, all the data is recorded in the appropriate variable
+    #
+    #takes the data received on the ros topic and records it to a variable
+    #@param self the object pointer
+    #@param data the data received by the subscriber
     def post_left_callback(self, data):
-        """
-        when a frame is received, all the data is recorded in the appropriate variable
-        """
         # We have some issues with locking between the GUI update thread
         # and the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.image_lock.acquire()
@@ -525,10 +528,12 @@ class CentralUi(QtGui.QMainWindow):
         finally:
             self.image_lock.release()
 
+    ## when a frame is received, all the data is recorded in the appropriate variable
+    #
+    #takes the data received on the ros topic and records it to a variable
+    #@param self the object pointer
+    #@param data the data received by the subscriber
     def post_right_callback(self, data):
-        """
-        when a frame is received, all the data is recorded in the appropriate variable
-        """
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.image_lock.acquire()
@@ -537,10 +542,12 @@ class CentralUi(QtGui.QMainWindow):
         finally:
             self.image_lock.release()
 
+    ## when a frame is received, all the data is recorded in the appropriate variable
+    #
+    #takes the data received on the ros topic and records it to a variable
+    #@param self the object pointer
+    #@param data the data received by the subscriber
     def post_bottom_callback(self, data):
-        """
-        when a frame is received, all the data is recorded in the appropriate variable
-        """
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
         self.image_lock.acquire()
@@ -548,14 +555,15 @@ class CentralUi(QtGui.QMainWindow):
             self.bottom_post_image = data  # Save the ros image for processing by the display thread
         finally:
             self.image_lock.release()
-
+    ##updates the video frames displayed
+    #
+    # simply converts the image data from the ros message received
+    #
+    # converts it to a QPixmap and resets the displayed image
+    #
+    # does this for all screens
+    #@param self the object pointer
     def redraw_video_callback(self):
-        """
-        updates the video frames displayed
-        simply converts the image data from the ros message received
-        converts it to a QPixmap and resets the displayed image
-        does this for all screens
-        """
         if self.left_pre_image is not None:
             self.image_lock.acquire()
             try:
@@ -629,27 +637,34 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.posBottom.setText("No video feed")
 
     # GRAPHS CALLBACKS
+    ## callback function for the imu topic
+    #
+    #stores the data received in variable
+    #
+    # calls to update the proper graph
+    #@param self the object pointer
+    #@param pose_data the pose message received by the subscriber
     def imu_callback(self, pose_data):
-        """
-        stores the data received in variable
-        calls to update the proper graph
-        """
         x = pose_data.orientation.x
         y = pose_data.orientation.y
         z = pose_data.orientation.z
         w = pose_data.orientation.w
         self.imu_graph_updater(x, y, z, w)
 
+    ## callback for the depth topic
+    #
+    #calls to update the proper graph and passes the received data
+    #@param self the object pointer
+    #@param depth_data the data received by the subscriber
     def depth_callback(self, depth_data):
-        """
-        calls to update the proper graph and passes the received data
-        """
         self.depth_graph_update(depth_data.data)
 
+    ## callback for the pressure topic
+    #
+    #calls to update the proper graph and passes the received data
+    #@param self the object pointer
+    #@param pressure_data the data received by the subscriber
     def pressure_callback(self, pressure_data):
-        """
-        calls to update the proper graph and passes the received data
-        """
         self.pressure_graph_update(pressure_data.data)
 
     # LOW BATTERY ALARM
@@ -666,17 +681,18 @@ class CentralUi(QtGui.QMainWindow):
             self.empty_battery_signal.emit()
             self.play_alarm()
     ## start the alarm sound
+    #
+    #@param self the object pointer
     def play_alarm(self):
         pygame.mixer.music.load(self.alarm_file)
         pygame.mixer.music.play(-1, 0)
 
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
-
+    ## launch the popup for the low battery
+    #
+    #@param self the object pointer
     def open_low_battery_dialog(self):
-        """
-        launch the popup for the low battery
-        """
         self.warning_ui.exec_()
 
 if __name__ == "__main__":
