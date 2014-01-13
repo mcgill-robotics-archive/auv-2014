@@ -9,7 +9,7 @@ FORMAT = pyaudio.paFloat32
 SAMPLEFREQ = 96000
 BLOCKSIZE = 1024
 p = pyaudio.PyAudio()
-
+'''
 stream = p.open(format=FORMAT,channels=1,rate=SAMPLEFREQ,input=True,frames_per_buffer=BLOCKSIZE)
 data = stream.read(BLOCKSIZE)
 timeDomain = np.fromstring(data, 'Float32')
@@ -28,5 +28,4 @@ amplitude = np.absolute(frequencyDomain)/2**bits
 plt.plot(amplitude)
 plt.show()
 
-f(x) = 0.0633x - 0.004
-'''
+#f(x) = 0.0633x - 0.004

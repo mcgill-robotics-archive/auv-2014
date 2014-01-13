@@ -105,7 +105,8 @@ void socialize() {
     }
 
     /* INDICATE END OF STREAM */
-    Serial.println(".");
+    if (counterO || counterX || counterY || counterZ)
+        Serial.println(".");
 
     /* RESET COUNTERS */
     counterO = 0;
