@@ -40,7 +40,8 @@ MarkerTarget::MarkerTarget() {
  * Detects if any markers are present and if so returns their position, and the identity of the marker object.
  *
  * @param currentFrame The current camera frame in which to look for the marker bins.
- * @return 
+ * @return A vector (std::vector< VisibleObjectData* >) of VisibleDataObjects populated with information such 
+ *				as distance, angle, and marker type for each visible marker bin.
  */
 computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
@@ -84,7 +85,13 @@ void MarkerTarget::applyFilter(cv::Mat& currentFrame) {
 	cv::blur( currentFrame, currentFrame, cv::Size(3,3) );
 }
 
-
+/**
+ * Searches a given frame for marker bins. Performs more specific filtering and then finds the corners of any bins.
+ *
+ * @param frame The processed camera frame in which to find the bins.
+ * @return  A 2-Dimensional vector containing the corners of each marker. For each marker the corners are listed
+ *				in clockwise order starting with the top-left or bottom-right corner when the bin is oriented vertically.
+ */
 MarkerTarget::Point2DVec MarkerTarget::findBins(cv::Mat& frame) {
 	cv::threshold(frame, frame, 170, 255, 1);
 	cv::Mat kernel(3, 3, CV_8UC1);
@@ -98,6 +105,15 @@ MarkerTarget::Point2DVec MarkerTarget::findBins(cv::Mat& frame) {
 	return corners;
 }
 
+/**
+ * Detects the edges in the given image and uses them to draw a contour and approximate polygons for each contour.
+ * Any contour with more than 4 edges and not convex is thrown away in order to find just contours matching the 
+ * marker bins.
+ *
+ * @param frame The current processed camera frame in which to find the contours.
+ * @param outContoursPoly An empty 2-Dimenional vector which will be populated with the points belonging to each contour.
+ * @return A Mat image with the contours of the detected marker bins.
+ */
 cv::Mat MarkerTarget::getContourMap(cv::Mat& frame, Point2DVec& outContoursPoly) {
 	// Detect edges.
 	cv::Mat canny_output;
@@ -127,6 +143,13 @@ cv::Mat MarkerTarget::getContourMap(cv::Mat& frame, Point2DVec& outContoursPoly)
 	return drawing;
 }
 
+/**
+ * Finds the corners in the given contour and associates each to one of the given contours.
+ *
+ * @param contourMap A Mat image with only the contours of marker bins drawn on.
+ * @param contoursPoly A 2-D vector containing a list of points belonging to each contour.
+ * @return  A 2-D vector (std::vector< std::vector< cv::Point2f>>) which is a list of the 4 corners belonging to each detected marker.
+ */
 MarkerTarget::Point2DVec MarkerTarget::getPreliminaryCorners(const cv::Mat& contourMap,
 						const Point2DVec& contoursPoly) {
 	// Find corners.
@@ -173,6 +196,11 @@ MarkerTarget::Point2DVec MarkerTarget::getPreliminaryCorners(const cv::Mat& cont
 	return finalCorners;
 }
 
+/**
+ * Order the corners so that they are in clockwise order starting with the top-left or bottom-right corner.
+ *
+ * @param corners An unordered list of corners which will be ordered once the function terminates.
+ */
 void MarkerTarget::refineCorners(Point2DVec& corners) {
 	// Check corners to make sure they are in the correct order.
 	for (int i = 0; i < corners.size(); i++) {
@@ -192,6 +220,11 @@ void MarkerTarget::refineCorners(Point2DVec& corners) {
 	}
 }
 
+/**
+ * Checks if the ratio of the sides of the marker bin is between 0.4 and 0.6 which defines an accpetable marker bin.
+ *
+ * @param rectangle The rectangle which sides will will check to see if it is similar to the marker bins.
+ */
 bool MarkerTarget::checkRectangleRatio(const cv::RotatedRect& rectangle) {
 	const double ACCEPTED_RATIO = 0.5;
 	const double RATIO_ERROR = 0.1;
@@ -204,6 +237,14 @@ bool MarkerTarget::checkRectangleRatio(const cv::RotatedRect& rectangle) {
 	return (ratio < ACCEPTED_RATIO + RATIO_ERROR && ratio > ACCEPTED_RATIO - RATIO_ERROR);
 }
 
+/**
+ * Given the corners of the marker bins, detects which marker is inside the bin and gather information such as distance and 
+ * angle about the marker. To figure out which marker is present, we compare the marker's image to reference images.
+ *
+ * @param frame The original camera frame in which to extract the marker image.
+ * @param bins A list of corners belonging to each detected marker bin.
+ * @return A vector of MarkerDescriptor objects populated with marker type, distances, and angles for each detected marker bin.
+ */
 std::vector<MarkerTarget::MarkerDescriptor> MarkerTarget::findMarkers(const cv::Mat& frame, const Point2DVec& bins) {
 	std::vector<MarkerDescriptor> results;
 
@@ -258,6 +299,14 @@ std::vector<MarkerTarget::MarkerDescriptor> MarkerTarget::findMarkers(const cv::
 	return results;
 }
 
+/**
+ * Compares a candidate marker to each reference image by counting the number of different pixels.
+ *
+ * @param sourceCoords The coordinates of the candidate markers in cap.
+ * @param cap The camera frame in which the marker image is located.
+ * @param ref The reference image which we are comparing the similarity of the captured image with.
+ * @return The number of different pixels between the candidate and reference images.
+ */
 long MarkerTarget::compareImages(const std::vector<cv::Point2f> &sourceCoords,
 		const cv::Mat& cap, const cv::Mat& ref) {
 	/* Obtain a flat version of the image we captured. We do this by creating a matrix which
@@ -287,6 +336,12 @@ long MarkerTarget::compareImages(const std::vector<cv::Point2f> &sourceCoords,
 	return differences;
 }
 
+/**
+ * Calculate the distances and angles of the marker from the robot.
+ *
+ * @param inOutMarker A MarkerDescriptor object containing the location of the bin within the image and will be 
+ *			populated with distances and angles.
+ */
 void MarkerTarget::estimatePose(MarkerDescriptor& inOutMarker) {
 	/* We use the solvePnP function, which figures out a transformation
 	between a 3D position and 2D image coordinates. We simply assume that
