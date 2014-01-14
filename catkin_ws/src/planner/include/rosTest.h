@@ -1,3 +1,6 @@
+#ifndef rosTest_h
+#define rosTest_h
+
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Quaternion.h"
@@ -5,8 +8,6 @@
 
 #include <sstream>
 
-#ifndef rosTest_h
-#define rosTest_h
 
 class rosTest {
 
