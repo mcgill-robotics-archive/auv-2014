@@ -1,3 +1,6 @@
+#ifndef FRONT_CV_NODE_H
+#define FRONT_CV_NODE_H
+
 #include "CVNode.h"
 #include "Door.h"
 
@@ -11,3 +14,5 @@ class FrontCVNode : public CVNode {
 
 	void receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName);
 };
+
+#endif
