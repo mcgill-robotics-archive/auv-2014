@@ -258,6 +258,7 @@ class CentralUi(QtGui.QMainWindow):
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
+            self.ps3_timer.stop()
             self.keyboard_control = True
             self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
@@ -477,12 +478,16 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber(ROS_Topics.imu_pose, Pose, self.imu_callback)
+        rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
-
+        rospy.Subscriber(ROS_Topics.right_pre_topic, Image, self.pre_right_callback)
+        rospy.Subscriber(ROS_Topics.bottom_pre_topic, Image, self.pre_bottom_callback)
+        rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
+        rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
+        rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #

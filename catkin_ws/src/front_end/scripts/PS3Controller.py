@@ -52,8 +52,6 @@ class PS3Controller(object):
             print "Shutting down the process..."
             self.controller_isPresent = False
 
-        self.controller = None
-        self.controller_name = None
 
     def initialize_controller(self):
         """
