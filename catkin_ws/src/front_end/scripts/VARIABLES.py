@@ -46,7 +46,8 @@ class ROS_Topics(object):
     left_post_topic = "/my_robot/camera1/image_raw"
     right_post_topic = "/my_robot/camera1/image_raw"
     bottom_post_topic = "/my_robot/camera1/image_raw"
-    imu_pose = "pose"
+    imu_raw = 'pose'
+    imu_filtered='pose'
     vel_topic = '/gazebo/robot_twist'
 
 ##    various parameters and constants
