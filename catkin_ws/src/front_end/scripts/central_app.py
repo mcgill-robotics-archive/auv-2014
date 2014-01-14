@@ -497,7 +497,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
-        #self.pose_ui.subscribe_topic("pose")
+        self.pose_ui.subscribe_topic("pose")
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
