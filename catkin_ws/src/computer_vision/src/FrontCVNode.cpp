@@ -68,18 +68,23 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> top
  * @param rosMessage The ROS message that contains the image
  */
 void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName) {
-	cv_bridge::CvImagePtr pCurrentFrame;
-	cv::Mat currentFrame;
 	std::list<VisibleObject*>::iterator it;
 
-	try {
-		// Convert sensor_msgs to an opencv image
-		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
-		currentFrame = pCurrentFrame->image;
-	} catch (cv_bridge::Exception& e) {
-		ROS_ERROR("cv_bridge exception: %s", e.what());
-		return;
-	}
+//	cv::Mat currentFrame = convertFromSensorToOpenCV(message);
+
+	cv::Mat currentFrame;
+	cv_bridge::CvImagePtr pCurrentFrame;
+
+		try {
+			// Convert sensor_msgs to an opencv image
+			pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
+			currentFrame = pCurrentFrame->image;
+		} catch (cv_bridge::Exception& e) {
+			ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
+			ROS_ERROR("cv_bridge exception: %s", e.what());
+			// Returns an empty cv::Mat object.
+			return;
+		}
 
 	try {
 		// Loop through the list of visible objects and transmit
@@ -96,3 +101,24 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const 
 		return;
 	}
 }
+
+///**
+// * Converts a sensor_msgs::ImageConstPtr to a cv::Mat object that OpenCV can use to run the filters.
+// *
+// * @param message The sensor_msgs::ImageConstPtr to be converted.
+// * @return The cv:Mat object that can be used by OpenCV.
+// */
+//cv::Mat convertFromSensorToOpenCV(const sensor_msgs::ImageConstPtr& message) {
+//	cv_bridge::CvImagePtr pCurrentFrame;
+//
+//	try {
+//		// Convert sensor_msgs to an opencv image
+//		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
+//		return (pCurrentFrame->image);
+//	} catch (cv_bridge::Exception& e) {
+//		ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
+//		ROS_ERROR("cv_bridge exception: %s", e.what());
+//		// Returns an empty cv::Mat object.
+//		return (cv::Mat());
+//	}
+//}

@@ -9,6 +9,8 @@
 
 #bunch of import statements
 #Ui declarations and GUI libraries
+
+from pose_view_widget import PoseViewWidget
 from CompleteUI_declaration import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
@@ -88,6 +90,13 @@ class CentralUi(QtGui.QMainWindow):
         self.right_post_image = None
         ## Holds the bottom post-processed image received from the sub and later processed by the GUI
         self.bottom_post_image = None
+
+        ## Pose Visualiser widget
+        self.pose_ui = PoseViewWidget(self)
+
+
+        #TODO: change name of verticalLayout to prevent potential naming conflicts
+        self.ui.verticalLayout.addWidget(self.pose_ui)
 
         # create initial data sets for imu, depth and pressure graphs
         ## the data set for accelerometer 1
@@ -488,6 +497,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
+        #self.pose_ui.subscribe_topic("pose")
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
