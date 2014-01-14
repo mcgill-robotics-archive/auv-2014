@@ -1,3 +1,6 @@
+#ifndef Interface_h
+#define Interface_h
+
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
@@ -8,14 +11,6 @@
 #include "planner/setPoints.h"
 #include "Loader.h"
 #include "Invoker.h"
-
-#ifndef Interface_h
-#define Interface_h
-
-#include "Interface.h"
-
-
-
 
 void setOrientation(const geometry_msgs::Quaternion msg);
 
