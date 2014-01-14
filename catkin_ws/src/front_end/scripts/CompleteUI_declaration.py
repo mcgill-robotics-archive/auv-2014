@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CompleteFinal.ui'
 #
-# Created: Tue Jan 14 13:05:15 2014
+# Created: Tue Jan 14 18:38:18 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -256,13 +256,13 @@ class Ui_RoboticsMain(object):
         self.imugraphics = GraphicsLayoutWidget(self.IMUraws)
         self.imugraphics.setGeometry(QtCore.QRect(0, 40, 401, 721))
         self.imugraphics.setObjectName(_fromUtf8("imugraphics"))
-        self.IMUdirectional = QtGui.QFrame(self.centralwidget)
-        self.IMUdirectional.setGeometry(QtCore.QRect(420, 380, 550, 311))
-        self.IMUdirectional.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.IMUdirectional.setFrameShadow(QtGui.QFrame.Raised)
-        self.IMUdirectional.setObjectName(_fromUtf8("IMUdirectional"))
-        self.label_12 = QtGui.QLabel(self.IMUdirectional)
-        self.label_12.setGeometry(QtCore.QRect(10, 10, 41, 21))
+        self.IMUPoseView = QtGui.QFrame(self.centralwidget)
+        self.IMUPoseView.setGeometry(QtCore.QRect(419, 380, 551, 311))
+        self.IMUPoseView.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.IMUPoseView.setFrameShadow(QtGui.QFrame.Raised)
+        self.IMUPoseView.setObjectName(_fromUtf8("IMUPoseView"))
+        self.label_12 = QtGui.QLabel(self.IMUPoseView)
+        self.label_12.setGeometry(QtCore.QRect(10, 10, 101, 21))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Sans Serif"))
         font.setPointSize(16)
@@ -272,6 +272,12 @@ class Ui_RoboticsMain(object):
         font.setWeight(50)
         self.label_12.setFont(font)
         self.label_12.setObjectName(_fromUtf8("label_12"))
+        self.verticalLayoutWidget = QtGui.QWidget(self.IMUPoseView)
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 40, 531, 261))
+        self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
+        self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setMargin(0)
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.Depth = QtGui.QFrame(self.centralwidget)
         self.Depth.setGeometry(QtCore.QRect(420, 200, 270, 171))
         self.Depth.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -364,7 +370,7 @@ class Ui_RoboticsMain(object):
         self.label_19.setText(QtGui.QApplication.translate("RoboticsMain", "Yaw", None, QtGui.QApplication.UnicodeUTF8))
         self.keyboardControl.setText(QtGui.QApplication.translate("RoboticsMain", "Keyboard Control", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Raw Readings", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_12.setText(QtGui.QApplication.translate("RoboticsMain", "IMU", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_12.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Pose", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("RoboticsMain", "Depth", None, QtGui.QApplication.UnicodeUTF8))
         self.label_11.setText(QtGui.QApplication.translate("RoboticsMain", "Pressure", None, QtGui.QApplication.UnicodeUTF8))
         self.menuFile.setTitle(QtGui.QApplication.translate("RoboticsMain", "File", None, QtGui.QApplication.UnicodeUTF8))

@@ -722,12 +722,12 @@
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="IMUdirectional">
+   <widget class="QFrame" name="IMUPoseView">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>419</x>
       <y>380</y>
-      <width>550</width>
+      <width>551</width>
       <height>311</height>
      </rect>
     </property>
@@ -742,7 +742,7 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>41</width>
+       <width>101</width>
        <height>21</height>
       </rect>
      </property>
@@ -757,8 +757,19 @@
       </font>
      </property>
      <property name="text">
-      <string>IMU</string>
+      <string>IMU Pose</string>
      </property>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>531</width>
+       <height>261</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout"/>
     </widget>
    </widget>
    <widget class="QFrame" name="Depth">
