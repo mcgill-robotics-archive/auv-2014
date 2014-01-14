@@ -4,14 +4,8 @@
 #since python does not have enums,
 #
 # also, these variables will be accessed by different python files therefore the need for a separate file
+#file containing all variables shared between one or more files also contains parameters and constants used in the UI and the key mapping for the keyboard controller
 #@author David Lavoie-Boutin
-
-"""
-
-file containing all variables shared between one or more files
-also contains parameters and constants used in the UI and the key mapping for the keyboard controller
-__author__ = 'david'
-"""
 
 from PyQt4 import QtCore
 ##    variables shared by all controller for the cmd_vel and z_position
@@ -23,9 +17,9 @@ class vel_vars(object):
     z_position = 0
     z_position_step = 0.5
 
-    MAX_YAW_VEL = 1
-    MAX_PITCH_VEL = 1
-    MAX_LINEAR_VEL = 0.2
+    MAX_YAW_VEL = 10
+    MAX_PITCH_VEL = 10
+    MAX_LINEAR_VEL = 10
 
 ##    Here we define the keyboard map for our controller
 class KeyMapping(object):
@@ -47,9 +41,14 @@ class ROS_Topics(object):
     pressure = "pressure"
     depth = "depth"
     left_pre_topic = "/my_robot/camera1/image_raw"
-    imu_pose = "pose"
-    partial_cmd_vel = '/gazebo/robot_twist'
-    zdes = 'zdes'
+    right_pre_topic = "/my_robot/camera1/image_raw"
+    bottom_pre_topic = "/my_robot/camera1/image_raw"
+    left_post_topic = "/my_robot/camera1/image_raw"
+    right_post_topic = "/my_robot/camera1/image_raw"
+    bottom_post_topic = "/my_robot/camera1/image_raw"
+    imu_raw = 'pose'
+    imu_filtered='pose'
+    vel_topic = '/gazebo/robot_twist'
 
 ##    various parameters and constants
 class misc_vars(object):

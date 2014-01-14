@@ -68,7 +68,10 @@ class CentralUi(QtGui.QMainWindow):
         super(CentralUi, self).__init__(parent)
         ## stores the ui object
         self.ui = Ui_RoboticsMain()
+
         self.ui.setupUi(self)
+        self.resizeSliders()
+
         
         ## dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
@@ -155,6 +158,13 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
 
+    ##resize the sliders to fit the correct range of values
+    def resizeSliders(self):
+        self.ui.angularHorizantal.setRange(-vel_vars.MAX_YAW_VEL, vel_vars.MAX_YAW_VEL)
+        self.ui.angularVertical.setRange(-vel_vars.MAX_PITCH_VEL, vel_vars.MAX_PITCH_VEL)
+        self.ui.linearVertical.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
+        self.ui.linearHorizantal.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
+
     ## customisation of the key press class of the QWidget
     #
     #  Increments the variables contained in VARIABLES.py
@@ -171,29 +181,29 @@ class CentralUi(QtGui.QMainWindow):
             else:
                 # Now we handle moving, notice that this section is the opposite (+=) of the keyrelease section
                 if key == KeyMapping.YawLeft:
-                    vel_vars.yaw_velocity += 1
+                    vel_vars.yaw_velocity += vel_vars.MAX_YAW_VEL
                 elif key == KeyMapping.YawRight:
-                    vel_vars.yaw_velocity += -1
+                    vel_vars.yaw_velocity += -vel_vars.MAX_YAW_VEL
 
                 elif key == KeyMapping.PitchForward:
-                    vel_vars.pitch_velocity += 1
+                    vel_vars.pitch_velocity += vel_vars.MAX_PITCH_VEL
                 elif key == KeyMapping.PitchBackward:
-                    vel_vars.pitch_velocity += -1
+                    vel_vars.pitch_velocity += -vel_vars.MAX_PITCH_VEL
 
                 elif key == KeyMapping.IncreaseDepth:
-                    vel_vars.z_position += 1
+                    vel_vars.z_position += vel_vars.z_position_step
                 elif key == KeyMapping.DecreaseDepth:
-                    vel_vars.z_position += -1
+                    vel_vars.z_position += -vel_vars.z_position_step
 
                 elif key == KeyMapping.IncreaseX:
-                    vel_vars.x_velocity += 1
+                    vel_vars.x_velocity += vel_vars.MAX_LINEAR_VEL
                 elif key == KeyMapping.DecreaseX:
-                    vel_vars.x_velocity += -1
+                    vel_vars.x_velocity += -vel_vars.MAX_LINEAR_VEL
 
                 elif key == KeyMapping.IncreaseY:
-                    vel_vars.y_velocity += 1
+                    vel_vars.y_velocity += vel_vars.MAX_LINEAR_VEL
                 elif key == KeyMapping.DecreaseY:
-                    vel_vars.y_velocity += -1
+                    vel_vars.y_velocity += -vel_vars.MAX_LINEAR_VEL
 
     ## customisation of the key release class of the QWidget
     #
@@ -208,24 +218,24 @@ class CentralUi(QtGui.QMainWindow):
         if self.keyboard_control and not event.isAutoRepeat():
             # Now we handle moving, notice that this section is the opposite (-=) of the keypress section
             if key == KeyMapping.YawLeft:
-                vel_vars.yaw_velocity -= 1
+                vel_vars.yaw_velocity -= vel_vars.MAX_YAW_VEL
             elif key == KeyMapping.YawRight:
-                vel_vars.yaw_velocity -= -1
+                vel_vars.yaw_velocity -= -vel_vars.MAX_YAW_VEL
 
             elif key == KeyMapping.PitchForward:
-                vel_vars.pitch_velocity -= 1
+                vel_vars.pitch_velocity -= vel_vars.MAX_PITCH_VEL
             elif key == KeyMapping.PitchBackward:
-                vel_vars.pitch_velocity -= -1
+                vel_vars.pitch_velocity -= -vel_vars.MAX_PITCH_VEL
 
             elif key == KeyMapping.IncreaseX:
-                vel_vars.x_velocity -= 1
+                vel_vars.x_velocity -= vel_vars.MAX_LINEAR_VEL
             elif key == KeyMapping.DecreaseX:
-                vel_vars.x_velocity -= -1
+                vel_vars.x_velocity -= -vel_vars.MAX_LINEAR_VEL
 
             elif key == KeyMapping.IncreaseY:
-                vel_vars.y_velocity -= 1
+                vel_vars.y_velocity -= vel_vars.MAX_LINEAR_VEL
             elif key == KeyMapping.DecreaseY:
-                vel_vars.y_velocity -= -1
+                vel_vars.y_velocity -= -vel_vars.MAX_LINEAR_VEL
 
     ##  procedure when the "Connect PS3 Controller" button is pressed
     #
@@ -248,6 +258,7 @@ class CentralUi(QtGui.QMainWindow):
                 self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
+            self.ps3_timer.stop()
             self.keyboard_control = True
             self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
@@ -266,10 +277,10 @@ class CentralUi(QtGui.QMainWindow):
     #   @param self the object pointer
     def keyboard_update(self):
         # set ui
-        self.ui.linearVertical.setValue(100*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(100*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(100*vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(100*-vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -279,7 +290,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
 
     ## Method for the ps3 control
     #
@@ -296,10 +307,10 @@ class CentralUi(QtGui.QMainWindow):
         self.ps3.updateController()
 
         # set ui
-        self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(-1000*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(-1000*vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(-1000*vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -309,7 +320,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
 
     ## create and layout imu graphics
     #
@@ -467,12 +478,16 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber(ROS_Topics.imu_pose, Pose, self.imu_callback)
+        rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
-
+        rospy.Subscriber(ROS_Topics.right_pre_topic, Image, self.pre_right_callback)
+        rospy.Subscriber(ROS_Topics.bottom_pre_topic, Image, self.pre_bottom_callback)
+        rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
+        rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
+        rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #

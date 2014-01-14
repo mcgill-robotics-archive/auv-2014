@@ -6,7 +6,7 @@ Task_Gate::Task_Gate(){
 }
 
 int Task_Gate::Execute(){
-	std::cout << "Executing Gate Task" << std::endl;
+	std::cout << ">> Executing Gate Task" << std::endl;
 	
 	std::cout<<"Gate Task setting velocity:   setVelocity(1, 1, 1, 1) "<<std::endl;
 	setVelocity(1, 1, 1, 1);	

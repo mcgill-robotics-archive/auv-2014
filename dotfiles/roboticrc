@@ -11,8 +11,6 @@ alias please='echo -e "${blue}bend over${NC}"'
 alias roscereal='rosrun rosserial_python serial_node.py'
 alias becool='roscore'
 
-PS1='\[\e[1;34m\]\u\[\e[0m\]:\[\e[0;34m\]\w\[\e[0m\]\$ '
-
 source /opt/ros/hydro/setup.bash
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
 export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
