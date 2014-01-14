@@ -17,8 +17,8 @@ project(planner)
  add_message_files (
    FILES
    MotorControl.msg
-   setPoints.msg
    ValueControl.msg
+   setPoints.msg
  )
 
 ## Generate services in the 'srv' folder
