@@ -131,9 +131,6 @@ std::vector<std::vector<cv::Point> > Door::findContoursFromHSVFrame(const cv::Ma
         std::vector<std::vector<cv::Point> > detectedContours;
         cv::findContours(inRangeHSVFrame, detectedContours, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
 
-        // FIXME: This is only so we can have a visual support of what's going on. It will not be in the final code.
-        cv::imshow(FILTERED_WINDOW, inRangeFrame);
-
         return (detectedContours);
 }
 
