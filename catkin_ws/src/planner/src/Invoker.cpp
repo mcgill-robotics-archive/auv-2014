@@ -11,6 +11,7 @@ void Invoker::AddTask(Task * t){
 void Invoker::StartRun(){
 	int i;
 	for(i = 0; i < TaskList.size(); i++){
+		std::cout<<std::endl<<">>> Executing task: " << TaskList.at(i)->id <<std::endl;		
 		TaskList.at(i)->Execute();
 	}
 

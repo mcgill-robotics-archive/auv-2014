@@ -21,7 +21,7 @@ Task* TaskFactory::makeTask(std::string id){
 
 			switch(v){
 				case 1:
-					 return new Task_1v1();//return new Task1v1();
+					 return new Task_Gate();//return new Task1v1();
 					 break;
 
 				case 2:

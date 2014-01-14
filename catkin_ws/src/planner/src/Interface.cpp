@@ -53,11 +53,6 @@ double YSpeed;
 double YawSpeed;
 
 /**
- * Unused constructor
- */
-Interface::Interface() {}
-
-/**
  * Returns the current depth of the robot
  *
  * @return   the depth of the robot
@@ -166,15 +161,21 @@ int main(int argc, char **argv) {
   CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
   control_pub = n.advertise<planner::setPoints>("planner/setPoints", 1000);
 
+  std::cout<<"Starting Loader"<< std::endl; 
+  Loader* loader = new Loader();
+  Invoker* invoker = loader->getInvoker();
+  invoker->StartRun();
+  std::cout<<"Done Loader"<< std::endl;  
+
   ros::Rate loop_rate(10);
   int thing = 0;
-  while ( ros::ok() ) {
-    ps3Control();
-    setVisionObj("FW-Gate");
-    setVelocity(1, 1, 1, 1);
-    ros::spinOnce();
-    loop_rate.sleep();
-  }
+  //while ( ros::ok() ) {
+    //ps3Control();
+    //setVisionObj("FW-Gate");
+    //setVelocity(1, 1, 1, 1);
+    //ros::spinOnce();
+    //loop_rate.sleep();
+  //}
   ros::spin();
   return 0;
 }

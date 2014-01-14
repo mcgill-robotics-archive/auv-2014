@@ -2,9 +2,10 @@
 #Created on Nov 16th, 2013
 
 ## @package central_app
-#  @author David Lavoie-Boutin
 #
 #  Main file for McGill Robotics AUV Design Team testing User Interface
+
+#  @author David Lavoie-Boutin
 
 #bunch of import statements
 #Ui declarations and GUI libraries
@@ -67,7 +68,10 @@ class CentralUi(QtGui.QMainWindow):
         super(CentralUi, self).__init__(parent)
         ## stores the ui object
         self.ui = Ui_RoboticsMain()
+
         self.ui.setupUi(self)
+        self.resizeSliders()
+
         
         ## dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
@@ -154,6 +158,13 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
 
+    ##resize the sliders to fit the correct range of values
+    def resizeSliders(self):
+        self.ui.angularHorizantal.setRange(-vel_vars.MAX_YAW_VEL, vel_vars.MAX_YAW_VEL)
+        self.ui.angularVertical.setRange(-vel_vars.MAX_PITCH_VEL, vel_vars.MAX_PITCH_VEL)
+        self.ui.linearVertical.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
+        self.ui.linearHorizantal.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
+
     ## customisation of the key press class of the QWidget
     #
     #  Increments the variables contained in VARIABLES.py
@@ -170,29 +181,29 @@ class CentralUi(QtGui.QMainWindow):
             else:
                 # Now we handle moving, notice that this section is the opposite (+=) of the keyrelease section
                 if key == KeyMapping.YawLeft:
-                    vel_vars.yaw_velocity += 1
+                    vel_vars.yaw_velocity += vel_vars.MAX_YAW_VEL
                 elif key == KeyMapping.YawRight:
-                    vel_vars.yaw_velocity += -1
+                    vel_vars.yaw_velocity += -vel_vars.MAX_YAW_VEL
 
                 elif key == KeyMapping.PitchForward:
-                    vel_vars.pitch_velocity += 1
+                    vel_vars.pitch_velocity += vel_vars.MAX_PITCH_VEL
                 elif key == KeyMapping.PitchBackward:
-                    vel_vars.pitch_velocity += -1
+                    vel_vars.pitch_velocity += -vel_vars.MAX_PITCH_VEL
 
                 elif key == KeyMapping.IncreaseDepth:
-                    vel_vars.z_position += 1
+                    vel_vars.z_position += vel_vars.z_position_step
                 elif key == KeyMapping.DecreaseDepth:
-                    vel_vars.z_position += -1
+                    vel_vars.z_position += -vel_vars.z_position_step
 
                 elif key == KeyMapping.IncreaseX:
-                    vel_vars.x_velocity += 1
+                    vel_vars.x_velocity += vel_vars.MAX_LINEAR_VEL
                 elif key == KeyMapping.DecreaseX:
-                    vel_vars.x_velocity += -1
+                    vel_vars.x_velocity += -vel_vars.MAX_LINEAR_VEL
 
                 elif key == KeyMapping.IncreaseY:
-                    vel_vars.y_velocity += 1
+                    vel_vars.y_velocity += vel_vars.MAX_LINEAR_VEL
                 elif key == KeyMapping.DecreaseY:
-                    vel_vars.y_velocity += -1
+                    vel_vars.y_velocity += -vel_vars.MAX_LINEAR_VEL
 
     ## customisation of the key release class of the QWidget
     #
@@ -207,24 +218,24 @@ class CentralUi(QtGui.QMainWindow):
         if self.keyboard_control and not event.isAutoRepeat():
             # Now we handle moving, notice that this section is the opposite (-=) of the keypress section
             if key == KeyMapping.YawLeft:
-                vel_vars.yaw_velocity -= 1
+                vel_vars.yaw_velocity -= vel_vars.MAX_YAW_VEL
             elif key == KeyMapping.YawRight:
-                vel_vars.yaw_velocity -= -1
+                vel_vars.yaw_velocity -= -vel_vars.MAX_YAW_VEL
 
             elif key == KeyMapping.PitchForward:
-                vel_vars.pitch_velocity -= 1
+                vel_vars.pitch_velocity -= vel_vars.MAX_PITCH_VEL
             elif key == KeyMapping.PitchBackward:
-                vel_vars.pitch_velocity -= -1
+                vel_vars.pitch_velocity -= -vel_vars.MAX_PITCH_VEL
 
             elif key == KeyMapping.IncreaseX:
-                vel_vars.x_velocity -= 1
+                vel_vars.x_velocity -= vel_vars.MAX_LINEAR_VEL
             elif key == KeyMapping.DecreaseX:
-                vel_vars.x_velocity -= -1
+                vel_vars.x_velocity -= -vel_vars.MAX_LINEAR_VEL
 
             elif key == KeyMapping.IncreaseY:
-                vel_vars.y_velocity -= 1
+                vel_vars.y_velocity -= vel_vars.MAX_LINEAR_VEL
             elif key == KeyMapping.DecreaseY:
-                vel_vars.y_velocity -= -1
+                vel_vars.y_velocity -= -vel_vars.MAX_LINEAR_VEL
 
     ##  procedure when the "Connect PS3 Controller" button is pressed
     #
@@ -265,10 +276,10 @@ class CentralUi(QtGui.QMainWindow):
     #   @param self the object pointer
     def keyboard_update(self):
         # set ui
-        self.ui.linearVertical.setValue(100*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(100*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(100*vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(100*-vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -278,7 +289,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
 
     ## Method for the ps3 control
     #
@@ -295,10 +306,10 @@ class CentralUi(QtGui.QMainWindow):
         self.ps3.updateController()
 
         # set ui
-        self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(-1000*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(-1000*vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(-1000*vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -308,7 +319,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
 
     ## create and layout imu graphics
     #

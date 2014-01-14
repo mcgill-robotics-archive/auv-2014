@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>752</height>
+    <width>1690</width>
+    <height>1020</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -444,9 +444,6 @@
        <height>18</height>
       </rect>
      </property>
-     <property name="minimum">
-      <number>-99</number>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -459,9 +456,6 @@
        <width>201</width>
        <height>20</height>
       </rect>
-     </property>
-     <property name="minimum">
-      <number>-99</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -476,9 +470,6 @@
        <height>160</height>
       </rect>
      </property>
-     <property name="minimum">
-      <number>-99</number>
-     </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -491,9 +482,6 @@
        <width>18</width>
        <height>160</height>
       </rect>
-     </property>
-     <property name="minimum">
-      <number>-99</number>
      </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -677,7 +665,7 @@
      <rect>
       <x>420</x>
       <y>700</y>
-      <width>551</width>
+      <width>271</width>
       <height>261</height>
      </rect>
     </property>
@@ -884,7 +872,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Robotics_graphical_ressources.qrc">:/Keys/Screen Shot 2014-01-10 at 10.05.30 AM.png</pixmap>
+     <pixmap>:/Keys/Screen Shot 2014-01-10 at 10.05.30 AM.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -903,10 +891,20 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="Robotics_graphical_ressources.qrc">:/Keys/Screen Shot 2014-01-10 at 10.06.36 AM.png</pixmap>
+     <pixmap>:/Keys/Screen Shot 2014-01-10 at 10.06.36 AM.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="GraphicsLayoutWidget" name="hydrophonegraph">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>700</y>
+      <width>271</width>
+      <height>261</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -915,8 +913,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
-     <height>22</height>
+     <width>1690</width>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
