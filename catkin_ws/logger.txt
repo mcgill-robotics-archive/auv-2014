@@ -2214,3 +2214,9 @@ XML [map.xml] loaded with errors
 Error description: File was not found
 Error offset: 0 (error at [...map.xml]
 
+XML [tasks.xml] loaded without errors
+
+XML [map.xml] loaded with errors
+Error description: File was not found
+Error offset: 0 (error at [...map.xml]
+
