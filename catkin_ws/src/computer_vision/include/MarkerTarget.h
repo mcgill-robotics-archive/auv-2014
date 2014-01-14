@@ -13,12 +13,14 @@
 /* Marker target: a target (image of some kind) placed in a bin at the bottom of the pool.
  * Two markers are to be dropped, one in the primary and one in the secondary bin. */
 
+enum ObjectType { UNDEFINED = -1, DOOR, BOEY, GROUND_TARGET_1, GROUND_TARGET_2, GROUND_TARGET_3, GROUND_TARGET_4 };
+
 class MarkerTarget : public VisibleObject
 {
 public:
 	MarkerTarget();
 
-	virtual ObjectData* retrieveObjectData(cv::Mat& currentFrame);
+	virtual computer_vision::VisibleObjectData* retrieveObjectData(cv::Mat& currentFrame);
 	virtual void applyFilter(cv::Mat& currentFrame);
 private:
 	typedef std::vector<std::vector<cv::Point2f> > Point2DVec;

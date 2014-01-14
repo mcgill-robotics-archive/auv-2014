@@ -6,14 +6,13 @@
 #include <opencv/cv.h>
 #include <iostream>
 #include <cmath>
-
-#include "ObjectData.h"
+#include "computer_vision/VisibleObjectData.h"
 
 class VisibleObject {
 
 	public:
 
-	virtual ObjectData* retrieveObjectData(cv::Mat& currentFrame) = 0;
+	virtual computer_vision::VisibleObjectData* retrieveObjectData(cv::Mat& currentFrame) = 0;
 	cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
 
 	virtual ~VisibleObject();
