@@ -30,11 +30,18 @@ private:
 		std::vector<cv::Point2f> imageCorners; //The corners of the marker (i.e. the corners of the bin)
 		ObjectType closestMatch; //Which marker template is the closest to this one
 		long diffFromMatch; //How close is the template to this one
+		float yaw_angle, pitch_angle; //Angles between us and the marker, in degrees
+		float x_dist, y_dist, z_dist; //Distances between us and the marker, in centimeters
 
 		MarkerDescriptor(const std::vector<cv::Point2f>& _imageCorners, ObjectType _closestMatch, long _diffFromMatch) :
 			imageCorners(_imageCorners),
 			closestMatch(_closestMatch),
-			diffFromMatch(_diffFromMatch)
+			diffFromMatch(_diffFromMatch),
+			yaw_angle(0.f),
+			pitch_angle(0.f),
+			x_dist(0.f),
+			y_dist(0.f),
+			z_dist(0.f)
 		{ }
 	};
 
@@ -50,6 +57,8 @@ private:
 	/* Maximum allowed difference between a captured image and a reference image, in pixels*/
 	int errorTolerance;
 
+	/* Intrinsic camera parameters, used for 3D pose estimation */
+	cv::Mat_<float> intrinsic;
 
 	// ===== Bin-finding functions =====
 	/* Finds bins on the bottom of the pool. Returns a list of bin corners, grouped by 4.*/
@@ -72,8 +81,11 @@ private:
 	std::vector<MarkerDescriptor> findMarkers(const cv::Mat& frame, const Point2DVec& bins);
 
 	/* Computes the number of differences between a marker candidate (in the captured image) and a marker reference. */
-	long compareCandidateWithReference(const std::vector<cv::Point2f> &sourceCoords,
-													const cv::Mat& cap, const cv::Mat& ref);
+	long compareImages(const std::vector<cv::Point2f> &sourceCoords, const cv::Mat& cap, const cv::Mat& ref);
+
+	// ===== Pose estimation functions =====
+	/* Given a MarkerDescriptor, estimate its distance and angles relative to us. */
+	void estimatePose(MarkerDescriptor& inOutMarker);
 };
 
 #endif /* CV_MARKER_TARGET_H */

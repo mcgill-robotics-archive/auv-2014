@@ -6,18 +6,30 @@
  */
 
 #include <stdlib.h>
+#include <math.h>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
 #include "MarkerTarget.h"
 
 MarkerTarget::MarkerTarget() {
 	//Load the reference images
 	for(int i = 0 ; i < NUM_REFERENCE_IMGS; i += 2) {
-		//Load the image, add it to the list, mirror it on both axes and add it again
+		//TODO Load the image, add it to the list, mirror it on both axes and add it again
 	}
 
 	/* To set the error tolerance, assume that all reference images
 	 * have the same size. */
 	errorTolerance = (int) (((float) (referenceImgs[0].cols * referenceImgs[0].rows)) * 0.15f);
+
+	/* Create the intrinsic camera maxtrix, used to estimate pose. 
+	 * NOTE: These values will only work properly with the simulator! */
+	intrinsic = cv::Mat(3, 3, 0); //Skew and other entries are 0
+	intrinsic.at<float>(0, 0) = 0.02f; //Focal length x corresponds to near plane
+	intrinsic.at<float>(1, 1) = 0.02f; //Same with focal length y
+	intrinsic.at<float>(2, 2) = 1; //Always 1
+	//Principal point, in pixels. Use center of the video feed (simulator: (400, 400))
+	intrinsic.at<float>(0, 2) = 298;
+	intrinsic.at<float>(1, 2) = 220;
 }
 
 computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
@@ -27,8 +39,10 @@ computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& cu
 	Point2DVec binCorners = findBins(currentFrame);
 	std::vector<MarkerDescriptor> markers = findMarkers(filteredFrame, binCorners);
 
-	//Estimate 3D position of each found marker.
+	for(unsigned int i = 0 ; i < markers.size() ; i++)
+		estimatePose(markers[i]);
 
+	//TODO construct the object with the data in each marker descriptor and return it
 	return NULL;
 }
 
@@ -181,7 +195,7 @@ std::vector<MarkerTarget::MarkerDescriptor> MarkerTarget::findMarkers(const cv::
 		long min = LONG_MAX;
 		int minIndex = -1;
 		for(unsigned int j = 0 ; j < NUM_REFERENCE_IMGS ; j++) {
-			long result = compareCandidateWithReference(sourceCoords, markerCandidate, referenceImgs[j]);
+			long result = compareImages(sourceCoords, markerCandidate, referenceImgs[j]);
 			//Only keep the best result
 			if(result < min) {
 				minIndex = j;
@@ -210,7 +224,7 @@ std::vector<MarkerTarget::MarkerDescriptor> MarkerTarget::findMarkers(const cv::
 	return results;
 }
 
-long MarkerTarget::compareCandidateWithReference(const std::vector<cv::Point2f> &sourceCoords,
+long MarkerTarget::compareImages(const std::vector<cv::Point2f> &sourceCoords,
 		const cv::Mat& cap, const cv::Mat& ref) {
 	/* Obtain a flat version of the image we captured. We do this by creating a matrix which
 	 * transforms the image so that the detected corners of the marker end up in the corners
@@ -237,4 +251,30 @@ long MarkerTarget::compareCandidateWithReference(const std::vector<cv::Point2f> 
 	}
 
 	return differences;
+}
+
+void MarkerTarget::estimatePose(MarkerDescriptor& inOutMarker) {
+	/* We use the solvePnP function, which figures out a transformation
+	between a 3D position and 2D image coordinates. We simply assume that
+	the marker is at the center of the world. Thus, the solvePnP function
+	will give us the transformations to go from the marker to the camera.*/
+
+	//Coordinates of the marker, in centimeters
+	std::vector<cv::Point3f> objectCoords;
+	objectCoords.push_back(cv::Point3f(-15.24, 30.48, 0));
+	objectCoords.push_back(cv::Point3f(15.24, 30.48, 0));
+	objectCoords.push_back(cv::Point3f(15.24, -30.48, 0));
+	objectCoords.push_back(cv::Point3f(-15.24, -30.48, 0));
+
+	//rvec will contain the rotation transformations, tvec the translations
+	cv::Mat rvec, tvec;
+	/* The empty vector contains the distortion coefficients. Outside of the
+	simulator, this should contain values appropriate for our camera. */
+	cv::solvePnP(objectCoords, inOutMarker.imageCorners, intrinsic, std::vector<float>(), rvec, tvec);
+
+	inOutMarker.x_dist = tvec.at<double>(0);
+	inOutMarker.y_dist = tvec.at<double>(1);
+	inOutMarker.z_dist = tvec.at<double>(2);
+
+	//TODO Angles
 }
