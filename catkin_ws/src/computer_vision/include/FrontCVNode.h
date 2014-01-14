@@ -13,6 +13,7 @@ class FrontCVNode : public CVNode {
 	private:
 
 	void receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName);
+	cv::Mat convertFromSensorToOpenCV(const sensor_msgs::ImageConstPtr& message);
 };
 
 #endif
