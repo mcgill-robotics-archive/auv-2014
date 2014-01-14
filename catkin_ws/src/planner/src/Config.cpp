@@ -16,9 +16,11 @@ const char* mapFN = "map.xml";
 //xml data needed and values will be accessed when requested from loader through getter methods
 Config::Config()
 {
+	std::cout<<"Loading Task File"<< std::endl;
 	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
 	loadFile(mapFN, roboSub_map_doc);
 	parse(roboSub_task_doc, roboSub_map_doc);
+	std::cout<<"Done Loading Task File"<< std::endl;
 }
 
 //this takes as imput a file name and reference to a xml_document used to load the file

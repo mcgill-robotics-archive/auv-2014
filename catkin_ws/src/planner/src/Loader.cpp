@@ -4,14 +4,16 @@ void ps3Control();
 
 Loader::Loader(){
 	//Initialize the objects
+	std::cout<<"In Loader Constructor"<< std::endl;
 	main_Invoker = new Invoker();
 	main_Config = new Config();
 	main_Taskfactory = new TaskFactory();
 	//loads the invoker
 	isInvokerLoaded = false;
-int i = 0;
-while(i < 1000000){
-	ps3Control(); i++;}
+	//int i = 0;
+	//while(i < 1000000){
+	//	ps3Control(); i++;
+	//}
 	loadInvoker();
 }
 
@@ -26,11 +28,15 @@ void Loader::loadInvoker(){
 
 		//uses the vector of strings to input into the task factory to then add a task to the invoker
 		for(int i = 0; i < s_tasklist.size(); i++){
+			std::cout<<"Adding task to invoker"<< std::endl;
 			main_Invoker->AddTask(main_Taskfactory->makeTask(s_tasklist.at(i)));
 		}
+		std::cout<<"Adding default gate task because config does not work..."<< std::endl;
+		main_Invoker->AddTask(main_Taskfactory->makeTask("1v1"));
 	}
 	//To make sure the invoker doesn't get loaded agian unless needed
 	isInvokerLoaded = true;
+	std::cout<<"Done loading invoker"<< std::endl;
 }
 
 //incase the Invoker wants to be reloaded
