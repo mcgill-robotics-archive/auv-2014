@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'CompleteFinal.ui'
 #
-# Created: Fri Jan 10 10:13:30 2014
-#      by: PyQt4 UI code generator 4.9.4
+# Created: Tue Jan 14 13:05:15 2014
+#      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_RoboticsMain(object):
     def setupUi(self, RoboticsMain):
         RoboticsMain.setObjectName(_fromUtf8("RoboticsMain"))
-        RoboticsMain.resize(1280, 752)
+        RoboticsMain.resize(1690, 1020)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/Images/Only-Logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         RoboticsMain.setWindowIcon(icon)
@@ -173,22 +173,18 @@ class Ui_RoboticsMain(object):
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.angularHorizantal = QtGui.QSlider(self.StatusBar)
         self.angularHorizantal.setGeometry(QtCore.QRect(300, 150, 191, 18))
-        self.angularHorizantal.setMinimum(-99)
         self.angularHorizantal.setOrientation(QtCore.Qt.Horizontal)
         self.angularHorizantal.setObjectName(_fromUtf8("angularHorizantal"))
         self.linearHorizantal = QtGui.QSlider(self.StatusBar)
         self.linearHorizantal.setGeometry(QtCore.QRect(20, 150, 201, 20))
-        self.linearHorizantal.setMinimum(-99)
         self.linearHorizantal.setOrientation(QtCore.Qt.Horizontal)
         self.linearHorizantal.setObjectName(_fromUtf8("linearHorizantal"))
         self.linearVertical = QtGui.QSlider(self.StatusBar)
         self.linearVertical.setGeometry(QtCore.QRect(240, 10, 18, 160))
-        self.linearVertical.setMinimum(-99)
         self.linearVertical.setOrientation(QtCore.Qt.Vertical)
         self.linearVertical.setObjectName(_fromUtf8("linearVertical"))
         self.angularVertical = QtGui.QSlider(self.StatusBar)
         self.angularVertical.setGeometry(QtCore.QRect(510, 10, 18, 160))
-        self.angularVertical.setMinimum(-99)
         self.angularVertical.setOrientation(QtCore.Qt.Vertical)
         self.angularVertical.setObjectName(_fromUtf8("angularVertical"))
         self.label_14 = QtGui.QLabel(self.StatusBar)
@@ -238,7 +234,7 @@ class Ui_RoboticsMain(object):
         self.keyboardControl.setChecked(False)
         self.keyboardControl.setObjectName(_fromUtf8("keyboardControl"))
         self.logObject = QtGui.QTextEdit(self.centralwidget)
-        self.logObject.setGeometry(QtCore.QRect(420, 700, 551, 261))
+        self.logObject.setGeometry(QtCore.QRect(420, 700, 271, 261))
         self.logObject.setReadOnly(True)
         self.logObject.setObjectName(_fromUtf8("logObject"))
         self.IMUraws = QtGui.QFrame(self.centralwidget)
@@ -326,9 +322,12 @@ class Ui_RoboticsMain(object):
         self.label_20.setPixmap(QtGui.QPixmap(_fromUtf8(":/Keys/Screen Shot 2014-01-10 at 10.06.36 AM.png")))
         self.label_20.setScaledContents(True)
         self.label_20.setObjectName(_fromUtf8("label_20"))
+        self.hydrophonegraph = GraphicsLayoutWidget(self.centralwidget)
+        self.hydrophonegraph.setGeometry(QtCore.QRect(700, 700, 271, 261))
+        self.hydrophonegraph.setObjectName(_fromUtf8("hydrophonegraph"))
         RoboticsMain.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(RoboticsMain)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1690, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))

@@ -20,7 +20,7 @@ MarkerTarget::MarkerTarget() {
 	errorTolerance = (int) (((float) (referenceImgs[0].cols * referenceImgs[0].rows)) * 0.15f);
 }
 
-ObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
+computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
 

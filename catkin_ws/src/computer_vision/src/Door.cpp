@@ -21,27 +21,39 @@ Door::~Door() {
  *  which contains the information gathered on the door. If the door is
  *  not present in the current frame, it returns the zero pointer (NULL).
  */
-ObjectData* Door::retrieveObjectData(cv::Mat& currentFrame) {
+computer_vision::VisibleObjectData* Door::retrieveObjectData(cv::Mat& currentFrame) {
 	bool isVisible;
-	double distance, verticalAngle, horizontalAngle;
-	ObjectData* pObjectData;
+	double yawAngle = -90.0;
+	double pitchAngle = 90.0;
+	double xDistance = 1;
+	double yDistance = 3;
+	double zDistance = 4;
 
-	// Apply filters
+	// Creates a pointer that will point to a computer_vision::VisibleObjectData object.
+	computer_vision::VisibleObjectData* visibleObjectData;
+
+	// Apply filters on the cv::Mat object.
 	applyFilter(currentFrame);
 
 	// Check if door is visible
-	isVisible = false;
+	isVisible = true;
 
 	if (isVisible) {
 		// Get object data
 		// [...]
 
 		// Return gathered data to caller
-		pObjectData = new ObjectData(DOOR, distance, verticalAngle, horizontalAngle);
-		return pObjectData;
+		visibleObjectData->object_type = visibleObjectData->DOOR;
+		visibleObjectData->pitch_angle = yawAngle;
+		visibleObjectData->yaw_angle = pitchAngle;
+		visibleObjectData->x_distance = xDistance;
+		visibleObjectData->y_distance = yDistance;
+		visibleObjectData->z_distance = zDistance;
+
+		return visibleObjectData;
+	} else {
+		return (computer_vision::VisibleObjectData*)0;
 	}
-	else
-		return (ObjectData*)0;
 }
 
 
@@ -62,10 +74,6 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 
         // Finds all the contours in the image and store them in a vector containing vectors of points.
         std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV);
-
-
-
-
 
         for (int i = 0 ; i < detectedContours.size() ; i++) {
                 // Gets the contour to analyse in this loop iteration.

@@ -1,4 +1,9 @@
 #!usr/bin/python
+
+## @package central_app
+#  @author David Lavoie-Boutin
+#
+#  Main file for McGill Robotics AUV Design Team testing User Interface
 """
 Created on Aug 10th 2013
 
@@ -47,6 +52,9 @@ class PS3Controller(object):
             print "Shutting down the process..."
             self.controller_isPresent = False
 
+        self.controller = None
+        self.controller_name = None
+
     def initialize_controller(self):
         """
         This part will set all the Global variables used in PS3Controller.
@@ -86,7 +94,7 @@ class PS3Controller(object):
                         self.z_rise()
 
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                    vel_vars.x_velocity = -0.2*self.controller.get_axis(0)  # left left/right axis
-                    vel_vars.y_velocity = -0.2*self.controller.get_axis(1)  # left front/back axis
-                    vel_vars.yaw_velocity = -0.2*self.controller.get_axis(2)  # right left/right axis
-                    vel_vars.pitch_velocity = -0.2*self.controller.get_axis(3)  # right front/back axis
+                    vel_vars.x_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(0)  # left left/right axis
+                    vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
+                    vel_vars.yaw_velocity = -vel_vars.MAX_YAW_VEL*self.controller.get_axis(2)  # right left/right axis
+                    vel_vars.pitch_velocity = -vel_vars.MAX_PITCH_VEL*self.controller.get_axis(3)  # right front/back axis

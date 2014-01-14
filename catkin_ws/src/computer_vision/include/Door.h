@@ -71,7 +71,7 @@ class Door : public VisibleObject {
 	public:
 
 	~Door();
-	ObjectData* retrieveObjectData(cv::Mat& currentFrame);
+	computer_vision::VisibleObjectData* retrieveObjectData(cv::Mat& currentFrame);
 
 	private:
 
