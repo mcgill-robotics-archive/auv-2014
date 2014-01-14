@@ -12,7 +12,7 @@ import sys
 
 # VARIABLES
 NUMBER_OF_MICS = 4  # SELF-EXPLANATORY
-DISTANCE = 4      # DISTANCE BETWEEN HYDROPHONES IN CENTIMETERS
+DISTANCE = 100      # DISTANCE BETWEEN HYDROPHONES IN CENTIMETERS
 SPEED = 0.001450    # SPEED OF SOUND UNDER WATER IN METERS PER MICROSECOND
 DIMENSIONS = 3      # DIMENSIONS OF SOLUTION
 
@@ -86,14 +86,16 @@ def parse(str):
 # TRIANGULATE
 def triangulate(index):
     # TIME DIFFERENCES
-    dtx = mics[0][index] - mics[1][index]
-    dty = mics[0][index] - mics[2][index]
-    dtz = mics[0][index] - mics[3][index]
+    dtx = mics[0][index] - mics[0][index]
+    dty = mics[0][index] - mics[1][index]
+    dtz = mics[0][index] - mics[2][index]
 
     # DISTANCE DIFFERENCES (ds = v * dt)
     sx = dtx * SPEED
     sy = dty * SPEED
     sz = dtz * SPEED
+
+    print sx, sy, sz
 
     # FIRST SOLUTION
     x0 = (DISTANCE * DISTANCE * sy - sx * (DISTANCE * DISTANCE * sz * sz + DISTANCE * DISTANCE * sy * sy - DISTANCE * DISTANCE * sz * sy - DISTANCE * DISTANCE * sy * sx + pow(sx, 3) * sy - pow(DISTANCE, 4) + sy * pow(sz, 3) - sy * sy * sz * sz + DISTANCE * DISTANCE * sx * sx - sx * sx * sy * sy + sqrt(4 * pow(sy, 4) * sx * sx * DISTANCE * DISTANCE + pow(sx, 4) * sy * sy * DISTANCE * DISTANCE - 2 * pow(sy, 5) * sx * DISTANCE * DISTANCE + 2 * pow(sy, 3) * sx * pow(DISTANCE, 4) - 2 * pow(sx, 3) * pow(sy, 3) * DISTANCE * DISTANCE - 4 * sx * sx * sy * sy * pow(DISTANCE, 4) + 3 * sy * sy * pow(DISTANCE, 6) - pow(sx, 4) * pow(sy, 4) + 2 * pow(sx, 3) * pow(sy, 5) - pow(sy, 6) * sx * sx - 4 * pow(DISTANCE, 4) * pow(sy, 4) - pow(sy, 4) * pow(sz, 4) - pow(sx, 4) * sy * sy * sz * sz - pow(sz, 4) * sy * sy * sx * sx - 4 * sy * sy * sz * sz * pow(DISTANCE, 4) + sy * sy * pow(sz, 4) * DISTANCE * DISTANCE - 2 * pow(sy, 3) * pow(sz, 3) * DISTANCE * DISTANCE + 2 * pow(sy, 3) * sz * pow(DISTANCE, 4) + 4 * pow(sy, 4) * sz * sz * DISTANCE * DISTANCE + 4 * sx * sx * sy * sy * sz * sz * DISTANCE * DISTANCE + 2 * pow(sx, 3) * sy * sy * pow(sz, 3) - 2 * DISTANCE * DISTANCE * sy * sy * sx * pow(sz, 3) + 2 * pow(DISTANCE, 4) * sz * sy * sy * sx - 2 * DISTANCE * DISTANCE * sz * sy * sy * pow(sx, 3) + DISTANCE * DISTANCE * pow(sy, 6) + 2 * pow(sy, 5) * pow(sz, 3) - pow(sy, 6) * sz * sz - 2 * DISTANCE * DISTANCE * pow(sy, 5) * sz)) / (-sy * sy - sx * sx - sz * sz + DISTANCE * DISTANCE) - DISTANCE * DISTANCE * sx + sx * sy * sy - sx * sx * sy) / DISTANCE / sy / 2
@@ -154,39 +156,46 @@ try:
     while True:
         try:
             # READ SERIAL DATA AND PUBLISH TOPIC
-            line = ser.readline().rstrip()
-
-            if __name__ == '__main__':
-                try:
-                    if line is '.':
-                        # CHECK IF NO FUCKUPS
-                        if len(mics[0]) > 0 and len(mics[0]) == len(mics[1]) and len(mics[1]) == len(mics[2]) and len(mics[2]) == len(mics[3]):
-                            for i in xrange(len(mics[0])):
-                                try:
-                                    triangulate(i)
-                                    average()
-                                    publish()
-                                except:
-                                    print 'degenerate triangle'
-                        elif len(mics[0]) > 0 and len(mics[1]) > 0 and len(mics[2]) > 0 and len(mics[3]) > 0:
+            #line = ser.readline().rstrip()
+            mics[0] = 0
+            for i in range(10):
+                mics[1] = i - 5
+                for j in range(10):
+                    mics[2] = j - 5
+                    for k in range(10):
+                        mics[3] = k - 5
+                        if __name__ == '__main__':
                             try:
-                                triangulate(0)
-                                publish()
-                            except:
-                                print 'degenerate triangle'
+                                if True:#line is '.':
+                                    # CHECK IF NO FUCKUPS
+                                    if False:#len(mics[0]) > 0 and len(mics[0]) == len(mics[1]) and len(mics[1]) == len(mics[2]) and len(mics[2]) == len(mics[3]):
+                                        for i in xrange(len(mics[0])):
+                                            try:
+                                                triangulate(i)
+                                                average()
+                                                publish()
+                                            except:
+                                                print 'degenerate triangle'
+                                    elif True:#len(mics[0]) > 0 and len(mics[1]) > 0 and len(mics[2]) > 0 and len(mics[3]) > 0:
+                                        try:
+                                            triangulate(0)
+                                            publish()
+                                        except:
+                                            print 'degenerate triangle'
 
-                        else:
-                            print 'pinger could not be found'
+                                    else:
+                                        print 'pinger could not be found'
 
-                        # RESET DATA
-                        for i in xrange(NUMBER_OF_MICS):
-                            del mics[i][:]
-                        for i in xrange(DIMENSIONS):
-                            del pos0[i][:]
-                    else:
-                        parse(line)
-                except rospy.ROSInterruptException:
-                    pass
+                                    # RESET DATA
+                                    # for i in xrange(NUMBER_OF_MICS):
+                                    #     del mics[i][:]
+                                    # for i in xrange(DIMENSIONS):
+                                    #     del pos0[i][:]
+                                #else:
+                                    #parse(line)
+                            except rospy.ROSInterruptException:
+                                pass
+                            time.sleep(0.05)
 
         except serial.serialutil.SerialException:
             # PEACE OUT IF CONNECTION DROPS
