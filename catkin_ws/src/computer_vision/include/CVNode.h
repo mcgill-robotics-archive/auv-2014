@@ -16,6 +16,9 @@ class CVNode {
 
 	private:
 	
+	/**
+	 * Defines the rate at which the node will be checking for incoming messages.
+	 */
 	int receptionRate;
 	image_transport::ImageTransport* pImageTransport;
 	std::list<image_transport::Subscriber> subscribers;

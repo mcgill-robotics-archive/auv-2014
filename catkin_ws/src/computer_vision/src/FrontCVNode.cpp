@@ -6,6 +6,11 @@
 const std::string ROS_NODE_NAME = "front_cv_node";
 
 /**
+ * Defines what will be the reception rate of
+ */
+const int RECEPTION_RATE = 1;
+
+/**
  * @brief Main method used by ROS when the node is launched.
  *
  * @param argc The number of arguments passed when the process is stared.
@@ -18,7 +23,7 @@ int main(int argc, char **argv) {
 		ros::init(argc, argv, ROS_NODE_NAME);
 		ros::NodeHandle nodeHandle;
 
-		ROS_INFO("%s", ("Initializing the node named " + ros::this_node::getName() + ".").c_str());
+		ROS_INFO("%s", ("Initializing the node " + ros::this_node::getName() + ".").c_str());
 
 		// Create the list of topics to listen to
 		std::list<std::string> topicList;
@@ -29,7 +34,7 @@ int main(int argc, char **argv) {
 		}
 
 		// Creates a new CVNode object.
-		FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, topicList, 1);
+		FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, topicList, RECEPTION_RATE);
 
 		// Start receiving images from the camera node (publisher)
 		pFrontCVNode->receiveImages();

@@ -95,9 +95,9 @@ void CVNode::receiveImages() {
 	while (ros::ok()) {
 		if (subscribers.empty()) {
 			// If the node is not subscribed to any topic then stop receiving images
+			ROS_WARN("%s", ("The node " + ros::this_node::getName() + " is not subscribed to any topic.").c_str());
 			break;
-		}
-		else {
+		} else {
 			// Check if there are still publishers on each topics
 			for (std::list<image_transport::Subscriber>::iterator it = subscribers.begin(); it != subscribers.end(); it++) {
 				if ((*it).getNumPublishers() == 0) {
