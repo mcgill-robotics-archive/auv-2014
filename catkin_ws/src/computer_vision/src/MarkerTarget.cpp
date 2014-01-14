@@ -1,8 +1,8 @@
 /*
  * MarkerTarget.cpp
  *
- *  Created on: Nov 20, 2013
- *      Author: fred
+ * @author Fred Lafrance
+ * @author Michael Noseworthy
  */
 
 #include <stdlib.h>
@@ -11,6 +11,10 @@
 #include <opencv2/calib3d/calib3d.hpp>
 #include "MarkerTarget.h"
 
+/**
+ * The constructor loads the reference images which we will use to compare our candidate markers to.
+ * Also initializes the matrix we will use to determine the positions of the objects.
+ */
 MarkerTarget::MarkerTarget() {
 	//Load the reference images
 	for(int i = 0 ; i < NUM_REFERENCE_IMGS; i += 2) {
@@ -32,6 +36,12 @@ MarkerTarget::MarkerTarget() {
 	intrinsic.at<float>(1, 2) = 220;
 }
 
+/**
+ * Detects if any markers are present and if so returns their position, and the identity of the marker object.
+ *
+ * @param currentFrame The current camera frame in which to look for the marker bins.
+ * @return 
+ */
 computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
@@ -43,13 +53,37 @@ computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& cu
 		estimatePose(markers[i]);
 
 	//TODO construct the object with the data in each marker descriptor and return it
+	if (markers.size() > 0) {
+		//TODO Decide what to do if we detect more than one marker
+		for (int i = 0; i < markers.size(); i++) {
+			computer_vision::VisibleObjectData* objectData;
+			objectData->object_type = markers[i].closestMatch;
+			objectData->x_distance = markers[i].x_dist;
+			objectData->y_distance = markers[i].y_dist;
+			objectData->z_distance = markers[i].z_dist;
+			objectData->pitch_angle = markers[i].pitch_angle;
+			objectData->yaw_angle = markers[i].yaw_angle;
+		}
+		
+		
+	} else {
+		return (computer_vision::VisibleObjectData*)0;
+	}
+	
 	return NULL;
 }
 
+/**
+ * Converts the image to grayscale since we are only looking for edges amongst a black and white surface.
+ * Also blurs the image to remove noise.
+ *
+ * @param currentFrame The camera frame in which to apply the filter.
+ */
 void MarkerTarget::applyFilter(cv::Mat& currentFrame) {
 	cv::cvtColor( currentFrame, currentFrame, CV_BGR2GRAY );
 	cv::blur( currentFrame, currentFrame, cv::Size(3,3) );
 }
+
 
 MarkerTarget::Point2DVec MarkerTarget::findBins(cv::Mat& frame) {
 	cv::threshold(frame, frame, 170, 255, 1);
