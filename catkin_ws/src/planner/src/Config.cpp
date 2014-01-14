@@ -48,6 +48,8 @@ bool Config::loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 		outfile << "Error description: " << roboSub_result.description() << "\n";
 		outfile << "Error offset: " << roboSub_result.offset << " (error at [..." << (filename + roboSub_result.offset) << "]\n\n";
 		outfile.close();
+		std::cout << "Error loading the config files..."<< std::endl;
+		std::cout<< "Make sure tasks.xml and map.xml are valid and located at the root of the catkin folder you are working in" <<std::endl;
 		
 	}
 
