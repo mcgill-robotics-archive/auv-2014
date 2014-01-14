@@ -10,7 +10,7 @@ TorpedoTask::TorpedoTask(){
 	id = "Rocket_Task";
 }
 int TorpedoTask::Execute(){
-	std::cout << "Shoot Torpedo!!!"<< std::endl;
+	std::cout <<std::endl <<">> Shoot Torpedo!!!"<< std::endl;
 	return 0;
 }
 
@@ -19,7 +19,7 @@ Task_1v1::Task_1v1(){
 }
 int Task_1v1::Execute()
 {
-	std::cout<< "1.1: Move Right, then fire Missiles!" << std::endl;
+	std::cout<< std::endl <<">> 1.1: Move Right, then fire Missiles!" << std::endl;
 	return 0;
 }
 
@@ -28,7 +28,7 @@ Task_1v2::Task_1v2(){
 }
 int Task_1v2::Execute()
 {
-	std::cout<< "1.2: Move Left, then fire Missiles!" << std::endl;
+	std::cout<< std::endl <<">> 1.2: Move Left, then fire Missiles!" << std::endl;
 	return 0;
 }
 
@@ -37,7 +37,7 @@ Task_2v1::Task_2v1(){
 }
 int Task_2v1::Execute()
 {
-	std::cout<< "2.1: Move Straight, then fire Missiles!" << std::endl;
+	std::cout<< std::endl <<">> 2.1: Move Straight, then fire Missiles!" << std::endl;
 	return 0;
 }
 

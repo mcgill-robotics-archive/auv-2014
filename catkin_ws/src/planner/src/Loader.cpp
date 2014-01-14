@@ -31,8 +31,8 @@ void Loader::loadInvoker(){
 			std::cout<<"Adding task to invoker"<< std::endl;
 			main_Invoker->AddTask(main_Taskfactory->makeTask(s_tasklist.at(i)));
 		}
-		std::cout<<"Adding default gate task because config does not work..."<< std::endl;
-		main_Invoker->AddTask(main_Taskfactory->makeTask("1v1"));
+		//std::cout<<"Adding default gate task because config does not work..."<< std::endl; // works now!!!
+		//main_Invoker->AddTask(main_Taskfactory->makeTask("1v1")); // works now!!!
 	}
 	//To make sure the invoker doesn't get loaded agian unless needed
 	isInvokerLoaded = true;
