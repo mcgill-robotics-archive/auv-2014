@@ -2,9 +2,10 @@
 #Created on Nov 16th, 2013
 
 ## @package central_app
-#  @author David Lavoie-Boutin
 #
 #  Main file for McGill Robotics AUV Design Team testing User Interface
+
+#  @author David Lavoie-Boutin
 
 #bunch of import statements
 #Ui declarations and GUI libraries

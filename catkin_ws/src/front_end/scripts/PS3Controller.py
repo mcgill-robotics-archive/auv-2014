@@ -1,4 +1,9 @@
 #!usr/bin/python
+
+## @package central_app
+#  @author David Lavoie-Boutin
+#
+#  Main file for McGill Robotics AUV Design Team testing User Interface
 """
 Created on Aug 10th 2013
 

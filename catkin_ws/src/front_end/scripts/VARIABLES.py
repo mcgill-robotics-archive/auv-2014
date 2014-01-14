@@ -1,15 +1,21 @@
+##@package VARIABLES
+#
+# file grouping similar variables in classes
+#since python does not have enums,
+#
+# also, these variables will be accessed by different python files therefore the need for a separate file
+#@author David Lavoie-Boutin
+
 """
+
 file containing all variables shared between one or more files
 also contains parameters and constants used in the UI and the key mapping for the keyboard controller
 __author__ = 'david'
 """
+
 from PyQt4 import QtCore
-
-
+##    variables shared by all controller for the cmd_vel and z_position
 class vel_vars(object):
-    """
-    variables shared by all controller for the cmd_vel and z_position
-    """
     pitch_velocity = 0
     yaw_velocity = 0
     x_velocity = 0
@@ -21,11 +27,8 @@ class vel_vars(object):
     MAX_YAW_VEL = 1
     MAX_PITCH_VEL =1
 
-
+##    Here we define the keyboard map for our controller
 class KeyMapping(object):
-    """
-    Here we define the keyboard map for our controller
-    """
     PitchForward = QtCore.Qt.Key_I
     PitchBackward = QtCore.Qt.Key_K
     YawLeft = QtCore.Qt.Key_J
@@ -38,11 +41,8 @@ class KeyMapping(object):
     DecreaseY = QtCore.Qt.Key_D
     Surface = QtCore.Qt.Key_H
 
-
+##   variables for the ros topic names
 class ROS_Topics(object):
-    """
-    variables for the ros topic names
-    """
     battery_voltage = "battery_voltage"
     pressure = "pressure"
     depth = "depth"
@@ -51,11 +51,8 @@ class ROS_Topics(object):
     partial_cmd_vel = '/gazebo/robot_twist'
     zdes = 'zdes'
 
-
+##    various parameters and constants
 class misc_vars(object):
-    """
-    various parameters and constants
-    """
     controller_updateFrequency = 50
     low_battery_threshold = 2.0
     max_voltage = 24.0
