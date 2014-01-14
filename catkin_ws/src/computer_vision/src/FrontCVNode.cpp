@@ -1,6 +1,11 @@
 #include "FrontCVNode.h"
 
 /**
+ * Defines the name this node will have during its execution.
+ */
+const std::string ROS_NODE_NAME = "front_cv_node";
+
+/**
  * @brief Main method used by ROS when the node is launched.
  *
  * @param argc The number of arguments passed when the process is stared.
@@ -10,20 +15,18 @@
 int main(int argc, char **argv) {
 
 	if (argc > 1) {
-		ros::init(argc, argv, "front_cv_node");
+		ros::init(argc, argv, ROS_NODE_NAME);
 		ros::NodeHandle nodeHandle;
+
+		ROS_INFO("%s", ("Initializing the node named " + ros::this_node::getName() + ".").c_str());
 
 		// Create the list of topics to listen to
 		std::list<std::string> topicList;
 		for (int i = 1; i < argc; i++) {
 			std::string topic = std::string(argv[i]);
+			ROS_INFO("%s", (ros::this_node::getName() + " will be listening to the topic named: " + topic).c_str());
 			topicList.push_back(topic);
 		}
-
-		/*
-		ROS_INFO("%s", ("Initializing the CVNode. It will be listening to the topic named \"" + VIDEO_FEED_TOPIC_NAME + "\"").c_str());
-		ROS_INFO("%s", "If you want to run this node in Gazebo, the topic needs to be renamed to \"/my_robot/camera1/image_raw\"");
-		 */
 
 		// Creates a new CVNode object.
 		FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, topicList, 1);
@@ -36,9 +39,10 @@ int main(int argc, char **argv) {
 
 		// Destroy the node
 		ros::shutdown();
+	} else {
+		ROS_ERROR("%s", "The topics that the node should subscribe to are not present.");
+		ROS_ERROR("%s", "Usage: rosrun computer_vision FrontCVNode [topic 1] [topic 2] ... [topic n]");
 	}
-	else
-		std::cout << "Usage: rosrun computer_vision FrontCVNode [topic 1] [topic 2] ... [topic n]" << std::endl;
 }
 
 /**

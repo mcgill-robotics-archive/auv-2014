@@ -87,6 +87,9 @@ CVNode::~CVNode() {
  * @brief Function that dictates the rate at which the node checks if an image is received.
  */
 void CVNode::receiveImages() {
+
+	ROS_INFO("%s", (ros::this_node::getName() + " will start to receive images from publisher.").c_str());
+
 	ros::Rate loop_rate(receptionRate);
 
 	while (ros::ok()) {
