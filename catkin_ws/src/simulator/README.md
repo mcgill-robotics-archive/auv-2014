@@ -50,42 +50,10 @@ There is a test package "robot_move_test" in the workspace. This can be used to 
 move it in the simulator. Run: "rosrun robot_move_test robot_move_test"
 
 -----------------------------------------------------------------
-
-Bin Task:
-
-Run: $roslaunch simulator bin_task.launch
-
-This will create a world with robot and the 4 bins aligned.
-
-To subscribe to the image from the camera pointing downwards:
-Make sure your ROS node subscribes to "/my_robot/camera_down/image_raw"
-
-The topics published by the camera are:
-
-/my_robot/camera_down/camera_info
-/my_robot/camera_down/image_raw
-/my_robot/camera_down/image_raw/compressed
-/my_robot/camera_down/image_raw/compressed/parameter_descriptions
-/my_robot/camera_down/image_raw/compressed/parameter_updates
-/my_robot/camera_down/image_raw/compressedDepth
-/my_robot/camera_down/image_raw/compressedDepth/parameter_descriptions
-/my_robot/camera_down/image_raw/compressedDepth/parameter_updates
-/my_robot/camera_down/image_raw/theora
-/my_robot/camera_down/image_raw/theora/parameter_descriptions
-/my_robot/camera_down/image_raw/theora/parameter_updates
-/my_robot/camera_down/parameter_descriptions
-/my_robot/camera_down/parameter_updates
-
-
-To move the robot slowly so it hovers over the bins, you will need to use
-a PS3 controller and the front_end package OR an easier way is to use
-the robot_move_model test package. 
-
-Run: $rosrun robot_move_model robot_move_model
-Pass it x:0, y:0.05, z:0
-
-The robot will move over the bins and you can see if your filters are working.
-
-A negative z should lower the robot, in case that's needed.
-
------------------------------------------------------------------
+topics:
+/controls/wrench
+/gazebo/simulator/robot_twist
+/gazebo/simulator/thruster_forces
+/simulator/camera1/image_raw
+/simulator/camera2/image_raw
+/simulator/camera3/image_raw
