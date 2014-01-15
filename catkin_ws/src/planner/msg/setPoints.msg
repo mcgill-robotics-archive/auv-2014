@@ -6,4 +6,3 @@ ValueControl XSpeed
 ValueControl YSpeed
 ValueControl YawSpeed
 ValueControl Depth
-ValueControl ZPos #depricated

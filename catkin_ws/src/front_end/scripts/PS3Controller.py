@@ -95,4 +95,4 @@ class PS3Controller(object):
                     vel_vars.x_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(0)  # left left/right axis
                     vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
                     vel_vars.yaw_velocity = -vel_vars.MAX_YAW_VEL*self.controller.get_axis(2)  # right left/right axis
-                    vel_vars.pitch_velocity = -vel_vars.MAX_PITCH_VEL*self.controller.get_axis(3)  # right front/back axis
+                    vel_vars.pitch_velocity = -vel_vars.MAX_PITCH_ANGLE*self.controller.get_axis(3)  # right front/back axis
