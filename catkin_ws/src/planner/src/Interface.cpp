@@ -1,6 +1,7 @@
 #include "Interface.h"
+#include "geometry_msgs/Wrench.h"
 
-ros::Publisher ps3_pub;
+ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
 ros::Publisher control_pub;
 /**
@@ -130,23 +131,23 @@ void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth)
 }
 
 
-void setPosition(double x_pos, double y_pos, double z_pos, double pitch_angle, double yaw_angle){
-	double pointControl[18] = {1, x_pos, 1, y_pos, 1, z_pos, 1, pitch_angle, 1, yaw_angle, 0, 0, 0, 0, 0, 0, 0, 0};
+void setPosition(double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth){
+	double pointControl[18] = {1, x_pos, 1, y_pos, 0,0, 1, pitch_angle, 1, yaw_angle, 0, 0, 0, 0, 0, 0, 1, depth};
 	setPoints(pointControl);
 }
 
 
 
 void ps3Control() {
-  simulator::ThrusterForces msgPS3;
-    msgPS3.ty1 = 40.0;
-    msgPS3.ty2 = 40.0;
-    msgPS3.tx1 = 0.0;
-    msgPS3.tz1 = 0.0;
-    msgPS3.tx2 = 0.0;
-    msgPS3.tz2 = 0.0;
+  geometry_msgs::Wrench msgWrench;
+    msgWrench.force.y = 40.0;
+    msgWrench.torque.y = 0.0;
+    msgWrench.force.x = 0.0;
+    msgWrench.force.z = 0.0;
+    msgWrench.torque.x = 0.0;
+    msgWrench.torque.z = 0.0;
 
-  ps3_pub.publish(msgPS3);
+  wrench_pub.publish(msgWrench);
 }
 
 int main(int argc, char **argv) {
@@ -157,7 +158,7 @@ int main(int argc, char **argv) {
   ros::Subscriber pressure_sub = n.subscribe("pressure_data", 1000, setPressure);
   ros::Subscriber IMU_sub = n.subscribe("imu_data", 1000, setOrientation);
 
-  ps3_pub = n.advertise<simulator::ThrusterForces>("gazebo/thruster_forces", 1000);
+  wrench_pub = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 1000);
   CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
   control_pub = n.advertise<planner::setPoints>("planner/setPoints", 1000);
 
