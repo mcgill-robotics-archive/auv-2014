@@ -23,6 +23,7 @@ class Config{
 
 		void parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc);
 
+
 	private:
 	    std::vector<string> taskList;
 	    std::vector<string> mapList;

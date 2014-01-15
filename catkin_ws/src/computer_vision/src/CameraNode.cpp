@@ -1,21 +1,31 @@
 #include "CameraNode.h"
 
 int main(int argc, char **argv) {
-	// Initialize the node
-    ros::init(argc, argv, "camera_node");
-    ros::NodeHandle nodeHandle;
-    
-    // Create a new CameraNode object
-	CameraNode* pCameraNode = new CameraNode(nodeHandle, "camera_feed", argv[1], 10);
 
-    // Start sending images to computer vision node (subscriber)
-    pCameraNode->sendImages();
+	if (argc == 3) {
+		// Initialize the node
+		ros::init(argc, argv, argv[1]);
+		ros::NodeHandle nodeHandle;
 
-    // Destroy the CameraNode object
-    delete pCameraNode;
+		// Set the topic name to: [node name]_feed
+		char topicName[strlen(argv[1]) + 5];
+		strcpy(topicName, argv[1]);
+		strcat(topicName, "_feed");
 
-    // Destroy the node
-    ros::shutdown();
+		// Create a new CameraNode object
+		CameraNode* pCameraNode = new CameraNode(nodeHandle, topicName, argv[2], 10);
+
+		// Start sending images to computer vision node (subscriber)
+		pCameraNode->sendImages();
+
+		// Destroy the CameraNode object
+		delete pCameraNode;
+
+		// Destroy the node
+		ros::shutdown();
+	}
+	else
+		std::cout << "Usage: rosrun computer_vision CVNode [node name] [video source]" << std::endl;
 }
 
 /**

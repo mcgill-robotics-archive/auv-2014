@@ -9,5 +9,7 @@ var searchData=
   ['acc3',['acc3',['../classcentral__app_1_1CentralUi.html#aec8d0f124623b47f78b9ca2172d5f2d9',1,'central_app::CentralUi']]],
   ['acc3_5fcurve',['acc3_curve',['../classcentral__app_1_1CentralUi.html#a2bd95a9121e28efbb2e585bb03e60c6c',1,'central_app::CentralUi']]],
   ['acc3_5fdata',['acc3_data',['../classcentral__app_1_1CentralUi.html#a70aec9133dafcba413c8635c6dcb6595',1,'central_app::CentralUi']]],
-  ['alarm_5ffile',['alarm_file',['../classcentral__app_1_1CentralUi.html#aa68443a56df9803059aa773451d6ff37',1,'central_app::CentralUi']]]
+  ['alarm_5ffile',['alarm_file',['../classcentral__app_1_1CentralUi.html#aa68443a56df9803059aa773451d6ff37',1,'central_app::CentralUi']]],
+  ['allow_5fremote_5fpredicate',['allow_remote_predicate',['../structallow__remote__predicate.html',1,'']]],
+  ['axis_5fto_5ftype',['axis_to_type',['../structaxis__to__type.html',1,'']]]
 ];

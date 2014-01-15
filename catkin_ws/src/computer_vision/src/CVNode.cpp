@@ -25,39 +25,6 @@ const std::string VIDEO_FEED_TOPIC_NAME = "camera_feed";
 const std::string FORWARD_CAMERAS_TOPIC_NAME = "forward_cameras_object";
 
 /**
- * @brief Main method used by ROS when the node is launched.
- *
- * @param argc The number of arguments passed when the process is stared.
- * @param argv The arguments passed when the process is started.
- * @return The termination status of the processe's execution.
- */
-int main(int argc, char **argv) {
-	ros::init(argc, argv, "cv_node");
-	ros::NodeHandle nodeHandle;
-
-	ROS_INFO("%s", ("Initializing the CVNode. It will be listening to the topic named \"" + VIDEO_FEED_TOPIC_NAME + "\"").c_str());
-	ROS_INFO("%s", "If you want to run this node in Gazebo, the topic needs to be renamed to \"/my_robot/camera1/image_raw\"");
-
-	// Creates a new CVNode object.
-	CVNode* pCVNode = new CVNode(nodeHandle, VIDEO_FEED_TOPIC_NAME);
-
-	// Start receiving images from the camera node (publisher)
-	while (ros::ok()) {
-		// Check if the camera node is still sending images
-		if (pCVNode->getNumPublisher() > 0)
-			ros::getGlobalCallbackQueue()->callAvailable();
-		else
-			break;
-	}
-
-	// Destroy the CVNode object
-	delete pCVNode;
-
-	// Destroy the node
-	ros::shutdown();
-}
-
-/**
  * @brief Constructor.
  *
  * Constructs a new CVNode object. The computer vision node receives
@@ -66,28 +33,32 @@ int main(int argc, char **argv) {
  * @param nodeHandle The ROS node handle
  * @param topicName The name of the topic on which the images are published
  */
-CVNode::CVNode(ros::NodeHandle& nodeHandle, const std::string& topicName) {
-	// Subscribe to the "camera_feed" topic
-	pImageTransport = new image_transport::ImageTransport(nodeHandle);
+CVNode::CVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate) {
+	this->receptionRate = receptionRate;
+	this->pImageTransport = new image_transport::ImageTransport(nodeHandle);
 
-	// Instanciates the subscribers.
-	subscriber = pImageTransport->subscribe(topicName, 1, &CVNode::receiveImage, this);
+	// Instanciate the subscribers
+	for (std::list<std::string>::iterator it = topicList.begin(); it != topicList.end(); it++) {
+		// boost::bind() is used to pass an argument (the topic name) to the callback function (CVNode::receiveImage)
+		image_transport::Subscriber subscriber = pImageTransport->subscribe(*it, 1, boost::bind(&CVNode::receiveImage, this, _1, *it), ros::VoidPtr(), image_transport::TransportHints());
+		this->subscribers.push_back(subscriber);
 
-	// Construct the list of VisibleObjects
-	visibleObjects.push_back(new Door());
-
-	// Setup a window to display the camera feed
-	cv::namedWindow(MAIN_WINDOW, CV_WINDOW_KEEPRATIO);
-	cv::namedWindow(FILTERED_WINDOW, CV_WINDOW_KEEPRATIO);
-	cv::moveWindow(MAIN_WINDOW, 100, 30);
-	cv::moveWindow(FILTERED_WINDOW, 500, 30);
-
-	ROS_INFO("%s", "The subscriber has been configured, now about to wait for a node to publishing the camera feed.");
-
-	// Wait for publisher(s) to be ready.
-	while (subscriber.getNumPublishers() == 0) {
-		ROS_INFO_THROTTLE(DELAY_BETWEEN_INFOS, "Now waiting for a node to publish a video feed...");
+		// Create a window for that topic
+		cv::namedWindow(*it, CV_WINDOW_KEEPRATIO);
 	}
+
+	ROS_INFO("%s", "Subscriber(s) configured.");
+
+	// Wait for publisher(s) to be ready
+	for (std::list<image_transport::Subscriber>::iterator it = subscribers.begin(); it != subscribers.end(); it++) {
+		while ((*it).getNumPublishers() == 0) {
+			std::string message = "Waiting for a publisher to start publishing on the topic ";
+			message += (*it).getTopic();
+			ROS_INFO_THROTTLE(DELAY_BETWEEN_INFOS, "%s", message.c_str());
+		}
+	}
+
+	ROS_INFO("%s", "Publisher(s) ready.");
 }
 
 /**
@@ -96,61 +67,58 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, const std::string& topicName) {
  * Releases the memory used by the CVNode object.
  */
 CVNode::~CVNode() {
-	// Destroy window
-	cv::destroyWindow(MAIN_WINDOW);
+	// Unsubscribe from all topics and destroy windows
+	for (std::list<image_transport::Subscriber>::iterator it = subscribers.begin(); it != subscribers.end(); it++) {
+		(*it).shutdown();
+		cv::destroyWindow(getTopicName(*it));
+	}
 
-	// Unsubscribe from topic
-	subscriber.shutdown();
-	delete pImageTransport;
-
-	// Empty the list of VisibleObjects
+	// Delete all VisibleObjects
 	while (!visibleObjects.empty()) {
 		delete visibleObjects.front();
 		visibleObjects.pop_front();
 	}
+
+	// Delete ImageTransport object
+	delete pImageTransport;
 }
 
 /**
- * @brief Function that is called when an image is received.
- *
- * @param rosMessage The ROS message that contains the image
+ * @brief Function that dictates the rate at which the node checks if an image is received.
  */
-void CVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
-	cv_bridge::CvImagePtr pCurrentFrame;
-	cv::Mat currentFrame;
-	std::list<VisibleObject*>::iterator it;
+void CVNode::receiveImages() {
 
-	try {
-		// Convert sensor_msgs to an opencv image
-		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
-		currentFrame = pCurrentFrame->image;
-	} catch (cv_bridge::Exception& e) {
-		ROS_ERROR("cv_bridge exception: %s", e.what());
-		return;
-	}
+	ROS_INFO("%s", (ros::this_node::getName() + " will start to receive images from publisher.").c_str());
 
-	try {
-		// Loop through the list of visible objects and transmit
-		// the received image to each visible object
-		for (it = visibleObjects.begin(); it != visibleObjects.end(); it++) {
-			(*it)->retrieveObjectData(currentFrame);
+	ros::Rate loop_rate(receptionRate);
+
+	while (ros::ok()) {
+		if (subscribers.empty()) {
+			// If the node is not subscribed to any topic then stop receiving images
+			ROS_WARN("%s", ("The node " + ros::this_node::getName() + " is not subscribed to any topic.").c_str());
+			break;
+		} else {
+			// Check if there are still publishers on each topics
+			for (std::list<image_transport::Subscriber>::iterator it = subscribers.begin(); it != subscribers.end(); it++) {
+				if ((*it).getNumPublishers() == 0) {
+					// If there is no publisher on a topic, stop listening to it and destroy the window that displays the images
+					(*it).shutdown();
+					cv::destroyWindow(getTopicName(*it));
+					subscribers.remove(*it);
+					break;
+				}
+			}
+
+			ros::spinOnce();
+			loop_rate.sleep();
 		}
-
-		// Display the filtered image
-		cv::imshow(MAIN_WINDOW, currentFrame);
-		cv::waitKey(5);
-	} catch (cv::Exception& e) {
-		ROS_ERROR("cv::imgshow exception: %s", e.what());
-		return;
 	}
 }
 
 /**
- * Helper function that is used to tell whether or not the node is
- * still receiving images from the publisher(s).
- *
- * @return The number of publishers on the topic
+ * Returns the name of the topic a subscriber is subscribed to.
  */
-int CVNode::getNumPublisher() {
-	return subscriber.getNumPublishers();
+std::string getTopicName(image_transport::Subscriber subscriber) {
+	return subscriber.getTopic().erase(0, 1);
 }
+

@@ -17,8 +17,8 @@ project(planner)
  add_message_files (
    FILES
    MotorControl.msg
-   setPoints.msg
    ValueControl.msg
+   setPoints.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -52,7 +52,7 @@ project(planner)
  add_executable(TestNodePleaseIgnore src/rosTest.cpp)
  target_link_libraries(TestNodePleaseIgnore ${catkin_LIBRARIES})
 
- add_executable(Planner src/Interface.cpp src/Loader.cpp src/Invoker.cpp src/TaskFactory.cpp src/Config.cpp include/pugixml/src/pugixml.cpp src/TaskConcrete.cpp src/Task.cpp src/quick_parse.cpp)
+ add_executable(Planner src/Interface.cpp src/Loader.cpp src/Invoker.cpp src/TaskFactory.cpp src/Config.cpp include/pugixml/src/pugixml.cpp src/TaskConcrete.cpp src/Task.cpp src/Task_Gate.cpp )
  target_link_libraries(Planner ${catkin_LIBRARIES})
 
  include_directories(include ${catkin_INCLUDE_DIRS})

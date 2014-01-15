@@ -5,16 +5,17 @@
 #include "Config.h"
 #include "TaskFactory.hpp"
 #include "Interface.h"
-
+#include "Task.hpp"
+class TaskFactory;
 class Loader {
 
  public:
 
- 	void loadInvoker();
+    void loadInvoker();
 
- 	void reLoadInvoker();
+    void reLoadInvoker();
 
- 	Invoker* getInvoker();
+    Invoker* getInvoker();
 
     Loader();
 

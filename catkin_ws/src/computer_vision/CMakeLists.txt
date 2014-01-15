@@ -140,20 +140,18 @@ include_directories(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_library(ObjectData src/ObjectData.cpp)
-target_link_libraries(ObjectData ${catkin_LIBRARIES})
-
 add_library(VisibleObject src/VisibleObject.cpp)
 target_link_libraries(VisibleObject ${catkin_LIBRARIES})
 
+add_library(CVNode src/CVNode.cpp)
+target_link_libraries(CVNode ${catkin_LIBRARIES})
+
 add_library(Door src/Door.cpp)
 target_link_libraries(Door VisibleObject)
-target_link_libraries(Door ObjectData)
 target_link_libraries(Door ${catkin_LIBRARIES})
 
 add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
-target_link_libraries(MarkerTarget ObjectData)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
 
 add_library(Camera src/Camera.cpp)
@@ -163,10 +161,17 @@ add_executable(CameraNode src/CameraNode.cpp)
 target_link_libraries(CameraNode Camera)
 target_link_libraries(CameraNode ${catkin_LIBRARIES})
 
-add_executable(CVNode src/CVNode.cpp)
-target_link_libraries(CVNode VisibleObject)
-target_link_libraries(CVNode Door)
-target_link_libraries(CVNode ${catkin_LIBRARIES})
+add_executable(DownCVNode src/DownCVNode.cpp)
+target_link_libraries(DownCVNode CVNode)
+target_link_libraries(DownCVNode VisibleObject)
+target_link_libraries(DownCVNode MarkerTarget)
+target_link_libraries(DownCVNode ${catkin_LIBRARIES})
+
+add_executable(FrontCVNode src/FrontCVNode.cpp)
+target_link_libraries(FrontCVNode CVNode)
+target_link_libraries(FrontCVNode VisibleObject)
+target_link_libraries(FrontCVNode Door)
+target_link_libraries(FrontCVNode ${catkin_LIBRARIES})
 
 add_executable(CVTestNode src/CVTestNode.cpp)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
