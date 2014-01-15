@@ -32,9 +32,10 @@ MarkerTarget::MarkerTarget() {
 	intrinsic.at<float>(1, 2) = 220;
 }
 
-computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
+	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	Point2DVec binCorners = findBins(currentFrame);
 	std::vector<MarkerDescriptor> markers = findMarkers(filteredFrame, binCorners);
@@ -43,7 +44,7 @@ computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& cu
 		estimatePose(markers[i]);
 
 	//TODO construct the object with the data in each marker descriptor and return it
-	return NULL;
+	return (messagesToReturn);
 }
 
 void MarkerTarget::applyFilter(cv::Mat& currentFrame) {

@@ -11,6 +11,11 @@ const std::string ROS_NODE_NAME = "front_cv_node";
 const int RECEPTION_RATE = 1;
 
 /**
+ * The topic name used for the front_cv_node to publish the VisibleObjectData.
+ */
+const std::string DATA_TOPIC_NAME = "front_cv_data";
+
+/**
  * @brief Main method used by ROS when the node is launched.
  *
  * @param argc The number of arguments passed when the process is stared.
@@ -75,16 +80,16 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const 
 	cv::Mat currentFrame;
 	cv_bridge::CvImagePtr pCurrentFrame;
 
-		try {
-			// Convert sensor_msgs to an opencv image
-			pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
-			currentFrame = pCurrentFrame->image;
-		} catch (cv_bridge::Exception& e) {
-			ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
-			ROS_ERROR("cv_bridge exception: %s", e.what());
-			// Returns an empty cv::Mat object.
-			return;
-		}
+	try {
+		// Convert sensor_msgs to an opencv image
+		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
+		currentFrame = pCurrentFrame->image;
+	} catch (cv_bridge::Exception& e) {
+		ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
+		ROS_ERROR("cv_bridge exception: %s", e.what());
+		// Returns an empty cv::Mat object.
+		return;
+	}
 
 	try {
 		// Loop through the list of visible objects and transmit

@@ -21,13 +21,14 @@ Door::~Door() {
  *  which contains the information gathered on the door. If the door is
  *  not present in the current frame, it returns the zero pointer (NULL).
  */
-computer_vision::VisibleObjectData* Door::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Mat& currentFrame) {
 	bool isVisible;
 	double yawAngle = -90.0;
 	double pitchAngle = 90.0;
 	double xDistance = 1;
 	double yDistance = 3;
 	double zDistance = 4;
+	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	// Creates a pointer that will point to a computer_vision::VisibleObjectData object.
 	computer_vision::VisibleObjectData* visibleObjectData;
@@ -50,9 +51,11 @@ computer_vision::VisibleObjectData* Door::retrieveObjectData(cv::Mat& currentFra
 		visibleObjectData->y_distance = yDistance;
 		visibleObjectData->z_distance = zDistance;
 
-		return visibleObjectData;
+		messagesToReturn.push_back(visibleObjectData);
+
+		return (messagesToReturn);
 	} else {
-		return (computer_vision::VisibleObjectData*)0;
+		return (messagesToReturn);
 	}
 }
 

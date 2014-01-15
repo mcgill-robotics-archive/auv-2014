@@ -12,7 +12,7 @@ class VisibleObject {
 
 	public:
 
-	virtual computer_vision::VisibleObjectData* retrieveObjectData(cv::Mat& currentFrame) = 0;
+	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame) = 0;
 	cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
 
 	virtual ~VisibleObject();
