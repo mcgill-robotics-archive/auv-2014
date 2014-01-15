@@ -170,7 +170,7 @@ class CentralUi(QtGui.QMainWindow):
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
         self.ui.angularHorizantal.setRange(-vel_vars.MAX_YAW_VEL, vel_vars.MAX_YAW_VEL)
-        self.ui.angularVertical.setRange(-vel_vars.MAX_PITCH_VEL, vel_vars.MAX_PITCH_VEL)
+        self.ui.angularVertical.setRange(-vel_vars.MAX_PITCH_ANGLE, vel_vars.MAX_PITCH_ANGLE)
         self.ui.linearVertical.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
         self.ui.linearHorizantal.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
 
@@ -195,9 +195,9 @@ class CentralUi(QtGui.QMainWindow):
                     vel_vars.yaw_velocity += -vel_vars.MAX_YAW_VEL
 
                 elif key == KeyMapping.PitchForward:
-                    vel_vars.pitch_velocity += vel_vars.MAX_PITCH_VEL
+                    vel_vars.pitch_velocity += vel_vars.MAX_PITCH_ANGLE
                 elif key == KeyMapping.PitchBackward:
-                    vel_vars.pitch_velocity += -vel_vars.MAX_PITCH_VEL
+                    vel_vars.pitch_velocity += -vel_vars.MAX_PITCH_ANGLE
 
                 elif key == KeyMapping.IncreaseDepth:
                     vel_vars.z_position += vel_vars.z_position_step
@@ -232,9 +232,9 @@ class CentralUi(QtGui.QMainWindow):
                 vel_vars.yaw_velocity -= -vel_vars.MAX_YAW_VEL
 
             elif key == KeyMapping.PitchForward:
-                vel_vars.pitch_velocity -= vel_vars.MAX_PITCH_VEL
+                vel_vars.pitch_velocity -= vel_vars.MAX_PITCH_ANGLE
             elif key == KeyMapping.PitchBackward:
-                vel_vars.pitch_velocity -= -vel_vars.MAX_PITCH_VEL
+                vel_vars.pitch_velocity -= -vel_vars.MAX_PITCH_ANGLE
 
             elif key == KeyMapping.IncreaseX:
                 vel_vars.x_velocity -= vel_vars.MAX_LINEAR_VEL
@@ -286,8 +286,8 @@ class CentralUi(QtGui.QMainWindow):
     #   @param self the object pointer
     def keyboard_update(self):
         # set ui
-        self.ui.linearVertical.setValue(vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(vel_vars.x_velocity)
+        self.ui.linearVertical.setValue(vel_vars.x_velocity)
+        self.ui.linearHorizantal.setValue(vel_vars.y_velocity)
         self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
         self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
 
@@ -605,7 +605,7 @@ class CentralUi(QtGui.QMainWindow):
         if self.right_pre_image is not None:
             self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_pre_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 self.image_lock.release()
 
@@ -617,7 +617,7 @@ class CentralUi(QtGui.QMainWindow):
         if self.bottom_pre_image is not None:
             self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_pre_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 self.image_lock.release()
 
