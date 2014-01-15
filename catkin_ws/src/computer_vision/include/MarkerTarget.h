@@ -20,7 +20,7 @@ class MarkerTarget : public VisibleObject
 public:
 	MarkerTarget();
 
-	virtual computer_vision::VisibleObjectData* retrieveObjectData(cv::Mat& currentFrame);
+	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 	virtual void applyFilter(cv::Mat& currentFrame);
 private:
 	typedef std::vector<std::vector<cv::Point2f> > Point2DVec;

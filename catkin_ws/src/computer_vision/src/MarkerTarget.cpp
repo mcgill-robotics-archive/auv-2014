@@ -43,16 +43,18 @@ MarkerTarget::MarkerTarget() {
  * @return A vector (std::vector< VisibleObjectData* >) of VisibleDataObjects populated with information such 
  *				as distance, angle, and marker type for each visible marker bin.
  */
-computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
+	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	Point2DVec binCorners = findBins(currentFrame);
 	std::vector<MarkerDescriptor> markers = findMarkers(filteredFrame, binCorners);
 
 	for(unsigned int i = 0 ; i < markers.size() ; i++)
 		estimatePose(markers[i]);
-
+	
+	std::vector<computer_vision::VisibleObjectData*> messages;
 	//TODO construct the object with the data in each marker descriptor and return it
 	if (markers.size() > 0) {
 		//TODO Decide what to do if we detect more than one marker
@@ -64,14 +66,10 @@ computer_vision::VisibleObjectData* MarkerTarget::retrieveObjectData(cv::Mat& cu
 			objectData->z_distance = markers[i].z_dist;
 			objectData->pitch_angle = markers[i].pitch_angle;
 			objectData->yaw_angle = markers[i].yaw_angle;
+			messages.push_back(objectData);
 		}
-		
-		
-	} else {
-		return (computer_vision::VisibleObjectData*)0;
 	}
-	
-	return NULL;
+	return messages;
 }
 
 /**
