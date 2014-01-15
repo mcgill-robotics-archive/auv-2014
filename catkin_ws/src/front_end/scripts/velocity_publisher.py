@@ -14,7 +14,7 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic):
     
     msg.XSpeed.data = x_vel
     msg.YSpeed.data = y_vel
-    msg.ZPos.data = z_depth
+    msg.Depth.data = z_depth
 
     msg.Pitch.data = pitch_vel
     msg.YawSpeed.data = yaw_vel
@@ -22,7 +22,7 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic):
 
     msg.XPos.isActive=0
     msg.YPos.isActive=0
-    msg.ZPos.isActive=1
+    msg.Depth.isActive=1
     msg.Yaw.isActive=0
     msg.Pitch.isActive=1
     msg.XSpeed.isActive=1
