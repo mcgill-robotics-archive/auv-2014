@@ -1,7 +1,7 @@
 #include "DownCVNode.h"
 
 /**
- * The topic name used for the front_cv_node to publish the VisibleObjectData.
+ * The topic name used for the down_cv_node to publish the VisibleObjectData.
  */
 const std::string DATA_TOPIC_NAME = "down_cv_data";
 

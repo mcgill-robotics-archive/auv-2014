@@ -16,6 +16,21 @@ const int RECEPTION_RATE = 1;
 const std::string DATA_TOPIC_NAME = "front_cv_data";
 
 /**
+ * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera1.
+ */
+const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
+
+/**
+ * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera2.
+ */
+const std::string CAMERA2_CV_TOPIC_NAME = "front_cv_camera2";
+
+
+ros::Publisher visibleObjectDataPublisher;
+ros::Publisher frontCVCamera1Publisher;
+ros::Publisher frontCVCamera2Publisher;
+
+/**
  * @brief Main method used by ROS when the node is launched.
  *
  * @param argc The number of arguments passed when the process is stared.
@@ -27,6 +42,11 @@ int main(int argc, char **argv) {
 	if (argc > 1) {
 		ros::init(argc, argv, ROS_NODE_NAME);
 		ros::NodeHandle nodeHandle;
+
+		// TODO: I put the publishers' initialization there, but it could be moved somewhere else.
+		visibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
+
+
 
 		ROS_INFO("%s", ("Initializing the node " + ros::this_node::getName() + ".").c_str());
 
@@ -73,10 +93,9 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> top
  * @param rosMessage The ROS message that contains the image
  */
 void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName) {
-	std::list<VisibleObject*>::iterator it;
+	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
 
 //	cv::Mat currentFrame = convertFromSensorToOpenCV(message);
-
 	cv::Mat currentFrame;
 	cv_bridge::CvImagePtr pCurrentFrame;
 
@@ -87,16 +106,30 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const 
 	} catch (cv_bridge::Exception& e) {
 		ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
 		ROS_ERROR("cv_bridge exception: %s", e.what());
-		// Returns an empty cv::Mat object.
 		return;
 	}
 
 	try {
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
-		for (it = visibleObjects.begin(); it != visibleObjects.end(); it++) {
-			(*it)->retrieveObjectData(currentFrame);
+		for (std::list<VisibleObject*>::iterator it = visibleObjects.begin(); it != visibleObjects.end(); ++it) {
+			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
+
+		// Publish the VisibleObjectData messages.
+		for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it != messagesToPublish.end(); ++it) {
+			computer_vision::VisibleObjectData messageToSend;
+			messageToSend.object_type = (*it)->object_type;
+			messageToSend.pitch_angle = (*it)->pitch_angle;
+			messageToSend.yaw_angle = (*it)->yaw_angle;
+			messageToSend.x_distance = (*it)->x_distance;
+			messageToSend.y_distance = (*it)->y_distance;
+			messageToSend.z_distance = (*it)->z_distance;
+			visibleObjectDataPublisher.publish(messageToSend);
+		}
+
+		// Publish the images.
+
 
 		// Display the filtered image
 		cv::imshow(topicName, currentFrame);
