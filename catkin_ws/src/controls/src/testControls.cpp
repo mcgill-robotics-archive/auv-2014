@@ -4,7 +4,7 @@
 */
 
 #include "ros/ros.h"
-#include "planer/setPoints.h"
+#include "planner/setPoints.h"
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "testControls");
@@ -18,27 +18,28 @@ int main(int argc, char **argv)
 		// process!
 		//define msg
 
-		const planner::setPoints msg
+		planner::setPoints msg;
 
-		msg.Xpos.data = 0;
-		msg.Ypos.data = 0;
+		msg.XPos.data = 0;
+		msg.XSpeed.data = 100000;
+		msg.YPos.data = 0;
 		msg.Depth.data = -3;
 		msg.Yaw.data = 0;
 		msg.Pitch.data = 0;
 
-		msg.Xpos.isActive = 1;
-		msg.Ypos.isActive = 1;
+		msg.XPos.isActive = 0;
+		msg.YPos.isActive = 1;
 		msg.Depth.isActive = 1;
 		msg.Yaw.isActive = 1;
 		msg.Pitch.isActive = 1;
-		msg.XSpeed.isActive = 0;
+		msg.XSpeed.isActive = 1;
 		msg.YSpeed.isActive = 0;
 		msg.YawSpeed.isActive = 0;
 		//skip depth
 
 		setPointsPublisher.publish(msg);
 		ros::spinOnce();
-		loop_rate.sleep()
+		loop_rate.sleep();
 	}
-	return 0
+	return 0;
 }

@@ -191,12 +191,14 @@ int main(int argc, char **argv)
 			ep_XPos = setPoint_XPos - estimated_XPos;
 			ei_XPos += ep_XPos*dt;
 			Fx = kp*ep_XPos + ki*ei_XPos;
+			//ROS_INFO("controlling xpos");
 		}
         
         if (isActive_XSpeed)
         {
         	OL_coef_x = 1;
         	Fx = OL_coef_x*setPoint_XSpeed;
+        	//ROS_INFO("controlling xspeed");
         }
 
         //Y 
@@ -254,6 +256,8 @@ int main(int argc, char **argv)
 
 		wrench_publisher.publish(wrenchMsg);
 		loop_rate.sleep();
+
+
 	}
 	return 0;
 }

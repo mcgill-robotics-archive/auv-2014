@@ -162,23 +162,24 @@ try:
                 try:
                     if line is '.':
                         # CHECK IF NO FUCKUPS
-                        if len(mics[0]) > 0 and len(mics[0]) == len(mics[1]) and len(mics[1]) == len(mics[2]) and len(mics[2]) == len(mics[3]):
-                            for i in xrange(len(mics[0])):
-                                #try:
-                                triangulate(i)
-                                average()
-                                publish()
+                        #if len(mics[0]) > 0 and len(mics[0]) == len(mics[1]) and len(mics[1]) == len(mics[2]) and len(mics[2]) == len(mics[3]):
+                            # for i in xrange(len(mics[0])):
+                            #     #try:
+                            #     triangulate(i)
+                            #     average()
+                            #     publish()
                                 #except:
                                  #   print 'degenerate triangle'
-                        elif len(mics[0]) > 0 and len(mics[1]) > 0 and len(mics[2]) > 0 and len(mics[3]) > 0:
+                        #elif len(mics[0]) > 0 and len(mics[1]) > 0 and len(mics[2]) > 0 and len(mics[3]) > 0:
+                        if True:
                             try:
                                 triangulate(0)
                                 publish()
                             except:
                                 print 'degenerate triangle'
 
-                        else:
-                            print 'pinger could not be found'
+                        #else:
+                            #print 'pinger could not be found'
 
                         # RESET DATA
                         for i in xrange(NUMBER_OF_MICS):

@@ -99,8 +99,8 @@ void setPoints(double pointControl[]) {
   msgControl.YPos.isActive = pointControl[2];
   msgControl.YPos.data = pointControl[3];
   
-  msgControl.ZPos.isActive = pointControl[4];
-  msgControl.ZPos.data = pointControl[5];
+  //msgControl.ZPos.isActive = pointControl[4];
+  //msgControl.ZPos.data = pointControl[5];
   
   msgControl.Yaw.isActive = pointControl[6];
   msgControl.Yaw.data = pointControl[7];
