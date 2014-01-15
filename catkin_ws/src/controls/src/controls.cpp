@@ -37,7 +37,7 @@ Roadmap
 #include "gazebo_msgs/ModelStates.h"
 
 #include "planner/setPoints.h"	
-#include "planner/ValueControl.h"
+#include "planner/ValueControl.h" //useless? / deprecated?
 
 // using namespace std; //what does this do?!?!
 
@@ -47,7 +47,7 @@ float z_est = 0;
 
 float setPoint_XPos = 0;
 float setPoint_YPos = 0;
-float setPoint_ZPos = 0;
+float setPoint_Depth = 0;
 float setPoint_Yaw = 0;
 float setPoint_Pitch = 0;
 float setPoint_XSpeed = 0;
@@ -56,7 +56,7 @@ float setPoint_YawSpeed = 0;
 
 bool isActive_XPos = 0;	//expecting int, but I'd rather bool. Is this valid casting?
 bool isActive_YPos = 0;
-bool isActive_ZPos = 0;
+bool isActive_Depth = 0;
 bool isActive_Yaw = 0;
 bool isActive_Pitch = 0;
 bool isActive_XSpeed = 0;
@@ -65,7 +65,7 @@ bool isActive_YawSpeed = 0;
 
 float estimated_XPos = 0;
 float estimated_YPos = 0;
-float estimated_ZPos = 0;
+float estimated_Depth = 0;
 float estimated_Pitch = 0;
 float estimated_Yaw = 0;
 
@@ -74,7 +74,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	ROS_DEBUG("Subscriber received set points");
 	setPoint_XPos = setPointsMsg.XPos.data;
 	setPoint_YPos = setPointsMsg.YPos.data;
-	setPoint_ZPos = setPointsMsg.ZPos.data;
+	setPoint_Depth = setPointsMsg.Depth.data;
 	setPoint_Yaw = setPointsMsg.Yaw.data;
 	setPoint_Pitch = setPointsMsg.Pitch.data;
 	setPoint_XSpeed = setPointsMsg.XSpeed.data;
@@ -83,7 +83,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 
 	isActive_XPos = setPointsMsg.XPos.isActive;
 	isActive_YPos = setPointsMsg.YPos.isActive;
-	isActive_ZPos = setPointsMsg.ZPos.isActive;
+	isActive_Depth = setPointsMsg.Depth.isActive;
 	isActive_Yaw = setPointsMsg.Yaw.isActive;
 	isActive_Pitch = setPointsMsg.Pitch.isActive;
 	isActive_XSpeed = setPointsMsg.XSpeed.isActive;
@@ -98,9 +98,12 @@ void estimatedState_callback(const gazebo_msgs::ModelStates data)
 	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model with [0]
 	ROS_DEBUG("Subscriber received estimated data");
     
-    estimated_XPos = data.pose[0].position.z;
-    estimated_YPos = data.pose[0].position.z;
-    estimated_ZPos = data.pose[0].position.z;
+    estimated_XPos = data.pose[0].position.x;
+    estimated_YPos = data.pose[0].position.y;
+    estimated_Depth = data.pose[0].position.z;
+    estimated_Pitch = 0; //hardcoded TODO FIX THIS
+	estimated_Yaw = 0; //hardcoded TODO FIX THIS
+
 
     //still need to add pitch and yaw
 
@@ -125,8 +128,8 @@ int main(int argc, char **argv)
     float ei_XPos = 0; //integral error
     float ep_YPos = 0;
     float ei_YPos = 0;
-    float ep_ZPos = 0;
-    float ei_ZPos = 0;
+    float ep_Depth = 0;
+    float ei_Depth = 0;
     float ep_Pitch = 0;
     float ei_Pitch = 0;
     float ep_Yaw = 0;
@@ -211,11 +214,11 @@ int main(int argc, char **argv)
         }
 
         //Z 
-		if (isActive_ZPos)
+		if (isActive_Depth)
 		{
-			ep_ZPos = setPoint_ZPos - estimated_ZPos;
-			ei_ZPos += ep_ZPos*dt;
-			Fz = kp*ep_ZPos + ki*ei_ZPos;
+			ep_Depth = setPoint_Depth - estimated_Depth;
+			ei_Depth += ep_Depth*dt;
+			Fz = kp*ep_Depth + ki*ei_Depth;
 			Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}
 
