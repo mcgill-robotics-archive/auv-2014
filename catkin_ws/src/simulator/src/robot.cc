@@ -53,10 +53,10 @@ public:
 
 		// ROS Subscriber
 		// NOTE: should the queue be increased?
-		this->twistSub = this->node->subscribe("robot_twist", 1, &Robot::moveCallback, this);
+		this->twistSub = this->node->subscribe("simulator/robot_twist", 1, &Robot::moveCallback, this);
 
 		// Thruster Forces
-		this->thrusterForcesSub = this->node->subscribe("thruster_forces", 1000, &Robot::thrusterForcesCallBack, this);
+		this->thrusterForcesSub = this->node->subscribe("simulator/thruster_forces", 1000, &Robot::thrusterForcesCallBack, this);
 
 		// /controls/wrench/
 		this->controlsWrenchSub = this->node->subscribe("/controls/wrench", 1000, &Robot::controlsWrenchCallBack, this);
@@ -84,7 +84,7 @@ public:
 				 << ", " << msg->linear.z << std::endl;
 		std::cout << "angular vel: " << msg->angular.x << ", " << msg->angular.y
 				 << ", " << msg->angular.z << std::endl;
-		this->model->SetLinearVel(math::Vector3(msg->linear.x, msg->linear.y, msg->linear.z));
+		this->model->SetLinearVel(math::Vector3(msg->linear.x, msg->linear.y, -msg->linear.z));
 		this->model->SetAngularVel(math::Vector3(msg->angular.x, msg->angular.y, msg->angular.z));
 	};
 
@@ -124,7 +124,7 @@ public:
 
 		// ApplyBodyWrench msg
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
-		applyBodyWrench.request.body_name = (std::string) "my_robot::body";
+		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = wrench;
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
@@ -194,7 +194,7 @@ public:
 
 		// ApplyBodyWrench message
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
-		applyBodyWrench.request.body_name = (std::string) "my_robot::body";
+		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = wrench;
 
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
@@ -221,7 +221,7 @@ public:
 	 */
 	void controlsWrenchCallBack(const geometry_msgs::Wrench msg) {
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
-		applyBodyWrench.request.body_name = (std::string) "my_robot::body";
+		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = msg;
 
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.

@@ -6,7 +6,7 @@
 class ThrusterTest {
 	public:
 		ThrusterTest(ros::NodeHandle& nh) {
-			commandPub = nh.advertise<simulator::ThrusterForces>("gazebo/thruster_forces", 1);
+			commandPub = nh.advertise<simulator::ThrusterForces>("gazebo/simulator/thruster_forces", 1);
 		};
 
 		// Send a velocity command
