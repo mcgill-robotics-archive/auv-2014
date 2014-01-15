@@ -139,8 +139,8 @@ void setPosition(double x_pos, double y_pos, double z_pos, double pitch_angle, d
 
 void ps3Control() {
   simulator::ThrusterForces msgPS3;
-    msgPS3.ty1 = 1.0;
-    msgPS3.ty2 = 1.0;
+    msgPS3.ty1 = 40.0;
+    msgPS3.ty2 = 40.0;
     msgPS3.tx1 = 0.0;
     msgPS3.tz1 = 0.0;
     msgPS3.tx2 = 0.0;
