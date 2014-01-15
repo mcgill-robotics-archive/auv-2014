@@ -1,6 +1,11 @@
 #include "DownCVNode.h"
 
 /**
+ * The topic name used for the front_cv_node to publish the VisibleObjectData.
+ */
+const std::string DATA_TOPIC_NAME = "down_cv_data";
+
+/**
  * @brief Main method used by ROS when the node is launched.
  *
  * @param argc The number of arguments passed when the process is stared.
