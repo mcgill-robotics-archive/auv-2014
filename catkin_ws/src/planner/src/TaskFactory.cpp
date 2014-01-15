@@ -6,6 +6,38 @@ TaskFactory::TaskFactory(){
 
 }
 
+//Parses the task number from the tasks.xml file 
+int TaskFactory::parseTask(std::string id){
+	unsigned int start = 0;
+	unsigned int end;
+
+	//finds the 'v' in the string and finds end index
+	for(int i = 0; i < id.size(); i++){
+		if(id.at(i) == 'v'){
+			end = i;
+		}
+	}
+	return atoi(id.substr(start,end).c_str());
+}
+
+/**
+*Parses the version section in that comes from the tasks.xml file
+*/
+int TaskFactory::parseVersion(std::string id){
+	unsigned int start;
+	unsigned int end;
+
+	for(int i = id.size()-1; i >= 0; i--){
+		if(id.at(i) == 'v'){
+			start = i + 1;
+			end = id.size() - i;
+		}
+	}
+
+	return atoi(id.substr(start,end).c_str());
+
+}
+
 Task* TaskFactory::makeTask(std::string id){
 
 	//parses the string into the id task number and id version number 

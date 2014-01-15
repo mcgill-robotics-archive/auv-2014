@@ -1,12 +1,12 @@
-//TaskLoader.hpp
+//TaskFactory.hpp
 
 // need to include Task.cpp, TaskConcrete.cpp, etc....
-#ifndef Taskloader_h
-#define Taskloader_h
+#ifndef Taskfactory_h
+#define Taskfactory_h
 
 #include <iostream>
 #include <string>
-#include "quick_parse.hpp"
+#include <stdlib.h>
 #include "TaskConcrete.hpp"
 #include "Task.hpp"
 #include "Task_Gate.h"
@@ -18,8 +18,12 @@ class TaskFactory{
  public:
 
  	TaskFactory();
-	Task* makeTask(std::string id);
 
+ 	int parseTask(std::string id);
+		
+	int parseVersion(std::string id);
+
+	Task* makeTask(std::string id);
 
 };
 
