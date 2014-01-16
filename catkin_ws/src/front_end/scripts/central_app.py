@@ -23,6 +23,7 @@ from VARIABLES import *  # file containing all the shared variables and paramete
 import sys
 import rospy  # ros module for subscribing to topics
 import pygame  # module top play the alarm
+import numpy
 
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
@@ -169,10 +170,10 @@ class CentralUi(QtGui.QMainWindow):
 
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
-        self.ui.angularHorizantal.setRange(-vel_vars.MAX_YAW_VEL, vel_vars.MAX_YAW_VEL)
-        self.ui.angularVertical.setRange(-vel_vars.MAX_PITCH_ANGLE, vel_vars.MAX_PITCH_ANGLE)
-        self.ui.linearVertical.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
-        self.ui.linearHorizantal.setRange(-vel_vars.MAX_LINEAR_VEL, vel_vars.MAX_LINEAR_VEL)
+        self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)
+        self.ui.angularVertical.setRange(-1000*vel_vars.MAX_PITCH_ANGLE, 1000*vel_vars.MAX_PITCH_ANGLE)
+        self.ui.linearVertical.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
+        self.ui.linearHorizantal.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
 
     ## customisation of the key press class of the QWidget
     #
@@ -286,10 +287,11 @@ class CentralUi(QtGui.QMainWindow):
     #   @param self the object pointer
     def keyboard_update(self):
         # set ui
-        self.ui.linearVertical.setValue(vel_vars.x_velocity)
-        self.ui.linearHorizantal.setValue(vel_vars.y_velocity)
-        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(1000*vel_vars.x_velocity)
+        self.ui.linearHorizantal.setValue(1000*vel_vars.y_velocity)
+        self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
+#        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -316,10 +318,10 @@ class CentralUi(QtGui.QMainWindow):
         self.ps3.updateController()
 
         # set ui
-        self.ui.linearVertical.setValue(vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
+        self.ui.linearHorizantal.setValue(1000*vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
