@@ -19,7 +19,7 @@ class vel_vars(object):
 
     MAX_YAW_VEL = 10
     MAX_PITCH_ANGLE = PI/4
-    MAX_LINEAR_VEL = 10
+    MAX_LINEAR_VEL = 1
 
 ##    Here we define the keyboard map for our controller
 class KeyMapping(object):
