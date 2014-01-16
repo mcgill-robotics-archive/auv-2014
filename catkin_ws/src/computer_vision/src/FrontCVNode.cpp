@@ -15,20 +15,15 @@ const int RECEPTION_RATE = 1;
  */
 const std::string DATA_TOPIC_NAME = "front_cv_data";
 
-/**
- * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera1.
- */
-const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
-
-/**
- * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera2.
- */
-const std::string CAMERA2_CV_TOPIC_NAME = "front_cv_camera2";
-
 
 ros::Publisher visibleObjectDataPublisher;
 ros::Publisher frontCVCamera1Publisher;
 ros::Publisher frontCVCamera2Publisher;
+
+/**
+ * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera1.
+ */
+const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
 
 /**
  * @brief Main method used by ROS when the node is launched.
@@ -82,6 +77,9 @@ int main(int argc, char **argv) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate) : CVNode(nodeHandle, topicList, receptionRate) {
+	// Create topic with front end
+	this->publisher = this->pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, 1);
+
 	// Construct the list of VisibleObjects
 	visibleObjects.push_back(new Door());
 }
@@ -129,7 +127,11 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const 
 		}
 
 		// Publish the images.
-
+		cv_bridge::CvImage currentImage;
+		currentImage.header.stamp    = ros::Time::now();
+		currentImage.encoding        = sensor_msgs::image_encodings::BGR8;
+		currentImage.image           = currentFrame;
+		publisher.publish(currentImage.toImageMsg());
 
 		// Display the filtered image
 		cv::imshow(topicName, currentFrame);

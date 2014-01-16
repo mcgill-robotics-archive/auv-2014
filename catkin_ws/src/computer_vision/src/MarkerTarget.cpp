@@ -95,7 +95,7 @@ MarkerTarget::Point2DVec MarkerTarget::findBins(cv::Mat& frame) {
 	cv::Mat kernel(3, 3, CV_8UC1);
 	cv::morphologyEx(frame, frame, cv::MORPH_OPEN, kernel);
 
-	Point2DVec contoursPoly;
+	std::vector< std::vector <cv::Point> > contoursPoly;
 	cv::Mat contourMap = getContourMap(frame, contoursPoly);
 
 	Point2DVec corners = getPreliminaryCorners(contourMap, contoursPoly);
@@ -112,14 +112,14 @@ MarkerTarget::Point2DVec MarkerTarget::findBins(cv::Mat& frame) {
  * @param outContoursPoly An empty 2-Dimenional vector which will be populated with the points belonging to each contour.
  * @return A Mat image with the contours of the detected marker bins.
  */
-cv::Mat MarkerTarget::getContourMap(cv::Mat& frame, Point2DVec& outContoursPoly) {
+cv::Mat MarkerTarget::getContourMap(cv::Mat& frame, std::vector< std::vector <cv::Point> >& outContoursPoly) {
 	// Detect edges.
 	cv::Mat canny_output;
 	cv::Canny(frame, canny_output, CANNY_THRESHOLD, CANNY_THRESHOLD * 2, 3 );
 
 	// Find contours
 	std::vector<cv::Vec4i> hierarchy;
-	Point2DVec contours;
+	std::vector< std::vector <cv::Point> > contours;
 	cv::findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0) );
 
 	// Approximate each contour as a polygon.
@@ -149,7 +149,7 @@ cv::Mat MarkerTarget::getContourMap(cv::Mat& frame, Point2DVec& outContoursPoly)
  * @return  A 2-D vector (std::vector< std::vector< cv::Point2f>>) which is a list of the 4 corners belonging to each detected marker.
  */
 MarkerTarget::Point2DVec MarkerTarget::getPreliminaryCorners(const cv::Mat& contourMap,
-						const Point2DVec& contoursPoly) {
+						const std::vector< std::vector <cv::Point> >& contoursPoly) {
 	// Find corners.
 	std::vector<cv::Point2f> corners;
 	cv::goodFeaturesToTrack(contourMap, corners, 100, 0.4, 25);

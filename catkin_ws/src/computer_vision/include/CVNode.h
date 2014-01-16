@@ -12,6 +12,7 @@
 #include "computer_vision/VisibleObjectData.h"
 
 #include "VisibleObject.h"
+#include <opencv2/imgproc/imgproc.hpp>
 
 class CVNode {
 
@@ -21,13 +22,14 @@ class CVNode {
 	 * Defines the rate at which the node will be checking for incoming messages.
 	 */
 	int receptionRate;
-	image_transport::ImageTransport* pImageTransport;
 	std::list<image_transport::Subscriber> subscribers;
 
 	protected:
 
+	image_transport::ImageTransport* pImageTransport;
+	image_transport::Publisher publisher;
 	std::list<VisibleObject*> visibleObjects;
-	
+
 	public:
 	
 	CVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate);

@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
  *
  */
 DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate) : CVNode(nodeHandle, topicList, receptionRate) {
-
+	this->visibleObjects.push_back(new MarkerTarget());
 }
 
 
