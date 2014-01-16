@@ -12,6 +12,7 @@ echo "Starting roscore and simulator, then waiting 30 seconds to complete"
 xterm -e roslaunch simulator simulator.launch &
 sleep 30
 
+
 echo "Starting Planner"
 xterm -e rosrun planner Planner &
 
