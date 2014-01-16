@@ -629,7 +629,7 @@ class CentralUi(QtGui.QMainWindow):
         if self.left_post_image is not None:
             self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image, self.left_post_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image.width, self.left_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 self.image_lock.release()
 
@@ -641,7 +641,7 @@ class CentralUi(QtGui.QMainWindow):
         if self.right_post_image is not None:
             self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image, self.right_post_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image.width, self.right_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 self.image_lock.release()
 
@@ -653,7 +653,7 @@ class CentralUi(QtGui.QMainWindow):
         if self.bottom_post_image is not None:
             self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image.width, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 self.image_lock.release()
 
