@@ -1,0 +1,7 @@
+You can run _build_run_sim_planner.sh in catkin root to run gazebo and planner
+
+
+In simulation: 
+ roslaunch simulator simulator.launch
+ rosrun planner Planner
+ 
