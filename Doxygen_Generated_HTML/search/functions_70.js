@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['parseversion',['parseVersion',['../classTaskFactory.html#a7f5d78bc38e1622b747eec6ea5a8487d',1,'TaskFactory']]],
   ['play_5falarm',['play_alarm',['../classcentral__app_1_1CentralUi.html#abae4809bc41352fdbec62912e40c938c',1,'central_app::CentralUi']]],
   ['post_5fbottom_5fcallback',['post_bottom_callback',['../classcentral__app_1_1CentralUi.html#a93d37e6614f68b8a03ea21fc27e215ed',1,'central_app::CentralUi']]],
   ['post_5fleft_5fcallback',['post_left_callback',['../classcentral__app_1_1CentralUi.html#aa8fdeac3e999e419fb22d601dc52c17e',1,'central_app::CentralUi']]],

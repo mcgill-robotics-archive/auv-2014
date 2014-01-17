@@ -65,10 +65,10 @@ private:
 	Point2DVec findBins(cv::Mat& frame);
 
 	/* Creates a contour map of the current frame. outContoursPoly contains the polygons associated to each contour.*/
-	cv::Mat getContourMap(cv::Mat& frame, Point2DVec& outContoursPoly);
+	cv::Mat getContourMap(cv::Mat& frame, std::vector< std::vector <cv::Point> >& outContoursPoly);
 
 	/* Obtains a list of the corners that could be bins. */
-	Point2DVec getPreliminaryCorners(const cv::Mat& contourMap, const Point2DVec& contoursPoly);
+	Point2DVec getPreliminaryCorners(const cv::Mat& contourMap, const std::vector< std::vector <cv::Point> >& contoursPoly);
 
 	/* Modifies the corners so that they are in the correct order for marker detection. */
 	void refineCorners(Point2DVec& corners);

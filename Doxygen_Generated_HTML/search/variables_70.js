@@ -1,6 +1,7 @@
 var searchData=
 [
   ['parent',['parent',['../structpugi_1_1xml__node__struct.html#af692c222bcc5a9f61108cb3ae0b7b5ea',1,'pugi::xml_node_struct']]],
+  ['pose_5fui',['pose_ui',['../classcentral__app_1_1CentralUi.html#a20b23c673d631a0a0ec6d395aa23a0cc',1,'central_app::CentralUi']]],
   ['pressure_5fdata',['pressure_data',['../classcentral__app_1_1CentralUi.html#a41245edb30ebb4da27e6fc7fa25d12f7',1,'central_app::CentralUi']]],
   ['prev_5fattribute_5fc',['prev_attribute_c',['../structpugi_1_1xml__attribute__struct.html#a0e3a022235b316e4cfc1034ceb7d7862',1,'pugi::xml_attribute_struct']]],
   ['prev_5fsibling_5fc',['prev_sibling_c',['../structpugi_1_1xml__node__struct.html#a74e62128c88c422c0ed969633bbb2d4e',1,'pugi::xml_node_struct']]],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getnumpublisher',['getNumPublisher',['../classCVNode.html#a9bb570c46674234e9c8150bbca4be5b9',1,'CVNode']]]
+  ['gettopicname',['getTopicName',['../CVNode_8cpp.html#a1ca534f9f060bde683a05c59fbceba69',1,'CVNode.cpp']]]
 ];

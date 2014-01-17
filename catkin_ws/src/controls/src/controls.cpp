@@ -227,8 +227,9 @@ int main(int argc, char **argv)
 		{
 			ep_Depth = setPoint_Depth - estimated_Depth;
 			ei_Depth += ep_Depth*dt;
-			Fz = kp*ep_Depth + ki*ei_Depth;
-			Fz += buoyancy*m*g; //Account for positive buoyancy bias
+			//Fz = kp*ep_Depth + ki*ei_Depth;
+			Fz = 0; // workaround temp
+			//Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}
 
 		//Pitch

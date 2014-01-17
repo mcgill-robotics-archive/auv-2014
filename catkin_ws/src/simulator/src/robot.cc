@@ -141,7 +141,7 @@ public:
 		} else {
 			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-		applyDrag();
+		//applyDrag();
 	};
 
 	/**
@@ -236,7 +236,7 @@ public:
 		} else {
 			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-		applyDrag();
+		//applyDrag();
 	}
 
 private:
