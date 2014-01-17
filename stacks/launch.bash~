@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-source /opt/ros/hydro/setup.bash
-roslaunch Robosub.launch
