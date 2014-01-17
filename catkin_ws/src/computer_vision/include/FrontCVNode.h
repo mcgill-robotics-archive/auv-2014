@@ -3,6 +3,7 @@
 
 #include "CVNode.h"
 #include "Door.h"
+//#include "computer_vision/StereoCameraImages.h"
 
 class FrontCVNode : public CVNode {
 
