@@ -6,5 +6,6 @@ var searchData=
   ['depth_5fgraph_5fupdate',['depth_graph_update',['../classcentral__app_1_1CentralUi.html#a888380a2ed7821b834151a22adf61c23',1,'central_app::CentralUi']]],
   ['document_5forder_5fcomparator',['document_order_comparator',['../structdocument__order__comparator.html',1,'']]],
   ['door',['Door',['../classDoor.html',1,'']]],
+  ['downcvnode',['DownCVNode',['../classDownCVNode.html',1,'DownCVNode'],['../classDownCVNode.html#a57340f59c23b453bb0eceb19b1a10ae1',1,'DownCVNode::DownCVNode()']]],
   ['duplicate_5fcomparator',['duplicate_comparator',['../structduplicate__comparator.html',1,'']]]
 ];

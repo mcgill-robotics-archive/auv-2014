@@ -104,14 +104,94 @@ Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>MarkerDescriptor</b></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a170553695b1f9b338f42ecf4eb4fab"></a><!-- doxytag: member="MarkerTarget::retrieveObjectData" ref="a8a170553695b1f9b338f42ecf4eb4fab" args="(cv::Mat &amp;currentFrame)" -->
-virtual <a class="el" href="classObjectData.html">ObjectData</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveObjectData</b> (cv::Mat &amp;currentFrame)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e4652a7ab3a78e8273dd91ce53ea234"></a><!-- doxytag: member="MarkerTarget::applyFilter" ref="a9e4652a7ab3a78e8273dd91ce53ea234" args="(cv::Mat &amp;currentFrame)" -->
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>applyFilter</b> (cv::Mat &amp;currentFrame)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a517a3f4e811d61945e22f6345045b0b1">MarkerTarget</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor loads the reference images which we will use to compare our candidate markers to.  <a href="#a517a3f4e811d61945e22f6345045b0b1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual std::vector<br class="typebreak"/>
+&lt; computer_vision::VisibleObjectData * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a">retrieveObjectData</a> (cv::Mat &amp;currentFrame)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects if any markers are present and if so returns their position, and the identity of the marker object.  <a href="#a75e08b5541149c7f5ab5ab2d1ae5518a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234">applyFilter</a> (cv::Mat &amp;currentFrame)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the image to grayscale since we are only looking for edges amongst a black and white surface.  <a href="#a9e4652a7ab3a78e8273dd91ce53ea234"></a><br/></td></tr>
 </table>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a517a3f4e811d61945e22f6345045b0b1"></a><!-- doxytag: member="MarkerTarget::MarkerTarget" ref="a517a3f4e811d61945e22f6345045b0b1" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMarkerTarget.html#a517a3f4e811d61945e22f6345045b0b1">MarkerTarget::MarkerTarget</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The constructor loads the reference images which we will use to compare our candidate markers to. </p>
+<p>Also initializes the matrix we will use to determine the positions of the objects. </p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a9e4652a7ab3a78e8273dd91ce53ea234"></a><!-- doxytag: member="MarkerTarget::applyFilter" ref="a9e4652a7ab3a78e8273dd91ce53ea234" args="(cv::Mat &amp;currentFrame)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234">MarkerTarget::applyFilter</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>currentFrame</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Converts the image to grayscale since we are only looking for edges amongst a black and white surface. </p>
+<p>Also blurs the image to remove noise.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">currentFrame</td><td>The camera frame in which to apply the filter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classVisibleObject.html">VisibleObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a75e08b5541149c7f5ab5ab2d1ae5518a"></a><!-- doxytag: member="MarkerTarget::retrieveObjectData" ref="a75e08b5541149c7f5ab5ab2d1ae5518a" args="(cv::Mat &amp;currentFrame)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; computer_vision::VisibleObjectData * &gt; <a class="el" href="classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a">MarkerTarget::retrieveObjectData</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>currentFrame</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Detects if any markers are present and if so returns their position, and the identity of the marker object. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">currentFrame</td><td>The current camera frame in which to look for the marker bins. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A vector (std::vector&lt; VisibleObjectData* &gt;) of VisibleDataObjects populated with information such as distance, angle, and marker type for each visible marker bin. </dd></dl>
+
+<p>Implements <a class="el" href="classVisibleObject.html">VisibleObject</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="MarkerTarget_8h_source.html">MarkerTarget.h</a></li>
-<li>/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/MarkerTarget.cpp</li>
+<li>/home/dery/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="MarkerTarget_8h_source.html">MarkerTarget.h</a></li>
+<li>/home/dery/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/MarkerTarget.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -131,7 +211,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>applyFilter</
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 13 2014 15:41:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 16 2014 16:11:42 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
