@@ -29,10 +29,10 @@ class KeyMapping(object):
     YawRight = QtCore.Qt.Key_L
     IncreaseDepth = QtCore.Qt.Key_R
     DecreaseDepth = QtCore.Qt.Key_W
-    IncreaseX = QtCore.Qt.Key_E
-    DecreaseX = QtCore.Qt.Key_D
-    IncreaseY = QtCore.Qt.Key_F
-    DecreaseY = QtCore.Qt.Key_S
+    IncreaseX = QtCore.Qt.Key_F
+    DecreaseX = QtCore.Qt.Key_S
+    IncreaseY = QtCore.Qt.Key_E
+    DecreaseY = QtCore.Qt.Key_D
     Surface = QtCore.Qt.Key_H
 
 ##   variables for the ros topic names

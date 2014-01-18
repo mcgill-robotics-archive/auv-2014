@@ -2,7 +2,6 @@
 # the rest of the system. If you want to know what the ROS data type will be
 # mapped to in a specific language, go to this link:
 # http://wiki.ros.org/msg#Fields
-
 # The relative angle between the robot and the object on the yaw-axis.
 float64 yaw_angle
 
