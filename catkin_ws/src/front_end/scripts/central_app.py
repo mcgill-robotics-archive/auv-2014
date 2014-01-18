@@ -23,7 +23,6 @@ from VARIABLES import *  # file containing all the shared variables and paramete
 import sys
 import rospy  # ros module for subscribing to topics
 import pygame  # module top play the alarm
-import numpy
 
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
@@ -128,7 +127,7 @@ class CentralUi(QtGui.QMainWindow):
         self.start_ros_subscriber()
 
         ## object to acquire lock on a thread to eliminate race conditions when updating the images
-        self.image_lock = Lock()
+        ##self.image_lock = Lock()
 
         ## creates the timers to enable or disable the ps3
         self.ps3_timer = QtCore.QTimer()
@@ -509,11 +508,12 @@ class CentralUi(QtGui.QMainWindow):
     def pre_left_callback(self, data):
         # We have some issues with locking between the GUI update thread
         # and the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
+        ##self.image_lock.acquire()
         try:
             self.left_pre_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            ##self.image_lock.release()
+            pass
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
     #takes the data received on the ros topic and records it to a variable
@@ -522,11 +522,12 @@ class CentralUi(QtGui.QMainWindow):
     def pre_right_callback(self, data):
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
+        #self.image_lock.acquire()
         try:
             self.right_pre_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            #self.image_lock.release()
+            pass
 
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -536,12 +537,12 @@ class CentralUi(QtGui.QMainWindow):
     def pre_bottom_callback(self, data):
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
+        #self.image_lock.acquire()
         try:
             self.bottom_pre_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
-
+            #self.image_lock.release()
+            pass
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
     #takes the data received on the ros topic and records it to a variable
@@ -550,11 +551,12 @@ class CentralUi(QtGui.QMainWindow):
     def post_left_callback(self, data):
         # We have some issues with locking between the GUI update thread
         # and the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
+        #self.image_lock.acquire()
         try:
             self.left_post_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            #self.image_lock.release()
+            pass
 
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -564,11 +566,12 @@ class CentralUi(QtGui.QMainWindow):
     def post_right_callback(self, data):
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
+        #self.image_lock.acquire()
         try:
             self.right_post_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            #self.image_lock.release()
+            pass
 
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -578,11 +581,12 @@ class CentralUi(QtGui.QMainWindow):
     def post_bottom_callback(self, data):
         # We have some issues with locking between the GUI update thread and
         # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
+        #self.image_lock.acquire()
         try:
             self.bottom_post_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            #self.image_lock.release()
+            pass
     ##updates the video frames displayed
     #
     # simply converts the image data from the ros message received
@@ -593,11 +597,12 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def redraw_video_callback(self):
         if self.left_pre_image is not None:
-            self.image_lock.acquire()
+            #self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_pre_image.data, self.left_pre_image.width, self.left_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                #self.image_lock.release()
+                pass
 
             self.resize(image.width(), image.height())
             self.ui.preLeft.setPixmap(image)
@@ -605,11 +610,12 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.preLeft.setText("No video feed")
 
         if self.right_pre_image is not None:
-            self.image_lock.acquire()
+            #self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_pre_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                #self.image_lock.release()
+                pass
 
             self.resize(image.width(), image.height())
             self.ui.preRight.setPixmap(image)
@@ -617,11 +623,12 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.preRight.setText("No video feed")
 
         if self.bottom_pre_image is not None:
-            self.image_lock.acquire()
+            #self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_pre_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                #self.image_lock.release()
+                pass
 
             self.resize(image.width(), image.height())
             self.ui.preBottom.setPixmap(image)
@@ -629,11 +636,12 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.preBottom.setText("No video feed")
 
         if self.left_post_image is not None:
-            self.image_lock.acquire()
+            #self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image.width, self.left_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                #self.image_lock.release()
+                pass
 
             self.resize(image.width(), image.height())
             self.ui.postLeft.setPixmap(image)
@@ -641,11 +649,12 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.postLeft.setText("No video feed")
 
         if self.right_post_image is not None:
-            self.image_lock.acquire()
+            #self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image.width, self.right_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                #self.image_lock.release()
+                pass
 
             self.resize(image.width(), image.height())
             self.ui.postRight.setPixmap(image)
@@ -653,11 +662,12 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.postRight.setText("No video feed")
 
         if self.bottom_post_image is not None:
-            self.image_lock.acquire()
+            #self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image.width, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                #self.image_lock.release()
+                pass
 
             self.resize(image.width(), image.height())
             self.ui.posBottom.setPixmap(image)
