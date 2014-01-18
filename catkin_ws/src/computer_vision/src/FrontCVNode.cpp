@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
 		// TODO: I put the publishers' initialization there, but it could be moved somewhere else.
 		visibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
-		frontCVCamera1Publisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(CAMERA1_CV_TOPIC_NAME, 10);
+		frontCVCamera1Publisher = nodeHandle.advertise<sensor_msgs::Image>(CAMERA1_CV_TOPIC_NAME, 10);
 
 		ROS_INFO("%s", ("Initializing the node " + ros::this_node::getName() + ".").c_str());
 
