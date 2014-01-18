@@ -8,9 +8,9 @@ const std::string DATA_TOPIC_NAME = "down_cv_data";
 /**
  * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera3.
  */
-//const std::string CAMERA3_CV_TOPIC_NAME = "front_cv_camera3";
+const std::string CAMERA3_CV_TOPIC_NAME = "down_cv_camera";
 
-//ros::Publisher frontCVCamera1Publisher;
+ros::Publisher frontCVCamera1Publisher;
 
 /**
  * @brief Main method used by ROS when the node is launched.
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 			topicList.push_back(topic);
 		}
 
-//		frontCVCamera1Publisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(CAMERA3_CV_TOPIC_NAME, 10);
+		frontCVCamera1Publisher = nodeHandle.advertise<sensor_msgs::Image>(CAMERA3_CV_TOPIC_NAME, 10);
 
 		/*
 		ROS_INFO("%s", ("Initializing the CVNode. It will be listening to the topic named \"" + VIDEO_FEED_TOPIC_NAME + "\"").c_str());
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
  */
 DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate) : CVNode(nodeHandle, topicList, receptionRate) {
 	// Create topic with front end
-//	this->publisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, 1);
+	this->publisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, 1);
 
 	this->visibleObjects.push_back(new MarkerTarget());
 }
@@ -75,7 +75,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topic
  * @param rosMessage The ROS message that contains the image
  */
 void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName) {
-//	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
+	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
 	cv_bridge::CvImagePtr pCurrentFrame;
 	cv::Mat currentFrame;
 	std::list<VisibleObject*>::iterator it;
@@ -93,15 +93,15 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const s
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
 		for (it = visibleObjects.begin(); it != visibleObjects.end(); it++) {
-			(*it)->retrieveObjectData(currentFrame);
+			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 
-//		// Publish the images.
-//		cv_bridge::CvImage currentImage;
-//		currentImage.header.stamp    = ros::Time::now();
-//		currentImage.encoding        = sensor_msgs::image_encodings::BGR8;
-//		currentImage.image           = currentFrame;
-//		publisher.publish(currentImage.toImageMsg());
+		// Publish the images.
+		cv_bridge::CvImage currentImage;
+		currentImage.header.stamp    = ros::Time::now();
+		currentImage.encoding        = sensor_msgs::image_encodings::BGR8;
+		currentImage.image           = currentFrame;
+		publisher.publish(currentImage.toImageMsg());
 
 		// Display the filtered image
 		cv::imshow(topicName, currentFrame);
