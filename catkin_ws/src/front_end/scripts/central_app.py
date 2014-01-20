@@ -29,6 +29,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
+from gazebo_msgs.msg import ModelStates
 
 ## Popup for low battery
 #
@@ -484,6 +485,7 @@ class CentralUi(QtGui.QMainWindow):
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
         rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
+        rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
@@ -494,6 +496,15 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
         self.pose_ui.subscribe_topic("pose")
+
+
+    def sim_pose_callback(self, model_states_data):
+        robot_pose = model_states_data.pose[0]
+        x = robot_pose.orientation.x
+        y = robot_pose.orientation.y
+        z = robot_pose.orientation.z
+        w = robot_pose.orientation.w
+        self.imu_graph_updater(x, y, z, w)
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #

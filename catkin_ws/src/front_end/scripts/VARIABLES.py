@@ -46,6 +46,7 @@ class ROS_Topics(object):
     left_post_topic = "/front_cv_camera1"
     right_post_topic = "/front_cv_camera2"
     bottom_post_topic = "/down_cv_camera"
+    simulator_pose = "/gazebo/model_states"
     imu_raw = 'pose'
     imu_filtered='pose'
     vel_topic = '/setPoints'
