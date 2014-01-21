@@ -11,8 +11,6 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-#
-
 # from CompleteUI_declaration import *
 from resizableUI1 import *
 from low_battery_warning import*
