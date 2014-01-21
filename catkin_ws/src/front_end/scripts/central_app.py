@@ -487,7 +487,7 @@ class CentralUi(QtGui.QMainWindow):
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
         rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
-        rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
+        #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
@@ -497,7 +497,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
-        self.pose_ui.subscribe_topic("pose")
+        self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
 
 
     def sim_pose_callback(self, model_states_data):
