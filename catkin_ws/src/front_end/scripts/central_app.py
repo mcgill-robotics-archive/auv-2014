@@ -11,7 +11,10 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-from CompleteUI_declaration import *
+#
+
+# from CompleteUI_declaration import *
+from resizableUI1 import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
@@ -148,7 +151,7 @@ class CentralUi(QtGui.QMainWindow):
         self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
         # buttons connects
-        QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
+        #QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
 
         # low battery connect
@@ -257,22 +260,23 @@ class CentralUi(QtGui.QMainWindow):
             self.key_timer.stop()
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent and self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
-                self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
+                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
-                self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+                pass
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
             self.ps3_timer.stop()
             self.keyboard_control = True
-            self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
+            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
-            self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
     ##  Method for the keyboard controller
     #
