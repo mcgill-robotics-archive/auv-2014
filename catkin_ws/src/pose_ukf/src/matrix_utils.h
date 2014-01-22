@@ -15,11 +15,19 @@ void diagonalMatrix(double value, double* matrix, int dim);
 void cholesky(double* matrix, double* outMatrix, int dim);
 void matrixCopy(double *A,double *B, int dim);
 void addVectors(double A[], double B[], int length);
+void subtractVectors(double A[], double B[], int length);
 double *vectorIndex(double* vector, int index, int vector_length);
 void averageVectors(double *dest, double* vectors,
 		int num_vectors, int vector_length);
-void averageOuterProductOfVectors(double *dest, double* vectors,
-		int num_vectors, int dim);
+void averageOuterProductOfVectors(
+		double *dest
+		,double* vectors1
+		,double* vectors2
+		,int num_vectors
+		,int dim1
+		,int dim2);
+void subtractMultipleVectors(double *vectors, double *subtrahend
+		, int num_vectors, int dim);
 
 
 #endif /* MATRIX_UTILS_H_ */
