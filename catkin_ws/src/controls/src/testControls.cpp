@@ -5,6 +5,8 @@
 
 #include "ros/ros.h"
 #include "planner/setPoints.h"
+#include "std_msgs/Float64.h"
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "testControls");
@@ -12,6 +14,10 @@ int main(int argc, char **argv)
 
 	ros::Publisher setPointsPublisher = n.advertise<planner::setPoints>("setPoints", 1000);
 	ros::Rate loop_rate(10);
+
+	//param
+	std::string test_string;
+	//float test_param;
 
 	while (ros::ok())
 	{
@@ -39,8 +45,8 @@ int main(int argc, char **argv)
 
 		//parameters
 
-		nh.param<std::float>("testParam", test_param, 99);
-		ROS_INFO(test_param)
+		//n.param<std::float>("testParam", test_param, 99);
+		ROS_INFO("printing...");
 
 		setPointsPublisher.publish(msg);
 		ros::spinOnce();
