@@ -4,34 +4,32 @@ import scipy
 import scipy.linalg
 import math
 import RotationVectorUtils
-
-
-# noinspection PyCallingNonCallable
-
+import QuaternionUtils
 
 class ukf:
-    INITIAL_COVARIANCE = 0.1
+    INITIAL_COVARIANCE = 0.01
 
     #TODO: Figure out process and measurement variance
-    PROCESS_VARIANCE = 0.1
-    MEASUREMENT_VARIANCE = 0.1
+    PROCESS_VARIANCE = 0.01
+    MEASUREMENT_VARIANCE = 0.01
     #TODO: get delta_t from the ros message
     #TODO: Actually make the variance change based on delta_t
-    DELTA_T = 0.01  # In seconds
+    DELTA_T = 0.026  # In seconds
 
 
     def __init__(self):
         self.L = 3 #Length of pose representation
+        self.aL = 3*self.L #Length of augmented pose representation
         #Some parameters which should be optimized
-        self.alpha = 10**-3
-        self.kappa = 0
-        self.beta = 2
-        self.l = self.alpha * self.alpha * (self.L - self.kappa) - self.L
+        #self.alpha = 0.5
+        #self.kappa = 0
+        #self.beta = 2
+        #self.l = self.alpha * self.alpha * (self.L - self.kappa) - self.L
 
         #Create our initial pose estimate and covariance
         #Our internal representation of pose has to be a rotation vector since
         #that is the only chart on SO(3) which is a vector
-        pose = np.matrix([[0],[0],[0]])
+        pose = np.matrix([[0],[0],[0]],float)
         #I have called these bias instead of noise since I am thinking its supposed to
         #be the mean noise
         #Really REALLY not sure about the lengths of these
@@ -39,30 +37,48 @@ class ukf:
         measurementBias = np.matrix([[0]]*self.L)
         self.augmentedPose = np.vstack((pose, processBias, measurementBias))
 
+        zero = numpy.zeros((3,3))
         covariance = self.INITIAL_COVARIANCE * np.matlib.eye(self.L)
-        processCovariance = self.PROCESS_VARIANCE * np.matlib.eye(self.L)
-        measurementCovariance = self.MEASUREMENT_VARIANCE * np.lib.eye(self.L)
-        self.augmentedCovariance = scipy.linalg.block_diag(covariance, processCovariance, measurementCovariance)
+        self.processCovariance = scipy.linalg.block_diag(zero
+                                                         ,self.PROCESS_VARIANCE * np.matlib.eye(self.L)
+                                                         ,zero)
+        self.measurementCovariance = self.MEASUREMENT_VARIANCE * np.lib.eye(self.L)
 
+        self.augmentedCovariance = scipy.linalg.block_diag(covariance, zero, self.measurementCovariance)
+        self.augmentedCovariance += self.processCovariance
+
+
+    def _matrixRoot(self, matrix):
+        tolerance = 10**(-10)
+        try:
+            return np.matrix(np.linalg.cholesky(matrix))
+        except np.linalg.LinAlgError as e:
+            eValues = np.linalg.eig(matrix)[0]
+            minEValue = min(eValues)
+            if math.fabs(minEValue) < tolerance:
+                return self._matrixRoot(matrix + tolerance*np.matlib.eye(len(matrix)))
+            else:
+                raise e
 
 
     def _generateSigmas(self):
         #We first find the matrix square root
         #of the augmentedCovariance via cholesky decomposition
-        sqrtm = np.matrix(np.linalg.cholesky(self.augmentedCovariance))
 
-        sigmas = [self.augmentedPose]
+        sqrtm = self._matrixRoot(self.augmentedCovariance)
+
+        sigmas = [self.augmentedPose.copy()]
         L = len(self.augmentedPose)
-        lm = 1  # I have NO CLUE what this is supposed to be
+        #lm = 1  # I have NO CLUE what this is supposed to be
 
         for i in range(L):
-            sigmas.append(self.augmentedPose + math.sqrt(L + lm) * sqrtm[...,i])
+            sigmas.append(self.augmentedPose + math.sqrt(self.aL) * sqrtm[...,i])
 
         #You may think this could be put into the first for loop, but then
         #the sigmas wouldn't be in order, would they
         #....Do they need to be in order?
         for i in range(L):
-            sigmas.append(self.augmentedPose - math.sqrt(L + lm) * sqrtm[...,i])
+            sigmas.append(self.augmentedPose - math.sqrt(self.aL) * sqrtm[...,i])
 
         return sigmas
 
@@ -78,18 +94,20 @@ class ukf:
 
     def recoverPrediction(self, sigmas):
         #Generate weights
-        w = 1/(2*(self.L + self.l))
-        ws0 = self.l/(self.L + self.l)
-        wc0 = ws0 + 1 + self.beta - self.alpha * self.alpha
-
-        self.augmentedPose = ws0 * sigmas[0]
+        #TODO: Try using the wiki weighting scheme except with self.aL instead of self.L
+        #w = 1/(2*(self.L + self.l))
+        #ws0 = self.l/(self.L + self.l)
+        #wc0 = ws0 + 1 + self.beta - self.alpha * self.alpha
+        w0 = 0.0
+        w = (1-w0)/(2*self.aL)
+        self.augmentedPose = w0 * sigmas[0]
         for sigma in sigmas[1:]:
             self.augmentedPose += w*sigma
 
-        self.augmentedCovariance = wc0 * (sigmas[0] - self.augmentedPose) * (sigmas[0] - self.augmentedPose).transpose()
+        self.augmentedCovariance = w0 * (sigmas[0] - self.augmentedPose) * (sigmas[0] - self.augmentedPose).transpose()
         for sigma in sigmas[1:]:
             self.augmentedCovariance += w * (sigma - self.augmentedPose) * (sigma - self.augmentedPose).transpose()
-
+        self.augmentedCovariance += self.processCovariance
 
 
     def predict(self, gyro):
@@ -98,7 +116,7 @@ class ukf:
         #Generate sigma points
         sigmas = self._generateSigmas()
         #Propagate sigma points
-        self._propagateStates(sigmas, gyro)
+        self._propagateStates(sigmas, gyro*self.DELTA_T)
 
         #recover estimate and covariance
         self.recoverPrediction(sigmas)
@@ -113,24 +131,28 @@ class ukf:
 
     def recoverCorrection(self, sigmas, gammas, acc):
         #weights
-        w = 1/(2*(self.L + self.l))
-        ws0 = self.l/(self.L + self.l)
-        wc0 = ws0 + 1 + self.beta - self.alpha * self.alpha
+        #w = 1/(2*(self.L + self.l))
+        #ws0 = self.l/(self.L + self.l)
+        #wc0 = ws0 + 1 + self.beta - self.alpha * self.alpha
+        w0 = 0.0
+        w = (1-w0)/(2*self.aL)
+
 
         #Recover predicted measurement
-        predictedMeasurement = ws0 * gammas[0]
+        predictedMeasurement = w0 * gammas[0]
         for gamma in gammas[1:]:
             predictedMeasurement += w*gamma
         #And measurement prediction covariance
-        measurementCovariance = wc0 * (gammas[0] - predictedMeasurement) \
-                                    * (gammas[0] - predictedMeasurement).transpose()
+        measurementCovariance = w0 * (gammas[0] - predictedMeasurement) \
+                                   * (gammas[0] - predictedMeasurement).transpose()
         for gamma in gammas[1:]:
             measurementCovariance += w * (gamma - predictedMeasurement) \
                                        * (gamma - predictedMeasurement).transpose()
+        measurementCovariance += self.measurementCovariance
 
         #And cross covariance
-        crossCovariance = wc0 * (sigmas[0] - self.augmentedPose) \
-                              * (gammas[0] - predictedMeasurement).transpose()
+        crossCovariance = w0 * (sigmas[0] - self.augmentedPose) \
+                             * (gammas[0] - predictedMeasurement).transpose()
         for (gamma,sigma) in zip(gammas[1:],sigmas[1:]):
             crossCovariance += w * (sigma - self.augmentedPose) \
                                  * (gamma - predictedMeasurement).transpose()
@@ -156,10 +178,19 @@ class ukf:
         #Update stuff
 
         self.predict(numpy.matrix(gyro).transpose())
-        # self.correct(acc)
+        self.correct(acc)
+        print(self.augmentedPose[0:3])
 
-        return self.augmentedPose
+        return QuaternionUtils.quaternionFromRotationVector(self.augmentedPose[0:3])
 
 if __name__ == '__main__':
     estimator = ukf()
-    estimator.update([9.8,0,0],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    pass
