@@ -126,8 +126,8 @@ int main(int argc, char **argv)
 	float buoyancy = 0.02; // %percent buoyancy
 	float dt = 0.01; //temporary! TODO update this dynamically
 	float kp = 1; //proportional controller
-    float ki = 0;
-    float kd = .1;
+    float ki = 0; //integral
+    float kd = 10; //derivative
 
 	//initializations
 	
@@ -135,14 +135,24 @@ int main(int argc, char **argv)
     float ep_XPos = 0; //error
     float ei_XPos = 0; //integral error
     float ed_XPos = 0; //derivative error
+    float ep_XPos_prev = 0; //proportional error at last timestep
     float ep_YPos = 0;
     float ei_YPos = 0;
+    float ed_YPos = 0;
+    float ep_YPos_prev = 0;
     float ep_Depth = 0;
     float ei_Depth = 0;
+    float ed_Depth = 0;
+    float ep_Depth_prev = 0;
     float ep_Pitch = 0;
     float ei_Pitch = 0;
+    float ed_Pitch = 0;
+    float ep_Pitch_prev = 0;
     float ep_Yaw = 0;
     float ei_Yaw = 0;
+    float ed_Yaw = 0;
+    float ep_Yaw_prev = 0;
+
 
     float Fx = 0;
     float Fy = 0;
@@ -215,9 +225,11 @@ int main(int argc, char **argv)
         //Y 
 		if (isActive_YPos)
 		{
+			ep_YPos_prev = ep_YPos;
 			ep_YPos = setPoint_YPos - estimated_YPos;
 			ei_YPos += ep_YPos*dt;
-			Fy = kp*ep_YPos + ki*ei_YPos;
+			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
+			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
 		}
         
         if (isActive_YSpeed)
@@ -229,27 +241,33 @@ int main(int argc, char **argv)
         //Z 
 		if (isActive_Depth)
 		{
+			ep_Depth_prev = ep_Depth;
 			ep_Depth = setPoint_Depth - estimated_Depth;
 			ei_Depth += ep_Depth*dt;
-			//Fz = kp*ep_Depth + ki*ei_Depth;
-			Fz = 0; // workaround temp
+			ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
+			Fz = kp*ep_Depth + ki*ei_Depth + kd*ed_Depth;
+			//Fz = 0; // workaround temp
 			//Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}
 
 		//Pitch
 		if (isActive_Pitch)
 		{
+			ep_Pitch_prev = ep_Pitch;
 			ep_Pitch = setPoint_Pitch - estimated_Pitch;
 			ei_Pitch += ep_Pitch*dt;
-			Ty = kp*ep_Pitch + ki*ei_Pitch;
+			ed_Pitch = (ep_Pitch - ep_Pitch_prev)/dt;
+			Ty = kp*ep_Pitch + ki*ei_Pitch + kd*ed_Pitch;
 		}
 
 		//Yaw
 		if (isActive_Yaw)
 		{
+			ep_Yaw_prev = ep_Yaw;
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			ei_Yaw += ep_Yaw*dt;
-			Tz = kp*ep_Yaw + ki*ei_Yaw;
+			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
+			Tz = kp*ep_Yaw + ki*ei_Yaw + kd*ed_Yaw;
 		}
 
 		if (isActive_YawSpeed)
