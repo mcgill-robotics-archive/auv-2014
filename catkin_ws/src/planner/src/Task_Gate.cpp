@@ -16,8 +16,8 @@ int Task_Gate::Execute() {
 	loop_rate.sleep();
 
 	std::cout<<"Gate Task setting position:   setPosition(1.0, 2.0, 3.0, 4.0, 5.0);"<<std::endl;
-	setPosition(1.0, 2.0, 3.0, 4.0, 5.0);
-	loop_rate.sleep();
+	//setPosition(1.0, 2.0, 3.0, 4.0, 5.0);
+	//loop_rate.sleep();
 
 	std::cout<<"Gate Task starting ps3 control"<<std::endl<<"..."<<std::endl;
 

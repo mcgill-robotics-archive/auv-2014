@@ -1,97 +1,78 @@
 #include "Interface.h"
-#include "geometry_msgs/Wrench.h"
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
 ros::Publisher control_pub;
+
+/**
+ * Our current orientation from state estimation
+ */
+double Self_XDistance;
+double Self_YDistance;
+double Self_ZDistance;
+double Self_Yaw;
+double Self_Pitch;
+
 /**
  * Object the we currently want CV to look for
  */
 std::string visionObj;
 
 /**
- * the depth of the robot as read from the sensors
+ * Orientation of the object currently in view of CV
  */
-double depth;
-/**
- * the pressure of the robot as read from the sensors
- */
-double pressure;
+double VO_XDistance;
+double VO_YDistance;
+double VO_ZDistance;
+double VO_Yaw;
+double VO_Pitch;
 
-/**
- * The orientation coordinates of the robot as read
- * from the sensors
- */
-double orientX;
-double orientY;
-double orientZ;
-double orientW;
-
-/**
- * Variables for determining which points the motors
- * should ignore
- */
-int XPosControl;
-int YPosControl;
-int ZPosControl;
-int YawControl;
-int PitchControl;
-int XSpeedControl;
-int YSpeedControl;
-int YawSpeedControl;
-
-/**
- * Variables containing the desired position of the
- * robot to tell motor control
- */
-double XPos;
-double YPos;
-double ZPos;
-double Yaw;
-double Pitch;
-double XSpeed;
-double YSpeed;
-double YawSpeed;
-
-/**
- * Returns the current depth of the robot
- *
- * @return   the depth of the robot
- */
-double getDepth() {
-  return depth;
+void setVisibleObjectOrientation (computer_vision::VisibleObjectData msg) {
+  VO_XDistance = msg.x_distance;
+  VO_YDistance = msg.y_distance;
+  VO_ZDistance = msg.z_distance;
+  VO_Yaw = msg.yaw_angle;
+  VO_Pitch = msg.pitch_angle;
 }
 
-void setDepth(const std_msgs::Float64::ConstPtr& msg) {
-  depth = msg->data;
+//BEWARE: RETURNS ADDRESS OF ARRAY
+double* getVisibleObjectOrientation () {
+  double returnArray[5];
+  returnArray[0] = VO_XDistance;
+  returnArray[1] = VO_YDistance;
+  returnArray[2] = VO_ZDistance;
+  returnArray[3] = VO_Yaw;
+  returnArray[4] = VO_Pitch;
+  return returnArray;
 }
 
-double getPressure() {
-  return pressure;
+void setOurOrientation (computer_vision::VisibleObjectData msg) {
+  Self_XDistance = msg.x_distance;
+  Self_YDistance = msg.y_distance;
+  Self_ZDistance = msg.z_distance;
+  Self_Yaw = msg.yaw_angle;
+  Self_Pitch = msg.pitch_angle;
 }
 
-void setPressure(const std_msgs::Float64::ConstPtr& msg) {
-  pressure = msg->data;
+//BEWARE: RETURNS ADDRESS OF ARRAY
+double* getOurOrientation () {
+  double returnArray[5];
+  returnArray[0] = Self_XDistance;
+  returnArray[1] = Self_YDistance;
+  returnArray[2] = Self_ZDistance;
+  returnArray[3] = Self_Yaw;
+  returnArray[4] = Self_Pitch;
+  return returnArray;
 }
 
-void TODO(const geometry_msgs::Twist msg) {}
-
-void setOrientation(const geometry_msgs::Quaternion msg) {
-  orientX = msg.x;
-  orientY = msg.y;
-  orientZ = msg.z;
-  orientW = msg.w;
-}
-
-void setVisionObj(std::string obj) {
+void setVisionObj (std::string obj) {
   visionObj = obj;
   std_msgs::String msgCV;
   msgCV.data = visionObj;
   CV_objs_pub.publish(msgCV);
 }
 
-
-void setPoints(double pointControl[]) {
+void setPoints (double pointControl[]) {
   planner::setPoints msgControl;
 
   msgControl.XPos.isActive = pointControl[0];
@@ -100,67 +81,51 @@ void setPoints(double pointControl[]) {
   msgControl.YPos.isActive = pointControl[2];
   msgControl.YPos.data = pointControl[3];
   
-  //msgControl.ZPos.isActive = pointControl[4];
-  //msgControl.ZPos.data = pointControl[5];
+  msgControl.Yaw.isActive = pointControl[4];
+  msgControl.Yaw.data = pointControl[5];
+
+  msgControl.Pitch.isActive = pointControl[6];
+  msgControl.Pitch.data = pointControl[7];
   
-  msgControl.Yaw.isActive = pointControl[6];
-  msgControl.Yaw.data = pointControl[7];
+  msgControl.XSpeed.isActive = pointControl[8];
+  msgControl.XSpeed.data = pointControl[9];
 
-  msgControl.Pitch.isActive = pointControl[8];
-  msgControl.Pitch.data = pointControl[9];
-  
-  msgControl.XSpeed.isActive = pointControl[10];
-  msgControl.XSpeed.data = pointControl[11];
+  msgControl.YSpeed.isActive = pointControl[10];
+  msgControl.YSpeed.data = pointControl[11];
 
-  msgControl.YSpeed.isActive = pointControl[12];
-  msgControl.YSpeed.data = pointControl[13];
+  msgControl.YawSpeed.isActive = pointControl[12];
+  msgControl.YawSpeed.data = pointControl[13];
 
-  msgControl.YawSpeed.isActive = pointControl[14];
-  msgControl.YawSpeed.data = pointControl[15];
-
-  msgControl.Depth.isActive = pointControl[16];
-  msgControl.Depth.data = pointControl[17];
+  msgControl.Depth.isActive = pointControl[14];
+  msgControl.Depth.data = pointControl[15];
 
   control_pub.publish(msgControl);
 }
 
-void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth){
-	
-	double pointControl[18] = {0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,1 ,x_speed ,1,y_speed ,1, yaw_speed, 1,depth};
-	setPoints(pointControl);
+void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth) {
+  double pointControl[16] = {0, 0, 0, 0, 0, 0, 0, 0,
+    1, x_speed, 1, y_speed, 1, yaw_speed, 1,depth};
+  setPoints(pointControl);
 }
 
-
-void setPosition(double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth){
-	double pointControl[18] = {1, x_pos, 1, y_pos, 0,0, 1, pitch_angle, 1, yaw_angle, 0, 0, 0, 0, 0, 0, 1, depth};
-	setPoints(pointControl);
+void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth) {
+  double pointControl[16] = {1, x_pos, 1, y_pos, 1, pitch_angle, 
+    1, yaw_angle, 0, 0, 0, 0, 0, 0, 1, depth};
+  setPoints(pointControl);
 }
 
+//LEGACY -- NOT FOR TOUCHING
+void ps3Control () {}
 
-
-void ps3Control() {
-  geometry_msgs::Wrench msgWrench;
-    msgWrench.force.y = 40.0;
-    msgWrench.torque.y = 0.0;
-    msgWrench.force.x = 0.0;
-    msgWrench.force.z = 0.0;
-    msgWrench.torque.x = 0.0;
-    msgWrench.torque.z = 0.0;
-
-  wrench_pub.publish(msgWrench);
-}
-
-int main(int argc, char **argv) {
+int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  ros::Subscriber depth_sub = n.subscribe("depth_data", 1000, setDepth);
-  ros::Subscriber pressure_sub = n.subscribe("pressure_data", 1000, setPressure);
-  ros::Subscriber IMU_sub = n.subscribe("imu_data", 1000, setOrientation);
+  ros::Subscriber CV_sub = n.subscribe("front_cv_data", 1000, setVisibleObjectOrientation);
+  ros::Subscriber Pose_sub = n.subscribe("TODO", 1000, setOurOrientation);
 
-  wrench_pub = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 1000);
   CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
-  control_pub = n.advertise<planner::setPoints>("planner/setPoints", 1000);
+  control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
   std::cout<<"Starting Loader"<< std::endl; 
   Loader* loader = new Loader();
@@ -169,14 +134,8 @@ int main(int argc, char **argv) {
   std::cout<<"Done Loader"<< std::endl;  
 
   ros::Rate loop_rate(10);
-  int thing = 0;
-  //while ( ros::ok() ) {
-    //ps3Control();
-    //setVisionObj("FW-Gate");
-    //setVelocity(1, 1, 1, 1);
-    //ros::spinOnce();
-    //loop_rate.sleep();
-  //}
+  while ( ros::ok() ) {}
   ros::spin();
   return 0;
 }
+
