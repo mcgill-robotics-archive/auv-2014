@@ -37,6 +37,11 @@ int main(int argc, char **argv)
 		msg.YawSpeed.isActive = 0;
 		//skip depth
 
+		//parameters
+
+		nh.param<std::float>("testParam", test_param, 99);
+		ROS_INFO(test_param)
+
 		setPointsPublisher.publish(msg);
 		ros::spinOnce();
 		loop_rate.sleep();
