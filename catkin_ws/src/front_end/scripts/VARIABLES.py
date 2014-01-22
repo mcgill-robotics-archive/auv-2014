@@ -29,10 +29,10 @@ class KeyMapping(object):
     YawRight = QtCore.Qt.Key_L
     IncreaseDepth = QtCore.Qt.Key_R
     DecreaseDepth = QtCore.Qt.Key_W
-    IncreaseX = QtCore.Qt.Key_E
-    DecreaseX = QtCore.Qt.Key_D
-    IncreaseY = QtCore.Qt.Key_F
-    DecreaseY = QtCore.Qt.Key_S
+    IncreaseX = QtCore.Qt.Key_F
+    DecreaseX = QtCore.Qt.Key_S
+    IncreaseY = QtCore.Qt.Key_E
+    DecreaseY = QtCore.Qt.Key_D
     Surface = QtCore.Qt.Key_H
 
 ##   variables for the ros topic names
@@ -46,6 +46,7 @@ class ROS_Topics(object):
     left_post_topic = "/front_cv_camera1"
     right_post_topic = "/front_cv_camera2"
     bottom_post_topic = "/down_cv_camera"
+    simulator_pose = "/gazebo/model_states"
     imu_raw = 'pose'
     imu_filtered='pose'
     vel_topic = '/setPoints'

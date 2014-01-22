@@ -12,8 +12,8 @@ import sys
 
 # VARIABLES
 NUMBER_OF_MICS = 4  # SELF-EXPLANATORY
-DISTANCE = 4        # DISTANCE BETWEEN HYDROPHONES IN CENTIMETERS
-SPEED = 0.001450    # SPEED OF SOUND UNDER WATER IN METERS PER MICROSECOND
+DISTANCE = 0.25     # DISTANCE BETWEEN HYDROPHONES IN CENTIMETERS
+SPEED = 0.000330    # SPEED OF SOUND UNDER WATER IN METERS PER MICROSECOND
 DIMENSIONS = 3      # DIMENSIONS OF SOLUTION
 
 mics = [[] for x in xrange(NUMBER_OF_MICS)]
@@ -62,13 +62,13 @@ def connect():
 # PARSE
 def parse(str):
     if str[0] is 'O':
-        mics[0].append(int(str[1:]))
+        mics[0].append(long(str[1:]))
     elif str[0] is 'X':
-        mics[1].append(int(str[1:]) + 1004)
+        mics[1].append(long(str[1:]) + 1004)
     elif str[0] is 'Y':
-        mics[2].append(int(str[1:]) + 70)
+        mics[2].append(long(str[1:]) + 70)
     elif str[0] is 'Z':
-        mics[3].append(int(str[1:]) + 980)
+        mics[3].append(long(str[1:]) + 980)
 
 # MAGNITUDE OF VECTOR
 def magnitude(x, y, z):

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>McGill Robotics: RoboSub 2014: /home/dery/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCVNode.h Source File</title>
+<title>McGill Robotics: RoboSub 2014: /home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCVNode.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -79,21 +79,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">/home/dery/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCVNode.h</div>  </div>
+<div class="title">/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCVNode.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#include &quot;CVNode.h&quot;</span>
-<a name="l00002"></a>00002 
-<a name="l00003"></a><a class="code" href="classDownCVNode.html">00003</a> <span class="keyword">class </span><a class="code" href="classDownCVNode.html">DownCVNode</a> : <span class="keyword">public</span> <a class="code" href="classCVNode.html">CVNode</a> {
-<a name="l00004"></a>00004 
-<a name="l00005"></a>00005         <span class="keyword">public</span>:
-<a name="l00006"></a>00006 
-<a name="l00007"></a>00007         <a class="code" href="classDownCVNode.html#a57340f59c23b453bb0eceb19b1a10ae1" title="Constructor.">DownCVNode</a>(ros::NodeHandle&amp; nodeHandle, std::list&lt;std::string&gt; topicList, <span class="keywordtype">int</span> receptionRate);
-<a name="l00008"></a>00008 
-<a name="l00009"></a>00009         <span class="keyword">private</span>:
-<a name="l00010"></a>00010 
-<a name="l00011"></a>00011         <span class="keywordtype">void</span> receiveImage(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; message, <span class="keyword">const</span> std::string &amp;topicName);
-<a name="l00012"></a>00012 };
+<a name="l00002"></a>00002 <span class="preprocessor">#include &quot;MarkerTarget.h&quot;</span>
+<a name="l00003"></a>00003 
+<a name="l00004"></a><a class="code" href="classDownCVNode.html">00004</a> <span class="keyword">class </span><a class="code" href="classDownCVNode.html">DownCVNode</a> : <span class="keyword">public</span> <a class="code" href="classCVNode.html">CVNode</a> {
+<a name="l00005"></a>00005 
+<a name="l00006"></a>00006         <span class="keyword">public</span>:
+<a name="l00007"></a>00007 
+<a name="l00008"></a>00008         <a class="code" href="classDownCVNode.html#a57340f59c23b453bb0eceb19b1a10ae1" title="Constructor.">DownCVNode</a>(ros::NodeHandle&amp; nodeHandle, std::list&lt;std::string&gt; topicList, <span class="keywordtype">int</span> receptionRate);
+<a name="l00009"></a>00009 
+<a name="l00010"></a>00010         <span class="keyword">private</span>:
+<a name="l00011"></a>00011 
+<a name="l00012"></a>00012         <span class="keywordtype">void</span> receiveImage(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; message, <span class="keyword">const</span> std::string &amp;topicName);
+<a name="l00013"></a>00013 };
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -112,7 +113,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 16 2014 16:11:42 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 19 2014 14:43:40 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

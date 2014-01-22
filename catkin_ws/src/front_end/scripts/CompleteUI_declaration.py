@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'CompleteFinal.ui'
 #
-# Created: Tue Jan 14 18:38:18 2014
+# Created: Sun Jan 19 14:34:14 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,26 +31,32 @@ class Ui_RoboticsMain(object):
         self.preLeft = QtGui.QLabel(self.VideoOuter)
         self.preLeft.setGeometry(QtCore.QRect(10, 10, 344, 241))
         self.preLeft.setText(_fromUtf8(""))
+        self.preLeft.setScaledContents(True)
         self.preLeft.setObjectName(_fromUtf8("preLeft"))
         self.preRight = QtGui.QLabel(self.VideoOuter)
         self.preRight.setGeometry(QtCore.QRect(360, 10, 344, 241))
         self.preRight.setText(_fromUtf8(""))
+        self.preRight.setScaledContents(True)
         self.preRight.setObjectName(_fromUtf8("preRight"))
         self.postLeft = QtGui.QLabel(self.VideoOuter)
         self.postLeft.setGeometry(QtCore.QRect(10, 260, 344, 241))
         self.postLeft.setText(_fromUtf8(""))
+        self.postLeft.setScaledContents(True)
         self.postLeft.setObjectName(_fromUtf8("postLeft"))
         self.postRight = QtGui.QLabel(self.VideoOuter)
         self.postRight.setGeometry(QtCore.QRect(360, 260, 344, 241))
         self.postRight.setText(_fromUtf8(""))
+        self.postRight.setScaledContents(True)
         self.postRight.setObjectName(_fromUtf8("postRight"))
         self.preBottom = QtGui.QLabel(self.VideoOuter)
         self.preBottom.setGeometry(QtCore.QRect(10, 510, 344, 241))
         self.preBottom.setText(_fromUtf8(""))
+        self.preBottom.setScaledContents(True)
         self.preBottom.setObjectName(_fromUtf8("preBottom"))
         self.posBottom = QtGui.QLabel(self.VideoOuter)
         self.posBottom.setGeometry(QtCore.QRect(360, 510, 344, 241))
         self.posBottom.setText(_fromUtf8(""))
+        self.posBottom.setScaledContents(True)
         self.posBottom.setObjectName(_fromUtf8("posBottom"))
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(10, 10, 351, 111))
@@ -356,7 +362,7 @@ class Ui_RoboticsMain(object):
         self.autonomousControl.setText(QtGui.QApplication.translate("RoboticsMain", "Autonomous Control", None, QtGui.QApplication.UnicodeUTF8))
         self.label_3.setText(QtGui.QApplication.translate("RoboticsMain", "Control", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("RoboticsMain", "Battery", None, QtGui.QApplication.UnicodeUTF8))
-        self.attemptPS3.setText(QtGui.QApplication.translate("RoboticsMain", "Connect PS3 Contoller", None, QtGui.QApplication.UnicodeUTF8))
+        self.attemptPS3.setText(QtGui.QApplication.translate("RoboticsMain", "Connect Contoller", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("RoboticsMain", "Controller Status:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("RoboticsMain", "State", None, QtGui.QApplication.UnicodeUTF8))
         self.stateData.setText(QtGui.QApplication.translate("RoboticsMain", "No State Data Recieved", None, QtGui.QApplication.UnicodeUTF8))

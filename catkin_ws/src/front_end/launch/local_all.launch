@@ -11,8 +11,10 @@
 	<!-- front-end -->
 	      <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
 
-	<!-- depthController -->
+	<!-- Controls systems -->
 	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>          
-        <!-- CVNode -->
-                <node name="computer_vision" pkg="computer_vision" type="FrontCVNode"  respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+        <!-- CVNode front-->
+                <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+        <!-- CVNode down -->
+                <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/>
 </launch>

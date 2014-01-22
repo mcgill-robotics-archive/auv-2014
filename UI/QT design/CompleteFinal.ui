@@ -45,6 +45,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="preRight">
      <property name="geometry">
@@ -57,6 +60,9 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLabel" name="postLeft">
@@ -71,6 +77,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="postRight">
      <property name="geometry">
@@ -83,6 +92,9 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLabel" name="preBottom">
@@ -97,6 +109,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLabel" name="posBottom">
      <property name="geometry">
@@ -109,6 +124,9 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -292,7 +310,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Connect PS3 Contoller</string>
+      <string>Connect Contoller</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
