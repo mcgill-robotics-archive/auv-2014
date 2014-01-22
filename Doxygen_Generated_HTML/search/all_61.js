@@ -9,8 +9,10 @@ var searchData=
   ['acc3',['acc3',['../classcentral__app_1_1CentralUi.html#aec8d0f124623b47f78b9ca2172d5f2d9',1,'central_app::CentralUi']]],
   ['acc3_5fcurve',['acc3_curve',['../classcentral__app_1_1CentralUi.html#a2bd95a9121e28efbb2e585bb03e60c6c',1,'central_app::CentralUi']]],
   ['acc3_5fdata',['acc3_data',['../classcentral__app_1_1CentralUi.html#a70aec9133dafcba413c8635c6dcb6595',1,'central_app::CentralUi']]],
+  ['addmeasurement',['addMeasurement',['../classestimation_1_1OdomEstimation.html#af2f5fa22f8d559f98ca64e8c8df1fbc9',1,'estimation::OdomEstimation::addMeasurement(const tf::StampedTransform &amp;meas)'],['../classestimation_1_1OdomEstimation.html#a525c4ab121cbdceca6a3a6db4c5f0a80',1,'estimation::OdomEstimation::addMeasurement(const tf::StampedTransform &amp;meas, const MatrixWrapper::SymmetricMatrix &amp;covar)']]],
   ['alarm_5ffile',['alarm_file',['../classcentral__app_1_1CentralUi.html#aa68443a56df9803059aa773451d6ff37',1,'central_app::CentralUi']]],
   ['allow_5fremote_5fpredicate',['allow_remote_predicate',['../structallow__remote__predicate.html',1,'']]],
+  ['applydrag',['applyDrag',['../classgazebo_1_1Robot.html#aaaed9474beb729faf3414885e1a249bd',1,'gazebo::Robot']]],
   ['applyfilter',['applyFilter',['../classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234',1,'MarkerTarget']]],
   ['axis_5fto_5ftype',['axis_to_type',['../structaxis__to__type.html',1,'']]]
 ];

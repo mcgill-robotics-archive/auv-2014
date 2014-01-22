@@ -45,11 +45,12 @@ class ROS_Topics(object):
     bottom_pre_topic = "/simulator/camera3/image_raw"
     left_post_topic = "/front_cv_camera1"
     right_post_topic = "/front_cv_camera2"
-    bottom_post_topic = "/down_cv_camera"
+    bottom_post_topic = "as/down_cv_camera"
     simulator_pose = "/gazebo/model_states"
     imu_raw = 'pose'
     imu_filtered='pose'
     vel_topic = '/setPoints'
+    cv_data = 'front_cv_data'
 
 ##    various parameters and constants
 class misc_vars(object):

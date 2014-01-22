@@ -50,6 +50,10 @@ private:
 	const static int NUM_REFERENCE_IMGS = 8;
 	cv::Mat referenceImgs[NUM_REFERENCE_IMGS];
 
+	/* Reference markers' size. */
+	const static int REF_IMG_X = 100;
+	const static int REF_IMG_Y = 100;
+
 	const static int CANNY_THRESHOLD = 100;
 	const static int ADAPTIVE_THRESHOLD_KERNEL_SIZE = 41;
 

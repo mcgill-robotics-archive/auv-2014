@@ -11,8 +11,18 @@
 
 namespace gazebo
 {
+    /**
+     *@brief class to give the torpedo a vector
+     *@author Jonathan Fokkan
+     */ 
+
     class LaunchTorpedo : public ModelPlugin {
     public:
+
+	/** 
+	 * Load World
+	 */
+
 	void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/) {
 	    launch = true;
 	    iteration = 0;
@@ -28,6 +38,11 @@ namespace gazebo
 	};
 
 	// Called by the world update start event
+
+	/**
+	 *Start Launch
+	 */
+ 
 	void OnUpdate(const common::UpdateInfo & /*_info*/) {
 	    /*
 	      Note:

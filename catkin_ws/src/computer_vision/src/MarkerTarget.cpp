@@ -5,10 +5,14 @@
  * @author Michael Noseworthy
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
+#include <ros/package.h>
+#include <ros/console.h>
 #include "MarkerTarget.h"
 
 /**
@@ -16,9 +20,18 @@
  * Also initializes the matrix we will use to determine the positions of the objects.
  */
 MarkerTarget::MarkerTarget() {
+
+	std::string templatePath = ros::package::getPath("computer_vision") +
+			"/reference_markers/%d.png";
 	//Load the reference images
 	for(int i = 0 ; i < NUM_REFERENCE_IMGS; i += 2) {
-		//TODO Load the image, add it to the list, mirror it on both axes and add it again
+		char *path = new char[templatePath.size()];
+		sprintf(path, templatePath.c_str(), (i + 2) / 2);
+
+		referenceImgs[i] = cv::imread(path, CV_LOAD_IMAGE_GRAYSCALE);
+		cv::flip(referenceImgs[i], referenceImgs[i + 1], -1);
+
+		delete[] path;
 	}
 
 	/* To set the error tolerance, assume that all reference images
@@ -46,7 +59,6 @@ MarkerTarget::MarkerTarget() {
 std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
-	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	Point2DVec binCorners = findBins(currentFrame);
 	std::vector<MarkerDescriptor> markers = findMarkers(filteredFrame, binCorners);
@@ -59,7 +71,7 @@ std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectDat
 	if (markers.size() > 0) {
 		//TODO Decide what to do if we detect more than one marker
 		for (int i = 0; i < markers.size(); i++) {
-			computer_vision::VisibleObjectData* objectData;
+			computer_vision::VisibleObjectData* objectData = new computer_vision::VisibleObjectData();
 			objectData->object_type = markers[i].closestMatch;
 			objectData->x_distance = markers[i].x_dist;
 			objectData->y_distance = markers[i].y_dist;

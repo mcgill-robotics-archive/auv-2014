@@ -12,12 +12,12 @@ int Task_Gate::Execute() {
 	std::cout << ">> Executing Gate Task" << std::endl;
 	
 	std::cout<<"Gate Task setting velocity:   setVelocity(1, 1, 1, 1) "<<std::endl;
-	setVelocity(1.0, 1.0, 1.0, 1.0);	
+	setVelocity(0.0, 1.0, 0.0, 1.0);	
 	loop_rate.sleep();
 
 	std::cout<<"Gate Task setting position:   setPosition(1.0, 2.0, 3.0, 4.0, 5.0);"<<std::endl;
-	//setPosition(1.0, 2.0, 3.0, 4.0, 5.0);
-	//loop_rate.sleep();
+	weAreHere("GATE");
+	loop_rate.sleep();
 
 	std::cout<<"Gate Task starting ps3 control"<<std::endl<<"..."<<std::endl;
 
