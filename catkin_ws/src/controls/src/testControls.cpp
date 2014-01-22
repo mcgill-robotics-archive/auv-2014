@@ -20,19 +20,19 @@ int main(int argc, char **argv)
 
 		planner::setPoints msg;
 
-		msg.XPos.data = 0;
-		msg.XSpeed.data = 100000;
-		msg.YPos.data = 0;
-		msg.Depth.data = -3;
+		msg.XPos.data = 2.3;
+		msg.XSpeed.data = 0;
+		msg.YPos.data = 3.5;
+		msg.Depth.data = 1.0;
 		msg.Yaw.data = 0;
 		msg.Pitch.data = 0;
 
-		msg.XPos.isActive = 0;
-		msg.YPos.isActive = 1;
-		msg.Depth.isActive = 1;
-		msg.Yaw.isActive = 1;
-		msg.Pitch.isActive = 1;
-		msg.XSpeed.isActive = 1;
+		msg.XPos.isActive = 1;
+		msg.YPos.isActive = 0;
+		msg.Depth.isActive = 0;
+		msg.Yaw.isActive = 0;
+		msg.Pitch.isActive = 0;
+		msg.XSpeed.isActive = 0;
 		msg.YSpeed.isActive = 0;
 		msg.YawSpeed.isActive = 0;
 		//skip depth

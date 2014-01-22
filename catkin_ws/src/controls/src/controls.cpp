@@ -102,7 +102,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 void estimatedState_callback(const gazebo_msgs::ModelStates data)
 
 {
-	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model with [0]
+	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model (robot as opposed to buoys etc) with [0]
 	ROS_DEBUG("Subscriber received estimated data");
     
     estimated_XPos = data.pose[0].position.x;
@@ -125,8 +125,8 @@ int main(int argc, char **argv)
 	float cd = 0.1; //arbitrary drag coefficient
 	float buoyancy = 0.02; // %percent buoyancy
 	float dt = 0.01; //temporary! TODO update this dynamically
-	float kp = 1000; //proportional controller
-    float ki = 100;
+	float kp = 1; //proportional controller
+    float ki = 0;
 
 	//initializations
 	
