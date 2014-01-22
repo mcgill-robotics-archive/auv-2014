@@ -11,7 +11,7 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-# from CompleteUI_declaration import *
+#from CompleteUI_declaration import *
 from resizableUI1 import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
@@ -151,6 +151,7 @@ class CentralUi(QtGui.QMainWindow):
         # buttons connects
         #QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
+        QtCore.QObject.connect(self.ui.resSelect, QtCore.SIGNAL("currentIndexChanged(int)"), self.setVideoRes)
 
         # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -164,6 +165,38 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
 
+    ##sets the maximum size of the video displays
+    #
+    #the selected resolution sets the maximal size to not over size the window
+    #@param self the object pointer
+    #@param data the data passed by the connect of the resolution combo box
+    def setVideoRes(self, data):
+        #xga display
+        if data == 0:
+            self.ui.preLeft.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.preRight.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.preBottom.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.postLeft.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.postRight.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.posBottom.setMaximumSize(QtCore.QSize(190, 170))
+        #720p display
+        elif data == 1:
+            self.ui.preLeft.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.preRight.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.preBottom.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.postLeft.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.postRight.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.posBottom.setMaximumSize(QtCore.QSize(220, 200))
+        #1080p display
+        elif data == 2:
+            self.ui.preLeft.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.preRight.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.preBottom.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.postLeft.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.postRight.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
+        else:
+            pass
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
         self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)
