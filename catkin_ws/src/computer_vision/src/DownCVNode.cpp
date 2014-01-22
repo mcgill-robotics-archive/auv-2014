@@ -9,7 +9,7 @@ const std::string DATA_TOPIC_NAME = "down_cv_data";
  * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera3.
  */
 //const std::string CAMERA3_CV_TOPIC_NAME = "down_cv_camera";
-const std::string CAMERA3_CV_TOPIC_NAME = "front_cv_camera3";
+const std::string CAMERA3_CV_TOPIC_NAME = "down_cv_camera";
 
 ros::Publisher downCVCameraPublisher;
 
@@ -26,14 +26,17 @@ int main(int argc, char **argv) {
 		ros::init(argc, argv, "down_cv_node");
 		ros::NodeHandle nodeHandle;
 
+		downCVCameraPublisher = nodeHandle.advertise<sensor_msgs::Image>(CAMERA3_CV_TOPIC_NAME, 10);
+
+		ROS_INFO("%s", ("Initializing the node " + ros::this_node::getName() + ".").c_str());
+
 		// Create the list of topics to listen to
 		std::list<std::string> topicList;
 		for (int i = 1; i < argc; i++) {
 			std::string topic = std::string(argv[i]);
+			ROS_INFO("%s", (ros::this_node::getName() + " will be listening to the topic named: " + topic).c_str());
 			topicList.push_back(topic);
 		}
-
-		downCVCameraPublisher = nodeHandle.advertise<sensor_msgs::Image>(CAMERA3_CV_TOPIC_NAME, 10);
 
 		/*
 		ROS_INFO("%s", ("Initializing the CVNode. It will be listening to the topic named \"" + VIDEO_FEED_TOPIC_NAME + "\"").c_str());
