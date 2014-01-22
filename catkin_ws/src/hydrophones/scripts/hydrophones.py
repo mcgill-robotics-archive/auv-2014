@@ -72,7 +72,7 @@ def parse(str):
 
 # MAGNITUDE OF VECTOR
 def magnitude(x, y, z):
-    return sqrt(x * x + y * y )       
+    return sqrt(x * x + y * y + z * z)       
 
 # TRIANGULATE
 def triangulate(index):
