@@ -186,6 +186,7 @@
 
     </model>
 
+	<!-- bin 1 -->
     <model name="bin1">
       <pose>3 -3.5 0 0 0 0</pose>
       <static>false</static>
@@ -233,7 +234,9 @@
       </link>
 
     </model>
-
+	<!-- bin 1 done -->
+	
+	<!-- bin 2 -->
     <model name="bin2">
       <pose>3 -1.5 0 0 0 0</pose>
       <static>false</static>
@@ -259,7 +262,7 @@
         
       </link>
 
-      <joint name='bin2_image2' type='revolute'>
+      <joint name='bin2_image' type='revolute'>
 		<parent>body</parent>
 		<child>image</child>
 		<axis>1 0 0</axis>
@@ -281,7 +284,9 @@
       </link>
 
     </model>
-
+	<!-- bin 2 done -->
+	
+	<!-- bin 3 -->
     <model name="bin3">
       <pose>3 .5 0 0 0 0</pose>
       <static>false</static>
@@ -307,7 +312,7 @@
         
       </link>
 
-      <joint name='bin1_image1' type='revolute'>
+      <joint name='bin3_image' type='revolute'>
 		<parent>body</parent>
 		<child>image</child>
 		<axis>1 0 0</axis>
@@ -329,6 +334,56 @@
       </link>
 
     </model>
+    <!-- bin 3 done -->
     
+    <!-- bin 4 -->
+    <model name="bin4">
+      <pose>3 2.5 0 0 0 0</pose>
+      <static>false</static>
+      <link name="body">
+      
+        <collision name="visual">
+          <geometry>
+            <mesh>
+	      <uri>file://../models/BinColor1.dae</uri>
+	      <scale> .01 .01 .01</scale>
+	    </mesh>
+          </geometry>
+        </collision>
+      
+        <visual name="visual">
+          <geometry>
+            <mesh>
+	      <uri>file://../models/BinColor1.dae</uri>
+	      <scale> .01 .01 .01</scale>
+	    </mesh>
+          </geometry>
+        </visual>
+        
+      </link>
+
+      <joint name='bin4_image' type='revolute'>
+		<parent>body</parent>
+		<child>image</child>
+		<axis>1 0 0</axis>
+		<pose>0 0 0 0 0 0</pose>
+      </joint>
+
+      
+      <link name="image">
+		<pose>0 0 0.05 0 0 -1.5707963</pose>
+      
+        <visual name="visual">
+          <geometry>
+            <mesh>
+	      <uri>file://../models/RoboSub16.dae</uri>
+	      <scale> .03 .025 .01</scale>
+	    </mesh>
+          </geometry>
+        </visual>
+      </link>
+
+    </model>
+    <!-- bin 4 done -->
   </world>
 </sdf>

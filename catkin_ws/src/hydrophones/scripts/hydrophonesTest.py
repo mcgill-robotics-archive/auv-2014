@@ -86,9 +86,9 @@ def parse(str):
 # TRIANGULATE
 def triangulate(index):
     # TIME DIFFERENCES
-    dtx = mics[0][index] - mics[0][index]
-    dty = mics[0][index] - mics[1][index]
-    dtz = mics[0][index] - mics[2][index]
+    dtx = mics[0] - mics[0]
+    dty = mics[0] - mics[1]
+    dtz = mics[0] - mics[2]
 
     # DISTANCE DIFFERENCES (ds = v * dt)
     sx = dtx * SPEED
@@ -177,11 +177,11 @@ try:
                                             except:
                                                 print 'degenerate triangle'
                                     elif True:#len(mics[0]) > 0 and len(mics[1]) > 0 and len(mics[2]) > 0 and len(mics[3]) > 0:
-                                        try:
-                                            triangulate(0)
-                                            publish()
-                                        except:
-                                            print 'degenerate triangle'
+                                        #try:
+                                        triangulate(0)
+                                        publish()
+                                        #except:
+                                            #print 'degenerate triangle'
 
                                     else:
                                         print 'pinger could not be found'

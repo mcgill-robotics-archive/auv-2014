@@ -4,11 +4,9 @@
 #define PERIOD          1000000     // PERIOD AT WHICH TO POLL FOR SERIAL DATA
 #define RESOLUTION      10          // RESOLUTION OF PWM
 #define FREQUENCY       46875       // FREQUENCY OF PWM
-#define DEFAULT_THRESH  256         // THRESHOLD AT STARTUP
 
 /* PINS */
 const int micPins[NUMBER_OF_MICS] = { 0, 1, 2, 3 };
-const int threshPins[NUMBER_OF_MICS] = { 20, 21, 22, 23 };
 
 /* TIMES OF EACH HYDROPHONE */
 volatile unsigned long micO[SIZE_OF_ARRAY];
@@ -33,11 +31,6 @@ void setup() {
     for (int i = 0; i < NUMBER_OF_MICS; i++)
         pinMode(micPins[i], INPUT);
 
-    /* SETUP IDEAL FREQUENCY AND RESOLUTION */
-    // NOTE: pulled from http://www.pjrc.com/teensy/td_pulse.html
-    analogWriteResolution(RESOLUTION);
-    analogWriteFrequency(threshPins[0], FREQUENCY);
-
     /* SETUP INTERRUPTS */
     attachInterrupt(micPins[0], micOISR, CHANGE);
     attachInterrupt(micPins[1], micXISR, CHANGE);
@@ -45,7 +38,7 @@ void setup() {
     attachInterrupt(micPins[3], micZISR, CHANGE);
 
     /* WAIT UNTIL FIRST PING */
-    while (counterO == 0);
+    while (!counterO);
     delay(500);
 
     /* SETUP SERIAL TO TRANSFER EVERY SECOND */
@@ -78,14 +71,6 @@ void micZISR() {
 }
 
 void socialize() {
-    /* RECEIVE THRESHOLDS */
-    // if (Serial.available())
-    //     for (int i = 0; i < NUMBER_OF_MICS; i++) {
-
-    //         int threshold = 
-    //         analogWrite(threshPins[i], (int)Serial.read());
-    //     }
-
     /* SEND AND RESET TIMES */
     for (int i = 0; i < counterO; i++) {
         Serial.println("O" + (String)micO[i]);

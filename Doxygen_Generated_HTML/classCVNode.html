@@ -81,30 +81,50 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">CVNode Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="CVNode" -->
+<!-- doxytag: class="CVNode" --><div class="dynheader">
+Inheritance diagram for CVNode:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classCVNode.png" usemap="#CVNode_map" alt=""/>
+  <map id="CVNode_map" name="CVNode_map">
+<area href="classDownCVNode.html" alt="DownCVNode" shape="rect" coords="0,56,92,80"/>
+<area href="classFrontCVNode.html" alt="FrontCVNode" shape="rect" coords="102,56,194,80"/>
+</map>
+ </div></div>
+
 <p><a href="classCVNode-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#ae4bbb77846a8bdbc332515ee0e8610cc">CVNode</a> (ros::NodeHandle &amp;nodeHandle, const std::string &amp;topicName)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#ae4bbb77846a8bdbc332515ee0e8610cc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#af22cdf9ed2ca17f8643eb6435effa4e5">CVNode</a> (ros::NodeHandle &amp;nodeHandle, std::list&lt; std::string &gt; topicList, int receptionRate)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#af22cdf9ed2ca17f8643eb6435effa4e5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a03bc29bcbeb07db109e94ee419658c40">~CVNode</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a03bc29bcbeb07db109e94ee419658c40"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a9bb570c46674234e9c8150bbca4be5b9">getNumPublisher</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function that is used to tell whether or not the node is still receiving images from the publisher(s).  <a href="#a9bb570c46674234e9c8150bbca4be5b9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2bda3c09e8307869a6a8e4c62edf5c86"></a><!-- doxytag: member="CVNode::receiveImages" ref="a2bda3c09e8307869a6a8e4c62edf5c86" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a2bda3c09e8307869a6a8e4c62edf5c86">receiveImages</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that dictates the rate at which the node checks if an image is received. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a301bcad979873b49e3b38a9d0e31fc9c"></a><!-- doxytag: member="CVNode::pImageTransport" ref="a301bcad979873b49e3b38a9d0e31fc9c" args="" -->
+image_transport::ImageTransport *&#160;</td><td class="memItemRight" valign="bottom"><b>pImageTransport</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5768f484fb2b9932c370c89a58d92a6b"></a><!-- doxytag: member="CVNode::publisher" ref="a5768f484fb2b9932c370c89a58d92a6b" args="" -->
+image_transport::Publisher&#160;</td><td class="memItemRight" valign="bottom"><b>publisher</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2f95983755ba5677613f500196a942a"></a><!-- doxytag: member="CVNode::visibleObjects" ref="ad2f95983755ba5677613f500196a942a" args="" -->
+std::list&lt; <a class="el" href="classVisibleObject.html">VisibleObject</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>visibleObjects</b></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ae4bbb77846a8bdbc332515ee0e8610cc"></a><!-- doxytag: member="CVNode::CVNode" ref="ae4bbb77846a8bdbc332515ee0e8610cc" args="(ros::NodeHandle &amp;nodeHandle, const std::string &amp;topicName)" -->
+<a class="anchor" id="af22cdf9ed2ca17f8643eb6435effa4e5"></a><!-- doxytag: member="CVNode::CVNode" ref="af22cdf9ed2ca17f8643eb6435effa4e5" args="(ros::NodeHandle &amp;nodeHandle, std::list&lt; std::string &gt; topicList, int receptionRate)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCVNode.html#ae4bbb77846a8bdbc332515ee0e8610cc">CVNode::CVNode</a> </td>
+          <td class="memname"><a class="el" href="classCVNode.html#af22cdf9ed2ca17f8643eb6435effa4e5">CVNode::CVNode</a> </td>
           <td>(</td>
           <td class="paramtype">ros::NodeHandle &amp;&#160;</td>
           <td class="paramname"><em>nodeHandle</em>, </td>
@@ -112,8 +132,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>topicName</em>&#160;</td>
+          <td class="paramtype">std::list&lt; std::string &gt;&#160;</td>
+          <td class="paramname"><em>topicList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>receptionRate</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -155,26 +181,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a9bb570c46674234e9c8150bbca4be5b9"></a><!-- doxytag: member="CVNode::getNumPublisher" ref="a9bb570c46674234e9c8150bbca4be5b9" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="classCVNode.html#a9bb570c46674234e9c8150bbca4be5b9">CVNode::getNumPublisher</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Helper function that is used to tell whether or not the node is still receiving images from the publisher(s). </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The number of publishers on the topic </dd></dl>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="CVNode_8h_source.html">CVNode.h</a></li>
 <li>/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="CVNode_8cpp.html">CVNode.cpp</a></li>
@@ -197,7 +203,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jan 11 2014 23:26:56 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 19 2014 14:43:40 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

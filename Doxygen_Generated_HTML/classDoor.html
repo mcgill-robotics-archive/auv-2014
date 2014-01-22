@@ -102,8 +102,9 @@ Inheritance diagram for Door:</div>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDoor.html#a3dbbbd7a49698a8461d3c22df60bd2d3">~Door</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">This object is used to detect the gate object.  <a href="#a3dbbbd7a49698a8461d3c22df60bd2d3"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classObjectData.html">ObjectData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDoor.html#ae96bc47f70364e0aaa446077c3bd365f">retrieveObjectData</a> (cv::Mat &amp;currentFrame)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the necessary filters to the current frame, checks if the door object is present and, if it is, extracts the necessary information.  <a href="#ae96bc47f70364e0aaa446077c3bd365f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak"/>
+&lt; computer_vision::VisibleObjectData * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDoor.html#a13540f7d0f7267fa055f6dcd13302e60">retrieveObjectData</a> (cv::Mat &amp;currentFrame)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the necessary filters to the current frame, checks if the door object is present and, if it is, extracts the necessary information.  <a href="#a13540f7d0f7267fa055f6dcd13302e60"></a><br/></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a3dbbbd7a49698a8461d3c22df60bd2d3"></a><!-- doxytag: member="Door::~Door" ref="a3dbbbd7a49698a8461d3c22df60bd2d3" args="()" -->
@@ -130,12 +131,12 @@ Haris Haidary </dd></dl>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ae96bc47f70364e0aaa446077c3bd365f"></a><!-- doxytag: member="Door::retrieveObjectData" ref="ae96bc47f70364e0aaa446077c3bd365f" args="(cv::Mat &amp;currentFrame)" -->
+<a class="anchor" id="a13540f7d0f7267fa055f6dcd13302e60"></a><!-- doxytag: member="Door::retrieveObjectData" ref="a13540f7d0f7267fa055f6dcd13302e60" args="(cv::Mat &amp;currentFrame)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classObjectData.html">ObjectData</a> * <a class="el" href="classDoor.html#ae96bc47f70364e0aaa446077c3bd365f">Door::retrieveObjectData</a> </td>
+          <td class="memname">std::vector&lt; computer_vision::VisibleObjectData * &gt; <a class="el" href="classDoor.html#a13540f7d0f7267fa055f6dcd13302e60">Door::retrieveObjectData</a> </td>
           <td>(</td>
           <td class="paramtype">cv::Mat &amp;&#160;</td>
           <td class="paramname"><em>currentFrame</em></td><td>)</td>
@@ -152,7 +153,7 @@ Haris Haidary </dd></dl>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>If the door is present, it returns a pointer to an <a class="el" href="classObjectData.html">ObjectData</a> which contains the information gathered on the door. If the door is not present in the current frame, it returns the zero pointer (NULL). </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>If the door is present, it returns a pointer to an ObjectData which contains the information gathered on the door. If the door is not present in the current frame, it returns the zero pointer (NULL). </dd></dl>
 
 <p>Implements <a class="el" href="classVisibleObject.html">VisibleObject</a>.</p>
 
@@ -180,7 +181,7 @@ Haris Haidary </dd></dl>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jan 11 2014 23:26:56 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 19 2014 14:43:40 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

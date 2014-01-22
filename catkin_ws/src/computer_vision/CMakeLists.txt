@@ -41,8 +41,7 @@ add_message_files(
 
 # Generate added messages and services with any dependencies listed here
 generate_messages(
-#  DEPENDENCIES
-#  std_msgs
+  DEPENDENCIES
 )
 
 ###################################
@@ -140,9 +139,6 @@ include_directories(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_library(ObjectData src/ObjectData.cpp)
-target_link_libraries(ObjectData ${catkin_LIBRARIES})
-
 add_library(VisibleObject src/VisibleObject.cpp)
 target_link_libraries(VisibleObject ${catkin_LIBRARIES})
 
@@ -151,12 +147,10 @@ target_link_libraries(CVNode ${catkin_LIBRARIES})
 
 add_library(Door src/Door.cpp)
 target_link_libraries(Door VisibleObject)
-target_link_libraries(Door ObjectData)
 target_link_libraries(Door ${catkin_LIBRARIES})
 
 add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
-target_link_libraries(MarkerTarget ObjectData)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
 
 add_library(Camera src/Camera.cpp)

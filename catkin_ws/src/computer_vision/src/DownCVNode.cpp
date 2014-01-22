@@ -1,6 +1,19 @@
 #include "DownCVNode.h"
 
 /**
+ * The topic name used for the down_cv_node to publish the VisibleObjectData.
+ */
+const std::string DATA_TOPIC_NAME = "down_cv_data";
+
+/**
+ * The topic name used for the front_cv_node to publish the cv::Mat object after the filters have been applied on camera3.
+ */
+//const std::string CAMERA3_CV_TOPIC_NAME = "down_cv_camera";
+const std::string CAMERA3_CV_TOPIC_NAME = "front_cv_camera3";
+
+ros::Publisher downCVCameraPublisher;
+
+/**
  * @brief Main method used by ROS when the node is launched.
  *
  * @param argc The number of arguments passed when the process is stared.
@@ -19,6 +32,8 @@ int main(int argc, char **argv) {
 			std::string topic = std::string(argv[i]);
 			topicList.push_back(topic);
 		}
+
+		downCVCameraPublisher = nodeHandle.advertise<sensor_msgs::Image>(CAMERA3_CV_TOPIC_NAME, 10);
 
 		/*
 		ROS_INFO("%s", ("Initializing the CVNode. It will be listening to the topic named \"" + VIDEO_FEED_TOPIC_NAME + "\"").c_str());
@@ -48,7 +63,10 @@ int main(int argc, char **argv) {
  *
  */
 DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate) : CVNode(nodeHandle, topicList, receptionRate) {
+	// Create topic with front end
+	this->publisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, 1);
 
+	this->visibleObjects.push_back(new MarkerTarget());
 }
 
 
@@ -58,6 +76,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topic
  * @param rosMessage The ROS message that contains the image
  */
 void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName) {
+	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
 	cv_bridge::CvImagePtr pCurrentFrame;
 	cv::Mat currentFrame;
 	std::list<VisibleObject*>::iterator it;
@@ -77,6 +96,13 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const s
 		for (it = visibleObjects.begin(); it != visibleObjects.end(); it++) {
 			(*it)->retrieveObjectData(currentFrame);
 		}
+
+		// Publish the images.
+		cv_bridge::CvImage currentImage;
+		currentImage.header.stamp    = ros::Time::now();
+		currentImage.encoding        = sensor_msgs::image_encodings::BGR8;
+		currentImage.image           = currentFrame;
+		publisher.publish(currentImage.toImageMsg());
 
 		// Display the filtered image
 		cv::imshow(topicName, currentFrame);

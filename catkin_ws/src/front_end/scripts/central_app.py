@@ -2,13 +2,17 @@
 #Created on Nov 16th, 2013
 
 ## @package central_app
-#  @author David Lavoie-Boutin
 #
 #  Main file for McGill Robotics AUV Design Team testing User Interface
 
+#  @author David Lavoie-Boutin
+
 #bunch of import statements
 #Ui declarations and GUI libraries
-from CompleteUI_declaration import *
+
+from pose_view_widget import PoseViewWidget
+#from CompleteUI_declaration import *
+from resizableUI1 import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
@@ -26,8 +30,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
-
-from threading import Lock  # We need resource locking to handle synchronization between GUI thread and ROS callbacks
+from gazebo_msgs.msg import ModelStates
 
 ## Popup for low battery
 #
@@ -67,7 +70,10 @@ class CentralUi(QtGui.QMainWindow):
         super(CentralUi, self).__init__(parent)
         ## stores the ui object
         self.ui = Ui_RoboticsMain()
+
         self.ui.setupUi(self)
+        self.resizeSliders()
+
         
         ## dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
@@ -84,6 +90,13 @@ class CentralUi(QtGui.QMainWindow):
         self.right_post_image = None
         ## Holds the bottom post-processed image received from the sub and later processed by the GUI
         self.bottom_post_image = None
+
+        ## Pose Visualiser widget
+        self.pose_ui = PoseViewWidget(self)
+
+
+        #TODO: change name of verticalLayout to prevent potential naming conflicts
+        self.ui.verticalLayout.addWidget(self.pose_ui)
 
         # create initial data sets for imu, depth and pressure graphs
         ## the data set for accelerometer 1
@@ -113,9 +126,6 @@ class CentralUi(QtGui.QMainWindow):
         self.create_plots()
         self.start_ros_subscriber()
 
-        ## object to acquire lock on a thread to eliminate race conditions when updating the images
-        self.image_lock = Lock()
-
         ## creates the timers to enable or disable the ps3
         self.ps3_timer = QtCore.QTimer()
         ## creates the timers to enable or disable the keyboard controllers
@@ -139,8 +149,9 @@ class CentralUi(QtGui.QMainWindow):
         self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
         # buttons connects
-        QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
+        #QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
+        QtCore.QObject.connect(self.ui.resSelect, QtCore.SIGNAL("currentIndexChanged(int)"), self.setVideoRes)
 
         # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -153,6 +164,45 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer = QtCore.QTimer(self)
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
+
+    ##sets the maximum size of the video displays
+    #
+    #the selected resolution sets the maximal size to not over size the window
+    #@param self the object pointer
+    #@param data the data passed by the connect of the resolution combo box
+    def setVideoRes(self, data):
+        #xga display
+        if data == 0:
+            self.ui.preLeft.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.preRight.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.preBottom.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.postLeft.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.postRight.setMaximumSize(QtCore.QSize(190, 170))
+            self.ui.posBottom.setMaximumSize(QtCore.QSize(190, 170))
+        #720p display
+        elif data == 1:
+            self.ui.preLeft.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.preRight.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.preBottom.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.postLeft.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.postRight.setMaximumSize(QtCore.QSize(220, 200))
+            self.ui.posBottom.setMaximumSize(QtCore.QSize(220, 200))
+        #1080p display
+        elif data == 2:
+            self.ui.preLeft.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.preRight.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.preBottom.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.postLeft.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.postRight.setMaximumSize(QtCore.QSize(320, 300))
+            self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
+        else:
+            pass
+    ##resize the sliders to fit the correct range of values
+    def resizeSliders(self):
+        self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)
+        self.ui.angularVertical.setRange(-1000*vel_vars.MAX_PITCH_ANGLE, 1000*vel_vars.MAX_PITCH_ANGLE)
+        self.ui.linearVertical.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
+        self.ui.linearHorizantal.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
 
     ## customisation of the key press class of the QWidget
     #
@@ -170,29 +220,29 @@ class CentralUi(QtGui.QMainWindow):
             else:
                 # Now we handle moving, notice that this section is the opposite (+=) of the keyrelease section
                 if key == KeyMapping.YawLeft:
-                    vel_vars.yaw_velocity += 1
+                    vel_vars.yaw_velocity += vel_vars.MAX_YAW_VEL
                 elif key == KeyMapping.YawRight:
-                    vel_vars.yaw_velocity += -1
+                    vel_vars.yaw_velocity += -vel_vars.MAX_YAW_VEL
 
                 elif key == KeyMapping.PitchForward:
-                    vel_vars.pitch_velocity += 1
+                    vel_vars.pitch_velocity += vel_vars.MAX_PITCH_ANGLE
                 elif key == KeyMapping.PitchBackward:
-                    vel_vars.pitch_velocity += -1
+                    vel_vars.pitch_velocity += -vel_vars.MAX_PITCH_ANGLE
 
                 elif key == KeyMapping.IncreaseDepth:
-                    vel_vars.z_position += 1
+                    vel_vars.z_position += vel_vars.z_position_step
                 elif key == KeyMapping.DecreaseDepth:
-                    vel_vars.z_position += -1
+                    vel_vars.z_position += -vel_vars.z_position_step
 
                 elif key == KeyMapping.IncreaseX:
-                    vel_vars.x_velocity += 1
+                    vel_vars.x_velocity += vel_vars.MAX_LINEAR_VEL
                 elif key == KeyMapping.DecreaseX:
-                    vel_vars.x_velocity += -1
+                    vel_vars.x_velocity += -vel_vars.MAX_LINEAR_VEL
 
                 elif key == KeyMapping.IncreaseY:
-                    vel_vars.y_velocity += 1
+                    vel_vars.y_velocity += vel_vars.MAX_LINEAR_VEL
                 elif key == KeyMapping.DecreaseY:
-                    vel_vars.y_velocity += -1
+                    vel_vars.y_velocity += -vel_vars.MAX_LINEAR_VEL
 
     ## customisation of the key release class of the QWidget
     #
@@ -207,26 +257,26 @@ class CentralUi(QtGui.QMainWindow):
         if self.keyboard_control and not event.isAutoRepeat():
             # Now we handle moving, notice that this section is the opposite (-=) of the keypress section
             if key == KeyMapping.YawLeft:
-                vel_vars.yaw_velocity -= 1
+                vel_vars.yaw_velocity -= vel_vars.MAX_YAW_VEL
             elif key == KeyMapping.YawRight:
-                vel_vars.yaw_velocity -= -1
+                vel_vars.yaw_velocity -= -vel_vars.MAX_YAW_VEL
 
             elif key == KeyMapping.PitchForward:
-                vel_vars.pitch_velocity -= 1
+                vel_vars.pitch_velocity -= vel_vars.MAX_PITCH_ANGLE
             elif key == KeyMapping.PitchBackward:
-                vel_vars.pitch_velocity -= -1
+                vel_vars.pitch_velocity -= -vel_vars.MAX_PITCH_ANGLE
 
             elif key == KeyMapping.IncreaseX:
-                vel_vars.x_velocity -= 1
+                vel_vars.x_velocity -= vel_vars.MAX_LINEAR_VEL
             elif key == KeyMapping.DecreaseX:
-                vel_vars.x_velocity -= -1
+                vel_vars.x_velocity -= -vel_vars.MAX_LINEAR_VEL
 
             elif key == KeyMapping.IncreaseY:
-                vel_vars.y_velocity -= 1
+                vel_vars.y_velocity -= vel_vars.MAX_LINEAR_VEL
             elif key == KeyMapping.DecreaseY:
-                vel_vars.y_velocity -= -1
+                vel_vars.y_velocity -= -vel_vars.MAX_LINEAR_VEL
 
-    ##  procedure when the "Connect PS3 Controller" button is pressed
+    ##  procedure when the "Connect Controller" button is pressed
     #
     #   handles which timer to start for ps3 or keyboard_control or nothing
     #
@@ -241,21 +291,23 @@ class CentralUi(QtGui.QMainWindow):
             self.key_timer.stop()
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent and self.ps3.controller_name == "Sony PLAYSTATION(R)3 Controller":
-                self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
+                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
-                self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+                pass
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
+            self.ps3_timer.stop()
             self.keyboard_control = True
-            self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
+            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
-            self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
     ##  Method for the keyboard controller
     #
@@ -265,10 +317,11 @@ class CentralUi(QtGui.QMainWindow):
     #   @param self the object pointer
     def keyboard_update(self):
         # set ui
-        self.ui.linearVertical.setValue(100*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(100*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(100*vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(100*-vel_vars.yaw_velocity)
+        self.ui.linearVertical.setValue(1000*vel_vars.x_velocity)
+        self.ui.linearHorizantal.setValue(1000*vel_vars.y_velocity)
+        self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
+#        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -278,7 +331,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
 
     ## Method for the ps3 control
     #
@@ -296,9 +349,9 @@ class CentralUi(QtGui.QMainWindow):
 
         # set ui
         self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(-1000*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(-1000*vel_vars.pitch_velocity)
-        self.ui.angularHorizantal.setValue(-1000*vel_vars.yaw_velocity)
+        self.ui.linearHorizantal.setValue(1000*vel_vars.x_velocity)
+        self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
+        self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
@@ -308,7 +361,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.partial_cmd_vel, ROS_Topics.zdes)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
 
     ## create and layout imu graphics
     #
@@ -466,12 +519,27 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber(ROS_Topics.imu_pose, Pose, self.imu_callback)
+        rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
+        #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
+        rospy.Subscriber(ROS_Topics.right_pre_topic, Image, self.pre_right_callback)
+        rospy.Subscriber(ROS_Topics.bottom_pre_topic, Image, self.pre_bottom_callback)
+        rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
+        rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
+        rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
+        self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
 
+
+    def sim_pose_callback(self, model_states_data):
+        robot_pose = model_states_data.pose[0]
+        x = robot_pose.orientation.x
+        y = robot_pose.orientation.y
+        z = robot_pose.orientation.z
+        w = robot_pose.orientation.w
+        self.imu_graph_updater(x, y, z, w)
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -479,26 +547,20 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     #@param data the data received by the subscriber
     def pre_left_callback(self, data):
-        # We have some issues with locking between the GUI update thread
-        # and the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
         try:
             self.left_pre_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            pass
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
     def pre_right_callback(self, data):
-        # We have some issues with locking between the GUI update thread and
-        # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
         try:
             self.right_pre_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            pass
 
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -506,27 +568,20 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     #@param data the data received by the subscriber
     def pre_bottom_callback(self, data):
-        # We have some issues with locking between the GUI update thread and
-        # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
         try:
             self.bottom_pre_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
-
+            pass
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
     def post_left_callback(self, data):
-        # We have some issues with locking between the GUI update thread
-        # and the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
         try:
             self.left_post_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            pass
 
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -534,13 +589,10 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     #@param data the data received by the subscriber
     def post_right_callback(self, data):
-        # We have some issues with locking between the GUI update thread and
-        # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
         try:
             self.right_post_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            pass
 
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -548,13 +600,10 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     #@param data the data received by the subscriber
     def post_bottom_callback(self, data):
-        # We have some issues with locking between the GUI update thread and
-        # the ROS messaging thread due to the size of the image, so we need to lock the resources
-        self.image_lock.acquire()
         try:
             self.bottom_post_image = data  # Save the ros image for processing by the display thread
         finally:
-            self.image_lock.release()
+            pass
     ##updates the video frames displayed
     #
     # simply converts the image data from the ros message received
@@ -565,73 +614,62 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def redraw_video_callback(self):
         if self.left_pre_image is not None:
-            self.image_lock.acquire()
             try:
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_pre_image.data, self.left_pre_image.width, self.left_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                pass
 
-            self.resize(image.width(), image.height())
             self.ui.preLeft.setPixmap(image)
+
         else:
             self.ui.preLeft.setText("No video feed")
 
         if self.right_pre_image is not None:
-            self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_pre_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                pass
 
-            self.resize(image.width(), image.height())
             self.ui.preRight.setPixmap(image)
         else:
             self.ui.preRight.setText("No video feed")
 
         if self.bottom_pre_image is not None:
-            self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_pre_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                pass
 
-            self.resize(image.width(), image.height())
             self.ui.preBottom.setPixmap(image)
         else:
             self.ui.preBottom.setText("No video feed")
 
         if self.left_post_image is not None:
-            self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image, self.left_post_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image.width, self.left_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                pass
 
-            self.resize(image.width(), image.height())
             self.ui.postLeft.setPixmap(image)
         else:
             self.ui.postLeft.setText("No video feed")
 
         if self.right_post_image is not None:
-            self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image, self.right_post_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image.width, self.right_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                pass
 
-            self.resize(image.width(), image.height())
             self.ui.postRight.setPixmap(image)
         else:
             self.ui.postRight.setText("No video feed")
 
         if self.bottom_post_image is not None:
-            self.image_lock.acquire()
             try:
-                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
+                image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image.width, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
-                self.image_lock.release()
+                pass
 
-            self.resize(image.width(), image.height())
             self.ui.posBottom.setPixmap(image)
         else:
             self.ui.posBottom.setText("No video feed")

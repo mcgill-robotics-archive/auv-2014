@@ -2,28 +2,33 @@
 #__author__ = 'david lavoie-boutin'
 
 import rospy
-from geometry_msgs.msg import Twist
-from std_msgs.msg import Float64
+from planner.msg import setPoints
 
-def velocity_publisher(linear_x, linear_y, z_position, pitch, yaw, vel_topic, z_pos_des_topic):
+def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic):
 
-    #create the publisher for the cmd_vel topic and the desired z position topic
-    vel_pub = rospy.Publisher(vel_topic, Twist)
-    zdes_pub = rospy.Publisher(z_pos_des_topic, Float64)
+    #create the publisher for the cmd_vel topic
+    vel_pub = rospy.Publisher(ros_topic, setPoints)
 
-    twist = Twist()
+    msg = setPoints()
     # define the twist message from the joystick input
-    twist.linear.x = linear_x
-    twist.linear.y = linear_y
+    
+    msg.XSpeed.data = x_vel
+    msg.YSpeed.data = y_vel
+    msg.Depth.data = z_depth
 
-    #TODO --> assign angular parameters to the corresponding axis
-    twist.angular.y = pitch
-    twist.angular.z = yaw
+    msg.Pitch.data = pitch_vel
+    msg.YawSpeed.data = yaw_vel
 
-    #rospy.loginfo(twist)
-    #rospy.loginfo(z_position)
 
-    vel_pub.publish(twist)
-    zdes_pub.publish(z_position)
+    msg.XPos.isActive=0
+    msg.YPos.isActive=0
+    msg.Depth.isActive=1
+    msg.Yaw.isActive=0
+    msg.Pitch.isActive=1
+    msg.XSpeed.isActive=1
+    msg.YSpeed.isActive=1
+    msg.YawSpeed.isActive=1
 
-    return str(twist)
+    vel_pub.publish(msg)
+
+    #return str(msg)

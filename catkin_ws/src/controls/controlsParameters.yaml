@@ -1,0 +1,37 @@
+gains/kp: 1
+gains/ki: 0
+gains/kd: 10
+
+setPoints/XPos/value: 2.3
+setPoints/XSpeed/value: 0
+
+setPoints/YPos/value: 3.5
+setPoints/YSpeed/value: 0
+
+setPoints/Depth/value: 1.0
+
+setPoints/Yaw/value: 0
+setPoints/YawSpeed/value: 0
+
+setPoints/Pitch/value: 0
+
+
+
+setPoints/XPos/isActive: 1
+setPoints/XSpeed/isActive: 0
+
+setPoints/YPos/isActive: 1
+setPoints/YSpeed/isActive: 0
+
+setPoints/Depth/isActive: 1
+
+setPoints/Yaw/isActive: 0
+setPoints/YawSpeed/isActive: 0
+
+setPoints/Pitch/isActive: 0
+
+coefs/mass: 30
+coefs/buoyancy: 0.02
+coefs/drag: 0.1
+coefs/gravity: 9.81
+coefs/dt: 0.1

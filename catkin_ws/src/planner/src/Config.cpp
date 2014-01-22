@@ -16,9 +16,11 @@ const char* mapFN = "map.xml";
 //xml data needed and values will be accessed when requested from loader through getter methods
 Config::Config()
 {
+	std::cout<<"Loading Task File"<< std::endl;
 	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
-	loadFile(mapFN, roboSub_map_doc);
+	//loadFile(mapFN, roboSub_map_doc); /*Used to load map if ever needed */
 	parse(roboSub_task_doc, roboSub_map_doc);
+	std::cout<<"Done Loading Task File"<< std::endl;
 }
 
 //this takes as imput a file name and reference to a xml_document used to load the file
@@ -46,6 +48,8 @@ bool Config::loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 		outfile << "Error description: " << roboSub_result.description() << "\n";
 		outfile << "Error offset: " << roboSub_result.offset << " (error at [..." << (filename + roboSub_result.offset) << "]\n\n";
 		outfile.close();
+		std::cout << "Error loading the config files..."<< std::endl;
+		std::cout<< "Make sure tasks.xml and map.xml are valid and located at the root of the catkin folder you are working in" <<std::endl;
 		
 	}
 
@@ -58,13 +62,13 @@ bool Config::loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 void Config::parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	pugi::xml_node tasks, task_child, map, map_child, map_gchild;
 	string task_list = "";
-	string map_list = "";
+	//string map_list = "";
 	//below is used to know the size of the outer vector
 	//int task_size = 0, map_size = 0;
 
 	//xml_nodes to interate through and get the information
 	tasks = taskDoc.child("TASK_LIST");
-	map = mapDoc.child("MAP");	
+	//map = mapDoc.child("MAP");	
 
 	//This is kept incase it is made into a 2D vector 
 	//also it gets the size from the xml file
@@ -78,10 +82,11 @@ void Config::parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	//mapList.resize(map_size);
 
 	task_child = tasks.child("task");
-	map_child = map.child("obj");
+	//map_child = map.child("obj");
 	//TODO In this area add any parsing needed for the TASK_LIST for example number of attributtes to a tag and maybe number of tasks?
 	
 	//iterates through the task nodes and adds it to the taskList vector object
+	//add anymore attributes to be in the sml file to be parsed in this loop
 	for(task_child; (task_child); task_child = task_child.next_sibling("task")){
 		//taskList.push_back(task_child.attribute("name").value());
 		taskList.push_back(task_child.attribute("id").value());
@@ -91,7 +96,7 @@ void Config::parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 	}		
 	
 	//this adds all the data from the xml file that contains the information about the map
-	for(map_child; map_child; map_child = map_child.next_sibling("obj")){
+	/*for(map_child; map_child; map_child = map_child.next_sibling("obj")){
 		mapList.push_back(map_child.attribute("id").value());
 		mapList.push_back(map_child.attribute("version").value());
 		mapList.push_back(map_child.attribute("name").value());
@@ -104,7 +109,7 @@ void Config::parse(pugi::xml_document& taskDoc, pugi::xml_document& mapDoc){
 		mapList.push_back(map_gchild.attribute("deltaY").value());
 		mapList.push_back(map_gchild.attribute("deltaZ").value());
 
-	}
+	}*/
 
 }
 

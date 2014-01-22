@@ -9,7 +9,7 @@ public:
 	// Advertise a new publisher for the simulated robot's velocity command topic
 	// (the second argument indicates that if multiple command messages are in
 	// the queue to be sent, only the last command will be sent)
-	commandPub = nh.advertise<geometry_msgs::Twist>("gazebo/robot_twist", 1);
+	commandPub = nh.advertise<geometry_msgs::Twist>("gazebo/simulator/robot_twist", 1);
     };
 
     // Send a velocity command

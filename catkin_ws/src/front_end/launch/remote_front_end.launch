@@ -1,0 +1,11 @@
+<launch>
+        <!-- sets the Environment variable to use a remote roscore -->
+	<!-- launches 1 node: front-end -->
+	<!-- Written by David Lavoie-Boutin, Jan 16, McGill Robotics -->
+	
+   	<!-- Set the rosmaster to be McGill:11311, has to be set in /etc/hosts prior to launch -->
+   	    <env name="ROS_MASTER_URI" value="http://McGill:11311"/>
+
+	<!-- front-end -->
+            <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>                  
+</launch>

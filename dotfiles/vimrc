@@ -13,12 +13,6 @@ nmap <leader>w :w!<cr>
 
 nmap <silent> ,ev :e $MYVIMRC<cr>
 nmap <silent> ,sv :so $MYVIMRC<cr>
-nmap  ,p :set invpaste:set paste?
-nmap  ,n :set invhls:set hls?
-map  ,w :set invwrap:set wrap?
-nmap  ,rr :1,$retab
-nmap  ,cd :lcd %:h
-nmap  ,md :!mkdir -p %:p:h
 filetype off
 
 set rtp+=~/.vim/bundle/vundle/
@@ -38,6 +32,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'kien/ctrlp.vim'
 Bundle 'vim-scripts/taglist.vim'
+Bundle 'git@github.com:coot/atp_vim.git'
 
 filetype plugin indent on
 
@@ -62,7 +57,6 @@ set laststatus=2
 " Hide mouse while typing
 set mousehide
 set history=100
-:set virtualedit=all
 set complete=.,w,b,t
 set incsearch
 
