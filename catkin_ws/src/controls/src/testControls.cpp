@@ -16,7 +16,17 @@ int main(int argc, char **argv)
 	ros::Rate loop_rate(10);
 
 	//param
-	std::string test_string;
+	double test_float;
+
+	if (n.getParam("/testParam", test_float))
+	{
+		ROS_INFO("the string is: %f", test_float);
+	}
+	else
+	{
+		ROS_INFO("Parameter Doesnt Exist");
+	}
+
 	//float test_param;
 
 	while (ros::ok())
@@ -46,7 +56,7 @@ int main(int argc, char **argv)
 		//parameters
 
 		//n.param<std::float>("testParam", test_param, 99);
-		ROS_INFO("printing...");
+		//ROS_INFO("printing...");
 
 		setPointsPublisher.publish(msg);
 		ros::spinOnce();
