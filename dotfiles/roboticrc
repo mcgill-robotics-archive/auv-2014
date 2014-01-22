@@ -2,6 +2,7 @@ blue='\e[0;34m'
 red='\e[0;31m'
 NC='\e[0m' # No Color
 
+alias maple='/usr/share/maple13/bin/xmaple'
 alias fucking='sudo'
 alias whosyourmother='echo -e "${red}your mom${NC}"'
 alias woman='man'
