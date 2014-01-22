@@ -127,12 +127,14 @@ int main(int argc, char **argv)
 	float dt = 0.01; //temporary! TODO update this dynamically
 	float kp = 1; //proportional controller
     float ki = 0;
+    float kd = .1;
 
 	//initializations
 	
 
     float ep_XPos = 0; //error
     float ei_XPos = 0; //integral error
+    float ed_XPos = 0; //derivative error
     float ep_YPos = 0;
     float ei_YPos = 0;
     float ep_Depth = 0;
@@ -195,9 +197,11 @@ int main(int argc, char **argv)
 		//X 
 		if (isActive_XPos)
 		{
+			ep_XPos_prev = ep_XPos;
 			ep_XPos = setPoint_XPos - estimated_XPos;
 			ei_XPos += ep_XPos*dt;
-			Fx = kp*ep_XPos + ki*ei_XPos;
+			ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
+			Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
 			//ROS_INFO("controlling xpos");
 		}
         
