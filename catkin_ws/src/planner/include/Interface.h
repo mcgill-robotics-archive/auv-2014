@@ -11,8 +11,9 @@
 #include "planner/setPoints.h"
 #include "Loader.h"
 #include "Invoker.h"
+#include "computer_vision/VisibleObjectData.h"
 
-void setOrientation(const geometry_msgs::Quaternion msg);
+void setOrientation(computer_vision::VisibleObjectData msg);
 
 void setPoints(double pointControl[]);
 

@@ -1,5 +1,5 @@
 #include "Interface.h"
-#include "geometry_msgs/Wrench.h"
+
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
@@ -53,34 +53,19 @@ double XSpeed;
 double YSpeed;
 double YawSpeed;
 
-/**
- * Returns the current depth of the robot
- *
- * @return   the depth of the robot
- */
-double getDepth() {
-  return depth;
-}
 
-void setDepth(const std_msgs::Float64::ConstPtr& msg) {
-  depth = msg->data;
-}
+double relativeYaw;
+double relativePitch;
+double XDistance;
+double YDistance;
+double ZDistance;
 
-double getPressure() {
-  return pressure;
-}
-
-void setPressure(const std_msgs::Float64::ConstPtr& msg) {
-  pressure = msg->data;
-}
-
-void TODO(const geometry_msgs::Twist msg) {}
-
-void setOrientation(const geometry_msgs::Quaternion msg) {
-  orientX = msg.x;
-  orientY = msg.y;
-  orientZ = msg.z;
-  orientW = msg.w;
+void setOrientation(computer_vision::VisibleObjectData msg) {
+  relativeYaw = msg.yaw_angle;
+  relativePitch = msg.pitch_angle;
+  XDistance = msg.x_distance;
+  YDistance = msg.y_distance;
+  ZDistance = msg.z_distance;
 }
 
 void setVisionObj(std::string obj) {
@@ -139,28 +124,16 @@ void setPosition(double x_pos, double y_pos, double pitch_angle, double yaw_angl
 
 
 void ps3Control() {
-  geometry_msgs::Wrench msgWrench;
-    msgWrench.force.y = 40.0;
-    msgWrench.torque.y = 0.0;
-    msgWrench.force.x = 0.0;
-    msgWrench.force.z = 0.0;
-    msgWrench.torque.x = 0.0;
-    msgWrench.torque.z = 0.0;
-
-  wrench_pub.publish(msgWrench);
 }
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  ros::Subscriber depth_sub = n.subscribe("depth_data", 1000, setDepth);
-  ros::Subscriber pressure_sub = n.subscribe("pressure_data", 1000, setPressure);
-  ros::Subscriber IMU_sub = n.subscribe("imu_data", 1000, setOrientation);
+  ros::Subscriber CV_sub = n.subscribe("front_cv_data", 1000, setOrientation);
 
-  wrench_pub = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 1000);
   CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
-  control_pub = n.advertise<planner::setPoints>("planner/setPoints", 1000);
+  control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
   std::cout<<"Starting Loader"<< std::endl; 
   Loader* loader = new Loader();
@@ -170,13 +143,12 @@ int main(int argc, char **argv) {
 
   ros::Rate loop_rate(10);
   int thing = 0;
-  //while ( ros::ok() ) {
-    //ps3Control();
-    //setVisionObj("FW-Gate");
-    //setVelocity(1, 1, 1, 1);
+  while ( ros::ok() ) {
+    double shithead[18] = {0., 1., 0., 1.,0.,0.,0.,0.,0.,1.,1.,4.,1.,5.,1.,6.,0.,1.};
+    setPoints(shithead);
     //ros::spinOnce();
     //loop_rate.sleep();
-  //}
+  }
   ros::spin();
   return 0;
 }
