@@ -1,5 +1,9 @@
 /**
-* Config loads tasks from xml file
+* @file Config.cpp
+* @author Faraz Oman 
+* @author Nick Margie
+* @brief Config loads tasks from xml file, parses them, and then returns vector of strings with tasks.
+*
 */
 #include "Config.h"
 
@@ -20,10 +24,8 @@ const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
 const char* mapFN = "map.xml";
 
 /**
-* Constructor for the Config object invokes the load file and 
-* parse methods (pugi) to parse the xml data needed.
-* Values are accesible when requested from loader through    
-* getter methods 
+* Constructor for the Config object invokes the load file and parse methods (pugi) to parse the xml data needed.
+* Values are accesible when requested from loader through getter methods 
 */
 
 Config::Config()
@@ -32,7 +34,8 @@ Config::Config()
 	std::cout<<"Loading Task File"<< std::endl;
 
 /**
-* @param taskFN task ID and version
+* @param taskFN task ID and versionob
+* @roboSub_task_doc llkj
 */
 	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
 	//loadFile(mapFN, roboSub_map_doc); /*Used to load map if ever needed */

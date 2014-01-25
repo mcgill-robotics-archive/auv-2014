@@ -1,3 +1,10 @@
+/**
+* @file Loader.cpp
+* @version 1.0
+*
+*/
+
+
 #include "Loader.h"
 
 void ps3Control(); 
@@ -13,7 +20,7 @@ Loader::Loader(){
 
 /**
 * loads the invoker
-*/
+*/ 
 	isInvokerLoaded = false;
 
 	//int i = 0;
@@ -26,7 +33,7 @@ Loader::Loader(){
 }
 
 /**
-* loadInvoker() loads the Invoker by adding the tasks to it as needed
+* loadInvoker() goes into config and gets the task list, then pulls the tasks from taskFactory, and feeds task objects to invoker
 */
 void Loader::loadInvoker(){
 /**
@@ -36,7 +43,7 @@ void Loader::loadInvoker(){
 		std::vector<std::string> s_tasklist;
 
 /**
-*gets the vector of tasks fron the config
+* gets the vector of tasks fron the config
 */
 		s_tasklist = main_Config->GetTasks();
 

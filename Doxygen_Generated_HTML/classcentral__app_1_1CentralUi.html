@@ -118,6 +118,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcentral__app_1_1CentralUi.html#a326b4f794f37bf7fff383b2a7c4a3b07">__init__</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">constructor of the main window for the ui  <a href="#a326b4f794f37bf7fff383b2a7c4a3b07"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcentral__app_1_1CentralUi.html#a6095c7d959979da60e233ab5832b5094">setVideoRes</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the maximum size of the video displays  <a href="#a6095c7d959979da60e233ab5832b5094"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7cef3f3d8b92d75ff2ebb08fab4c4020"></a><!-- doxytag: member="central_app::CentralUi::resizeSliders" ref="a7cef3f3d8b92d75ff2ebb08fab4c4020" args="" -->
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcentral__app_1_1CentralUi.html#a7cef3f3d8b92d75ff2ebb08fab4c4020">resizeSliders</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">resize the sliders to fit the correct range of values <br/></td></tr>
@@ -141,6 +143,8 @@ def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the data displayed by the IMU graph  <a href="#a90eed73ca61c03e5680618283c2fb176"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcentral__app_1_1CentralUi.html#a910470ee4a113aec52ce5fea3b29de8d">start_ros_subscriber</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">initiallize the ros subscribers  <a href="#a910470ee4a113aec52ce5fea3b29de8d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acef7b8a2028740075fd947e13764d9c6"></a><!-- doxytag: member="central_app::CentralUi::sim_pose_callback" ref="acef7b8a2028740075fd947e13764d9c6" args="" -->
+def&#160;</td><td class="memItemRight" valign="bottom"><b>sim_pose_callback</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcentral__app_1_1CentralUi.html#ad6659d14e09ff6e46e888e34d20cd960">pre_left_callback</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">when a frame is received, all the data is recorded in the appropriate variable  <a href="#ad6659d14e09ff6e46e888e34d20cd960"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcentral__app_1_1CentralUi.html#acea3a5dc773af1bf8b02e0d6f462a02c">pre_right_callback</a></td></tr>
@@ -1108,6 +1112,43 @@ tuple&#160;</td><td class="memItemRight" valign="bottom"><b>empty_battery_signal
 
 </div>
 </div>
+<a class="anchor" id="a6095c7d959979da60e233ab5832b5094"></a><!-- doxytag: member="central_app::CentralUi::setVideoRes" ref="a6095c7d959979da60e233ab5832b5094" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def <a class="el" href="classcentral__app_1_1CentralUi.html#a6095c7d959979da60e233ab5832b5094">central_app.CentralUi.setVideoRes</a> </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the maximum size of the video displays </p>
+<p>the selected resolution sets the maximal size to not over size the window </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>the object pointer </td></tr>
+    <tr><td class="paramname">data</td><td>the data passed by the connect of the resolution combo box </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a910470ee4a113aec52ce5fea3b29de8d"></a><!-- doxytag: member="central_app::CentralUi::start_ros_subscriber" ref="a910470ee4a113aec52ce5fea3b29de8d" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1136,7 +1177,7 @@ tuple&#160;</td><td class="memItemRight" valign="bottom"><b>empty_battery_signal
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/central_app.py</li>
+<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/central_app.py</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -1156,7 +1197,7 @@ tuple&#160;</td><td class="memItemRight" valign="bottom"><b>empty_battery_signal
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 19 2014 14:43:41 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
