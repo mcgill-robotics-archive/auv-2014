@@ -31,6 +31,7 @@ from std_msgs.msg import Float64
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
 from gazebo_msgs.msg import ModelStates
+from computer_vision.msg import VisibleObjectData
 
 ## Popup for low battery
 #
@@ -530,8 +531,16 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
+        rospy.Subscriber(ROS_Topics.cv_data, VisibleObjectData, self.cv_data_callback)
         self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
 
+    def cv_data_callback(self, data):
+        data
+        self.ui.cv_rel_pitch.setText(str(data.pitch_angle))
+        self.ui.cv_rel_yaw.setText(str(data.yaw_angle))
+        self.ui.cv_rel_x.setText(str(data.x_distance))
+        self.ui.cv_rel_y.setText(str(data.y_distance))
+        self.ui.cv_rel_z.setText(str(data.z_distance))
 
     def sim_pose_callback(self, model_states_data):
         robot_pose = model_states_data.pose[0]
