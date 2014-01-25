@@ -393,7 +393,9 @@ void MarkerTarget::estimatePose(MarkerDescriptor& inOutMarker) {
 	inOutMarker.yaw_angle = degreesYaw;
 
 	float xyPlaneDistance = sqrt(x * x + y * y);
-
 	double atanPitch = atan(z / xyPlaneDistance);
-	inOutMarker.pitch_angle = atanPitch * PI / 180.0;
+
+	/* atanPitch is the angle from the object to the robot. We need the angle
+	 * from the robot to the object, so we negate that. */
+	inOutMarker.pitch_angle = -(atanPitch * PI / 180.0);
 }
