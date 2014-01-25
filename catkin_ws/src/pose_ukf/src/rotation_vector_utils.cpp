@@ -5,8 +5,9 @@
  *      Author: mkrogius, Alan Yang
  */
 
-#include <math.h>
+#include <cmath>
 #include <algorithm>
+#include <iostream>
 
 #include "rotation_vector_utils.h"
 
@@ -54,7 +55,7 @@ void cross(double result[3], double v1[3], double v2[3]) {
 }
 
 void inverse(double result[3], double rotationVector[3]) {
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		result[i] = -1.0 * rotationVector[i];
 	}
 }
@@ -98,15 +99,31 @@ void quaternionMultiply(double q[4], double p[4]) {
 
 void rotationVectorFromQuaternion(double rotation[3], double quaternion[4]) {
 	std::copy(quaternion + 1, quaternion + 3, rotation);
-	double sin = norm(rotation);
+	double sine = norm(rotation);
 	
-	if (sin == 0.0) {
+	if (sine == 0.0) {
 		std::fill(rotation, rotation + 2, 0.0);
 	}
 	
-	double angle = atan2(sin, quaternion[0]);
+	double angle = atan2(sine, quaternion[0]);
 	
-	for (int i = 0; i < 2; i++) {
-		rotation[i] = rotation[i] * angle / sin;
+	for (int i = 0; i < 3; i++) {
+		rotation[i] = rotation[i] * angle / sine;
 	}
 }
+
+
+/* For Testing
+int main (int argc, char **argv) {
+	double temp1[3],
+			temp2[] = {1.0, 2.0, 3.0},
+			temp3[] = {2.0, 2.0, 2.0};
+
+	rotateThisByThat(temp1, temp2, temp3);
+	for (int i = 0; i < 3; i++) {
+		std::cout<<temp1[i]<<std::endl;
+	}
+
+	return 0;
+}
+*/
