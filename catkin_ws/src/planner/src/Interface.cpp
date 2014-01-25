@@ -3,6 +3,7 @@
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
 ros::Publisher control_pub;
+ros::Publisher checkpoints_pub;
 
 /**
  * Our current orientation from state estimation
@@ -46,12 +47,12 @@ double* getVisibleObjectOrientation () {
   return returnArray;
 }
 
-void setOurOrientation (computer_vision::VisibleObjectData msg) {
-  Self_XDistance = msg.x_distance;
-  Self_YDistance = msg.y_distance;
-  Self_ZDistance = msg.z_distance;
-  Self_Yaw = msg.yaw_angle;
-  Self_Pitch = msg.pitch_angle;
+void setOurOrientation(gazebo_msgs::ModelStates msg) {
+  Self_XDistance = msg.pose[0].position.x;
+  Self_YDistance = msg.pose[0].position.y;
+  Self_ZDistance = msg.pose[0].position.z;
+  Self_Yaw = 0;
+  Self_Pitch = 0;
 }
 
 //BEWARE: RETURNS ADDRESS OF ARRAY
@@ -70,6 +71,12 @@ void setVisionObj (std::string obj) {
   std_msgs::String msgCV;
   msgCV.data = visionObj;
   CV_objs_pub.publish(msgCV);
+}
+
+void weAreHere (std::string task) {
+  std_msgs::String msg;
+  msg.data = task;
+  checkpoints_pub.publish(msg);
 }
 
 void setPoints (double pointControl[]) {
@@ -121,10 +128,11 @@ int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  ros::Subscriber CV_sub = n.subscribe("front_cv_data", 1000, setVisibleObjectOrientation);
-  ros::Subscriber Pose_sub = n.subscribe("TODO", 1000, setOurOrientation);
+  ros::Subscriber CV_sub = n.subscribe("visible_data", 1000, setVisibleObjectOrientation);
+  ros::Subscriber Pose_sub = n.subscribe("gazebo/model_states", 1000, setOurOrientation);
 
   CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
+  checkpoints_pub = n.advertise<std_msgs::String>("planner/Checkpoint", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
   std::cout<<"Starting Loader"<< std::endl; 
