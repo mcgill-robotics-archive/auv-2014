@@ -12,15 +12,31 @@
 #include "Loader.h"
 #include "Invoker.h"
 #include "computer_vision/VisibleObjectData.h"
+#include "gazebo_msgs/ModelStates.h"
 
-void setOrientation(computer_vision::VisibleObjectData msg);
+void setVisibleObjectOrientation (computer_vision::VisibleObjectData msg);
 
-void setPoints(double pointControl[]);
+//BEWARE: RETURNS ADDRESS OF ARRAY
+double* getVisibleObjectOrientation ();
 
-void setPosition(double x_pos, double y_pos, double z_pos, double pitch_angle, double yaw_angle);
+void setOurOrientation (gazebo_msgs::ModelStates msg);
 
-void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth);
+//BEWARE: RETURNS ADDRESS OF ARRAY
+double* getOurOrientation ();
 
-void ps3Control();
+void setVisionObj (std::string obj);
+
+void weAreHere (std::string task);
+
+void setPoints (double pointControl[]);
+
+void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth);
+
+void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
+
+//LEGACY -- NOT FOR TOUCHING
+void ps3Control ();
+
+int main (int argc, char **argv);
 
 #endif // Interface_h

@@ -5,6 +5,10 @@
 #include <fstream>
 #include "./pugixml/src/pugixml.hpp"
 
+/**
+* @author Nick Margie
+*/
+
 using namespace std;
 
 class Config{

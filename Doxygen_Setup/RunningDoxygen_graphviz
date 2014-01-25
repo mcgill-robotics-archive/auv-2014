@@ -1,0 +1,21 @@
+RUNNING DOXYGEN with graphviz (which shows graph dependencies visually) 
+
+cd into the Doxygen_Setup folder of root catkin_ws
+$ doxygen Doxygen_Setup
+
+Install Graphviz:
+
+For Ubuntu 12.04: 
+
+$ sudo apt-add-repository ppa:dperry/ppa-graphviz-test # --> this may or may not prove necessary
+
+$ sudo apt-get update
+$ sudo apt-get autoremove graphviz
+$ sudo apt-get install graphviz
+
+If you get this error "graphviz : Depends: libgraphviz4 (>= 2.18) but it is not going to be installed", run the following
+
+$ sudo apt-get remove libcdt4
+$ sudo apt-get remove libpathplan4
+$ sudo apt-get install graphviz
+
