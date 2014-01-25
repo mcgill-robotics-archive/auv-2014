@@ -8,6 +8,12 @@
 
 namespace gazebo
 {
+
+    /**
+     *@brief Give randomness to underwater objects
+     *@author Dwijesh Bhageerutty
+     */
+
     class MoveModel : public ModelPlugin
     {
     public:
@@ -26,6 +32,11 @@ namespace gazebo
 	};
 
 	// Called by the world update start event
+
+	/**
+	 * Launch objects' motion
+	 */
+
 	void OnUpdate(const common::UpdateInfo & /*_info*/) {
 	    if(iteration < 1000) {
 		// Apply a small linear velocity to the model.

@@ -11,6 +11,8 @@ var searchData=
   ['retrieveobjectdata',['retrieveObjectData',['../classDoor.html#a13540f7d0f7267fa055f6dcd13302e60',1,'Door::retrieveObjectData()'],['../classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a',1,'MarkerTarget::retrieveObjectData()']]],
   ['right_5fpost_5fimage',['right_post_image',['../classcentral__app_1_1CentralUi.html#a2684dadd0f97997bd0905d9d867cfa3c',1,'central_app::CentralUi']]],
   ['right_5fpre_5fimage',['right_pre_image',['../classcentral__app_1_1CentralUi.html#a8a8538efb7d18aaa63c52a500832abd9',1,'central_app::CentralUi']]],
+  ['robot',['Robot',['../classgazebo_1_1Robot.html',1,'gazebo']]],
+  ['robot',['Robot',['../classgazebo_1_1Robot.html#aecbe46165aa022525d20905024b32e18',1,'gazebo::Robot']]],
   ['ros_5ftopics',['ROS_Topics',['../classVARIABLES_1_1ROS__Topics.html',1,'VARIABLES']]],
   ['rostest',['rosTest',['../classrosTest.html',1,'']]]
 ];
