@@ -26,6 +26,8 @@ double* getOurOrientation ();
 
 void setVisionObj (std::string obj);
 
+void weAreHere (std::string task);
+
 void setPoints (double pointControl[]);
 
 void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth);
