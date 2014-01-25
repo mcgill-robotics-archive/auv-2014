@@ -535,7 +535,6 @@ class CentralUi(QtGui.QMainWindow):
         self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
 
     def cv_data_callback(self, data):
-        data
         self.ui.cv_rel_pitch.setText(str(data.pitch_angle))
         self.ui.cv_rel_yaw.setText(str(data.yaw_angle))
         self.ui.cv_rel_x.setText(str(data.x_distance))
