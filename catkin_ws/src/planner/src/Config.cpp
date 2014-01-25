@@ -1,3 +1,10 @@
+/**
+* @file Config.cpp
+* @author Faraz Oman 
+* @author Nick Margie
+* @brief Config loads tasks from xml file, parses them, and then returns vector of strings with tasks.
+*
+*/
 #include "Config.h"
 
 using namespace std;
@@ -9,21 +16,41 @@ vector<string> taskList;
 vector<string> mapList;
 
 
+/**
+* Constructor for Config object
+*/
 const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
+
 const char* mapFN = "map.xml";
 
-//constructor for the Config object, invokes the load file and parse methods above to parse the 
-//xml data needed and values will be accessed when requested from loader through getter methods
+/**
+* Constructor for the Config object invokes the load file and parse methods (pugi) to parse the xml data needed.
+* Values are accesible when requested from loader through getter methods 
+*/
+
 Config::Config()
+
 {
 	std::cout<<"Loading Task File"<< std::endl;
+
+/**
+* @param taskFN task ID and versionob
+* @roboSub_task_doc llkj
+*/
 	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
 	//loadFile(mapFN, roboSub_map_doc); /*Used to load map if ever needed */
 	parse(roboSub_task_doc, roboSub_map_doc);
 	std::cout<<"Done Loading Task File"<< std::endl;
 }
 
-//this takes as imput a file name and reference to a xml_document used to load the file
+/**
+* @param filename file name
+* @param pugi::xml_document inheritance 
+* 
+* This takes as input a file name and reference to a         
+* xml_document, used to load the file
+*
+*/
 bool Config::loadFile(const char* filename, pugi::xml_document& roboSub_doc){
 	pugi::xml_parse_result roboSub_result;
 	bool is_valid = true;
