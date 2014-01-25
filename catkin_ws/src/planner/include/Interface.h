@@ -12,13 +12,14 @@
 #include "Loader.h"
 #include "Invoker.h"
 #include "computer_vision/VisibleObjectData.h"
+#include "gazebo_msgs/ModelStates.h"
 
 void setVisibleObjectOrientation (computer_vision::VisibleObjectData msg);
 
 //BEWARE: RETURNS ADDRESS OF ARRAY
 double* getVisibleObjectOrientation ();
 
-void setOurOrientation (computer_vision::VisibleObjectData msg);
+void setOurOrientation (gazebo_msgs::ModelStates msg);
 
 //BEWARE: RETURNS ADDRESS OF ARRAY
 double* getOurOrientation ();
