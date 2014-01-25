@@ -7,6 +7,7 @@
 
 #include "ukf.h"
 #include "matrix_utils.h"
+#include "rotation_vector_utils.h"
 #include <math.h>
 
 //Length of the state vector
@@ -29,6 +30,10 @@ ukf::ukf(int dim)
 	augState = new double[AUGDIM]();
 	augCovar = new double[AUGDIM*AUGDIM]();
 	sigmas = new double[2*AUGDIM*AUGDIM]();
+	gammas = new double[2*AUGDIM*DIM]();
+	predMsmt = new double[DIM]();
+	measCovar = new double[DIM*DIM]();
+	crossCovar = new double[AUGDIM*DIM]();
 
 	//They are hopefully now set to zero
 
@@ -60,20 +65,28 @@ void ukf::generateSigmas()
 }
 
 void ukf::propogateSigmas(double *rotation)
-{//TODO: Implement this
-	/*
+{
 	double rotationEarth[3] = {};
+	double result[3] = {};
 	for (int i = 0; i < 2*AUGDIM; i++)
 	{
 		rotateThisByThat(rotation, sigma(i), rotationEarth);
-		composeRotations(omegaEarth, sigma(i), sigma(i)));
-	}*/
+		composeRotations(rotationEarth, sigma(i), result);
+		for (int j = 0; j < 3; j++)
+		{
+			sigma(i)[j] = result[j];
+		}
+	}
 }
 
 void ukf::recoverPrediction()
 {
 	averageVectors(augState, sigmas, 2*AUGDIM, AUGDIM);
-	averageOuterProductOfVectors(augCovar, sigmas, 2*AUGDIM, AUGDIM);
+
+	subtractMultipleVectors(sigmas, augState, 2*AUGDIM, AUGDIM);
+
+	averageOuterProductOfVectors(augCovar, sigmas, sigmas
+			,2*AUGDIM, AUGDIM, AUGDIM);
 	//TODO: Add in process covariance
 }
 
@@ -84,21 +97,57 @@ void ukf::predict(double rotation[3])
 	recoverPrediction();
 }
 
+void ukf::h(double *sigma, double *gamma)
+{
+	double gravity[] = {0, 0, 9.8};
+	double inverted[3] = {};
+	inverse(sigma, inverted);
+	rotateThisByThat(gravity, inverted, gamma);
+}
+
 void ukf::correct(double acc[3])
 {
+	generateSigmas();
+	//Here we predict the outcome of the acceleration measurement
+	//for every sigma and store in the gammas
+	for (int i = 0; i < 2* AUGDIM; i++)
+	{
+		h(sigma(i), gamma(i));
+	}
 
+	recoverCorrection(acc);
+}
+
+void ukf::recoverCorrection(double *acc)
+{
+
+	averageVectors(predMsmt, gammas, 2*AUGDIM, DIM);
+
+	subtractMultipleVectors(sigmas, augState, 2*AUGDIM, AUGDIM);
+	subtractMultipleVectors(gammas, predMsmt, 2*AUGDIM, DIM);
+
+	averageOuterProductOfVectors(measCovar, gammas, gammas, 2*AUGDIM, DIM, DIM);
+	averageOuterProductOfVectors(crossCovar, sigmas, gammas, 2*AUGDIM, AUGDIM, DIM);
+
+	//TODO: Last three lines go here
 }
 
 void ukf::update(double acc[3], double rotation[3])
 {
     predict(rotation);
-    //correct(acc);
+
+    correct(acc);
     //return quaternionFromRotationVector(self.augmentedPose[0:3])
 }
 
 double *ukf::sigma(int index)
 {//Returns a pointer to the desired sigma array
 	return vectorIndex(sigmas, index, AUGDIM);
+}
+
+double *ukf::gamma(int index)
+{//Returns a pointer to the desired sigma array
+	return vectorIndex(gammas, index, DIM);
 }
 
 int main()
