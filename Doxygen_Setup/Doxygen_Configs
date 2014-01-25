@@ -648,9 +648,13 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
+<<<<<<< HEAD
 #INPUT                  = ../catkin_ws/src/computer_vision ../catkin_ws/src/front_end ../catkin_ws/src/planner ../catkin_ws/src/controls ../catkin_ws/src/sensor_publisher ./mainpage.dox
 
 INPUT                  = ./mainpage.dox ../catkin_ws/src
+=======
+INPUT                  = ../catkin_ws/src/computer_vision ../catkin_ws/src/front_end ../catkin_ws/src/planner ../catkin_ws/src/controls ../catkin_ws/src/sensor_publisher ../catkin_ws/src/simulator ./mainpage.dox
+>>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

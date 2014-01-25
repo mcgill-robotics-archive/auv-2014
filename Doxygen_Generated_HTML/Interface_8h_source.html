@@ -3,7 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<<<<<<< HEAD
 <title>McGill Robotics: RoboSub 2014: /home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/planner/include/Interface.h Source File</title>
+=======
+<title>McGill Robotics: RoboSub 2014: /home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/planner/include/Interface.h Source File</title>
+>>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -79,7 +83,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
+<<<<<<< HEAD
 <div class="title">/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/planner/include/Interface.h</div>  </div>
+=======
+<div class="title">/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/planner/include/Interface.h</div>  </div>
+>>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef Interface_h</span>
@@ -95,18 +103,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00011"></a>00011 <span class="preprocessor">#include &quot;planner/setPoints.h&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &quot;<a class="code" href="Loader_8h.html" title="loader.h initializes some functions">Loader.h</a>&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;Invoker.h&quot;</span>
-<a name="l00014"></a>00014 
-<a name="l00015"></a>00015 <span class="keywordtype">void</span> setOrientation(<span class="keyword">const</span> geometry_msgs::Quaternion msg);
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="keywordtype">void</span> setPoints(<span class="keywordtype">double</span> pointControl[]);
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019 <span class="keywordtype">void</span> setPosition(<span class="keywordtype">double</span> x_pos, <span class="keywordtype">double</span> y_pos, <span class="keywordtype">double</span> z_pos, <span class="keywordtype">double</span> pitch_angle, <span class="keywordtype">double</span> yaw_angle);
+<a name="l00014"></a>00014 <span class="preprocessor">#include &quot;computer_vision/VisibleObjectData.h&quot;</span>
+<a name="l00015"></a>00015 
+<a name="l00016"></a>00016 <span class="keywordtype">void</span> setVisibleObjectOrientation (computer_vision::VisibleObjectData msg);
+<a name="l00017"></a>00017 
+<a name="l00018"></a>00018 <span class="comment">//BEWARE: RETURNS ADDRESS OF ARRAY</span>
+<a name="l00019"></a>00019 <span class="keywordtype">double</span>* getVisibleObjectOrientation ();
 <a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="keywordtype">void</span> setVelocity(<span class="keywordtype">double</span> x_speed, <span class="keywordtype">double</span> y_speed, <span class="keywordtype">double</span> yaw_speed, <span class="keywordtype">double</span> depth);
+<a name="l00021"></a>00021 <span class="keywordtype">void</span> setOurOrientation (computer_vision::VisibleObjectData msg);
 <a name="l00022"></a>00022 
-<a name="l00023"></a>00023 <span class="keywordtype">void</span> ps3Control();
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025 <span class="preprocessor">#endif // Interface_h</span>
+<a name="l00023"></a>00023 <span class="comment">//BEWARE: RETURNS ADDRESS OF ARRAY</span>
+<a name="l00024"></a>00024 <span class="keywordtype">double</span>* getOurOrientation ();
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026 <span class="keywordtype">void</span> setVisionObj (std::string obj);
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 <span class="keywordtype">void</span> setPoints (<span class="keywordtype">double</span> pointControl[]);
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="keywordtype">void</span> setVelocity (<span class="keywordtype">double</span> x_speed, <span class="keywordtype">double</span> y_speed, <span class="keywordtype">double</span> yaw_speed, <span class="keywordtype">double</span> depth);
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032 <span class="keywordtype">void</span> setPosition (<span class="keywordtype">double</span> x_pos, <span class="keywordtype">double</span> y_pos, <span class="keywordtype">double</span> pitch_angle, <span class="keywordtype">double</span> yaw_angle, <span class="keywordtype">double</span> depth);
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="comment">//LEGACY -- NOT FOR TOUCHING</span>
+<a name="l00035"></a>00035 <span class="keywordtype">void</span> ps3Control ();
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <span class="keywordtype">int</span> <a class="code" href="CVTestNode_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627" title="Main method used by ROS when the node is launched.">main</a> (<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv);
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 <span class="preprocessor">#endif // Interface_h</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -125,7 +147,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
+<<<<<<< HEAD
 Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+=======
+Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+>>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

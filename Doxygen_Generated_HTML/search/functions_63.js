@@ -8,5 +8,7 @@ var searchData=
   ['controlswrenchcallback',['controlsWrenchCallBack',['../classgazebo_1_1Robot.html#a07ef12a4a9114ceab06996a0ca7277bf',1,'gazebo::Robot']]],
   ['convertfrombgrxtohsv',['convertFromBGRXToHSV',['../classVisibleObject.html#a942674dd96c9b176bebe13247c8db1a0',1,'VisibleObject']]],
   ['create_5fplots',['create_plots',['../classcentral__app_1_1CentralUi.html#a62c0c03ab8eea921ee5420cb2fef28cf',1,'central_app::CentralUi']]],
+  ['createcallback',['createCallback',['../classgazebo_1_1CreateTorpedo.html#a6167967d585ff974ae636015c1a4f85e',1,'gazebo::CreateTorpedo']]],
+  ['createtorpedo',['CreateTorpedo',['../classgazebo_1_1CreateTorpedo.html#ae8724043a4c8965bc21fdc66acc65c20',1,'gazebo::CreateTorpedo']]],
   ['cvnode',['CVNode',['../classCVNode.html#af22cdf9ed2ca17f8643eb6435effa4e5',1,'CVNode']]]
 ];

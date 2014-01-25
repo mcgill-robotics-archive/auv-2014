@@ -14,7 +14,10 @@ var searchData=
   ['right_5fpre_5fimage',['right_pre_image',['../classcentral__app_1_1CentralUi.html#a8a8538efb7d18aaa63c52a500832abd9',1,'central_app::CentralUi']]],
   ['robot',['Robot',['../classgazebo_1_1Robot.html',1,'gazebo']]],
   ['robot',['Robot',['../classgazebo_1_1Robot.html#aecbe46165aa022525d20905024b32e18',1,'gazebo::Robot']]],
+<<<<<<< HEAD
   ['robotmove',['RobotMove',['../classRobotMove.html',1,'']]],
+=======
+>>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
   ['ros_5ftopics',['ROS_Topics',['../classVARIABLES_1_1ROS__Topics.html',1,'VARIABLES']]],
   ['rostest',['rosTest',['../classrosTest.html',1,'']]]
 ];
