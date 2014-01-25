@@ -15,6 +15,8 @@
 #include <ros/console.h>
 #include "MarkerTarget.h"
 
+#define PI 3.141592653589793
+
 /**
  * The constructor loads the reference images which we will use to compare our candidate markers to.
  * Also initializes the matrix we will use to determine the positions of the objects.
@@ -371,9 +373,27 @@ void MarkerTarget::estimatePose(MarkerDescriptor& inOutMarker) {
 	simulator, this should contain values appropriate for our camera. */
 	cv::solvePnP(objectCoords, inOutMarker.imageCorners, intrinsic, std::vector<float>(), rvec, tvec);
 
-	inOutMarker.x_dist = tvec.at<double>(0);
-	inOutMarker.y_dist = tvec.at<double>(1);
-	inOutMarker.z_dist = tvec.at<double>(2);
+	/* The image has y axis vertical, but for us that's the x axis, so we swap x and y. */
+	float x = inOutMarker.x_dist = tvec.at<double>(1);
+	float y = inOutMarker.y_dist = tvec.at<double>(0);
+	float z = inOutMarker.z_dist = tvec.at<double>(2);
 
-	//TODO Angles
+	double atanYaw = atan(x / y);
+	double degreesYaw = atanYaw * PI / 180.0;
+	if(y < 0) {
+		if(x < 0) {
+			degreesYaw = 180.0 + degreesYaw; // third quadrant
+		} else {
+			degreesYaw = 180.0 - degreesYaw; //second quadrant
+		}
+	} else if(x < 0) { //fourth quadrant
+		degreesYaw = 360.0 - degreesYaw;
+	}
+
+	inOutMarker.yaw_angle = degreesYaw;
+
+	float xyPlaneDistance = sqrt(x * x + y * y);
+
+	double atanPitch = atan(z / xyPlaneDistance);
+	inOutMarker.pitch_angle = atanPitch * PI / 180.0;
 }
