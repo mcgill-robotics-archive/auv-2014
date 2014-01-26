@@ -38,8 +38,8 @@ MarkerTarget::MarkerTarget() {
 
 	/* To set the error tolerance, assume that all reference images
 	 * have the same size. */
-	errorTolerance = (int) (((float) (referenceImgs[0].cols * referenceImgs[0].rows)) * 0.15f);
-
+	//errorTolerance = (int) (((float) (referenceImgs[0].cols * referenceImgs[0].rows)) * 0.15f);
+	errorTolerance = 20000;
 	/* Create the intrinsic camera maxtrix, used to estimate pose. 
 	 * NOTE: These values will only work properly with the simulator! */
 	intrinsic = cv::Mat(3, 3, 0); //Skew and other entries are 0
@@ -58,8 +58,7 @@ MarkerTarget::MarkerTarget() {
  * @return A vector (std::vector< VisibleObjectData* >) of VisibleDataObjects populated with information such 
  *				as distance, angle, and marker type for each visible marker bin.
  */
-std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& givenFrame) {
-	cv::Mat currentFrame = givenFrame.clone();
+std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
 
@@ -84,6 +83,7 @@ std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectDat
 			messages.push_back(objectData);
 		}
 	}
+	cv::cvtColor( currentFrame, currentFrame, CV_GRAY2BGR );
 	return messages;
 }
 
@@ -111,9 +111,9 @@ MarkerTarget::Point2DVec MarkerTarget::findBins(cv::Mat& frame) {
 	cv::morphologyEx(frame, frame, cv::MORPH_OPEN, kernel);
 
 	std::vector< std::vector <cv::Point> > contoursPoly;
-	cv::Mat contourMap = getContourMap(frame, contoursPoly);
+	frame = getContourMap(frame, contoursPoly);
 
-	Point2DVec corners = getPreliminaryCorners(contourMap, contoursPoly);
+	Point2DVec corners = getPreliminaryCorners(frame, contoursPoly);
 	refineCorners(corners);
 	return corners;
 }
@@ -201,6 +201,7 @@ MarkerTarget::Point2DVec MarkerTarget::getPreliminaryCorners(const cv::Mat& cont
 
 		std::vector<cv::Point2f> tempCorners;
 		for (int j = 0; j < 4; j++) {
+			std::cout << "[DEBUG] Rectangle Found." << std::endl;
 			tempCorners.push_back(vertices[j]);
 		}
 		finalCorners.push_back(tempCorners); // Add these corners to our final matrix.
