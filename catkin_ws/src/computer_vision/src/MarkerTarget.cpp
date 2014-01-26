@@ -58,7 +58,8 @@ MarkerTarget::MarkerTarget() {
  * @return A vector (std::vector< VisibleObjectData* >) of VisibleDataObjects populated with information such 
  *				as distance, angle, and marker type for each visible marker bin.
  */
-std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& givenFrame) {
+	cv::Mat currentFrame = givenFrame.clone();
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
 

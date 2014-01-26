@@ -12,6 +12,7 @@ const std::string DATA_TOPIC_NAME = "down_cv_data";
 const std::string CAMERA3_CV_TOPIC_NAME = "down_cv_camera";
 
 ros::Publisher downCVCameraPublisher;
+ros::Publisher visibleObjectDataPublisher;
 
 /**
  * @brief Main method used by ROS when the node is launched.
@@ -27,6 +28,7 @@ int main(int argc, char **argv) {
 		ros::NodeHandle nodeHandle;
 
 		downCVCameraPublisher = nodeHandle.advertise<sensor_msgs::Image>(CAMERA3_CV_TOPIC_NAME, 10);
+		visibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
 
 		ROS_INFO("%s", ("Initializing the node " + ros::this_node::getName() + ".").c_str());
 
@@ -97,7 +99,18 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const s
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
 		for (it = visibleObjects.begin(); it != visibleObjects.end(); it++) {
-			(*it)->retrieveObjectData(currentFrame);
+			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
+		}
+		
+		for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it != messagesToPublish.end(); ++it) {
+			computer_vision::VisibleObjectData messageToSend;
+			messageToSend.object_type = (*it)->object_type;
+			messageToSend.pitch_angle = (*it)->pitch_angle;
+			messageToSend.yaw_angle = (*it)->yaw_angle;
+			messageToSend.x_distance = (*it)->x_distance;
+			messageToSend.y_distance = (*it)->y_distance;
+			messageToSend.z_distance = (*it)->z_distance;
+			visibleObjectDataPublisher.publish(messageToSend);
 		}
 
 		// Publish the images.
