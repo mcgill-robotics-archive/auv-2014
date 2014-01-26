@@ -8,6 +8,7 @@
 #include <opencv/cv.h>
 #include <iostream>
 #include <cmath>
+#include <boost/lexical_cast.hpp>
 #include "computer_vision/VisibleObjectData.h"
 
 class VisibleObject {

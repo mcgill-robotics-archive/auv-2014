@@ -7,6 +7,7 @@
  */
 
 #include "Door.h"
+
 #define USE_CV_WINDOWS 1
 
 const std::string COLOR_THRESH_WINDOW = "color_thresh_window";
@@ -199,18 +200,20 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 		cv::Point2f centerOfRectangleOne = rectangleOne.center;
 		cv::Point2f centerOfRectangleTwo = rectangleTwo.center;
 
-		float centerX = std::abs(centerOfRectangleOne.x - centerOfRectangleTwo.x);
-		float centerY = std::abs(centerOfRectangleOne.y - centerOfRectangleTwo.y);
-
-//		cv::Point2f centerPoint;
-//		centerPoint.x = centerX;
-//		centerPoint.y = centerY;
+		float centerX = (centerOfRectangleOne.x + centerOfRectangleTwo.x)/2;
+		float centerY = (centerOfRectangleOne.y + centerOfRectangleTwo.y)/2;
 
 		cv::Point centerPoint;
 		centerPoint.x = centerX;
 		centerPoint.y = centerY;
+		cv::circle(currentFrame, centerPoint, 30, WHITE_BGRX, 2, 5);
 
-		cv::circle(currentFrame, centerPoint, 10, WHITE_BGRX);
+		cv::Point centerPoint2;
+		centerPoint2.x = currentFrame.cols;
+		centerPoint2.y = currentFrame.rows;
+		cv::circle(currentFrame, centerPoint2, 10, MAUVE_BGRX, 2, 5);
+
+//		ROS_INFO("%s", ("Width of image=" << currentFrame.cols << " Height of image=" << currentFrame.rows));
 
 		cv::line(currentFrame, centerOfRectangleOne, centerOfRectangleTwo, WHITE_BGRX, 1, CV_AA);
 	}
