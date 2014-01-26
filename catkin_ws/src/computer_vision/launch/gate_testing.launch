@@ -1,5 +1,5 @@
 <launch>
-	<!-- launches 3 nodes: front-end, controls, simulator -->
+	<!-- launches 2 nodes: FronCVNode and simulator -->
 	<!-- Written by Jean-Sebastien Dery, Jan 25, McGill Robotics -->
 	
  	<!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->

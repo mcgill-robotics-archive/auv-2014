@@ -100,6 +100,12 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 	HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_hsv_value_threshold);
 	HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, start_hsv_value_threshold);
 
+	std::vector<cv::RotatedRect> potentialMatchRectangles;
+
+	// Ok so what I need to do is accept more rectangles and apply logic to filter them
+	// no bounds for the maximum of points, and only filter for a percentage of the heigh relative to the image resolution.
+	// also, the rectangles should be almost vertically aligned.
+
 	ROS_INFO("%s", "Applying filter to the current frame.");
 
 	// Converts the current frame to HSV in order to ease color filtering (with varying brightness).
@@ -112,66 +118,109 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 	// Finds all the contours in the image and store them in a vector containing vectors of points.
 	std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV);
 
-	for (int i = 0; i < detectedContours.size(); i++) {
+	// Goes through all the identified shapes for a first filtering.
+	for (int rectangleID = 0; rectangleID < detectedContours.size(); rectangleID++) {
 		// Gets the contour to analyse in this loop iteration.
-		std::vector<cv::Point> contourToAnalyse = detectedContours.at(i);
-		// Approximates a polygonal curve(s) with the specified precision on the contourToAnalyse vector.
-		std::vector<cv::Point> contourAfterPolygonApproximation;
-		approxPolyDP(contourToAnalyse, contourAfterPolygonApproximation, polygon_approximation_threshold, true);
+		std::vector<cv::Point> contourToAnalyse = detectedContours.at(rectangleID);
+
+//		// Approximates a polygonal curve(s) with the specified precision on the contourToAnalyse vector.
+//		std::vector<cv::Point> contourAfterPolygonApproximation;
+//		approxPolyDP(contourToAnalyse, contourAfterPolygonApproximation, polygon_approximation_threshold, true);
 
 		// Gets the number of points that define this contour.
-		int numberOfPointsInContour = contourAfterPolygonApproximation.size();
+		int numberOfPointsInContour = contourToAnalyse.size();
 
 		// Displays only the contours that have a number of points in the specified range and respect the ratio.
-		if (numberOfPointsInContour >= MIN_NUMBER_POINTS && numberOfPointsInContour <= max_number_points) {
-			std::cout << "[DEBUG] Number of points in this contour= " << numberOfPointsInContour << std::endl;
+		std::cout << "[DEBUG] Number of points in this contour= " << numberOfPointsInContour << std::endl;
 
-			// Finds a rotated rectangle that defines the contour of the object.
-			cv::RotatedRect foundRectangle = cv::minAreaRect(cv::Mat(contourAfterPolygonApproximation));
+		// Finds a rotated rectangle that defines the contour of the object.
+		cv::RotatedRect foundRectangle = cv::minAreaRect(cv::Mat(contourToAnalyse));
 
-			// Determining the Width, Height and Ratio of the rotated rectangle.
-			float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
-			float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
-			float heightWidthRatio = std::abs(height / width - GATE_RATIO);
+		// Determining the Width, Height and Ratio of the rotated rectangle.
+		float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
+		float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
+		float heightWidthRatio = std::abs(height / width - GATE_RATIO);
+		float angle = foundRectangle.angle;
 
-			if (heightWidthRatio < gate_ratio_error) {
-				// Determines if the rectangle found respects the ratio given in the rules.
-				cv::Point2f vertices[4];
-				foundRectangle.points(vertices);
+		// The angle of the rectangle will always be between [-90:0).
+		if (numberOfPointsInContour >= MIN_NUMBER_POINTS && (angle <= -80 || angle >= -10)) {
 
-				// Goes through each vertex and connects them to write the edges of the rectangle.
-				for (int i = 0; i < 4; ++i) {
-					std::cout << "[DEBUG] (" << i << ") = (" << vertices[i].x << ";" << vertices[i].y << ")" << std::endl;
-					cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
-				}
-				drawPointsOfContour(currentFrame, contourAfterPolygonApproximation, GREEN_BGRX);
+			// Add the rectangle that is a potential match for the orange cylinders of the gate.
+			potentialMatchRectangles.push_back(foundRectangle);
 
-				// Write the text information right next to the rectangle.
-				float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / (height * CAMERA_SENSOR_HEIGHT);
-				// Draws text containing the dimensions on each rectangles.
-				std::stringstream ssWidth;
-				std::stringstream ssHeight;
-				std::stringstream ssDistance;
-				ssWidth << "Width=" << width;
-				ssHeight << "Height=" << height;
-				ssDistance << "Distance=" << approximateDistanceWithObject << " mm";
-				putText(currentFrame, (ssWidth).str(),
-						cv::Point(vertices[0].x, vertices[0].y),
-						cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-						CV_AA);
-				putText(currentFrame, (ssHeight).str(),
-						cv::Point(vertices[0].x, vertices[0].y + 10),
-						cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-						CV_AA);
-				putText(currentFrame, (ssDistance).str(),
-						cv::Point(vertices[0].x, vertices[0].y + 20),
-						cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-						CV_AA);
+			cv::Point2f vertices[4];
+			foundRectangle.points(vertices);
+
+			// Goes through each vertex and connects them to write the edges of the rectangle.
+			for (int i = 0; i < 4; ++i) {
+				std::cout << "[DEBUG] (" << i << ") = (" << vertices[i].x << ";" << vertices[i].y << ")" << std::endl;
+				cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
 			}
+			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
+
+			// Write the text information right next to the rectangle.
+			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / (height * CAMERA_SENSOR_HEIGHT);
+			// Draws text containing the dimensions on each rectangles.
+			std::stringstream ssWidth;
+			std::stringstream ssHeight;
+			std::stringstream ssDistance;
+			std::stringstream ssAngle;
+			ssWidth << "Width=" << width;
+			ssHeight << "Height=" << height;
+			ssDistance << "Distance=" << approximateDistanceWithObject << " mm";
+			ssAngle << "Angle=" << angle;
+			putText(currentFrame, (ssWidth).str(),
+					cv::Point(vertices[0].x, vertices[0].y),
+					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+					CV_AA);
+			putText(currentFrame, (ssHeight).str(),
+					cv::Point(vertices[0].x, vertices[0].y + 10),
+					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+					CV_AA);
+			putText(currentFrame, (ssDistance).str(),
+					cv::Point(vertices[0].x, vertices[0].y + 20),
+					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+					CV_AA);
+			putText(currentFrame, (ssAngle).str(),
+					cv::Point(vertices[0].x, vertices[0].y + 30),
+					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+					CV_AA);
 		} else {
 			drawPointsOfContour(currentFrame, contourToAnalyse, RED_BGRX);
 		}
 	}
+
+	int numberOfPotentialMatch = potentialMatchRectangles.size();
+	//  Here I assume that the two rectangles that I have are the orange cylinders of the gate.
+	if (numberOfPotentialMatch == 2) {
+		cv::RotatedRect rectangleOne = potentialMatchRectangles.at(0);
+		cv::RotatedRect rectangleTwo = potentialMatchRectangles.at(1);
+
+		cv::Point2f centerOfRectangleOne = rectangleOne.center;
+		cv::Point2f centerOfRectangleTwo = rectangleTwo.center;
+
+		float centerX = std::abs(centerOfRectangleOne.x - centerOfRectangleTwo.x);
+		float centerY = std::abs(centerOfRectangleOne.y - centerOfRectangleTwo.y);
+
+//		cv::Point2f centerPoint;
+//		centerPoint.x = centerX;
+//		centerPoint.y = centerY;
+
+		cv::Point centerPoint;
+		centerPoint.x = centerX;
+		centerPoint.y = centerY;
+
+		cv::circle(currentFrame, centerPoint, 10, WHITE_BGRX);
+
+		cv::line(currentFrame, centerOfRectangleOne, centerOfRectangleTwo, WHITE_BGRX, 1, CV_AA);
+	}
+
+//	// Goes through the potential matches of the rectangles for a second filtering.
+//	for (int i = 0; i < potentialMathRectangleIDs.size(); i++) {
+//		int rectangleID = potentialMathRectangleIDs.at(i);
+//
+//
+//	}
 }
 
 /**
