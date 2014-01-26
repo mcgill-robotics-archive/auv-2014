@@ -15,7 +15,6 @@ cv::Mat filteredImage;
 int thresh = 300;
 int max_thresh = 500;
 RNG rng(12345);
-RotatedRect line2;
 
 //int main(int argc, char** argv){
 //
@@ -25,6 +24,8 @@ RotatedRect line2;
 
 double xDistance = 0;
 double yDistance = 0;
+double yaw = 0;
+bool visibility = false;
 
 std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(cv::Mat& currentFrame) {
         bool isVisible;
@@ -43,14 +44,14 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
 
         // Check if door is visible
 
-        if (isVisible(line2)) {
+        if (visibility) {
                 // Get object data
                 // [...]
 
                 // Return gathered data to caller
                 visibleObjectData->object_type = visibleObjectData->LANE;
                 visibleObjectData->pitch_angle = 0;
-                visibleObjectData->yaw_angle = relativeYaw(line2);
+                visibleObjectData->yaw_angle = yaw;
                 visibleObjectData->x_distance = xDistance;
                 visibleObjectData->y_distance = yDistance;
                 visibleObjectData->z_distance = 0;
@@ -125,6 +126,7 @@ void thresh_callback(int, void* )
   Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
 
 	  Point2f vertices[4];
+	  cv::RotatedRect line;
 	  std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
 
 	  	  //evaluates all found lines and returns largest line line that fits ratio
@@ -140,27 +142,30 @@ void thresh_callback(int, void* )
 		       }
 
 		       current.points(vertices);
-		       if (current.size.area() > line2.size.area()){
-		        line2 = minAreaRect(hull_points);
+		       if (current.size.area() > line.size.area()){
+		        line = minAreaRect(hull_points);
 		       }
 		  }
 
 		  //draws located line
-		  line2.points(vertices);
+		  line.points(vertices);
 		  for (int i = 0; i < 4; ++i){
 			  cv::line(drawing, vertices[i], vertices[(i + 1) % 4], cv::Scalar(0, 255, 0), 1, CV_AA);
 		  }
-		  int centerX = line2.center.x;
-		  int centerY = line2.center.y;
-		  cout << "\n" << centerX << " " << centerY << "\n";
+		  int centerX = line.center.x;
+		  int centerY = line.center.y;
+
 		  cv::line(drawing, Point(centerX, centerY), Point(centerX,centerY), cv::Scalar(0, 0, 255),2,8, 0 );
 		  cv::line(drawing, Point(drawing.size().width/2, drawing.size().height/2), Point(drawing.size().width/2, drawing.size().height/2), cv::Scalar(255, 0, 0),2,8, 0 );
-		  isVisible(line2);
-		  relativeYaw(line2);
+		  visibility = isVisible(line);
+		  yaw = relativeYaw(line);
 
 		  //If output is opposite, then invert
 		  xDistance = drawing.size().width/2 - centerX;
  		  yDistance = drawing.size().height/2 - centerY;
+ 		  cout << "xDistance: " << xDistance << "\n";
+ 		  cout << "yDistance: " << yDistance << "\n";
+
 
   /// Show in a window
   namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
