@@ -5,20 +5,35 @@
  * @author Michael Noseworthy
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
+#include <ros/package.h>
+#include <ros/console.h>
 #include "MarkerTarget.h"
+
+#define PI 3.141592653589793
 
 /**
  * The constructor loads the reference images which we will use to compare our candidate markers to.
  * Also initializes the matrix we will use to determine the positions of the objects.
  */
 MarkerTarget::MarkerTarget() {
+
+	std::string templatePath = ros::package::getPath("computer_vision") +
+			"/reference_markers/%d.png";
 	//Load the reference images
 	for(int i = 0 ; i < NUM_REFERENCE_IMGS; i += 2) {
-		//TODO Load the image, add it to the list, mirror it on both axes and add it again
+		char *path = new char[templatePath.size()];
+		sprintf(path, templatePath.c_str(), (i + 2) / 2);
+
+		referenceImgs[i] = cv::imread(path, CV_LOAD_IMAGE_GRAYSCALE);
+		cv::flip(referenceImgs[i], referenceImgs[i + 1], -1);
+
+		delete[] path;
 	}
 
 	/* To set the error tolerance, assume that all reference images
@@ -43,10 +58,10 @@ MarkerTarget::MarkerTarget() {
  * @return A vector (std::vector< VisibleObjectData* >) of VisibleDataObjects populated with information such 
  *				as distance, angle, and marker type for each visible marker bin.
  */
-std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectData(cv::Mat& givenFrame) {
+	cv::Mat currentFrame = givenFrame.clone();
 	applyFilter(currentFrame);
 	cv::Mat filteredFrame = currentFrame.clone();
-	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	Point2DVec binCorners = findBins(currentFrame);
 	std::vector<MarkerDescriptor> markers = findMarkers(filteredFrame, binCorners);
@@ -59,7 +74,7 @@ std::vector<computer_vision::VisibleObjectData*> MarkerTarget::retrieveObjectDat
 	if (markers.size() > 0) {
 		//TODO Decide what to do if we detect more than one marker
 		for (int i = 0; i < markers.size(); i++) {
-			computer_vision::VisibleObjectData* objectData;
+			computer_vision::VisibleObjectData* objectData = new computer_vision::VisibleObjectData();
 			objectData->object_type = markers[i].closestMatch;
 			objectData->x_distance = markers[i].x_dist;
 			objectData->y_distance = markers[i].y_dist;
@@ -359,9 +374,29 @@ void MarkerTarget::estimatePose(MarkerDescriptor& inOutMarker) {
 	simulator, this should contain values appropriate for our camera. */
 	cv::solvePnP(objectCoords, inOutMarker.imageCorners, intrinsic, std::vector<float>(), rvec, tvec);
 
-	inOutMarker.x_dist = tvec.at<double>(0);
-	inOutMarker.y_dist = tvec.at<double>(1);
-	inOutMarker.z_dist = tvec.at<double>(2);
+	/* The image has y axis vertical, but for us that's the x axis, so we swap x and y. */
+	float x = inOutMarker.x_dist = tvec.at<double>(1);
+	float y = inOutMarker.y_dist = tvec.at<double>(0);
+	float z = inOutMarker.z_dist = tvec.at<double>(2);
 
-	//TODO Angles
+	double atanYaw = atan(x / y);
+	double degreesYaw = atanYaw * PI / 180.0;
+	if(y < 0) {
+		if(x < 0) {
+			degreesYaw = 180.0 + degreesYaw; // third quadrant
+		} else {
+			degreesYaw = 180.0 - degreesYaw; //second quadrant
+		}
+	} else if(x < 0) { //fourth quadrant
+		degreesYaw = 360.0 - degreesYaw;
+	}
+
+	inOutMarker.yaw_angle = degreesYaw;
+
+	float xyPlaneDistance = sqrt(x * x + y * y);
+	double atanPitch = atan(z / xyPlaneDistance);
+
+	/* atanPitch is the angle from the object to the robot. We need the angle
+	 * from the robot to the object, so we negate that. */
+	inOutMarker.pitch_angle = -(atanPitch * PI / 180.0);
 }

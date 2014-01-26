@@ -10,10 +10,11 @@
 //#include "Map.h"
 //#include "ROS.h"
 
-
-
 class Invoker{
 
+/**
+* functions to be called in Invoker.h 
+*/
  public:
  	Invoker();
  	void AddTask(Task * t);

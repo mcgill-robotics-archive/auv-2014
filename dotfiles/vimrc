@@ -3,6 +3,7 @@ syntax on
 set hidden
 set showmode
 set wildmenu
+set winaltkeys=no
 
 " Change map leader
 let mapleader = ","
@@ -20,7 +21,6 @@ call vundle#rc()
 
 Bundle 'gmarik/vundle'
 Bundle 'flazz/vim-colorschemes'
-Bundle 'LaTeX-Box-Team/LaTeX-Box'
 Bundle 'sudar/vim-arduino-syntax'
 Bundle 'jwhitley/vim-matchit'
 Bundle 'MarcWeber/vim-addon-mw-utils'
@@ -32,9 +32,18 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'kien/ctrlp.vim'
 Bundle 'vim-scripts/taglist.vim'
-Bundle 'git@github.com:coot/atp_vim.git'
+Bundle 'gerw/vim-latex-suite'
+Bundle 'tomasr/molokai'
+Bundle 'Lokaltog/vim-distinguished'
+Bundle 'ervandew/supertab'
+Bundle 'davidhalter/jedi-vim'
+Bundle 'fholgado/minibufexpl.vim'
+Bundle 'terryma/vim-multiple-cursors'
+"Bundle 'LaTeX-Box-Team/LaTeX-Box'
+"Bundle 'coot/atp_vim'
 
 filetype plugin indent on
+set omnifunc=syntaxcomplete#Complete
 
 " IMPORTANT: win32 users will need to have 'shellslash' set so that latex
 " can be called correctly.
@@ -81,7 +90,11 @@ map j gj
 map k gk
 
 set t_Co=256
-set background=dark
+"set background=dark
+"colorscheme distinguished
+colorscheme molokai
+"let g:rehash256 = 1
+"let g:molokai_original = 1
 
 " Taglist Settings
 noremap <silent> <Leader>t :TlistToggle<CR>
@@ -109,3 +122,11 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
+
+let g:tex_flavor='latex'
+let g:Tex_TreatMacViewerAsUNIX = 1
+let g:Tex_ExecuteUNIXViewerInForeground = 1
+let g:Tex_ViewRule_ps = 'open -a Skim'
+let g:Tex_ViewRule_pdf = 'open -a /Applications/Skim.app'
+let g:Tex_ViewRule_dvi = 'open -a /Applications/texniscope.app'
+autocmd FileType tex call Tex_SetTeXCompilerTarget('View','pdf')

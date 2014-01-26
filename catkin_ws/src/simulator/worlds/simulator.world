@@ -37,6 +37,19 @@
       <pose>2.7 -3.5 1 0 0 3.14</pose>
 
       <link name='body'>
+
+      	<inertial>
+      		<mass>700</mass>
+      		<inertia>
+      			<ixx>2008.867</ixx>
+				<ixy>1.097</ixy>
+				<ixz>-150.648</ixz>
+				<iyy>3756.187</iyy>
+				<iyz>11.587</iyz>
+				<izz>3834.560</izz>      			
+      		</inertia>
+      	</inertial>
+      		
 		<collision name='collision'>
 		  <geometry>
 			<mesh>
@@ -45,6 +58,7 @@
 			</mesh>
 		  </geometry>
 		</collision>
+		
 		<visual name='visual'>
 		  <geometry>
 			<mesh>
@@ -150,7 +164,7 @@
 	  <update_rate>300.0</update_rate>
 
 	  <camera name="head">
-	    <horizontal_fov>1.3962634</horizontal_fov>
+	    <horizontal_fov>1.56079666</horizontal_fov>
 	    <image>
 	      <width>800</width>
 	      <height>800</height>
@@ -218,7 +232,7 @@
 	  <update_rate>300.0</update_rate>
 
 	  <camera name="head">
-	    <horizontal_fov>1.3962634</horizontal_fov>
+	    <horizontal_fov>1.56079666</horizontal_fov>
 	    <image>
 	      <width>800</width>
 	      <height>800</height>
@@ -285,7 +299,7 @@
 	  <update_rate>300.0</update_rate>
 
 	  <camera name="head">
-	    <horizontal_fov>1.3962634</horizontal_fov>
+	    <horizontal_fov>1.56079666</horizontal_fov>
 	    <image>
 	      <width>800</width>
 	      <height>800</height>

@@ -76,6 +76,8 @@ int main(int argc, char **argv) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate) : CVNode(nodeHandle, topicList, receptionRate) {
+	ROS_INFO("%s", "Generating all the objects that the FrontCVNode can be listening to.");
+
 	// Create topic with front end
 	this->publisher = this->pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, 1);
 

@@ -5,13 +5,25 @@
 #include "std_msgs/Bool.h"
 
 namespace gazebo {
+    /**
+     * @brief class to create torpedo in Gazebo
+     * @author Jonathan Fokkan
+     */
     class CreateTorpedo : public WorldPlugin {
     public:
+
+	/**
+	 * Constructor
+	 */
 	CreateTorpedo() {
 	    int argc = 0;
 	    ros::init(argc, NULL, "Create Torpedo Plugin");
 	    std::cout<<"Create Torpedo plugin node Created"<<std::endl;
 	}
+	
+	/**
+	 * TODO
+	 */
 
 	void Load(physics::WorldPtr _parent, sdf::ElementPtr /*_sdf*/) {
 	    this->world = _parent;
@@ -33,6 +45,10 @@ namespace gazebo {
 	void OnUpdate(const common::UpdateInfo & /*_info*/) {
 	    ros::spinOnce();
 	};
+
+	/**
+	 * Give a torpedo a position and an orientation
+	 */
 
 	void createCallback(const std_msgs::Bool::ConstPtr& msg) {
 	    if (msg->data) {

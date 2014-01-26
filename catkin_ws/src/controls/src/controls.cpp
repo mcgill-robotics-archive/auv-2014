@@ -25,8 +25,22 @@ Publishers:
 TODO
 service for reset
 ros params
+	implement check if not parametrized properly (rather than 0 default which can go unnoticed)
+remove old depthcontroller relics
+
+subscribe to estimated position from planner?
 
 /*
+
+
+/*
+Simulator needs
+-----------------
+
+drag
+apply force in body frame
+
+*/
 
 
 
@@ -49,32 +63,32 @@ Roadmap
 // using namespace std; //what does this do?!?!
 
 //global vars
-float z_des = 0;
-float z_est = 0;
+double z_des = 0;
+double z_est = 0;
 
-float setPoint_XPos = 0;
-float setPoint_YPos = 0;
-float setPoint_Depth = 0;
-float setPoint_Yaw = 0;
-float setPoint_Pitch = 0;
-float setPoint_XSpeed = 0;
-float setPoint_YSpeed = 0;
-float setPoint_YawSpeed = 0;
+double setPoint_XPos; //initialized by ros params
+double setPoint_YPos;
+double setPoint_Depth;
+double setPoint_Yaw;
+double setPoint_Pitch;
+double setPoint_XSpeed;
+double setPoint_YSpeed;
+double setPoint_YawSpeed;
 
-bool isActive_XPos = 0;	//expecting int, but I'd rather bool. Is this valid casting?
-bool isActive_YPos = 0;
-bool isActive_Depth = 0;
-bool isActive_Yaw = 0;
-bool isActive_Pitch = 0;
-bool isActive_XSpeed = 0;
-bool isActive_YSpeed = 0;
-bool isActive_YawSpeed = 0;
+int8_t isActive_XPos;	
+int8_t isActive_YPos;
+int8_t isActive_Depth;
+int8_t isActive_Yaw;
+int8_t isActive_Pitch;
+int8_t isActive_XSpeed;
+int8_t isActive_YSpeed;
+int8_t isActive_YawSpeed;
 
-float estimated_XPos = 0;
-float estimated_YPos = 0;
-float estimated_Depth = 0;
-float estimated_Pitch = 0;
-float estimated_Yaw = 0;
+double estimated_XPos = 0;
+double estimated_YPos = 0;
+double estimated_Depth = 0;
+double estimated_Pitch = 0;
+double estimated_Yaw = 0;
 
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
@@ -119,44 +133,71 @@ void estimatedState_callback(const gazebo_msgs::ModelStates data)
 
 int main(int argc, char **argv)
 {
+	//Create ROS Node
+	ros::init(argc,argv,"controls");
+	ros::NodeHandle n;
+
 	//Parameters
-	float m = 30; //mass in kg
-	float g = 9.81;
-	float cd = 0.1; //arbitrary drag coefficient
-	float buoyancy = 0.02; // %percent buoyancy
-	float dt = 0.01; //temporary! TODO update this dynamically
-	float kp = 1; //proportional controller
-    float ki = 0;
-    float kd = .1;
+	double m; //mass in kg
+	double g;
+	double cd; // drag coefficient
+	double buoyancy; // %percent buoyancy
+	double dt; //temporary! TODO update this dynamically
+	double kp; //proportional controller
+    double ki; //integral
+    double kd; //derivative
+
+    //ROS Params
+
+    n.param<double>("gains/kp", kp, 0.0);
+    n.param<double>("gains/ki", ki, 0.0);
+    n.param<double>("gains/kd", kd, 0.0);
+
+   
+
+    n.param<double>("coefs/mass", m, 30.0);
+    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
+    n.param<double>("coefs/drag", cd, 0.0);
+    n.param<double>("coefs/gravity", g, 9.81);
+    n.param<double>("coefs/dt", dt, 0.1);
+
 
 	//initializations
 	
 
-    float ep_XPos = 0; //error
-    float ei_XPos = 0; //integral error
-    float ed_XPos = 0; //derivative error
-    float ep_YPos = 0;
-    float ei_YPos = 0;
-    float ep_Depth = 0;
-    float ei_Depth = 0;
-    float ep_Pitch = 0;
-    float ei_Pitch = 0;
-    float ep_Yaw = 0;
-    float ei_Yaw = 0;
+    double ep_XPos = 0; //error
+    double ei_XPos = 0; //integral error
+    double ed_XPos = 0; //derivative error
+    double ep_XPos_prev = 0; //proportional error at last timestep
+    double ep_YPos = 0;
+    double ei_YPos = 0;
+    double ed_YPos = 0;
+    double ep_YPos_prev = 0;
+    double ep_Depth = 0;
+    double ei_Depth = 0;
+    double ed_Depth = 0;
+    double ep_Depth_prev = 0;
+    double ep_Pitch = 0;
+    double ei_Pitch = 0;
+    double ed_Pitch = 0;
+    double ep_Pitch_prev = 0;
+    double ep_Yaw = 0;
+    double ei_Yaw = 0;
+    double ed_Yaw = 0;
+    double ep_Yaw_prev = 0;
 
-    float Fx = 0;
-    float Fy = 0;
-    float Fz = 0;
-    float Ty = 0;
-    float Tz = 0;
 
-    float OL_coef_x;	//set later in the controller
-    float OL_coef_y;
-    float OL_coef_yaw;
+    double Fx = 0;
+    double Fy = 0;
+    double Fz = 0;
+    double Ty = 0;
+    double Tz = 0;
+
+    double OL_coef_x;	//set later in the controller
+    double OL_coef_y;
+    double OL_coef_yaw;
 
 	// ROS subscriber setup
-	ros::init(argc,argv,"controls");
-	ros::NodeHandle n;
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
 	ros::Subscriber estimatedState_subscriber = n.subscribe("gazebo/model_states", 1000, estimatedState_callback);
 	//add clock subscription
@@ -215,9 +256,11 @@ int main(int argc, char **argv)
         //Y 
 		if (isActive_YPos)
 		{
+			ep_YPos_prev = ep_YPos;
 			ep_YPos = setPoint_YPos - estimated_YPos;
 			ei_YPos += ep_YPos*dt;
-			Fy = kp*ep_YPos + ki*ei_YPos;
+			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
+			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
 		}
         
         if (isActive_YSpeed)
@@ -229,33 +272,39 @@ int main(int argc, char **argv)
         //Z 
 		if (isActive_Depth)
 		{
+			ep_Depth_prev = ep_Depth;
 			ep_Depth = setPoint_Depth - estimated_Depth;
 			ei_Depth += ep_Depth*dt;
-			//Fz = kp*ep_Depth + ki*ei_Depth;
-			Fz = 0; // workaround temp
+			ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
+			Fz = kp*ep_Depth + ki*ei_Depth + kd*ed_Depth;
+			//Fz = 0; // workaround temp
 			//Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}
 
 		//Pitch
 		if (isActive_Pitch)
 		{
+			ep_Pitch_prev = ep_Pitch;
 			ep_Pitch = setPoint_Pitch - estimated_Pitch;
 			ei_Pitch += ep_Pitch*dt;
-			Ty = kp*ep_Pitch + ki*ei_Pitch;
+			ed_Pitch = (ep_Pitch - ep_Pitch_prev)/dt;
+			Ty = kp*ep_Pitch + ki*ei_Pitch + kd*ed_Pitch;
 		}
 
 		//Yaw
 		if (isActive_Yaw)
 		{
+			ep_Yaw_prev = ep_Yaw;
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			ei_Yaw += ep_Yaw*dt;
-			Tz = kp*ep_Yaw + ki*ei_Yaw;
+			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
+			Tz = kp*ep_Yaw + ki*ei_Yaw + kd*ed_Yaw;
 		}
 
 		if (isActive_YawSpeed)
         {
         	OL_coef_yaw = 1;
-        	Ty = OL_coef_yaw*setPoint_YawSpeed;
+        	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
 
 		// Assemble Wrench

@@ -4,15 +4,12 @@ import random as r
 import math
 from src import RotationVectorUtils
 
-__author__ = 'mkrogius'
-
-
 class TestRotationVectorUtils(TestCase):
     identity = numpy.matrix([[0],[0],[0]])
     x = numpy.matrix([[1],[0],[0]])
     y = numpy.matrix([[0],[1],[0]])
     z = numpy.matrix([[0],[0],[1]])
-    tolerance = 10**(-10)
+    tolerance = 10**(-8)
 
     def assertMatrixEqual(self, A, B):
         diff = A-B
@@ -59,4 +56,12 @@ class TestRotationVectorUtils(TestCase):
         self.assertMatrixEqual(self.x, RotationVectorUtils.composeRotations(self.x, self.identity))
 
     def test_composeRotations_multipleRotationsSameDirection(self):
-        self.fail()
+        rotation = RotationVectorUtils.composeRotations(self.x, self.x)
+        rotation = RotationVectorUtils.composeRotations(self.x, rotation)
+        self.assertMatrixEqual(rotation, 3*self.x)
+
+    def test_composeRotations_inverse(self):
+        self.assertMatrixEqual(self.identity,
+                               RotationVectorUtils.composeRotations(
+                                   self.x,
+                                   RotationVectorUtils.inverse(self.x)))
