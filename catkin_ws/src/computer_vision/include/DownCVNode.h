@@ -1,5 +1,6 @@
 #include "CVNode.h"
 #include "MarkerTarget.h"
+#include "LineTarget.h"
 
 class DownCVNode : public CVNode {
 

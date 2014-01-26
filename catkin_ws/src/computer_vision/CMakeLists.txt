@@ -153,6 +153,10 @@ add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
 
+add_library(LineTarget src/LineTarget.cpp)
+target_link_libraries(LineTarget VisibleObject)
+target_link_libraries(LineTarget ${catkin_LIBRARIES})
+
 add_library(Camera src/Camera.cpp)
 target_link_libraries(Camera ${catkin_LIBRARIES})
 
@@ -164,6 +168,7 @@ add_executable(DownCVNode src/DownCVNode.cpp)
 target_link_libraries(DownCVNode CVNode)
 target_link_libraries(DownCVNode VisibleObject)
 target_link_libraries(DownCVNode MarkerTarget)
+target_link_libraries(DownCVNode LineTarget)
 target_link_libraries(DownCVNode ${catkin_LIBRARIES})
 
 add_executable(FrontCVNode src/FrontCVNode.cpp)
