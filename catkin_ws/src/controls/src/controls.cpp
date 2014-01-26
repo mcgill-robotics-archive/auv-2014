@@ -26,8 +26,21 @@ TODO
 service for reset
 ros params
 	implement check if not parametrized properly (rather than 0 default which can go unnoticed)
+remove old depthcontroller relics
+
+subscribe to estimated position from planner?
 
 /*
+
+
+/*
+Simulator needs
+-----------------
+
+drag
+apply force in body frame
+
+*/
 
 
 
@@ -140,30 +153,8 @@ int main(int argc, char **argv)
     n.param<double>("gains/ki", ki, 0.0);
     n.param<double>("gains/kd", kd, 0.0);
 
-    n.param<double>("setPoints/XPos/value", setPoint_XPos, 0.0);
-    n.param<double>("setPoints/XSpeed/value", setPoint_XSpeed, 0.0);
+   
 
-    n.param<double>("setPoints/YPos/value", setPoint_YPos, 0.0);
-    n.param<double>("setPoints/YSpeed/value", setPoint_YSpeed, 0.0);
-
-    n.param<double>("setPoints/Depth/value", setPoint_Depth, 0.0);
-
-    n.param<double>("setPoints/Yaw/value", setPoint_Yaw, 0.0);
-    n.param<double>("setPoints/YawSpeed/value", setPoint_YawSpeed, 0.0);
-/*
-TODO figure this out - doesnt compile
-
-    n.param<int8_t>("setPoints/XPos/isActive", isActive_XPos, 0);
-    n.param<int8_t>("setPoints/XSpeed/isActive", isActive_XSpeed, 0);
-
-    n.param<int8_t>("setPoints/YPos/isActive", isActive_YPos, 0);
-    n.param<int8_t>("setPoints/YSpeed/isActive", isActive_YSpeed, 0);
-
-    n.param<int8_t>("setPoints/Depth/isActive", isActive_Depth, 0);
-
-    n.param<int8_t>("setPoints/Yaw/isActive", isActive_Yaw, 0);
-    n.param<int8_t>("setPoints/YawSpeed/isActive", isActive_YawSpeed, 0);
-*/
     n.param<double>("coefs/mass", m, 30.0);
     n.param<double>("coefs/buoyancy", buoyancy, 0.02);
     n.param<double>("coefs/drag", cd, 0.0);
@@ -313,7 +304,7 @@ TODO figure this out - doesnt compile
 		if (isActive_YawSpeed)
         {
         	OL_coef_yaw = 1;
-        	Ty = OL_coef_yaw*setPoint_YawSpeed;
+        	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
 
 		// Assemble Wrench
