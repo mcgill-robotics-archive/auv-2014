@@ -18,8 +18,8 @@ int main(int argc, char **argv)
 {
 
 
-// create node called "depthPublisher"
-  ros::init(argc, argv, "depthPublisher");
+// create node called "gazeboDepthEstimator"
+  ros::init(argc, argv, "gazeboDepthEstimator");
   ros::NodeHandle n;
 
   // parameters
@@ -28,6 +28,7 @@ int main(int argc, char **argv)
   double surfaceHeight;
   n.param<double>("surfaceHeight", surfaceHeight, 10);
 
+  ros::Subscriber gazebo_sub = n.subscribe("/gazebo/model_states", 1000, estimatedDepth_callback);
   ros::Publisher depthPub = n.advertise<std_msgs::Float64>("depthCalculated", 1000); // publish to topic called "depthCalculated"
 
   ros::Rate loop_rate(10);

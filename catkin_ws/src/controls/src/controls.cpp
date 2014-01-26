@@ -29,6 +29,11 @@ ros params
 remove old depthcontroller relics
 
 subscribe to estimated position from planner?
+different gains for different axes?
+add a saturate functionality to the forces
+	should integral error accumulate?
+fix coordinate system integration with Gen and Mathieu
+
 
 /*
 
@@ -55,10 +60,11 @@ Roadmap
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64.h"
-#include "gazebo_msgs/ModelStates.h"
+//#include "gazebo_msgs/ModelStates.h" //old
 
 #include "planner/setPoints.h"	
 #include "planner/ValueControl.h" //useless? / deprecated?
+#include "computer_vision/VisibleObjectData.h"
 
 // using namespace std; //what does this do?!?!
 
@@ -112,6 +118,8 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	isActive_YawSpeed = setPointsMsg.YawSpeed.isActive;
 
 }
+/*
+old way with model states from gazebo
 
 void estimatedState_callback(const gazebo_msgs::ModelStates data)
 
@@ -129,7 +137,23 @@ void estimatedState_callback(const gazebo_msgs::ModelStates data)
     //still need to add pitch and yaw
 
 }
+*/
+void estimatedState_callback(const computer_vision::VisibleObjectData data)
 
+{
+	ROS_DEBUG("Subscriber received estimated data");
+    
+    estimated_XPos = data.x_distance;
+    estimated_YPos = data.y_distance;
+    estimated_Pitch = data.pitch_angle; 
+	estimated_Yaw = data.yaw_angle; 
+
+}
+
+void estimatedDepth_callback(const std_msgs::Float64 data)
+{
+	estimated_Depth = data.data;
+}
 
 int main(int argc, char **argv)
 {
@@ -199,7 +223,8 @@ int main(int argc, char **argv)
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber estimatedState_subscriber = n.subscribe("gazebo/model_states", 1000, estimatedState_callback);
+	ros::Subscriber estimatedState_subscriber = n.subscribe("visible_data", 1000, estimatedState_callback);
+	ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 	//add clock subscription
 
 	//ROS Publisher setup
@@ -243,6 +268,7 @@ int main(int argc, char **argv)
 			ei_XPos += ep_XPos*dt;
 			ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 			Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
+			Fx *= -1; //flip direction to account for relative coordinate system
 			//ROS_INFO("controlling xpos");
 		}
         
@@ -261,6 +287,7 @@ int main(int argc, char **argv)
 			ei_YPos += ep_YPos*dt;
 			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
+			Fy *= -1; //flip direction to account for relative coordinate system
 		}
         
         if (isActive_YSpeed)
@@ -272,11 +299,13 @@ int main(int argc, char **argv)
         //Z 
 		if (isActive_Depth)
 		{
+			ROS_INFO("setPointDepth: %f | estimatedDepth: %f", setPoint_Depth, estimated_Depth);
 			ep_Depth_prev = ep_Depth;
 			ep_Depth = setPoint_Depth - estimated_Depth;
 			ei_Depth += ep_Depth*dt;
 			ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 			Fz = kp*ep_Depth + ki*ei_Depth + kd*ed_Depth;
+			Fz *= -1; //flip direction to account for relative coordinate system
 			//Fz = 0; // workaround temp
 			//Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}

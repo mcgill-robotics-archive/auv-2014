@@ -15,7 +15,10 @@
 	<!-- Controls systems -->
 	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>
           <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
-
+  <!-- state estimation stuff 
+          <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
+          <node name="distanceCalculator" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
+  -->
   <!-- RQT Plot -->
   
 

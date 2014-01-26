@@ -92,13 +92,13 @@ int main(int argc, char **argv)
 		msg.Pitch.data = setPoint_Pitch;
 
 		msg.XPos.isActive = 0;
-		msg.YPos.isActive = 0;
+		msg.YPos.isActive = 1;
 		msg.Depth.isActive = 1;
 		msg.Yaw.isActive = 0;
 		msg.Pitch.isActive = 0;
-		msg.XSpeed.isActive = 1;
+		msg.XSpeed.isActive = 0;
 		msg.YSpeed.isActive = 0;
-		msg.YawSpeed.isActive = 1;
+		msg.YawSpeed.isActive = 0;
 		//skip depth
 
 		//parameters

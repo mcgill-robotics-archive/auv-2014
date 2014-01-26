@@ -1,14 +1,14 @@
-gains/kp: 1
-gains/ki: 0
-gains/kd: 10
+gains/kp: 7
+gains/ki: 1
+gains/kd: 500
 
 setPoints/XPos/value: 3.0
 setPoints/XSpeed/value: 5
 
-setPoints/YPos/value: -2
+setPoints/YPos/value: 0
 setPoints/YSpeed/value: 1
 
-setPoints/Depth/value: 1.0
+setPoints/Depth/value: 8.5
 
 setPoints/Yaw/value: 0
 setPoints/YawSpeed/value: 5
@@ -35,3 +35,5 @@ coefs/buoyancy: 0.02
 coefs/drag: 0.1
 coefs/gravity: 9.81
 coefs/dt: 0.1
+
+surfaceHeight: 10.0
