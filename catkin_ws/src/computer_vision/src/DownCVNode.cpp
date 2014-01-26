@@ -120,7 +120,7 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message, const s
 		currentImage.image           = currentFrame;
 		publisher.publish(currentImage.toImageMsg());
 
-		// Display the filtered image
+		// Display the raw image
 		cv::imshow(topicName, currentFrame);
 		cv::waitKey(5);
 	} catch (cv::Exception& e) {
