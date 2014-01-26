@@ -24,11 +24,11 @@ int main(int argc, char **argv)
 
   // parameters
 
-  std_msgs::float64 depthVal;
+  std_msgs::Float64 depthVal;
   double surfaceHeight;
   n.param<double>("surfaceHeight", surfaceHeight, 10);
 
-  ros::Publisher depthPub = n.advertise<std_msgs::float64>("depthCalculated", 1000); // publish to topic called "depthCalculated"
+  ros::Publisher depthPub = n.advertise<std_msgs::Float64>("depthCalculated", 1000); // publish to topic called "depthCalculated"
 
   ros::Rate loop_rate(10);
 
