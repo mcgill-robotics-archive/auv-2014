@@ -11,7 +11,6 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-#from CompleteUI_declaration import *
 from resizableUI1 import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
@@ -22,6 +21,8 @@ import PS3Controller  # custom modules for acquiring ps3 input
 from VARIABLES import *  # file containing all the shared variables and parameters
 
 import sys
+from subprocess import call
+import thread
 import rospy  # ros module for subscribing to topics
 import pygame  # module top play the alarm
 
@@ -305,10 +306,15 @@ class CentralUi(QtGui.QMainWindow):
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
+            #QtCore.QTimer.singleShot(0, self.planner)
+            thread.start_new_thread(self.planner, ())
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
             #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+
+    def planner(self):
+        call(['rosrun planner Planner'], shell=True)
 
     ##  Method for the keyboard controller
     #
@@ -321,7 +327,6 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.linearVertical.setValue(1000*vel_vars.x_velocity)
         self.ui.linearHorizantal.setValue(1000*vel_vars.y_velocity)
         self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
-#        self.ui.angularVertical.setValue(vel_vars.pitch_velocity)
         self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
