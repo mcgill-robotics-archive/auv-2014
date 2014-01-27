@@ -9,6 +9,8 @@
 #@author David Lavoie-Boutin
 PI = 3.141592653
 from PyQt4 import QtCore
+
+
 ##    variables shared by all controller for the cmd_vel and z_position
 class vel_vars(object):
     pitch_velocity = 0
@@ -21,6 +23,7 @@ class vel_vars(object):
     MAX_YAW_VEL = 10
     MAX_PITCH_ANGLE = PI/4
     MAX_LINEAR_VEL = 1
+
 
 ##    Here we define the keyboard map for our controller
 class KeyMapping(object):
@@ -53,6 +56,7 @@ class ROS_Topics(object):
     imu_filtered='pose'
     vel_topic = '/setPoints'
     cv_data = 'front_cv_data'
+    planner_task='planner/task'
 
 
 ##    various parameters and constants

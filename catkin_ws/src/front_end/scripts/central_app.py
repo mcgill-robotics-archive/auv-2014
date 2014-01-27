@@ -537,7 +537,11 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
         rospy.Subscriber(ROS_Topics.cv_data, VisibleObjectData, self.cv_data_callback)
+        rospy.Subscriber(ROS_Topics.planner_task, String, self.planner_callback)
         self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
+
+    def planner_callback(self, data):
+        self.ui.logObject.append(data.data)
 
     def cv_data_callback(self, data):
         self.ui.cv_rel_pitch.setText(str(data.pitch_angle))
