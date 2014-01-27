@@ -753,4 +753,4 @@ try:
         AppWindow.show()
         sys.exit(app.exec_())
 except KeyboardInterrupt:
-    exit(0)
+    sys.exit(0)
