@@ -109,6 +109,12 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 
 	ROS_INFO("%s", "Applying filter to the current frame.");
 
+	cv::Point centerOfCurrentFrame;
+	centerOfCurrentFrame.x = currentFrame.cols/2;
+	centerOfCurrentFrame.y = currentFrame.rows/2;
+	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
+	ROS_INFO("%s", ("Width of image=" + boost::lexical_cast<std::string>(currentFrame.cols) + " pixels. Height of image="  + boost::lexical_cast<std::string>(currentFrame.rows) + " pixels.").c_str());
+
 	// Converts the current frame to HSV in order to ease color filtering (with varying brightness).
 	cv::Mat currentFrameInHSV = convertFromBGRXToHSV(currentFrame);
 
@@ -162,27 +168,19 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 			// Write the text information right next to the rectangle.
 			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / (height * CAMERA_SENSOR_HEIGHT);
 			// Draws text containing the dimensions on each rectangles.
-			std::stringstream ssWidth;
-			std::stringstream ssHeight;
-			std::stringstream ssDistance;
-			std::stringstream ssAngle;
-			ssWidth << "Width=" << width;
-			ssHeight << "Height=" << height;
-			ssDistance << "Distance=" << approximateDistanceWithObject << " mm";
-			ssAngle << "Angle=" << angle;
-			putText(currentFrame, (ssWidth).str(),
+			putText(currentFrame, "Width=" + boost::lexical_cast<std::string>(width),
 					cv::Point(vertices[0].x, vertices[0].y),
 					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 					CV_AA);
-			putText(currentFrame, (ssHeight).str(),
+			putText(currentFrame, "Height=" + boost::lexical_cast<std::string>(height),
 					cv::Point(vertices[0].x, vertices[0].y + 10),
 					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 					CV_AA);
-			putText(currentFrame, (ssDistance).str(),
+			putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(approximateDistanceWithObject),
 					cv::Point(vertices[0].x, vertices[0].y + 20),
 					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 					CV_AA);
-			putText(currentFrame, (ssAngle).str(),
+			putText(currentFrame, "Angle=" + boost::lexical_cast<std::string>(angle),
 					cv::Point(vertices[0].x, vertices[0].y + 30),
 					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 					CV_AA);
@@ -206,24 +204,10 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 		cv::Point centerPoint;
 		centerPoint.x = centerX;
 		centerPoint.y = centerY;
-		cv::circle(currentFrame, centerPoint, 30, WHITE_BGRX, 2, 5);
-
-		cv::Point centerPoint2;
-		centerPoint2.x = currentFrame.cols;
-		centerPoint2.y = currentFrame.rows;
-		cv::circle(currentFrame, centerPoint2, 10, MAUVE_BGRX, 2, 5);
-
-//		ROS_INFO("%s", ("Width of image=" << currentFrame.cols << " Height of image=" << currentFrame.rows));
+		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
 
 		cv::line(currentFrame, centerOfRectangleOne, centerOfRectangleTwo, WHITE_BGRX, 1, CV_AA);
 	}
-
-//	// Goes through the potential matches of the rectangles for a second filtering.
-//	for (int i = 0; i < potentialMathRectangleIDs.size(); i++) {
-//		int rectangleID = potentialMathRectangleIDs.at(i);
-//
-//
-//	}
 }
 
 /**
