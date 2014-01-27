@@ -35,6 +35,7 @@ namespace gazebo {
 	};
 
 	void createCallback(const std_msgs::Bool::ConstPtr& msg) {
+		ROS_INFO("create torpedo call back");
 	    if (msg->data) {
 		sdf::SDF torpedoSDF;
 		std::string torpedoString;
