@@ -4,7 +4,8 @@
 #since python does not have enums,
 #
 # also, these variables will be accessed by different python files therefore the need for a separate file
-#file containing all variables shared between one or more files also contains parameters and constants used in the UI and the key mapping for the keyboard controller
+#file containing all variables shared between one or more files also contains parameters and constants
+# used in the UI and the key mapping for the keyboard controller
 #@author David Lavoie-Boutin
 PI = 3.141592653
 from PyQt4 import QtCore
@@ -35,6 +36,7 @@ class KeyMapping(object):
     DecreaseY = QtCore.Qt.Key_D
     Surface = QtCore.Qt.Key_H
 
+
 ##   variables for the ros topic names
 class ROS_Topics(object):
     battery_voltage = "battery_voltage"
@@ -51,6 +53,7 @@ class ROS_Topics(object):
     imu_filtered='pose'
     vel_topic = '/setPoints'
     cv_data = 'front_cv_data'
+
 
 ##    various parameters and constants
 class misc_vars(object):
