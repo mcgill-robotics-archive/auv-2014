@@ -11,9 +11,11 @@
 //#include "ROS.h"
 
 
-
 class Invoker{
 
+/**
+* functions to be called in Invoker.h 
+*/
  public:
  	Invoker();
  	void AddTask(Task * t);
@@ -22,5 +24,10 @@ class Invoker{
  	std::vector<Task *> TaskList;
 
 };
+
+
+/*************INCLUDE AT BOTTOM*********************/
+/*BECAUSE OF ROUND ABOUT INCLUDES FROM INTERFACE.H TO INVOKER.H*/
+#include "Interface.h"
 
 #endif // Task_h

@@ -18,9 +18,9 @@ class LineTarget : public VisibleObject {
 
 	public:
 
-	~LineTarget();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
+	void applyFilter(cv::Mat& image);
 	void thresh_callback(int, void* );
 	double relativeYaw(cv::RotatedRect line);
 	bool isVisible(cv::RotatedRect line);

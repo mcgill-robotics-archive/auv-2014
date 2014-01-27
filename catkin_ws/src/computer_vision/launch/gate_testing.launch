@@ -1,0 +1,16 @@
+<launch>
+	<!-- launches 2 nodes: FronCVNode and simulator -->
+	<!-- Written by Jean-Sebastien Dery, Jan 25, McGill Robotics -->
+	
+ 	<!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(find simulator)/worlds/simulator.world"/>
+		<!-- more default parameters can be changed here -->
+	</include>       
+
+	<!-- CVNode front-->
+	<node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+
+	<!-- CVNode down -->
+	<!-- <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/> -->
+</launch>

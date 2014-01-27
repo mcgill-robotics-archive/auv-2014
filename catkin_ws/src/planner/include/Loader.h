@@ -1,3 +1,9 @@
+/**
+* @file Loader.h
+* @version 1.0.0 
+* @brief loader.h initializes some functions
+*/
+
 #ifndef Loader_h
 #define Loader_h
 

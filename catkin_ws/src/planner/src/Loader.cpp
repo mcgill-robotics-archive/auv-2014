@@ -1,32 +1,55 @@
+/**
+* @file Loader.cpp
+* @version 1.0
+*
+*/
+
+
 #include "Loader.h"
 
 void ps3Control(); 
 
 Loader::Loader(){
-	//Initialize the objects
+/**
+* Initialize the objects
+*/
 	std::cout<<"In Loader Constructor"<< std::endl;
 	main_Invoker = new Invoker();
 	main_Config = new Config();
 	main_Taskfactory = new TaskFactory();
-	//loads the invoker
+
+/**
+* loads the invoker
+*/ 
 	isInvokerLoaded = false;
+
 	//int i = 0;
 	//while(i < 1000000){
 	//	ps3Control(); i++;
 	//}
 	loadInvoker();
+
+
 }
 
-//This loads the Invoker by adding the tasks to it as needed
+/**
+* loadInvoker() goes into config and gets the task list, then pulls the tasks from taskFactory, and feeds task objects to invoker
+*/
 void Loader::loadInvoker(){
-	//will only run if Invoker is not loaded yet
+/**
+* will only run if Invoker is not loaded yet
+*/
 	if(!isInvokerLoaded){
 		std::vector<std::string> s_tasklist;
 
-		//gets the vector of tasks fron the config
+/**
+* gets the vector of tasks fron the config
+*/
 		s_tasklist = main_Config->GetTasks();
 
-		//uses the vector of strings to input into the task factory to then add a task to the invoker
+/**
+* uses the vector of strings to input into the task factory to * then add a task to the invoker
+*/
 		for(int i = 0; i < s_tasklist.size(); i++){
 			std::cout<<"Adding task to invoker"<< std::endl;
 			main_Invoker->AddTask(main_Taskfactory->makeTask(s_tasklist.at(i)));
@@ -39,9 +62,13 @@ void Loader::loadInvoker(){
 	std::cout<<"Done loading invoker"<< std::endl;
 }
 
-//incase the Invoker wants to be reloaded
+/**
+* incase the Invoker wants to be reloaded
+*/
 void Loader::reLoadInvoker(){
-	//chage variable to false for the loadInvoker() call
+/**
+* change variable to false for the loadInvoker() call
+*/	
 	isInvokerLoaded = false;
 	main_Invoker = new Invoker();
 	loadInvoker();
