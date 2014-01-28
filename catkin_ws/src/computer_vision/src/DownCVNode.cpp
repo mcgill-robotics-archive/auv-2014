@@ -71,7 +71,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topic
 	// Create topic with front end
 	this->publisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, 1);
 
-	this->visibleObjects.push_back(new MarkerTarget());
+	//this->visibleObjects.push_back(new MarkerTarget());
 	this->visibleObjects.push_back(new LineTarget());
 }
 
