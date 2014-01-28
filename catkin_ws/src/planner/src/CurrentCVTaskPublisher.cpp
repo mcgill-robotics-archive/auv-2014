@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     planner::currentCVTask msgDown;
 
     msgFront.currentCVTask = msgFront.GATE;
-    msgDown.currentCVTask = msgFront.NOTHING;
+    msgDown.currentCVTask = msgDown.NOTHING;
 
     taskPubFront.publish(msgFront);
     taskPubDown.publish(msgDown);

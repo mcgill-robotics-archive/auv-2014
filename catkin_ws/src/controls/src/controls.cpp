@@ -164,10 +164,10 @@ int main(int argc, char **argv)
 
 	//specify ROSCONSOLE verbosity level
 	//Fred Lafrance: temporarily commented because of compile error	
-	/*if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
 	{
    		ros::console::notifyLoggerLevelsChanged();
-	}*/
+	}
 
 	//Parameters
 	double m; //mass in kg

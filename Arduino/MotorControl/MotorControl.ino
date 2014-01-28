@@ -6,6 +6,15 @@
 Servo myservo[6];
 ros::NodeHandle nh;
 
+int boundCheck(int x){
+if(x> 500 || x< -500){
+nh.logerror("Motor speed out of bound ! " + x);
+return 0;
+}
+return x;
+}
+
+
 
 void motorCb( const arduino_msgs::motor& msg){
   myservo[0].writeMicroseconds(1500 + msg.x_p);
@@ -16,7 +25,7 @@ void motorCb( const arduino_msgs::motor& msg){
   myservo[5].writeMicroseconds(1500 + msg.z_n);
 }
 
-ros::Subscriber<arduino_msgs::motor> sub("/motor", &motorCb );
+ros::Subscriber<arduino_msgs::motor> sub("/elec_interface/motor", &motorCb );
 
 void setup(){
   myservo[0].attach(2); 

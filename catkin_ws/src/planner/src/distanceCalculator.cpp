@@ -21,9 +21,9 @@ void setGazeboPretendThings(gazebo_msgs::ModelStates msg) {
   gate_z = msg.pose[1].position.z;
 }
 
-void currentCVTask_Front_callback(planner::currentCVTask text)
+void currentCVTask_Front_callback(planner::currentCVTask msg)
 {
-  currentCVTask_Front = text;
+  currentCVTask_Front = msg;
 }
 
 /*
@@ -64,6 +64,7 @@ int main(int argc, char **argv)
 
   	if (currentCVTask_Front.currentCVTask == currentCVTask_Front.GATE)
   	{
+      //ROS_INFO("Current CV Task Front = GATE");
       //compute distances here
   		x_dist_global = gate_x - robot_x;
   		y_dist_global = gate_y - robot_y;
