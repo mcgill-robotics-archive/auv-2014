@@ -1,6 +1,0 @@
-#! /bin/bash
-
-clear
-echo Compiling now: g++ -o Config.o Config.cpp
-g++ -Wall -c Config.cpp ../pugixml/src/pugixml.cpp
-g++ -Wall -o Config.out Config.o  pugixml.o
