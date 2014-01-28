@@ -10,6 +10,7 @@
 //#include "Map.h"
 //#include "ROS.h"
 
+
 class Invoker{
 
 /**
@@ -23,5 +24,10 @@ class Invoker{
  	std::vector<Task *> TaskList;
 
 };
+
+
+/*************INCLUDE AT BOTTOM*********************/
+/*BECAUSE OF ROUND ABOUT INCLUDES FROM INTERFACE.H TO INVOKER.H*/
+#include "Interface.h"
 
 #endif // Task_h

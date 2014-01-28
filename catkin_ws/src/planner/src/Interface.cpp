@@ -132,7 +132,7 @@ int main (int argc, char **argv) {
   ros::Subscriber Pose_sub = n.subscribe("gazebo/model_states", 1000, setOurOrientation);
 
   CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
-  checkpoints_pub = n.advertise<std_msgs::String>("planner/Checkpoint", 1000);
+  checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
   std::cout<<"Starting Loader"<< std::endl; 

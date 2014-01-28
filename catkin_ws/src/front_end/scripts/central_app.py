@@ -537,7 +537,11 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
         rospy.Subscriber(ROS_Topics.cv_data, VisibleObjectData, self.cv_data_callback)
+        rospy.Subscriber(ROS_Topics.planner_task, String, self.planner_callback)
         self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
+
+    def planner_callback(self, data):
+        self.ui.logObject.append(data.data)
 
     def cv_data_callback(self, data):
         self.ui.cv_rel_pitch.setText(str(data.pitch_angle))
@@ -731,6 +735,7 @@ class CentralUi(QtGui.QMainWindow):
             self.battery_empty = True
             self.empty_battery_signal.emit()
             self.play_alarm()
+
     ## start the alarm sound
     #
     #@param self the object pointer
@@ -745,9 +750,11 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def open_low_battery_dialog(self):
         self.warning_ui.exec_()
-
-if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
-    AppWindow = CentralUi()
-    AppWindow.show()
-    sys.exit(app.exec_())
+try:
+    if __name__ == "__main__":
+        app = QtGui.QApplication(sys.argv)
+        AppWindow = CentralUi()
+        AppWindow.show()
+        sys.exit(app.exec_())
+except KeyboardInterrupt:
+    sys.exit(0)

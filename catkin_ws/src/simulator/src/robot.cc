@@ -70,6 +70,7 @@ public:
 	 * Called on every simulation iteration
 	 */
 	void OnUpdate(const common::UpdateInfo & /*_info*/) {
+		//applyDrag();
 		ros::spinOnce();
 	};
 
@@ -141,7 +142,6 @@ public:
 		} else {
 			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-		//applyDrag();
 	};
 
 	/**
@@ -163,6 +163,8 @@ public:
 		q = angularVelocity.y;
 		r = angularVelocity.z;
 		
+		//if (!shouldApplyDrag(u,v,w,p,q,r)) return;
+		
 		magnitude = sqrt(u*u + v*v + w*w);
 		
 		if (magnitude > 1E-5) {
@@ -171,16 +173,18 @@ public:
 			translationalDragVector.z = w/magnitude;
 		}
 		
+		//Drag force = -0.5 * Area * density* |speed|^2 * dragCoefficent
 		translationalDragMagnitude = -.5 * .118 * 1000 * (u*u + v*v + w*w) * .8;
+		ROS_DEBUG("Drag force: %f | Speed = %f", translationalDragMagnitude, magnitude);
 		translationalDragVector.x = translationalDragVector.x * translationalDragMagnitude;
 		translationalDragVector.y = translationalDragVector.y * translationalDragMagnitude;
 		translationalDragVector.z = translationalDragVector.z * translationalDragMagnitude;
 		
 		// wrench message
 		geometry_msgs::Vector3 forceVector;
-		forceVector.x = translationalDragVector.x;
-		forceVector.y = translationalDragVector.y;
-		forceVector.z = translationalDragVector.z;
+		forceVector.x = -translationalDragVector.x;
+		forceVector.y = -translationalDragVector.y;
+		forceVector.z = -translationalDragVector.z;
 				
 		geometry_msgs::Vector3 torqueVector;
 		torqueVector.x = -(KP * p * abs(p));
@@ -192,6 +196,8 @@ public:
 		wrench.force = forceVector;
 		wrench.torque = torqueVector;
 
+		if (!shouldApplyForce(forceVector.x, forceVector.y, forceVector.z, torqueVector.x, torqueVector.y, torqueVector.z)) return;		
+
 		// ApplyBodyWrench message
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
@@ -202,9 +208,9 @@ public:
 
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
 
-		//std::cout << "Applying drag force:" << std::endl;
-		//std::cout << "fx:" << forceVector.x << ", fy:" << forceVector.y << " fz:" << forceVector.z;
-		//std::cout << " taoX:" << torqueVector.x << ", taoY:" << torqueVector.y << " taoZ:" << torqueVector.z << std::endl;
+		std::cout << "Applying drag force:" << std::endl;
+		std::cout << "fx:" << forceVector.x << ", fy:" << forceVector.y << " fz:" << forceVector.z;
+		std::cout << " taoX:" << torqueVector.x << ", taoY:" << torqueVector.y << " taoZ:" << torqueVector.z << std::endl;
 		
 		client.call(applyBodyWrench);
 
@@ -220,9 +226,12 @@ public:
 	 * @param msg Wrench to be applied to robot
 	 */
 	void controlsWrenchCallBack(const geometry_msgs::Wrench msg) {
+		if (!shouldApplyForce(msg.force.x, msg.force.y, msg.force.z, msg.torque.x, msg.torque.y, msg.torque.z))	return;
+
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = msg;
+		applyBodyWrench.request.reference_frame = "robot::body";
 
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
@@ -230,13 +239,32 @@ public:
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
 
 		client.call(applyBodyWrench);
+		
+		std::cout << "Applying wrench obtained from controls/wrench topic:" << std::endl;
+		std::cout << "fx:" << msg.force.x << ", fy:" << msg.force.y << " fz:" << msg.force.z;
+		std::cout << " taoX:" << msg.torque.x << ", taoY:" << msg.torque.y << " taoZ:" << msg.torque.z << std::endl;
 
 		if (applyBodyWrench.response.success) {
-			ROS_INFO("ApplyBodyWrench call successful.");
+<<<<<<< HEAD
+			ROS_DEBUG("ApplyBodyWrench call successful.");
+=======
+			//ROS_INFO("ApplyBodyWrench call successful.");
+>>>>>>> ded4ec1197d1d6eb3b4e9712184d51ebd4d6a79f
 		} else {
-			ROS_ERROR("ApplyBodyWrench call failed.");
+			//ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-		//applyDrag();
+<<<<<<< HEAD
+		applyDrag();
+=======
+	}
+
+	bool shouldApplyForce(float u, float v, float w, float p, float q, float r) {
+		return (inRangeForce(u) || inRangeForce(v) || inRangeForce(w) || inRangeForce(p) || inRangeForce(q) || inRangeForce(r));
+	}	
+	
+	bool inRangeForce(float x) {
+		return abs(x) > .0000001;
+>>>>>>> ded4ec1197d1d6eb3b4e9712184d51ebd4d6a79f
 	}
 
 private:

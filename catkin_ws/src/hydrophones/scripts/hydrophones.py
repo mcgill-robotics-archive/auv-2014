@@ -199,7 +199,7 @@ try:
             exit(1)
 
 except KeyboardInterrupt:
-    # CTRL-C FRENDLY
+    # CTRL-C FRIENDLY
     print ''
     print 'goodbye!'
     time.sleep(1)

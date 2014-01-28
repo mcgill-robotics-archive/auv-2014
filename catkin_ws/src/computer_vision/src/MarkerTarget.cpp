@@ -25,16 +25,17 @@ MarkerTarget::MarkerTarget() {
 
 	std::string templatePath = ros::package::getPath("computer_vision") +
 			"/reference_markers/%d.png";
+
+	char *path = new char[templatePath.size()];
 	//Load the reference images
 	for(int i = 0 ; i < NUM_REFERENCE_IMGS; i += 2) {
-		char *path = new char[templatePath.size()];
 		sprintf(path, templatePath.c_str(), (i + 2) / 2);
 
 		referenceImgs[i] = cv::imread(path, CV_LOAD_IMAGE_GRAYSCALE);
 		cv::flip(referenceImgs[i], referenceImgs[i + 1], -1);
-
-		delete[] path;
 	}
+
+	delete[] path;
 
 	/* To set the error tolerance, assume that all reference images
 	 * have the same size. */
@@ -47,8 +48,8 @@ MarkerTarget::MarkerTarget() {
 	intrinsic.at<float>(1, 1) = 0.02f; //Same with focal length y
 	intrinsic.at<float>(2, 2) = 1; //Always 1
 	//Principal point, in pixels. Use center of the video feed (simulator: (400, 400))
-	intrinsic.at<float>(0, 2) = 298;
-	intrinsic.at<float>(1, 2) = 220;
+	intrinsic.at<float>(0, 2) = 400;
+	intrinsic.at<float>(1, 2) = 400;
 }
 
 /**
