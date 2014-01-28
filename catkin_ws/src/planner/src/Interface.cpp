@@ -1,4 +1,5 @@
 #include "Interface.h"
+#include "planner/currentCVTask.h"
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
@@ -67,9 +68,11 @@ double* getOurOrientation () {
 }
 
 void setVisionObj (std::string obj) {
-  visionObj = obj;
-  std_msgs::String msgCV;
-  msgCV.data = visionObj;
+  planner::currentCVTask msgCV;
+  msgCV.currentCVTask = msgCV.GATE;
+  //visionObj = obj;
+  //std_msgs::String msgCV;
+  //msgCV.data = ;
   CV_objs_pub.publish(msgCV);
 }
 
@@ -131,7 +134,7 @@ int main (int argc, char **argv) {
   ros::Subscriber CV_sub = n.subscribe("visible_data", 1000, setVisibleObjectOrientation);
   ros::Subscriber Pose_sub = n.subscribe("gazebo/model_states", 1000, setOurOrientation);
 
-  CV_objs_pub = n.advertise<std_msgs::String>("planner/CV_Object", 1000); 
+  CV_objs_pub = n.advertise<planner::currentCVTask>("currentCVTask_Front", 1000); 
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
