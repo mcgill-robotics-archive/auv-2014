@@ -173,7 +173,9 @@ public:
 			translationalDragVector.z = w/magnitude;
 		}
 		
+		//Drag force = -0.5 * Area * density* |speed|^2 * dragCoefficent
 		translationalDragMagnitude = -.5 * .118 * 1000 * (u*u + v*v + w*w) * .8;
+		ROS_DEBUG("Drag force: %f | Speed = %f", translationalDragMagnitude, magnitude);
 		translationalDragVector.x = translationalDragVector.x * translationalDragMagnitude;
 		translationalDragVector.y = translationalDragVector.y * translationalDragMagnitude;
 		translationalDragVector.z = translationalDragVector.z * translationalDragMagnitude;
@@ -229,6 +231,7 @@ public:
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = msg;
+		applyBodyWrench.request.reference_frame = "robot::body";
 
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
@@ -242,10 +245,12 @@ public:
 		std::cout << " taoX:" << msg.torque.x << ", taoY:" << msg.torque.y << " taoZ:" << msg.torque.z << std::endl;
 
 		if (applyBodyWrench.response.success) {
+			ROS_DEBUG("ApplyBodyWrench call successful.");
 			//ROS_INFO("ApplyBodyWrench call successful.");
 		} else {
 			//ROS_ERROR("ApplyBodyWrench call failed.");
 		}
+		applyDrag();
 	}
 
 	bool shouldApplyForce(float u, float v, float w, float p, float q, float r) {

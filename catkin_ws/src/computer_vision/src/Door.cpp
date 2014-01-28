@@ -63,11 +63,9 @@ std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Ma
 	// Creates a pointer that will point to a computer_vision::VisibleObjectData object.
 	computer_vision::VisibleObjectData* visibleObjectData;
 
-	// Apply filters on the cv::Mat object.
 	applyFilter(currentFrame);
 
-	ROS_INFO("%s",
-			"The processing for the Gate object is completed. Now creating the ROS message.");
+	ROS_INFO("%s", "The processing for the Gate object is completed. Now creating the ROS message.");
 
 	// Check if door is visible
 	isVisible = true;

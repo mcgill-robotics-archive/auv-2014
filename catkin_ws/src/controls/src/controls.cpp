@@ -65,6 +65,7 @@ Roadmap
 #include "planner/setPoints.h"	
 #include "planner/ValueControl.h" //useless? / deprecated?
 #include "computer_vision/VisibleObjectData.h"
+#include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
 
 // using namespace std; //what does this do?!?!
 
@@ -161,6 +162,12 @@ int main(int argc, char **argv)
 	ros::init(argc,argv,"controls");
 	ros::NodeHandle n;
 
+	//specify ROSCONSOLE verbosity level
+	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+	{
+   		ros::console::notifyLoggerLevelsChanged();
+	}
+
 	//Parameters
 	double m; //mass in kg
 	double g;
@@ -223,7 +230,7 @@ int main(int argc, char **argv)
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber estimatedState_subscriber = n.subscribe("visible_data", 1000, estimatedState_callback);
+	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
 	ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 	//add clock subscription
 

@@ -19,6 +19,7 @@ project(planner)
    MotorControl.msg
    ValueControl.msg
    setPoints.msg
+   currentCVTask.msg
  )
 
 ## Generate services in the 'srv' folder
