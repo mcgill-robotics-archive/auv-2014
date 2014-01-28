@@ -336,6 +336,7 @@
       <!-- Camera 3 done -->
 
     </model>
+	<!-- robot model done -->
 
 	<!-- gate -->
     <model name="gate">
