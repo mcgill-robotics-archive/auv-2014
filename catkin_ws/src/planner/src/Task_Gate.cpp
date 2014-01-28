@@ -12,7 +12,8 @@ int Task_Gate::Execute() {
 	std::cout << ">> Executing Gate Task" << std::endl;
 	
 	std::cout<<"Gate Task setting velocity:   setVelocity(1, 1, 1, 1) "<<std::endl;
-	setPosition(0.0, 0.0, 0.0, 0.0, 9.0);	
+	setVisionObj("");
+	setPosition(-2.0, 0.0, 0.0, 0.0, 9.0);	
 	loop_rate.sleep();
 
 	std::cout<<"Gate Task setting position:   setPosition(1.0, 2.0, 3.0, 4.0, 5.0);"<<std::endl;
