@@ -245,17 +245,12 @@ public:
 		std::cout << " taoX:" << msg.torque.x << ", taoY:" << msg.torque.y << " taoZ:" << msg.torque.z << std::endl;
 
 		if (applyBodyWrench.response.success) {
-<<<<<<< HEAD
 			ROS_DEBUG("ApplyBodyWrench call successful.");
-=======
 			//ROS_INFO("ApplyBodyWrench call successful.");
->>>>>>> ded4ec1197d1d6eb3b4e9712184d51ebd4d6a79f
 		} else {
 			//ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-<<<<<<< HEAD
 		applyDrag();
-=======
 	}
 
 	bool shouldApplyForce(float u, float v, float w, float p, float q, float r) {
@@ -264,7 +259,6 @@ public:
 	
 	bool inRangeForce(float x) {
 		return abs(x) > .0000001;
->>>>>>> ded4ec1197d1d6eb3b4e9712184d51ebd4d6a79f
 	}
 
 private:
