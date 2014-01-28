@@ -1,6 +1,7 @@
-gains/kp: 10
+gains/kp: 1
 gains/ki: 1
-gains/kd: 20
+gains/kd: 0
+
 
 setPoints/XPos/value: 3.0
 setPoints/XSpeed/value: 5
