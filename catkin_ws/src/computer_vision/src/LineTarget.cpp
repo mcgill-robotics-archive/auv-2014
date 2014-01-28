@@ -79,8 +79,8 @@ void LineTarget::applyFilter(cv::Mat& image){
   /// Create Window
   char* source_window = "Source";
 
-  namedWindow( source_window, CV_WINDOW_AUTOSIZE );
-  imshow( source_window, src );
+  //namedWindow( source_window, CV_WINDOW_NORMAL);
+  //imshow( source_window, src );
 
   //createTrackbar( "Canny thresh:", "Source", &thresh, max_thresh, thresh_callback );
   thresh_callback( 0, 0 );
@@ -161,14 +161,17 @@ void LineTarget::thresh_callback(int, void* )
 		  yaw = relativeYaw(line);
 
 		  //If output is opposite, then invert
-		  xDistance = drawing.size().width/2 - centerX;
- 		  yDistance = drawing.size().height/2 - centerY;
+		  //invert the X and Y to be in the coordinate system of the robot
+		  //yDistance = drawing.size().width/2 - centerX;
+ 		  //xDistance = drawing.size().height/2 - centerY;
+ 		  yDistance = centerX - drawing.size().width/2;
+ 		  xDistance = drawing.size().height/2 - centerY;
  		  cout << "xDistance: " << xDistance << "\n";
  		  cout << "yDistance: " << yDistance << "\n";
 
 
   /// Show in a window
-  namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+  namedWindow( "Contours", CV_WINDOW_NORMAL );
   imshow( "Contours", drawing );
 }
 /**
