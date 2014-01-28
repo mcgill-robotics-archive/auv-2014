@@ -5,6 +5,8 @@ ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
 ros::Publisher control_pub;
 ros::Publisher checkpoints_pub;
+ros::Publisher taskPubFront;
+ros::Publisher taskPubDown;
 
 /**
  * Our current orientation from state estimation
@@ -68,12 +70,14 @@ double* getOurOrientation () {
 }
 
 void setVisionObj (std::string obj) {
-  planner::currentCVTask msgCV;
-  msgCV.currentCVTask = msgCV.GATE;
-  //visionObj = obj;
-  //std_msgs::String msgCV;
-  //msgCV.data = ;
-  CV_objs_pub.publish(msgCV);
+    planner::currentCVTask msgFront;
+    planner::currentCVTask msgDown;
+
+    msgFront.currentCVTask = msgFront.GATE;
+    msgDown.currentCVTask = msgDown.NOTHING;
+
+    taskPubFront.publish(msgFront);
+    taskPubDown.publish(msgDown);
 }
 
 void weAreHere (std::string task) {
@@ -134,7 +138,8 @@ int main (int argc, char **argv) {
   ros::Subscriber CV_sub = n.subscribe("visible_data", 1000, setVisibleObjectOrientation);
   ros::Subscriber Pose_sub = n.subscribe("gazebo/model_states", 1000, setOurOrientation);
 
-  CV_objs_pub = n.advertise<planner::currentCVTask>("currentCVTask_Front", 1000); 
+  taskPubFront = n.advertise<planner::currentCVTask>("currentCVTask_Front", 1000); 
+  taskPubDown = n.advertise<planner::currentCVTask>("currentCVTask_Down", 1000); 
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
