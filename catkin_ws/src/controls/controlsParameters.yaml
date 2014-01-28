@@ -1,18 +1,18 @@
-gains/kp: 1
-gains/ki: 1
-gains/kd: 0
+gains/kp: 10
+gains/ki: 0.1
+gains/kd: 10
 
 
-setPoints/XPos/value: 3.0
-setPoints/XSpeed/value: 5
+setPoints/XPos/value: 2.7
+setPoints/XSpeed/value: 0
 
-setPoints/YPos/value: 2
-setPoints/YSpeed/value: 1
+setPoints/YPos/value: 0.5
+setPoints/YSpeed/value: 0
 
-setPoints/Depth/value: 8.7
+setPoints/Depth/value: 8.8
 
 setPoints/Yaw/value: 0
-setPoints/YawSpeed/value: 5
+setPoints/YawSpeed/value: 0
 
 setPoints/Pitch/value: 0
 
