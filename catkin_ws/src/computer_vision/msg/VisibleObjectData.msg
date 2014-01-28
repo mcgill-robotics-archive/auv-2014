@@ -21,7 +21,7 @@ float64 z_distance
 # take the value of the constants defined under it.
 uint8 object_type
 
-# Constants used to identify which object is being analysed.
+# Constants used to identify the object that the information is about.
 uint8 DOOR=0
 uint8 BUOY=1
 uint8 GROUND_TARGET_1=2
@@ -30,3 +30,4 @@ uint8 GROUND_TARGET_3=4
 uint8 GROUND_TARGET_4=5
 uint8 GROUND_TARGET_UNKNOWN=6
 uint8 LANE=7
+uint8 CANNOT_DETERMINE_OBJECT=8
