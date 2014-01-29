@@ -44,7 +44,7 @@ void spin() {
 			posStamped.header.stamp = ros::Time::now();
 			posStamped.header.frame_id = "base_footprint";
 
-			pub.publish(posStamped);
+			pub.publish(pos);
 		}
 	}
 }
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 	ros::init(argc, argv, "x_imu_pose");
 	ros::NodeHandle node;
 
-	pub = node.advertise<geometry_msgs::PoseStamped>("pose_estimation", 100);
+	pub = node.advertise<geometry_msgs::Pose>("pose", 100);
 	
 	spin();
 	
