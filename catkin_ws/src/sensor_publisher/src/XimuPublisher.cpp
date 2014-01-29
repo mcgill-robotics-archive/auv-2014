@@ -14,8 +14,8 @@ ros::Publisher pub;
 geometry_msgs::Pose pos;
 geometry_msgs::PoseStamped posStamped;
 
-asio::io_service io;
-asio::serial_port port(io);
+asio::io_service serial_io;
+asio::serial_port port(serial_io);
 XimuReceiver receiver;
 
 void spin() {
@@ -33,10 +33,10 @@ void spin() {
 		if (receiver.isQuaternionGetReady()) {
 			QuaternionStruct quaternionStruct = receiver.getQuaternion();
 			
-			pos.orientation.w = quternionStruct.w;
-			pos.orientation.x = quternionStruct.x;
-			pos.orientation.y = quternionStruct.y;
-			pos.orientation.z = quternionStruct.z;
+			pos.orientation.w = quaternionStruct.w;
+			pos.orientation.x = quaternionStruct.x;
+			pos.orientation.y = quaternionStruct.y;
+			pos.orientation.z = quaternionStruct.z;
 			
 			posStamped = geometry_msgs::PoseStamped();
 			posStamped.pose = pos;

@@ -121,3 +121,34 @@ double *vectorIndex(double* vector, int index, int vector_length)
 	return &(vector[index*vector_length]);
 }
 
+void solve(double * A, double *B, double *C, int dim1, int dim2)
+{
+	//This method solves the equation CB=A
+	//given dim1*dim2 matrix A and dim2*dim2 matrix B
+	double *rootB = new double[dim2*dim2]();
+	cholesky(B, rootB, dim2);
+
+	//Now we have rootB*rootB^T = B
+	//where rootB is lower triangular
+	//and thus C*rootB*rootB^T = A
+	//introduce matrix D = C*rootB
+	//we now have D*rootB^T = A
+
+	//col and row refer to the column and row of D being written
+	//we solve for D
+	for(int col = 0; col < dim2; col++)
+	{
+		for(int row = 0; row<dim1;row++)
+		{
+			double temp = 0;
+			for(int k = 0; k < col; k++)
+			{
+				temp += C[row*dim2+k]*rootB[k*dim2+col];
+			}
+			C[row*dim2+col] = (A[row*dim2+col]-temp)/rootB[col*dim2+col];
+		}
+	}
+
+	//Now we have C*rootB = D
+
+}
