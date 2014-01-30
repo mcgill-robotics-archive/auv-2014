@@ -24,7 +24,7 @@ void setOurOrientation (gazebo_msgs::ModelStates msg);
 //BEWARE: RETURNS ADDRESS OF ARRAY
 double* getOurOrientation ();
 
-void setVisionObj (std::string obj);
+void setVisionObj (int objIndex);
 
 void weAreHere (std::string task);
 

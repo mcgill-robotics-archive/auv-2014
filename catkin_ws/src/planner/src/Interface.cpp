@@ -69,15 +69,23 @@ double* getOurOrientation () {
   return returnArray;
 }
 
-void setVisionObj (std::string obj) {
-    planner::currentCVTask msgFront;
-    planner::currentCVTask msgDown;
+void setVisionObj (int objIndex) {
+  planner::currentCVTask msgFront;
+   planner::currentCVTask msgDown;
 
-    msgFront.currentCVTask = msgFront.GATE;
-    msgDown.currentCVTask = msgDown.NOTHING;
+  msgFront.currentCVTask = msgFront.NOTHING;
+  msgDown.currentCVTask = msgDown.NOTHING;
+  switch (objIndex) {
+    case 1 : msgFront.currentCVTask = msgFront.GATE;
+  break;
+    case 2 : msgDown.currentCVTask = msgFront.LANE;
+  break;
+    case 3 : msgFront.currentCVTask = msgFront.BUOY;
+  break;
+  }
 
-    taskPubFront.publish(msgFront);
-    taskPubDown.publish(msgDown);
+  taskPubFront.publish(msgFront);
+  taskPubDown.publish(msgDown);
 }
 
 void weAreHere (std::string task) {
