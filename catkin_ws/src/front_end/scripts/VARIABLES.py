@@ -48,9 +48,9 @@ class ROS_Topics(object):
     left_pre_topic = "/simulator/camera1/image_raw"
     right_pre_topic = "/simulator/camera2/image_raw"
     bottom_pre_topic = "/simulator/camera3/image_raw"
-    left_post_topic = "/front_cv_camera1"
-    right_post_topic = "/front_cv_camera2"
-    bottom_post_topic = "/down_cv_camera"
+    left_post_topic = "/left_camera/camera/image_color"
+    right_post_topic = "/right_camera/camera/image_color"
+    bottom_post_topic = "/down_camera/camera/image_color"
     simulator_pose = "/gazebo/model_states"
     imu_raw = 'pose'
     imu_filtered='pose'
@@ -64,5 +64,5 @@ class misc_vars(object):
     controller_updateFrequency = 50
     low_battery_threshold = 2.0
     max_voltage = 24.0
-    GUI_UPDATE_PERIOD = 1000 #ms
+    GUI_UPDATE_PERIOD = 10 #ms
     length_plot = 25

@@ -1,6 +1,6 @@
 <launch>
     <!-- first camera and associated image pipeline -->
-  <group ns="front_camera1" >
+  <group ns="left_camera" >
     <node pkg="camera1394" type="camera1394_node" name="camera1394_node" >
       <param name="guid" value="00b09d0100cd1e8a" />
       <param name="video_mode" value="format7_mode0" />
@@ -19,7 +19,7 @@
   </group>
 
     <!-- first camera and associated image pipeline -->
-  <group ns="front_camera2" >
+  <group ns="right_camera" >
     <node pkg="camera1394" type="camera1394_node" name="camera1394_node" >
       <param name="guid" value="00b09d0100cd1e8c" />
       <param name="video_mode" value="format7_mode0" />
