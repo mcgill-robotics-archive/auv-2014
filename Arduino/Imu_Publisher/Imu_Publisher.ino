@@ -43,8 +43,8 @@ geometry_msgs::Vector3 accel_msg;          // To publish in the accel topic (lin
 geometry_msgs::Vector3 gyro_msg;           // To publish in the gyro topic (angular velocity in deg/s)
 
 // Publishers
-ros::Publisher accel("accel", &accel_msg);       // Publish the accel topic
-ros::Publisher gyro("gyro", &gyro_msg);          // Publish the gyro topic
+ros::Publisher accel("/imu/accel", &accel_msg);       // Publish the accel topic
+ros::Publisher gyro("/imu/gyro", &gyro_msg);          // Publish the gyro topic
 
 // Function prototypes
 void MPU9150_getAccelReadings(geometry_msgs::Vector3 &);
@@ -109,7 +109,7 @@ void MPU9150_getGyroReadings(geometry_msgs::Vector3 &gyro_vector)
     int gz = MPU9150_readSensor(MPU9150_GYRO_ZOUT_L, MPU9150_GYRO_ZOUT_H);
     
     // Scale the values by mapping into the range (from -range to +range)
-    // MIN_INT and MAX_INT are used to find the domain of the raw data
+    // MIN_INT and MAX_INT are used to find the domain of the raw dataco
     gyro_vector.x = map_float( gx, MIN_INT, MAX_INT, -range, +range );
     gyro_vector.y = map_float( gy, MIN_INT, MAX_INT, -range, +range );
     gyro_vector.z = map_float( gz, MIN_INT, MAX_INT, -range, +range );

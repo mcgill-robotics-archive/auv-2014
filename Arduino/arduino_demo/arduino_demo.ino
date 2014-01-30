@@ -56,11 +56,11 @@ digitalWrite(5,msg.grabber1.data);
 
 
 
-ros::Publisher depth("/elec_interface/depth", &depth_msg);  // Publish the depth topic
-ros::Publisher battPub0("/elec_interface/batteryLevel0", &batteryLevel0);
-ros::Publisher battPub1("/elec_interface/batteryLevel1", &batteryLevel1);
-ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/elec_interface/solenoid", &solenoidCb );
-ros::Subscriber<arduino_msgs::motor> motor_sub("/elec_interface/motor", &motorCb );
+ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
+ros::Publisher battPub0("/arduino/batteryLevel0", &batteryLevel0);
+ros::Publisher battPub1("/arduino/batteryLevel1", &batteryLevel1);
+ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
+ros::Subscriber<arduino_msgs::motor> motor_sub("/arduino/motor", &motorCb );
 
 void setup(){
  
