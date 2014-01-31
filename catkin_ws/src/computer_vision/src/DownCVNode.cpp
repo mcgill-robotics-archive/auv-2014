@@ -46,7 +46,9 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	this->frontEndPublisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, bufferSize);
 
 	this->visibleObjectList.push_back(new MarkerTarget());
-	this->visibleObjectList.push_back(new LineTarget());
+
+	// FIXME: There is a problem with LineTarget::retrieveObjectData()
+	//this->visibleObjectList.push_back(new LineTarget());
 
 	cv::namedWindow(DOWN_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 }
@@ -82,20 +84,19 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
 		for (it = visibleObjectList.begin(); it != visibleObjectList.end(); it++) {
-		messagesToPublish = (*it)->retrieveObjectData(currentFrame);
+			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 			for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it !=
-			messagesToPublish.end(); ++it) {
-			computer_vision::VisibleObjectData messageToSend;
-			messageToSend.object_type = (*it)->object_type;
-			messageToSend.pitch_angle = (*it)->pitch_angle;
-			messageToSend.yaw_angle = (*it)->yaw_angle;
-			messageToSend.x_distance = (*it)->x_distance;
-			messageToSend.y_distance = (*it)->y_distance;
-			messageToSend.z_distance = (*it)->z_distance;
-			frontEndVisibleObjectDataPublisher.publish(messageToSend);
+			    messagesToPublish.end(); ++it) {
+				computer_vision::VisibleObjectData messageToSend;
+				messageToSend.object_type = (*it)->object_type;
+				messageToSend.pitch_angle = (*it)->pitch_angle;
+				messageToSend.yaw_angle = (*it)->yaw_angle;
+				messageToSend.x_distance = (*it)->x_distance;
+				messageToSend.y_distance = (*it)->y_distance;
+				messageToSend.z_distance = (*it)->z_distance;
+				frontEndVisibleObjectDataPublisher.publish(messageToSend);
 			}
 		}
-
 
 
 		// Publish the images.
