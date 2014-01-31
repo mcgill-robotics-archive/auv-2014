@@ -11,21 +11,19 @@ class CameraNode {
 
 	private:
 
-	int transmissionRate;
-	Camera* pCamera;
 	image_transport::ImageTransport* pImageTransport;
-	image_transport::Publisher publisher;
-	cv_bridge::CvImage* pLastImage;
-	
+
+	protected:
+
+	int transmissionRate;
+	image_transport::Publisher cvNodePublisher;
+	cv_bridge::CvImage toCvImage(cv::Mat* pFrame);
+
 	public:
 	
-	CameraNode(ros::NodeHandle& nodeHandle, const char* topicName, const char* captureSource, int transmissionRate);
-	~CameraNode();
-	void sendImages();
-
-	private:
-
-	void toCvImage(cv::Mat* pFrame);
+	CameraNode(ros::NodeHandle& nodeHandle, const std::string topicName, int transmissionRate, int bufferSize);
+	virtual ~CameraNode();
+	virtual void sendImages() = 0;
 };
 
 #endif
