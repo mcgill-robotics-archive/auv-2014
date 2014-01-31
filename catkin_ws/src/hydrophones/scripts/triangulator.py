@@ -1,6 +1,9 @@
-from math import sqrt, pow
+#!/usr/bin/env python
 
-SPEED = 340
+from math import sqrt, pow, pi, sin, cos
+from numpy import linalg
+
+SPEED = 330
 
 def magnitude(x, y, z):
         return sqrt(x * x + y * y + z * z)
@@ -62,7 +65,7 @@ def triangulate3d(DISTANCE, dtx, dty, dtz):
     except:
         return 'degenerate triangle'
 
-def triangulate2d(DISTANCE, dtx, sdty):
+def triangulate2d(DISTANCE, dtx, dty):
     try:
         # DISTANCE DIFFERENCES (ds = v * dt)
         sx = dtx * SPEED
@@ -101,10 +104,68 @@ def triangulate2d(DISTANCE, dtx, sdty):
     except:
         return 'degenerate triangle'
 
-DISTANCE = 100
-dtx = 232
-dty = 232
-dtz = 232
+def triangulate(dtx, dty):
+    DISTANCE_X = 499.1  # Distance M1 <---> M3
+    DISTANCE_Y = 1267.9 # Distance M2 <---> M3
 
-print triangulate3d(DISTANCE, dtx, dty, dtz)
-print triangulate2d(DISTANCE, dtx, dty)
+    sx = dtx*SPEED # Distance M1 <---> M2
+    sy = dty*SPEED # Distance M1 <---> M3
+
+    phi = 16.177*pi/180 # Angle between M1 and M2 in rads
+
+    # Initial Guess
+    r1 = 1000
+    theta = 0
+
+    # Solution vector
+    Y = [r1, theta]
+
+    # Position Vector
+    R = [ Y[0], sx, sy, DISTANCE_X, DISTANCE_Y ]
+    F = [0,0]
+    J = [[0,0],[0,0]]
+
+    # Tolerance
+    t = 1e-9
+    e = 100
+
+    # Iteration count
+    i = 0
+
+    # As long as the error is higher than the tolerance
+    while e > t:
+        R = [ Y[0], sx, sy, DISTANCE_X, DISTANCE_Y ]
+        theta = Y[1]
+
+        # Calculate the function
+        F = [(R[0] + R[2])**2 - (R[0] + R[1])**2 + R[3]**2 - 2*(R[0] + R[2]) * R[3] * cos(theta),
+            (R[0] + R[2])**2 + R[4]**2 - R[0]**2 - 2 * (R[0]+R[2]) * R[4] * cos(theta-phi)]
+        J[0][0] = 2 * R[2] - 2 * R[1] - 2 * R[3] * cos(theta)
+        J[0][1] = 2 * (R[0] + R[2]) * R[3] * sin(theta)
+        J[1][0] = 2 * R[2] - 2 * R[4] * cos(theta - phi)
+        J[1][1] = 2 * (R[0] + R[2]) * R[4] * sin(theta - phi)
+        
+        delta_x = -linalg.solve(J, F)
+        
+        Y += delta_x
+        
+        e = sqrt(delta_x[0]**2 + delta_x[1]**2)
+        
+        if i > 1000:
+            print "****Did not converge within", i, " iterations.**** with e = ", e
+            e = 0
+        
+        i += 1
+
+    return Y
+
+
+
+DISTANCE = 1200
+dtx = 0.455
+dty = 0.606
+dtz = 0.606
+
+print '3D Explicit: ', triangulate3d(DISTANCE, dtx, dty, dtz)
+print '2D Explicit: ', triangulate2d(DISTANCE, dtx, dty)
+print 'Numerical Method: ', triangulate(dtx, dty)
