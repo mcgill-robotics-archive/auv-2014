@@ -13,12 +13,15 @@ class Camera  {
     
     cv::VideoCapture* pVideoCapture;
     cv::Mat* pLastFrame;
+    ros::Time captureTime;
     
 	public:
     
     Camera(const char* captureSource);
     ~Camera();
-    cv::Mat* captureFrame();
+    void captureFrame();
+    cv::Mat* getLastFrame();
+    ros::Time getCaptureTime();
 };
 
 #endif
