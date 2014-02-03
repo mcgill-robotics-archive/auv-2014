@@ -1,7 +1,9 @@
 #include <Servo.h> 
 #include <ros.h>
+#include <std_msgs/Int32.h>
 #include <std_msgs/Int16.h>
-#include <arduino_msgs/motor.h>
+#include <std_msgs/String.h>
+#include <controls/motorCommands.h>
 #include <arduino_msgs/solenoid.h>
 #include <std_msgs/Float32.h>
 
@@ -30,19 +32,19 @@ long batteryLevelSchedule;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
-    nh.logerror("Motor speed out of bound ! " + x);
+    nh.logerror("Motor Speed out of bound!");
     return 0;  
   }
   return x;
 }
 
-void motorCb( const arduino_msgs::motor& msg){
-  myservo[0].writeMicroseconds(1500 + msg.x_p);
-  myservo[1].writeMicroseconds(1500 + msg.x_n);  // blink the led
-  myservo[2].writeMicroseconds(1500 + msg.y_p);
-  myservo[3].writeMicroseconds(1500 + msg.y_n);
-  myservo[4].writeMicroseconds(1500 + msg.z_p);
-  myservo[5].writeMicroseconds(1500 + msg.z_n);
+void motorCb( const controls::motorCommands& msg){
+  myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
+  myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));  // blink the led
+  myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
+  myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
+  myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
+  myservo[5].writeMicroseconds(1500 + boundCheck(msg.cmd_z2));
 }
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
@@ -60,7 +62,7 @@ ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
 ros::Publisher battPub0("/arduino/batteryLevel0", &batteryLevel0);
 ros::Publisher battPub1("/arduino/batteryLevel1", &batteryLevel1);
 ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
-ros::Subscriber<arduino_msgs::motor> motor_sub("/arduino/motor", &motorCb );
+ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
 
 void setup(){
  
