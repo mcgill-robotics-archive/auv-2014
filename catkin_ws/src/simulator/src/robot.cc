@@ -12,6 +12,7 @@
 #include "geometry_msgs/Vector3.h"
 #include "geometry_msgs/Wrench.h"
 #include <unistd.h>
+#include "std_msgs/Bool.h"
 
 namespace gazebo
 {
@@ -29,7 +30,6 @@ public:
 	 */
 	Robot() {
 		int argc = 0;
-		iterCount = 0;
 		ros::init(argc, NULL, "Robot Plugin");
 		std::cout<<"Robot plugin node Created"<<std::endl;
 	};
@@ -60,6 +60,12 @@ public:
 
 		// /controls/wrench/
 		this->controlsWrenchSub = this->node->subscribe("/controls/wrench", 1000, &Robot::controlsWrenchCallBack, this);
+
+		// Marker Drop Sub topic subscriber 
+		this->markerDropSub = this->node->subscribe("simulator/marker", 1000, &Robot::simulatorMarkerCallBack, this);
+
+		// Torpedo Launch Sub topic subscriber
+		this->torpedoLaunchSub = this->node->subscribe("simulator/torpedo", 1000, &Robot::torpedoCallBack, this);;
 
 		// Listen to the update event. This event is broadcast every
 		// simulation iteration.
@@ -228,6 +234,8 @@ public:
 
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
+		//applyBodyWrench.request.reference_frame = (std::string) "robot::body";
+		
 		applyBodyWrench.request.wrench = msg;
 
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
@@ -236,15 +244,14 @@ public:
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
 
 		client.call(applyBodyWrench);
-		
 		std::cout << "Applying wrench obtained from controls/wrench topic:" << std::endl;
 		std::cout << "fx:" << msg.force.x << ", fy:" << msg.force.y << " fz:" << msg.force.z;
 		std::cout << " taoX:" << msg.torque.x << ", taoY:" << msg.torque.y << " taoZ:" << msg.torque.z << std::endl;
 
 		if (applyBodyWrench.response.success) {
-			//ROS_INFO("ApplyBodyWrench call successful.");
+			ROS_INFO("ApplyBodyWrench call successful.");
 		} else {
-			//ROS_ERROR("ApplyBodyWrench call failed.");
+			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
 	}
 
@@ -254,6 +261,18 @@ public:
 	
 	bool inRangeForce(float x) {
 		return abs(x) > .0000001;
+	}
+
+	void simulatorMarkerCallBack(const std_msgs::Bool::ConstPtr& msg) {
+		if (msg->data) {
+			ROS_INFO("Dropped Marker");
+		}
+	}
+
+	void torpedoCallBack(const std_msgs::Bool::ConstPtr& msg) {
+		if (msg->data) {
+			ROS_INFO("Shot torpedo");
+		}
 	}
 
 private:
@@ -289,10 +308,13 @@ private:
 	
 	/** Controls wrench topic subscriber */
 	ros::Subscriber controlsWrenchSub;
-	
-	int iterCount;
-};
 
+	/** Marker Drop Sub topic subscriber */
+	ros::Subscriber markerDropSub;
+
+	/** Torpedo Launch Sub topic subscriber */
+	ros::Subscriber	torpedoLaunchSub;
+};
 // Register this plugin with the simulator
 GZ_REGISTER_MODEL_PLUGIN(Robot)
 }
