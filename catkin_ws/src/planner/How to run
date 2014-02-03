@@ -1,10 +1,8 @@
-
-You can run _build_run_sim_planner.sh in catkin root to run gazebo and planner
-
-
 In simulation: 
- roslaunch simulator simulator.launch
+ roslaunch planner planner.launch
+*wait for everything to initialize (you can see the robot)*
  rosrun planner Planner
  
-
 The tasks that run are defined in tasks.xml in the catkin root 
+
+Updated 1/29 by Alex Reiff

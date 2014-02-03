@@ -77,7 +77,7 @@ void LineTarget::applyFilter(cv::Mat& image){
 
 
   /// Create Window
-  char* source_window = "Source";
+  //char* source_window = "Source";
 
   //namedWindow( source_window, CV_WINDOW_NORMAL);
   //imshow( source_window, src );

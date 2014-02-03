@@ -5,23 +5,20 @@ Task_Gate::Task_Gate() {
 }
 
 int Task_Gate::Execute() {
-
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
 
 	std::cout << ">> Executing Gate Task" << std::endl;
-	
-	std::cout<<"Gate Task setting velocity:   setVelocity(1, 1, 1, 1) "<<std::endl;
-	setVelocity(0.0, 19000.0, 0.0, 1.0);	
+	weAreHere("Beginning GATE task");
+	loop_rate.sleep();
+	std::cout<<"Gate Task setting position relative to gate:  setPosition(-2, -1, 0, 0, 0, 8.8) "<<std::endl;
+	setVisionObj(1);
+	loop_rate.sleep();
+	setPosition(-2.0, -1, 0, 0.0, 8.8);	
 	loop_rate.sleep();
 
-	std::cout<<"Gate Task setting position:   setPosition(1.0, 2.0, 3.0, 4.0, 5.0);"<<std::endl;
-	weAreHere("GATE");
-	loop_rate.sleep();
-
-	std::cout<<"Gate Task starting ps3 control"<<std::endl<<"..."<<std::endl;
-
-	ps3Control();
+	std::cout<<"Gate Task completed"<<std::endl;
+	weAreHere("Finishing GATE task");
 	loop_rate.sleep();
 
 	return 0;

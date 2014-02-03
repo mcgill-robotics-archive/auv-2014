@@ -40,6 +40,7 @@ Camera::Camera(const char* captureSource) {
  * Releases the memory used by the Camera object.
  */
 Camera::~Camera() {
+	pVideoCapture->release();
 	delete this->pVideoCapture;
 	delete this->pLastFrame;
 }
@@ -49,7 +50,7 @@ Camera::~Camera() {
  * an opencv image.
  * @return An opencv image
  */
-cv::Mat* Camera::captureFrame() {
+void Camera::captureFrame() {
 	bool readFrame = false;
 
 	// Delete last frame and create a new one
@@ -60,7 +61,7 @@ cv::Mat* Camera::captureFrame() {
     readFrame = (*pVideoCapture).read(*pLastFrame);
 
     // Check if frame was read
-    if (readFrame == false) {
+    if (readFrame == false && pVideoCapture != NULL) {
     	/*
     	cv::Exception captureFailed(0, "Camera failed to capture frame", "Camera::captureFrame()", "Camera.cpp", 44);
     	throw captureFailed;
@@ -69,8 +70,16 @@ cv::Mat* Camera::captureFrame() {
         (*pVideoCapture).read(*pLastFrame);
     }
 
-    // Return new frame
+    // Set capture time
+    captureTime = ros::Time::now();
+}
+
+cv::Mat* Camera::getLastFrame() {
 	return pLastFrame;
+}
+
+ros::Time Camera::getCaptureTime() {
+	return captureTime;
 }
 
 

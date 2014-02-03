@@ -1,0 +1,27 @@
+<launch>
+  <!-- launches: everything planner needs running before it can start-->
+  <!-- WARNING: DOES NOT START PLANNER -->
+  <!-- Written by Alex Reiff, Jan 29, McGill Robotics -->
+  <!-- Copied from Nick Speal's "template" in Controls -->
+  
+  <!-- Parameters -->
+  <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
+
+
+  <!-- First start the simulation environment -->
+  <include file="$(find simulator)/launch/simulator.launch">
+    <!-- more default parameters can be changed here -->
+  </include>
+
+  <!-- Controls -->
+          <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>
+  <!-- dummy nodes for now -->
+          <node name="gazeboDepthEstimator" pkg="controls" type="gazeboDepthEstimator"  respawn="false" output="screen"/>
+          <node name="distanceCalculator" pkg="planner" type="distanceCalculator"  respawn="false" output="screen"/>
+
+
+  <!-- Planner
+          <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen"/>
+  -->
+
+</launch>
