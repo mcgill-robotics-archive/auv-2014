@@ -5,7 +5,7 @@ import time
 import serial
 import numpy as np
 import sys
-# import rospy
+import rospy
 # from geometry_msgs.msg import PointStamped
 from threading import Thread
 from math import sqrt, pow
@@ -17,9 +17,9 @@ DISTANCE_X = 0.565  # DISTANCE M1 <---> M3
 DISTANCE_Y = 0.349  # DISTANCE M2 <---> M3
 SPEED = 343         # SPEED IN AIR
 MAX_DELAY = 10000   # MAXIMUM DELAYAY BEFORE RESET (TICKS)
-THRESHOLD = 50      # VOLUME THRESHOLD (OUT OF 330) - EXPERIMENTAL VALUE
+THRESHOLD = 0      # VOLUME THRESHOLD (OUT OF 330) - EXPERIMENTAL VALUE
 TICK_TIME = 40      # TIME PER LOOP CYCLE (MICROSECONDS) - EXPERIMENTAL VALUE
-TEENSY_PATH = '/dev/tty.usbmodem10131'      # '/dev/teensy'
+TEENSY_PATH = '/dev/teensy'
 
 class mic(object):
     __slots__ = ['value', 'peak', 'time', 'done']
