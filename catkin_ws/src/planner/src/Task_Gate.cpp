@@ -9,18 +9,14 @@ int Task_Gate::Execute() {
 	loop_rate.sleep();
 
 	std::cout << ">> Executing Gate Task" << std::endl;
-	weAreHere("Beginning GATE task");
-	loop_rate.sleep();
+	weAreHere("Beginning GATE task");	loop_rate.sleep();
+
 	std::cout<<"Gate Task setting position relative to gate:  setPosition(-2, -1, 0, 0, 0, 8.8) "<<std::endl;
-	setVisionObj(1);
-	loop_rate.sleep();
-	setPosition(-2.0, -1, 0, 0.0, 8.8);	
-	loop_rate.sleep();
+	setVisionObj(1);	loop_rate.sleep();
+	setPosition(-2.0, -1, 0, 0.0, 8.8);	loop_rate.sleep();
 
 	std::cout<<"Gate Task completed"<<std::endl;
-	weAreHere("Finishing GATE task");
-	loop_rate.sleep();
+	weAreHere("Finishing GATE task");	loop_rate.sleep();
 
 	return 0;
 }
-
