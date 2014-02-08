@@ -1,21 +1,24 @@
 #include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
+#include "geometry_msgs/Wrench.h"
 #include "geometry_msgs/Pose.h"
 #include "std_msgs/Float64.h"
 #include "gazebo_msgs/ModelStates.h"
 #include "controls/motorCommands.h"
 
+//global vars
+ros::Publisher voltage_publisher;
+
+const float VOLTAGE_MIN=-20;
+const float VOLTAGE_MAX=20;
+
 void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 {	
-	float thrust[6] = [0, 0, 0, 0, 0, 0];
-	float voltage[6] = [0, 0, 0, 0, 0, 0];
-	int32_t motor_cmd[6] = [0, 0, 0, 0, 0, 0];
+	float thrust[6] = {0, 0, 0, 0, 0, 0};
+	float voltage[6] = {0, 0, 0, 0, 0, 0};
+	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
 	
-	const float VOLTAGE_MAX = 20;
-	const float VOLTAGE_MIN = -20;
-
-	const int MOTOR_CMD_MAX = 127;
-	const int MOTOR_CMD_MIN = -128;
+	const int32_t MOTOR_CMD_MAX = 127;
+	const int32_t MOTOR_CMD_MIN = -128;
 
 	controls::motorCommands motorCommands;
 
@@ -29,18 +32,19 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 	thrust[5] = 0.5 * wrenchMsg.force.z - 1.6667 * wrenchMsg.torque.y;    
 
 	//for each thrust, map to a voltage
-	for (int i=0; n<6; n++) {
-	    if (thrust[i]<0.4641 AND thrust[i]>-0.01095 ) {
+	for (int i=0; i<6; i++) {
+	    if (thrust[i]<0.4641 & thrust[i]>-0.01095 ) {
 	        voltage[i] = 0;
 	    }
-	    else if (thrust[i]>0.4641 AND thrust[i]<0.79423) {
+	    else if (thrust[i]>0.4641 & thrust[i]<0.79423) {
 	        voltage[i] = (-0.1419 + sqrt(0.1419*0.1419-4*0.0676*(-0.3668-thrust[i])))/(2*0.0676);
 	    }
 	    else if (thrust[i]>0.79423) {
 	    	voltage[i]=(thrust[i]+3.2786)/1.047;
 	    }
-	    else if (thrust[i]<-0.01095 AND thrust[i]>-1.179701){
-	        voltage[i] = -0.0314 + sqrt(0.0314*0.0314-4*-0.0851*(0.0042-thrust[i]);
+	    else if (thrust[i]<-0.01095 & thrust[i]>-1.179701){
+	        voltage[i] = -0.0314 + sqrt(0.0314*0.0314-4*-0.0851*(0.0042-thrust[i]));
+	    }
 	    else if (thrust[i]<-1.179701) {
 	    	voltage[i] = (thrust[i]-2.5582)/0.9609;
 	    }
@@ -50,7 +54,7 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 	//map voltages to motor commands
 	//Conversion to integer between -128 and +127
 	//linear for now TODO change mapping according to test
-	for (int i=0; n<6; n++)
+	for (int i=0; i<6; i++)
 	{
 		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-(MOTOR_CMD_MIN)) + (MOTOR_CMD_MIN); 
 	}
@@ -62,8 +66,19 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 	motorCommands.cmd_z2=motor_cmd[5]; 
 
 
-	//publish
+		//publish
 	voltage_publisher.publish(motorCommands);
+
+}
+
+float saturation(float value, float min, float max){
+	if (value > max | value < min) {
+		value = 0;
+	ROS_WARN("Saturation values have been exceeded. Thrust has been set to 0.");
+	}
+	else {
+		return value;
+	}
 }
 
 int main(int argc, char **argv)
@@ -75,19 +90,8 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	ros::Publisher voltage_publisher = n.advertise<geometry_msgs::Custom>("/gazebo/voltageMsg", 100); //TODO change message type and name
-	geometry_msgs::Twist twistMsg; //define variable
-
-	bool ready = 0;
-	ROS_INFO("thrust_mapper waiting for all subscribers to have content...");
-	while (ready == 0)
-	{
-		ROS_DEBUG_THROTTLE(2,"Waiting...");
-		ready = 1;		 
-		if (thrust_subscriber.getNumPublishers() == 0) {ready = 0;}
-		else {ROS_DEBUG_THROTTLE(2,"got thrust");}
-	}
-	ROS_INFO("All Subscribers Live. Starting thrust_mapper node!");
-	ros::spin()
+	voltage_publisher = n.advertise<geometry_msgs::Wrench>("/controls/motorCommands", 100); //TODO change message type and name
+	
+	ros::spin();
 	return 0;
 }
