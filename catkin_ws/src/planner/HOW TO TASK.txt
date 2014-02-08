@@ -1,0 +1,9 @@
+1) Create TASK_NAME.cpp in ./src
+2) Create TASK_NAME.h in ./include
+3) Make sure TASK_NAME.cpp includes TASK_NAME.h
+4) Make sure TaskFactory.h include TASK_NAME.h
+5) In TaskFactory.cpp, replace the corresponding task-version with TASK_NAME()
+6) Add src/TASK_NAME.cpp to CMakeLists.txt under add_executable(Planner ...)
+7) Enjoy your new task 
+
+If this doesn't work, let Alex Reiff know
