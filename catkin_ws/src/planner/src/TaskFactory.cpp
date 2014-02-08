@@ -58,10 +58,10 @@ Task* TaskFactory::makeTask(std::string id){
 
 				case 2:
 					return new Task_1v2();
-
+break;
 				case 3: 
 					return new TorpedoTask();
-
+break;
 				default:
 					return new Task();
 					break;
@@ -73,7 +73,7 @@ Task* TaskFactory::makeTask(std::string id){
 			switch(v){
 			
 				case 1:
-					return new Task_2v1();
+					return new Task_Lane();
 					 //return new Task2v1();
 					 break;
 			
