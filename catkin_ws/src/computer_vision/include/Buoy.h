@@ -270,7 +270,7 @@ class Buoy : public VisibleObject {
 	public:
 
 	~Buoy();
-	computer_vision::VisibleObjectData* retrieveObjectData(Mat& currentFrame);
+	vector<computer_vision::VisibleObjectData*> retrieveObjectData(Mat& currentFrame);
 };
 
 #endif
