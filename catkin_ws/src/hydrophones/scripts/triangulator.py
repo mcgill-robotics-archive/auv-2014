@@ -152,12 +152,17 @@ def triangulate(dtx, dty):
         e = sqrt(delta_x[0]**2 + delta_x[1]**2)
         
         if i > 1000:
-            print "****Did not converge within", i, " iterations.**** with e = ", e
+            print "****Did not converge within ", i, " iterations.**** with e = ", e
             e = 0
         
         i += 1
 
-    return Y
+    x = Y[0] * cos(Y[1])
+    y = Y[0] * sin(Y[1])
+
+    coordinates = [x, y]
+
+    return coordinates
 
 
 

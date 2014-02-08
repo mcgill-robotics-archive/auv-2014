@@ -64,11 +64,11 @@ def parse(str):
     if str[0] is 'O':
         mics[0].append(long(str[1:]))
     elif str[0] is 'X':
-        mics[1].append(long(str[1:]) + 1004)
+        mics[1].append(long(str[1:]))
     elif str[0] is 'Y':
-        mics[2].append(long(str[1:]) + 70)
+        mics[2].append(long(str[1:]))
     elif str[0] is 'Z':
-        mics[3].append(long(str[1:]) + 980)
+        mics[3].append(long(str[1:]))
 
 # MAGNITUDE OF VECTOR
 def magnitude(x, y, z):
