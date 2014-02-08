@@ -189,6 +189,11 @@ target_link_libraries(DownCameraNode ${catkin_LIBRARIES})
 add_executable(CVTestNode src/CVTestNode.cpp)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
 
+add_executable(SoftCameraNode src/SoftCameraNode.cpp)
+target_link_libraries(SoftCameraNode Camera)
+target_link_libraries(SoftCameraNode CameraNode)
+target_link_libraries(CVTestNode ${catkin_LIBRARIES})
+
 # This makes sure message headers are generated before being used
 add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
