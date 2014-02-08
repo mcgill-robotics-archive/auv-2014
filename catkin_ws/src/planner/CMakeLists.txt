@@ -56,7 +56,7 @@ project(planner)
  add_dependencies(TestNodePleaseIgnore ${catkin_EXPORTED_TARGETS})
 
 
- add_executable(Planner src/Interface.cpp src/Loader.cpp src/Invoker.cpp src/TaskFactory.cpp src/Config.cpp include/pugixml/src/pugixml.cpp src/TaskConcrete.cpp src/Task.cpp src/Task_Gate.cpp)
+ add_executable(Planner src/Interface.cpp src/Loader.cpp src/Invoker.cpp src/TaskFactory.cpp src/Config.cpp include/pugixml/src/pugixml.cpp src/TaskConcrete.cpp src/Task.cpp src/Task_Gate.cpp src/Task_Lane.cpp)
  target_link_libraries(Planner ${catkin_LIBRARIES})
  add_dependencies(Planner ${catkin_EXPORTED_TARGETS})
 

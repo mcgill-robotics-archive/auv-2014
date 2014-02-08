@@ -77,12 +77,18 @@ void setVisionObj (int objIndex) {
   msgFront.currentCVTask = msgFront.NOTHING;
   msgDown.currentCVTask = msgDown.NOTHING;
   switch (objIndex) {
-    case 1 : msgFront.currentCVTask = msgFront.GATE;
-  break;
+    case 0 : msgFront.currentCVTask = msgFront.NOTHING;
+             msgDown.currentCVTask = msgFront.NOTHING;
+      break;
+    case 1 : msgFront.currentCVTask = msgFront.GATE;\
+             msgDown.currentCVTask = msgFront.NOTHING;
+      break;
     case 2 : msgDown.currentCVTask = msgFront.LANE;
-  break;
+             msgFront.currentCVTask = msgFront.NOTHING;
+      break;
     case 3 : msgFront.currentCVTask = msgFront.BUOY;
-  break;
+             msgDown.currentCVTask = msgFront.NOTHING;
+      break;
   }
 
   taskPubFront.publish(msgFront);
