@@ -2,8 +2,9 @@
 #define FRONT_CV_NODE_H
 
 #include "CVNode.h"
-#include "Door.h"
 #include "Buoy.h"
+#include "Door.h"
+
 
 //#include "computer_vision/StereoCameraImages.h"
 

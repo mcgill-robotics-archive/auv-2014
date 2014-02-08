@@ -183,6 +183,7 @@ target_link_libraries(FrontCVNode VisibleObject)
 target_link_libraries(FrontCVNode Door)
 target_link_libraries(FrontCVNode Buoy)
 target_link_libraries(FrontCVNode ${catkin_LIBRARIES})
+rosbuild_add_compile_flags(FrontCVNode -std=c++0x)
 
 add_executable(FrontCameraNode src/FrontCameraNode.cpp)
 target_link_libraries(FrontCameraNode Camera)

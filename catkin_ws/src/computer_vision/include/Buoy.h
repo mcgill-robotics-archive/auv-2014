@@ -2,14 +2,8 @@
 #define CV_DOOR_H
 
 #include "VisibleObject.h"
-
-#include <iostream>
 #include <sstream>
 #include <random>
-#include <cv.h>
-#include <highgui.h>
-#include <math.h>
-#include <sys/time.h>
 
 #define _USE_MATH_DEFINES
 
@@ -266,11 +260,12 @@ inline vector<DetectedBuoy> detectBuoys(Mat* image, BuoyColorProfile buoy) {
  * Buoy class
  */
 class Buoy : public VisibleObject {
-
-	public:
-
+public:
+	Buoy();
 	~Buoy();
 	vector<computer_vision::VisibleObjectData*> retrieveObjectData(Mat& currentFrame);
+private:
+	virtual void applyFilter(cv::Mat& currentFrame);	
 };
 
 #endif

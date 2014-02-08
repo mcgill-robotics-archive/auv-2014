@@ -6,6 +6,10 @@
 
 #include "Buoy.h"
 
+Buoy::Buoy() {
+
+}
+
 Buoy::~Buoy() {
 
 }
@@ -53,3 +57,7 @@ vector<computer_vision::VisibleObjectData*> Buoy::retrieveObjectData(Mat& curren
 		return detectedObjects;
 	}
 }
+
+void Buoy::applyFilter(cv::Mat& currentFrame) {
+
+};
