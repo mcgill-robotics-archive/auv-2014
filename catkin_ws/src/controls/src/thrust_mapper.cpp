@@ -1,3 +1,12 @@
+/*
+
+Maps thrust to voltage
+Maps voltage to motor command
+
+*/
+
+
+
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
