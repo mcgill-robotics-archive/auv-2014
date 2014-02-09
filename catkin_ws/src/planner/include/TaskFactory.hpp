@@ -10,6 +10,7 @@
 #include "TaskConcrete.hpp"
 #include "Task.hpp"
 #include "Task_Gate.h"
+#include "Task_Lane.h"
 
 //#include "Config.hpp"
 //#include "Task.cpp"

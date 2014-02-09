@@ -65,7 +65,7 @@ std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Ma
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	// Creates a pointer that will point to a computer_vision::VisibleObjectData object.
-	computer_vision::VisibleObjectData* visibleObjectData;
+	computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();
 
 	applyFilter(currentFrame);
 

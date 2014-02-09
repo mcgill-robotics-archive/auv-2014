@@ -47,8 +47,8 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
 
 	// Construct the list of VisibleObjects
-	visibleObjectList.push_back(new Door());
-
+	this->visibleObjectList.push_back(new Door());
+	//this->visibleObjectList.push_back(new Buoy());
 	// Create a window to display the images received
 	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 }

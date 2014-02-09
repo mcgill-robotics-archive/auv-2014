@@ -7,6 +7,7 @@ ros::Publisher control_pub;
 ros::Publisher checkpoints_pub;
 ros::Publisher taskPubFront;
 ros::Publisher taskPubDown;
+//ros::Rate loop_rate(50);
 
 /**
  * Our current orientation from state estimation
@@ -76,22 +77,30 @@ void setVisionObj (int objIndex) {
   msgFront.currentCVTask = msgFront.NOTHING;
   msgDown.currentCVTask = msgDown.NOTHING;
   switch (objIndex) {
-    case 1 : msgFront.currentCVTask = msgFront.GATE;
-  break;
+    case 0 : msgFront.currentCVTask = msgFront.NOTHING;
+             msgDown.currentCVTask = msgFront.NOTHING;
+      break;
+    case 1 : msgFront.currentCVTask = msgFront.GATE;\
+             msgDown.currentCVTask = msgFront.NOTHING;
+      break;
     case 2 : msgDown.currentCVTask = msgFront.LANE;
-  break;
+             msgFront.currentCVTask = msgFront.NOTHING;
+      break;
     case 3 : msgFront.currentCVTask = msgFront.BUOY;
-  break;
+             msgDown.currentCVTask = msgFront.NOTHING;
+      break;
   }
 
   taskPubFront.publish(msgFront);
   taskPubDown.publish(msgDown);
+  //loop_rate.sleep();
 }
 
 void weAreHere (std::string task) {
   std_msgs::String msg;
   msg.data = task;
   checkpoints_pub.publish(msg);
+  //loop_rate.sleep();
 }
 
 void setPoints (double pointControl[]) {
@@ -122,6 +131,7 @@ void setPoints (double pointControl[]) {
   msgControl.Depth.data = pointControl[15];
 
   control_pub.publish(msgControl);
+ // loop_rate.sleep();
 }
 
 void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth) {
@@ -138,6 +148,14 @@ void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_ang
 
 //LEGACY -- NOT FOR TOUCHING
 void ps3Control () {}
+
+void rosSleep(int length) {
+  //Get the time and store it in the time variable.
+  ros::Time time = ros::Time::now();
+  //Wait a duration of one second.
+  ros::Duration d = ros::Duration(length, 0);
+  d.sleep();
+}
 
 int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");

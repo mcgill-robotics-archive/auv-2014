@@ -2,7 +2,10 @@
 #define FRONT_CV_NODE_H
 
 #include "CVNode.h"
+#include "Buoy.h"
 #include "Door.h"
+
+
 //#include "computer_vision/StereoCameraImages.h"
 
 const std::string FRONT_CV_NODE_NAME = "front_cv_node";
