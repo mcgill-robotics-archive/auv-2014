@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
+include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -152,6 +154,11 @@ add_library(Door src/Door.cpp)
 target_link_libraries(Door VisibleObject)
 target_link_libraries(Door ${catkin_LIBRARIES})
 
+add_library(Buoy src/Buoy.cpp)
+target_link_libraries(Buoy VisibleObject)
+target_link_libraries(Buoy ${catkin_LIBRARIES})
+rosbuild_add_compile_flags(Buoy -std=c++0x)
+
 add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
@@ -174,7 +181,9 @@ add_executable(FrontCVNode src/FrontCVNode.cpp)
 target_link_libraries(FrontCVNode CVNode)
 target_link_libraries(FrontCVNode VisibleObject)
 target_link_libraries(FrontCVNode Door)
+target_link_libraries(FrontCVNode Buoy)
 target_link_libraries(FrontCVNode ${catkin_LIBRARIES})
+rosbuild_add_compile_flags(FrontCVNode -std=c++0x)
 
 add_executable(FrontCameraNode src/FrontCameraNode.cpp)
 target_link_libraries(FrontCameraNode Camera)

@@ -86,6 +86,7 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 
 }
 
+
 float saturation(float value, float min, float max, int32_t counter){
 	if (value > max | value < min) {
 		value = 0;

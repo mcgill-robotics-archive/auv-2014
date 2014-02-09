@@ -22,10 +22,12 @@ RNG rng(12345);
 //	executeVideo (video);
 //}
 
-double xDistance = 0;
-double yDistance = 0;
-double yaw = 0;
-bool visibility = true;
+bool visibility = false;
+
+LineTarget::LineTarget() {
+	xDistance = 0.0;
+	yDistance = 0.0;
+}
 
 std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(cv::Mat& currentFrame) {
         bool isVisible;
@@ -47,17 +49,17 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
         if (visibility) {
                 // Get object data
                 // [...]
-
+								std::cout << "VISIBLE" << std::endl;
                 // Return gathered data to caller
                 visibleObjectData->object_type = visibleObjectData->LANE;
-                visibleObjectData->pitch_angle = 0;
+                visibleObjectData->pitch_angle = 0.0;
                 visibleObjectData->yaw_angle = yaw;
                 visibleObjectData->x_distance = xDistance;
                 visibleObjectData->y_distance = yDistance;
-                visibleObjectData->z_distance = 0;
+                visibleObjectData->z_distance = 0.0;
 
                 messagesToReturn.push_back(visibleObjectData);
-
+								visibility = false;
                 return (messagesToReturn);
         } else {
                 return (messagesToReturn);
@@ -157,7 +159,7 @@ void LineTarget::thresh_callback(int, void* )
 
 		  cv::line(drawing, Point(centerX, centerY), Point(centerX,centerY), cv::Scalar(0, 0, 255),2,8, 0 );
 		  cv::line(drawing, Point(drawing.size().width/2, drawing.size().height/2), Point(drawing.size().width/2, drawing.size().height/2), cv::Scalar(255, 0, 0),2,8, 0 );
-		  //visibility = isVisible(line);
+		  visibility = isVisible(line);
 		  yaw = relativeYaw(line);
 
 		  //If output is opposite, then invert
