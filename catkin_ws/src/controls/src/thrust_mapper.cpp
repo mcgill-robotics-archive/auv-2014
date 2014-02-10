@@ -20,7 +20,20 @@ ros::Publisher voltage_publisher;
 const float VOLTAGE_MIN=-20;
 const float VOLTAGE_MAX=20;
 
-void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
+float limit_check(float value, float min, float max, char* string){
+	if (value > max | value < min) {
+
+		ROS_WARN("Limit values have been exceeded: %s. Value is %f", string, value);
+		value = 0;
+
+	}
+	else {
+		return value;
+	}
+}
+
+
+void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 {	
 	float thrust[6] = {0, 0, 0, 0, 0, 0};
 	float voltage[6] = {0, 0, 0, 0, 0, 0};
@@ -29,7 +42,21 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 	const int32_t MOTOR_CMD_MAX = 127;
 	const int32_t MOTOR_CMD_MIN = -128;
 
+	const float F_MIN=-100;
+	const float F_MAX=100;
+	const float T_MIN=-100;
+	const float T_MAX=100;
+	
 	controls::motorCommands motorCommands;
+
+	//Limit check for input wrench values
+	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Force X");
+	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Force Y");
+	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Force Z");
+	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Torque Y");
+	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MIN, T_MAX, "Torque Z");
+
+
 
 	ROS_DEBUG("Subscriber received wrench");
 
@@ -61,9 +88,7 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 	}
 	//Add saturation statement, ROS_INFO("VALUE TOO GREAT")
 	//Saturation of voltage values
-	for (int i=0; i<6; i++) {
-		voltage[i]=saturation(voltage[i], VOLTAGE_MIN, VOLTAGE_MAX, i);
-	}
+
 
 
 	//map voltages to motor commands
@@ -71,8 +96,12 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 	//linear for now TODO change mapping according to test
 	for (int i=0; i<6; i++)
 	{
-		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-(MOTOR_CMD_MIN)) + (MOTOR_CMD_MIN); 
+		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-(MOTOR_CMD_MIN)) + (MOTOR_CMD_MIN);
+	//Apply limit check to motor command 
+		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR");//Find way to pass which motor into string
+
 	}
+
 	motorCommands.cmd_x1=motor_cmd[0];
 	motorCommands.cmd_x2=motor_cmd[1];
 	motorCommands.cmd_y1=motor_cmd[2];
@@ -87,15 +116,6 @@ void thrust_callback(const geometry_msgs::Wrench wrenchMsg)
 }
 
 
-float saturation(float value, float min, float max, int32_t counter){
-	if (value > max | value < min) {
-		value = 0;
-	ROS_WARN("Saturation values have been exceeded. Thrust %i has been set to 0.", counter);
-	}
-	else {
-		return value;
-	}
-}
 
 int main(int argc, char **argv)
 {
@@ -106,7 +126,7 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	voltage_publisher = n.advertise<geometry_msgs::Wrench>("/controls/motorCommands", 100); //TODO change message type and name
+	voltage_publisher = n.advertise<controls::motorCommands>("/controls/motorCommands", 100); //TODO change message type and name
 	
 	ros::spin();
 	return 0;
