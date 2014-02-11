@@ -16,9 +16,16 @@ Maps voltage to motor command
 
 //global vars
 ros::Publisher voltage_publisher;
+double VOLTAGE_MAX;
+double VOLTAGE_MIN;
+int32_t MOTOR_CMD_MAX;
+int32_t MOTOR_CMD_MIN;
+double F_MIN;
+double F_MAX;
+double T_MIN;
+double T_MAX;
 
-const float VOLTAGE_MIN=-20;
-const float VOLTAGE_MAX=20;
+
 
 float limit_check(float value, float min, float max, char* string){
 	if (value > max | value < min) {
@@ -39,13 +46,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	float voltage[6] = {0, 0, 0, 0, 0, 0};
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
 	
-	const int32_t MOTOR_CMD_MAX = 127;
-	const int32_t MOTOR_CMD_MIN = -128;
-
-	const float F_MIN=-100;
-	const float F_MAX=100;
-	const float T_MIN=-100;
-	const float T_MAX=100;
 	
 	controls::motorCommands motorCommands;
 
@@ -122,6 +122,18 @@ int main(int argc, char **argv)
 	// ROS subscriber setup
 	ros::init(argc,argv,"thrust_mapper");
 	ros::NodeHandle n;
+
+	//Parameters
+	n.param<double>("voltage/min", VOLTAGE_MIN, 0.0);
+	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
+	n.param<int32_t>("motorCommands/min", MOTOR_CMD_MIN, 0.0);
+	n.param<int32_t>("motorCommands/max", MOTOR_CMD_MAX, 0.0);
+	n.param<double>("force/min", F_MIN, 0.0);
+	n.param<double>("force/max", F_MAX, 0.0);
+	n.param<double>("torque/min", T_MIN, 0.0);
+	n.param<double>("torque/max", T_MAX, 0.0);
+
+
 	ros::Subscriber thrust_subscriber = n.subscribe("/controls/wrench", 1000, thrust_callback);
 	//add clock subscription
 
