@@ -16,7 +16,6 @@ Maps voltage to motor command
 
 //global vars
 ros::Publisher voltage_publisher;
-double VOLTAGE_MAX;
 double VOLTAGE_MIN;
 int32_t MOTOR_CMD_MAX;
 int32_t MOTOR_CMD_MIN;
@@ -25,12 +24,13 @@ double F_MAX;
 double T_MIN;
 double T_MAX;
 
-
+ros::NodeHandle n;
 
 float limit_check(float value, float min, float max, char* string){
 	if (value > max | value < min) {
 
 		ROS_WARN("Limit values have been exceeded: %s. Value is %f", string, value);
+
 		value = 0;
 
 	}
@@ -46,7 +46,9 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	float voltage[6] = {0, 0, 0, 0, 0, 0};
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
 	
-	
+	double VOLTAGE_MAX;
+	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
+
 	controls::motorCommands motorCommands;
 
 	//Limit check for input wrench values
@@ -98,7 +100,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	{
 		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-(MOTOR_CMD_MIN)) + (MOTOR_CMD_MIN);
 	//Apply limit check to motor command 
-		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR");//Find way to pass which motor into string
+		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR");//Find way to pass which motor into string, create and loop through enumerator
 
 	}
 
@@ -121,11 +123,10 @@ int main(int argc, char **argv)
 {
 	// ROS subscriber setup
 	ros::init(argc,argv,"thrust_mapper");
-	ros::NodeHandle n;
+	//ros::NodeHandle n;
 
 	//Parameters
 	n.param<double>("voltage/min", VOLTAGE_MIN, 0.0);
-	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
 	n.param<int32_t>("motorCommands/min", MOTOR_CMD_MIN, 0.0);
 	n.param<int32_t>("motorCommands/max", MOTOR_CMD_MAX, 0.0);
 	n.param<double>("force/min", F_MIN, 0.0);
