@@ -10,4 +10,4 @@ source devel/setup.bash
 	(this command needs to be run in all terminal windows/tabs, or put it in ~/.bashrc
 roscore
 rosrun mock_data posePublisher
-rosrun front_end poseSubscriber
+rosrun front_end central_app

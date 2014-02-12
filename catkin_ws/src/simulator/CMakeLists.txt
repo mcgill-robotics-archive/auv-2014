@@ -51,3 +51,7 @@ set_target_properties(robot PROPERTIES COMPILE_FLAGS "${roscpp_CFLAGS_OTHER}")
 set_target_properties(robot PROPERTIES LINK_FLAGS "${roscpp_LDFLAGS_OTHER}")
 
 target_link_libraries(robot ${roscpp_LIBRARIES} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+add_executable(tf_broadcaster_simulator src/tf_broadcaster_simulator.cpp)
+target_link_libraries(tf_broadcaster_simulator ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+add_dependencies(tf_broadcaster_simulator ${catkin_EXPORTED_TARGETS})

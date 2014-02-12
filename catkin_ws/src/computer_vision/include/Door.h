@@ -106,19 +106,5 @@ class Door : public VisibleObject {
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
 };
 
-//visibleObjectData->object_type = visibleObjectData->DOOR;
-//visibleObjectData->pitch_angle = yawAngle;
-//visibleObjectData->yaw_angle = pitchAngle;
-//visibleObjectData->x_distance = xDistance;
-//visibleObjectData->y_distance = yDistance;
-//visibleObjectData->z_distance = zDistance;
-//
-//class DataContainer {
-//	public:
-//
-//	DataContainer();
-//	~DataContainer();
-//};
-
 #endif
 

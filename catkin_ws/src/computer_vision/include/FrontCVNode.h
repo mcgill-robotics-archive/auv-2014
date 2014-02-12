@@ -5,16 +5,27 @@
 #include "Door.h"
 //#include "computer_vision/StereoCameraImages.h"
 
+const std::string FRONT_CV_NODE_NAME = "front_cv_node";
+
+const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
+const std::string DATA_TOPIC_NAME = "front_cv_data";
+
+const int FRONT_CV_NODE_RECEPTION_RATE = 10;
+const int FRONT_CV_NODE_BUFFER_SIZE = 1;
+
 class FrontCVNode : public CVNode {
 
 	public:
 
-	FrontCVNode(ros::NodeHandle& nodeHandle, std::list<std::string> topicList, int receptionRate);
+	FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize);
+	~FrontCVNode();
 
 	private:
 
-	void receiveImage(const sensor_msgs::ImageConstPtr& message, const std::string &topicName);
-	cv::Mat convertFromSensorToOpenCV(const sensor_msgs::ImageConstPtr& message);
+	cv::Mat* pLastImageLeftCamera;
+	cv::Mat* pLastImageRightCamera;
+
+	void receiveImage(const sensor_msgs::ImageConstPtr& message);
 };
 
 #endif

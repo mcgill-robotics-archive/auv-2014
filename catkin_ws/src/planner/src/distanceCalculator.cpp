@@ -6,8 +6,9 @@ double x_dist_global; double y_dist_global;
 double robot_x; double robot_y; double robot_z;
 double gate_x; double gate_y; double gate_z;
 
-std_msgs::String currentCVTask_Front;
-//std_msgs::String currentCVTask_Down;
+planner::currentCVTask currentCVTask_Front;
+//planner::currentCVTask currentCVTask_Front;
+
 
 
 void setGazeboPretendThings(gazebo_msgs::ModelStates msg) {
@@ -20,10 +21,9 @@ void setGazeboPretendThings(gazebo_msgs::ModelStates msg) {
   gate_z = msg.pose[1].position.z;
 }
 
-void currentCVTask_Front_callback(std_msgs::String text)
+void currentCVTask_Front_callback(planner::currentCVTask msg)
 {
-  currentCVTask_Front = text;
-  ROS_INFO("in callback: %s", text.data.c_str());
+  currentCVTask_Front = msg;
 }
 
 /*
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
   ros::Subscriber currentCVTask_Front_sub = n.subscribe("currentCVTask_Front", 1000, currentCVTask_Front_callback);
   //ros::Subscriber currentCVTask_Down_sub = n.subscribe("currentCVTask_Down", 1000, currentCVTask_Down_callback); //uncomment once the front version works
 
-  ros::Publisher pose_pub = n.advertise<computer_vision::VisibleObjectData>("visible_data", 1000);
+  ros::Publisher pose_pub = n.advertise<computer_vision::VisibleObjectData>("/front_cv_data", 1000);
 
   ros::Rate loop_rate(10);
   int count = 0;
@@ -62,8 +62,9 @@ int main(int argc, char **argv)
     ros::spinOnce();
     loop_rate.sleep();
 
-  	if (currentCVTask_Front.data == "gate")
+  	if (currentCVTask_Front.currentCVTask == currentCVTask_Front.GATE)
   	{
+      //ROS_INFO("Current CV Task Front = GATE");
       //compute distances here
   		x_dist_global = gate_x - robot_x;
   		y_dist_global = gate_y - robot_y;
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
   		x_dist = x_dist_global;
   		y_dist = y_dist_global;
   	}
-  	else if (currentCVTask_Front.data == "nothing")
+  	else if (currentCVTask_Front.currentCVTask == currentCVTask_Front.NOTHING)
   	{
   		ROS_INFO("Not looking for anything in front");
   		loop_rate.sleep();
@@ -82,7 +83,7 @@ int main(int argc, char **argv)
   	}
   	else
   	{
-  		ROS_WARN("unrecognized Current CV Task _ Front: %s", currentCVTask_Front.data.c_str());
+  		ROS_WARN("unrecognized Current CV Task _ Front: %i", currentCVTask_Front.currentCVTask);
       loop_rate.sleep();
       continue;
   	}

@@ -43,10 +43,10 @@ if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
     echo "source ~/.roboticrc" >> ~/.bashrc
 fi 
 
-cd $dir
-cd ..
-cd catkin_ws
-catkin_make
+#cd $dir
+#cd ..
+#cd catkin_ws
+#catkin_make
 
 
 

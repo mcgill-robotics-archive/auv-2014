@@ -31,7 +31,7 @@ public:
 	Robot() {
 		int argc = 0;
 		ros::init(argc, NULL, "Robot Plugin");
-		std::cout<<"Robot plugin node Created"<<std::endl;
+		std::cout<<"Robot plugin node created."<<std::endl;
 	};
 
 	/**
@@ -76,7 +76,6 @@ public:
 	 * Called on every simulation iteration
 	 */
 	void OnUpdate(const common::UpdateInfo & /*_info*/) {
-		//applyDrag();
 		ros::spinOnce();
 	};
 
@@ -143,9 +142,7 @@ public:
 
 		client.call(applyBodyWrench);
 
-		if (applyBodyWrench.response.success) {
-			ROS_INFO("ApplyBodyWrench call successful.");
-		} else {
+		if (!applyBodyWrench.response.success) {
 			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
 	};
@@ -179,7 +176,9 @@ public:
 			translationalDragVector.z = w/magnitude;
 		}
 		
+		//Drag force = -0.5 * Area * density* |speed|^2 * dragCoefficent
 		translationalDragMagnitude = -.5 * .118 * 1000 * (u*u + v*v + w*w) * .8;
+		ROS_DEBUG("Drag force: %f | Speed = %f", translationalDragMagnitude, magnitude);
 		translationalDragVector.x = translationalDragVector.x * translationalDragMagnitude;
 		translationalDragVector.y = translationalDragVector.y * translationalDragMagnitude;
 		translationalDragVector.z = translationalDragVector.z * translationalDragMagnitude;
@@ -230,37 +229,42 @@ public:
 	 * @param msg Wrench to be applied to robot
 	 */
 	void controlsWrenchCallBack(const geometry_msgs::Wrench msg) {
+		// adjustments for robot's local yaw w.r.t. robot's (model's) yaw
+		float modelYaw = this->model->GetRelativePose().rot.GetYaw();
+
+		math::Vector3 dummyAsEuler = this->model->GetLink("dummy")->GetRelativePose().rot.GetAsEuler();
+
+		float dummyYaw = dummyAsEuler.z;
+		
+		this->model->GetLink("dummy")->SetRelativePose(
+			math::Pose(this->model->GetLink("dummy")->GetRelativePose().pos,
+				math::Vector3(
+					dummyAsEuler.x /*this->model->GetRelativePose().rot.GetRoll() + 3.14159265359*/, // same 
+						dummyAsEuler.y /*this->model->GetRelativePose().rot.GetPitch()*/, // same
+							this->model->GetRelativePose().rot.GetYaw() - 1.57079632679)), // model's yaw - pi/2 
+								true,
+									true);
+
+		// adjustments over
+	
+		// check if its worth trying to apply the wrench
 		if (!shouldApplyForce(msg.force.x, msg.force.y, msg.force.z, msg.torque.x, msg.torque.y, msg.torque.z))	return;
 
+		// appply the wrench
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
-		//applyBodyWrench.request.reference_frame = (std::string) "robot::body";
-		
 		applyBodyWrench.request.wrench = msg;
-
+		applyBodyWrench.request.reference_frame = "robot::dummy";
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
-
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
-
 		client.call(applyBodyWrench);
-		std::cout << "Applying wrench obtained from controls/wrench topic:" << std::endl;
-		std::cout << "fx:" << msg.force.x << ", fy:" << msg.force.y << " fz:" << msg.force.z;
-		std::cout << " taoX:" << msg.torque.x << ", taoY:" << msg.torque.y << " taoZ:" << msg.torque.z << std::endl;
-
-		if (applyBodyWrench.response.success) {
-			ROS_INFO("ApplyBodyWrench call successful.");
-		} else {
+		
+		if (!applyBodyWrench.response.success) {
 			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-	}
-
-	bool shouldApplyForce(float u, float v, float w, float p, float q, float r) {
-		return (inRangeForce(u) || inRangeForce(v) || inRangeForce(w) || inRangeForce(p) || inRangeForce(q) || inRangeForce(r));
-	}	
-	
-	bool inRangeForce(float x) {
-		return abs(x) > .0000001;
+		
+		//applyDrag();
 	}
 
 	void simulatorMarkerCallBack(const std_msgs::Bool::ConstPtr& msg) {
@@ -273,6 +277,21 @@ public:
 		if (msg->data) {
 			ROS_INFO("Shot torpedo");
 		}
+	}
+	
+private:
+	void printWrenchMsg(geometry_msgs::Wrench msg) {
+		std::cout << "Applying wrench obtained from controls/wrench topic:" << std::endl;
+		std::cout << "fx:" << msg.force.x << ", fy:" << msg.force.y << " fz:" << msg.force.z;
+		std::cout << " taoX:" << msg.torque.x << ", taoY:" << msg.torque.y << " taoZ:" << msg.torque.z << std::endl;
+	}
+
+	bool shouldApplyForce(float u, float v, float w, float p, float q, float r) {
+		return (inRangeForce(u) || inRangeForce(v) || inRangeForce(w) || inRangeForce(p) || inRangeForce(q) || inRangeForce(r));
+	}	
+	
+	bool inRangeForce(float x) {
+		return abs(x) > .0000001;
 	}
 
 private:

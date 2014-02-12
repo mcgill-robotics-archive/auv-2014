@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-
+#include "planner/currentCVTask.h"
 
 /**
 
@@ -17,8 +17,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  ros::Publisher taskPubFront = n.advertise<std_msgs::String>("currentCVTask_Front", 1000);
-  ros::Publisher taskPubDown = n.advertise<std_msgs::String>("currentCVTask_Down", 1000);
+  ros::Publisher taskPubFront = n.advertise<planner::currentCVTask>("currentCVTask_Front", 1000);
+  ros::Publisher taskPubDown = n.advertise<planner::currentCVTask>("currentCVTask_Down", 1000);
 
 
   ros::Rate loop_rate(10);
@@ -26,11 +26,11 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
 
-    std_msgs::String msgFront;
-    std_msgs::String msgDown;
+    planner::currentCVTask msgFront;
+    planner::currentCVTask msgDown;
 
-    msgFront.data = "gate";
-    msgDown.data = "nothing";
+    msgFront.currentCVTask = msgFront.GATE;
+    msgDown.currentCVTask = msgDown.NOTHING;
 
     taskPubFront.publish(msgFront);
     taskPubDown.publish(msgDown);

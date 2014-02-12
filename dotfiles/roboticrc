@@ -1,16 +1,5 @@
-blue='\e[0;34m'
-red='\e[0;31m'
-NC='\e[0m' # No Color
-
 alias maple='/usr/share/maple13/bin/xmaple'
-alias fucking='sudo'
-alias whosyourmother='echo -e "${red}your mom${NC}"'
-alias woman='man'
-alias yinghanwang='echo is beautiful'
-alias showmeyourgenitals='echo -e "${blue}say please${NC}"'
-alias please='echo -e "${blue}bend over${NC}"'
 alias roscereal='rosrun rosserial_python serial_node.py'
-alias becool='roscore'
 
 source /opt/ros/hydro/setup.bash
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash

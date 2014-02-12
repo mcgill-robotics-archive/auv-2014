@@ -14,7 +14,7 @@
 	<!-- Controls systems -->
 	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>          
         <!-- CVNode front-->
-                <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+                <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
         <!-- CVNode down -->
-                <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/>
+                <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
 </launch>
