@@ -130,6 +130,12 @@ void ukf::recoverCorrection(double *acc)
 	averageOuterProductOfVectors(crossCovar, sigmas, gammas, 2*AUGDIM, AUGDIM, DIM);
 
 	//TODO: Last three lines go here
+	double *gain = new double[AUGDIM*DIM]();
+    solve(measCovar, crossCovar, gain);
+
+    //self.augmentedPose += gain * (acc - predictedMeasurement)
+    //self.augmentedCovariance -= gain * measurementCovariance * gain.transpose()
+
 }
 
 void ukf::update(double acc[3], double rotation[3])
@@ -137,7 +143,7 @@ void ukf::update(double acc[3], double rotation[3])
     predict(rotation);
 
     correct(acc);
-    //return quaternionFromRotationVector(self.augmentedPose[0:3])
+    //TODO: return quaternionFromRotationVector(self.augmentedPose[0:3])
 }
 
 double *ukf::sigma(int index)

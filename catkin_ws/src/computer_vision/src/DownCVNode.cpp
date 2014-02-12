@@ -15,11 +15,6 @@ int main(int argc, char **argv) {
 
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
-	/*
-	ROS_INFO("%s", ("Initializing the CVNode. It will be listening to the topic named \"" + VIDEO_FEED_TOPIC_NAME + "\"").c_str());
-	ROS_INFO("%s", "If you want to run this node in Gazebo, the topic needs to be renamed to \"/my_robot/camera1/image_raw\"");
-	 */
-
 	// Creates a new CVNode object.
 	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, DOWN_CAMERA_NODE_TOPIC, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
 
@@ -44,11 +39,12 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 
 	// Create topic with front end
 	this->frontEndPublisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, bufferSize);
-
-	this->visibleObjectList.push_back(new MarkerTarget());
+	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
+	
+	//this->visibleObjectList.push_back(new MarkerTarget());
 
 	// FIXME: There is a problem with LineTarget::retrieveObjectData()
-	//this->visibleObjectList.push_back(new LineTarget());
+	this->visibleObjectList.push_back(new LineTarget());
 
 	cv::namedWindow(DOWN_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 }

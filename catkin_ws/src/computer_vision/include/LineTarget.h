@@ -15,9 +15,11 @@ using namespace cv;
 using namespace std;
 
 class LineTarget : public VisibleObject {
-
+	double xDistance;
+	double yDistance;
+	double yaw;
 	public:
-
+	LineTarget();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 	void applyFilter(cv::Mat& image);

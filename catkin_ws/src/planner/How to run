@@ -1,8 +1,8 @@
 In simulation: 
  roslaunch planner planner.launch
-*wait for everything to initialize (you can see the robot)*
+*wait for everything to initialize (until you can see the robot)*
  rosrun planner Planner
  
-The tasks that run are defined in tasks.xml in the catkin root 
+The tasks that run are defined in tasks.xml in the catkin_ws/
 
-Updated 1/29 by Alex Reiff
+Updated 2/4 by Alex Reiff

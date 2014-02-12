@@ -34,6 +34,7 @@ void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth
 
 void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
 
+void rosSleep(int length);
 //LEGACY -- NOT FOR TOUCHING
 void ps3Control ();
 

@@ -38,3 +38,13 @@ coefs/gravity: 9.81
 coefs/dt: 0.1
 
 surfaceHeight: 10.0
+
+#thrust_mapper parameters
+voltage/min:-20 
+voltage/max:20
+motorCommands/min:-500
+motorCommands/max:500
+force/min:-100
+force/max:100
+torque/min:-100
+torque/max:100

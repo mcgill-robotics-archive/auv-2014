@@ -166,6 +166,12 @@ include_directories(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(madgwick src/madgwick.cpp)
-target_link_libraries(madgwick ${catkin_LIBRARIES})
-add_dependencies(madgwick sensor_publisher_generate_messages_cpp)
+add_executable(XimuPublisher src/XimuPublisher.cpp)
+add_library(XimuReceiver src/XimuReceiver.cpp)
+target_link_libraries(XimuPublisher 
+  ${catkin_LIBRARIES}
+  XimuReceiver
+)
+add_dependencies(XimuPublisher 
+  sensor_publisher_generate_messages_cpp
+)

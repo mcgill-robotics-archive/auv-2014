@@ -13,6 +13,10 @@
 const std::string COLOR_THRESH_WINDOW = "color_thresh_window";
 const std::string TRACKBARS_WINDOW = "trackbars_window";
 
+float centimetersPerPixel;
+
+cv::Point centerOfCurrentFrame;
+
 /**
  * Constructor.
  */
@@ -61,7 +65,7 @@ std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Ma
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
 	// Creates a pointer that will point to a computer_vision::VisibleObjectData object.
-	computer_vision::VisibleObjectData* visibleObjectData;
+	computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();
 
 	applyFilter(currentFrame);
 
@@ -107,7 +111,6 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 
 	ROS_INFO("%s", "Applying filter to the current frame.");
 
-	cv::Point centerOfCurrentFrame;
 	centerOfCurrentFrame.x = currentFrame.cols/2;
 	centerOfCurrentFrame.y = currentFrame.rows/2;
 	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
@@ -145,6 +148,8 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 		float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
 		float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
 		float heightWidthRatio = std::abs(height / width - GATE_RATIO);
+		foundRectangle.size.width = width;
+		foundRectangle.size.height = height;
 		float angle = foundRectangle.angle;
 
 		// The angle of the rectangle will always be between [-90:0).
@@ -198,10 +203,15 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 
 		float centerX = (centerOfRectangleOne.x + centerOfRectangleTwo.x)/2;
 		float centerY = (centerOfRectangleOne.y + centerOfRectangleTwo.y)/2;
-
 		cv::Point centerPoint;
 		centerPoint.x = centerX;
 		centerPoint.y = centerY;
+
+		centimetersPerPixel = DOOR_REAL_HEIGHT/rectangleOne.size.height*10;
+
+		float relativeYAxis = (centerPoint.x - centerOfCurrentFrame.x) * centimetersPerPixel;
+		float relativeZAxis = -(centerPoint.y - centerOfCurrentFrame.y) * centimetersPerPixel;
+
 		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
 
 		cv::line(currentFrame, centerOfRectangleOne, centerOfRectangleTwo, WHITE_BGRX, 1, CV_AA);

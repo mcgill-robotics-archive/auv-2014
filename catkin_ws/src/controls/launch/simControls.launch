@@ -1,0 +1,24 @@
+<launch>
+	<!-- launches 3 nodes: testControls, controls, simulator -->
+	<!-- Written by Nick Speal, Jan 28, McGill Robotics -->
+	
+  <!-- Parameters: Needed for controls to work!!! -->
+  <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
+
+
+  <!-- Assume Gazebo & Roscore running-->
+  
+
+
+
+  <!-- Controls systems -->
+	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>
+          <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
+  
+  <!-- state estimation stuff -->
+          <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
+          <node name="distanceCalculator" pkg="planner" type="distanceCalculator"  respawn="false" output="screen"/>
+  
+  
+
+</launch>
