@@ -6,30 +6,29 @@
 #include <std_msgs/Bool.h>
 #include <controls/motorCommands.h>
 #include <arduino_msgs/solenoid.h>
-#include <std_msgs/Float32.h>
-
-#define MAX_ANALOG 1023  // in bits
-#define MAX_ARDUINO_VOLTAGE 5000 // in mV
-#define RESISTANCE 100.0 // In ohms. Set to the value of the resistor being used. Should be less than 250 ohms because 5V / 20mA (max current) = 250 omhs.
-
-#define BASE_CURRENT 4.0
-#define CURRENT_RANGE 16.0   // from 4.0 mA to 20.0 mA
-#define MAX_DEPTH 914.4      // In centimeters. 30 feet
-#define OFFSET 7.0          // Just substract it. May need to be recalculated when circuit is built.
-#define BATT_VOLT_CONVERSION 3.14 //mock constant change later
-
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
-std_msgs::Float32 batteryLevel0;
-std_msgs::Float32 batteryLevel1;
-
+std_msgs::Int16 batteryCurrent0;
+std_msgs::Int16 batteryCurrent1;
+std_msgs::Int16 batteryVoltage0;
+std_msgs::Int16 batteryVoltage1;
+//PINOUT:
+//Motor control   : 0 - 5
+//Solenoid valve  : 14 - 19 
+//Depth sensor    :  A0
+//Battery voltage : A3, A4
+//Battery current : A5, A6
+//Kill switch     : 7
 Servo myservo[6];
-int sensorPin = A0;      // select the input pin for the potentiometer
-float sensorValue = 0;  // variable to store the value coming from the sensor
-long depthSensorSchedule;
-long batteryLevelSchedule;
+const static int depthPin = A0;      // select the input pin for the potentiometer
+const static int motorControlPin = 0 ; 
+const static int solenoidValvePin = 14;
+const static int battPin = A3;
 
+unsigned long depthSensorSchedule;
+unsigned long batteryVoltageSchedule;
+unsigned long batteryCurrentSchedule;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -41,7 +40,7 @@ int boundCheck(int x){
 
 void motorCb( const controls::motorCommands& msg){
   myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
-  myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));  // blink the led
+  myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));
   myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
   myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
   myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
@@ -49,80 +48,76 @@ void motorCb( const controls::motorCommands& msg){
 }
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
-digitalWrite(14,msg.torpedo0.data);
-digitalWrite(15,msg.torpedo1.data);
-digitalWrite(16,msg.dropper0.data);
-digitalWrite(17,msg.dropper1.data);
-digitalWrite(18,msg.grabber0.data);
-digitalWrite(19,msg.grabber1.data);
+  digitalWrite(14,msg.torpedo0.data);
+  digitalWrite(15,msg.torpedo1.data);
+  digitalWrite(16,msg.grabber0.data);
+  digitalWrite(17,msg.grabber1.data);
+  digitalWrite(18,msg.dropper0.data);
+  digitalWrite(19,msg.dropper1.data);
 }
 
-void killSwitchCb(const std_msgs::Bool& msg){
-digitalWrite(0,msg.data);
+void killSwitchCb( const std_msgs::Bool& msg){
+  digitalWrite(0,msg.data);
 }
 
 ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
-ros::Publisher battPub0("/arduino/batteryLevel0", &batteryLevel0);
-ros::Publisher battPub1("/arduino/batteryLevel1", &batteryLevel1);
+ros::Publisher battVoltPub0("/arduino/batteryVoltage0", &batteryVoltage0);
+ros::Publisher battVoltPub1("/arduino/batteryVoltage1", &batteryVoltage1);
+ros::Publisher battCurrPub0("/arduino/batteryCurrent0", &batteryCurrent0);
+ros::Publisher battCurrPub1("/arduino/batteryCurrent1", &batteryCurrent1);
 ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
-ros::Subscriber<std_msgs::bool> killSwitch_sub("/arduino/KillSwitch", &motorCb );
+ros::Subscriber<std_msgs::Bool> killSwitch_sub("/arduino/KillSwitch", &killSwitchCb);
 
 void setup(){
- 
-  //MotorControl setup
-  myservo[0].attach(0); 
-  myservo[1].attach(1);  
-  myservo[2].attach(2);  
-  myservo[3].attach(3);  
-  myservo[4].attach(4);  
-  myservo[5].attach(5);
-  
-  //SolenoidValve setup
-  pinMode(14,OUTPUT);
-  pinMode(15,OUTPUT);
-  pinMode(16,OUTPUT);
-  pinMode(17,OUTPUT);
-  pinMode(18,OUTPUT);
-  pinMode(19,OUTPUT);
-  
+  for(int i = 0; i<6; i++){
+    //MotorControl setup
+    myservo[i].attach(i); 
+    //SolenoidValve setup  
+    pinMode(14+i,OUTPUT);
+   }
+   
   //ros node initializtion
   nh.initNode();
   nh.advertise(depth);        //depth sensor
   
-  nh.advertise(battPub0);     //battery level
-  nh.advertise(battPub1);
+  nh.advertise(battVoltPub0);     //battery level
+  nh.advertise(battVoltPub1);
+  nh.advertise(battCurrPub0);
+  nh.advertise(battCurrPub1);
   
+  nh.subscribe(killSwitch_sub);// kill switch
   nh.subscribe(motor_sub);    //motor 
   nh.subscribe(solenoid_sub); // solenoid
 }
 
-
-
-
 void loop(){
   long currentTime = millis();
   
-  if(depthSensorSchedule < currentTime){
-    sensorValue = analogRead(sensorPin);                                             // ADC bits
-    sensorValue = sensorValue*MAX_ARDUINO_VOLTAGE/(float)MAX_ANALOG;                 // From ADC to voltage in mV
-    sensorValue = sensorValue/RESISTANCE;                                            // Get current in mA
-    sensorValue = (int)(((sensorValue-BASE_CURRENT)/CURRENT_RANGE)*MAX_DEPTH);       // C0nvert the current to depth
-  
-    depth_msg.data = sensorValue - OFFSET;
-    depth.publish(&depth_msg);
+  if(batteryCurrentSchedule < currentTime){
+    batteryCurrent0.data = analogRead(battPin + 2);
+    batteryCurrent1.data = analogRead(battPin + 3);
     
-    depthSensorSchedule += 250;        //Update at 10Hz  
+    battCurrPub0.publish(&batteryCurrent0);
+    battCurrPub1.publish(&batteryCurrent1);
+    
+    batteryCurrentSchedule += 1000;     //Update at 1 Hz
   }
   
-  if(batteryLevelSchedule < currentTime){
-    batteryLevel0.data = analogRead(A3) * BATT_VOLT_CONVERSION;
-    batteryLevel1.data = analogRead(A4) * BATT_VOLT_CONVERSION;
+  if(depthSensorSchedule < currentTime){
+    depth_msg.data = analogRead(depthPin );
+    depth.publish(&depth_msg);
+    depthSensorSchedule += 200;        //Update at 5Hz  
+  }
+  
+  if(batteryVoltageSchedule < currentTime){
+    batteryVoltage0.data = analogRead(battPin + 0);
+    batteryVoltage1.data = analogRead(battPin + 1);
     
-    battPub0.publish(&batteryLevel0);
-    battPub1.publish(&batteryLevel1);
+    battVoltPub0.publish(&batteryVoltage0);
+    battVoltPub1.publish(&batteryVoltage1);
     
-    batteryLevelSchedule += 10000;     //Update at 0.1 Hz
+    batteryVoltageSchedule += 1000;     //Update at 1 Hz
   }  
   nh.spinOnce();
   delay(1);
