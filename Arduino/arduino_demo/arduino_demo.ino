@@ -3,6 +3,7 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include <controls/motorCommands.h>
 #include <arduino_msgs/solenoid.h>
 #include <std_msgs/Float32.h>
@@ -48,39 +49,42 @@ void motorCb( const controls::motorCommands& msg){
 }
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
-digitalWrite(0,msg.torpedo0.data);
-digitalWrite(1,msg.torpedo1.data);
-digitalWrite(2,msg.dropper0.data);
-digitalWrite(3,msg.dropper1.data);
-digitalWrite(4,msg.grabber0.data);
-digitalWrite(5,msg.grabber1.data);
+digitalWrite(14,msg.torpedo0.data);
+digitalWrite(15,msg.torpedo1.data);
+digitalWrite(16,msg.dropper0.data);
+digitalWrite(17,msg.dropper1.data);
+digitalWrite(18,msg.grabber0.data);
+digitalWrite(19,msg.grabber1.data);
 }
 
-
+void killSwitchCb(const std_msgs::Bool& msg){
+digitalWrite(0,msg.data);
+}
 
 ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
 ros::Publisher battPub0("/arduino/batteryLevel0", &batteryLevel0);
 ros::Publisher battPub1("/arduino/batteryLevel1", &batteryLevel1);
 ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
+ros::Subscriber<std_msgs::bool> killSwitch_sub("/arduino/KillSwitch", &motorCb );
 
 void setup(){
  
   //MotorControl setup
-  myservo[0].attach(2); 
-  myservo[1].attach(3);  
-  myservo[2].attach(4);  
-  myservo[3].attach(5);  
-  myservo[4].attach(6);  
-  myservo[5].attach(7);
+  myservo[0].attach(0); 
+  myservo[1].attach(1);  
+  myservo[2].attach(2);  
+  myservo[3].attach(3);  
+  myservo[4].attach(4);  
+  myservo[5].attach(5);
   
   //SolenoidValve setup
-  pinMode(0,OUTPUT);
-  pinMode(1,OUTPUT);
-  pinMode(2,OUTPUT);
-  pinMode(3,OUTPUT);
-  pinMode(4,OUTPUT);
-  pinMode(5,OUTPUT);
+  pinMode(14,OUTPUT);
+  pinMode(15,OUTPUT);
+  pinMode(16,OUTPUT);
+  pinMode(17,OUTPUT);
+  pinMode(18,OUTPUT);
+  pinMode(19,OUTPUT);
   
   //ros node initializtion
   nh.initNode();
