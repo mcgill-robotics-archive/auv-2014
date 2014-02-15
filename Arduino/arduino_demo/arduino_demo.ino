@@ -101,7 +101,7 @@ void loop(){
     battCurrPub0.publish(&batteryCurrent0);
     battCurrPub1.publish(&batteryCurrent1);
     
-    batteryCurrentSchedule += 1000;     //Update at 1 Hz
+    batteryCurrentSchedule += 100;     //Update at 10 Hz
   }
   
   if(depthSensorSchedule < currentTime){
@@ -109,7 +109,7 @@ void loop(){
     depth.publish(&depth_msg);
     depthSensorSchedule += 200;        //Update at 5Hz  
   }
-  
+
   if(batteryVoltageSchedule < currentTime){
     batteryVoltage0.data = analogRead(battPin + 0);
     batteryVoltage1.data = analogRead(battPin + 1);
