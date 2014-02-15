@@ -129,16 +129,22 @@ void ukf::recoverCorrection(double *acc)
 	averageOuterProductOfVectors(measCovar, gammas, gammas, 2*AUGDIM, DIM, DIM);
 	averageOuterProductOfVectors(crossCovar, sigmas, gammas, 2*AUGDIM, AUGDIM, DIM);
 
-	//TODO: Last three lines go here
+
 	double *gain = new double[AUGDIM*DIM]();
-    solve(measCovar, crossCovar, gain);
+    solve(measCovar, crossCovar, gain, AUGDIM, DIM);
 
-    //self.augmentedPose += gain * (acc - predictedMeasurement)
-    //self.augmentedCovariance -= gain * measurementCovariance * gain.transpose()
+    //augmentedPose += gain * (acc - predictedMeasurement)
+    subtractVectors(acc, predMsmt, DIM);
+    leftMultiplyAdd(gain, acc, augState, AUGDIM, DIM, 1);
 
+    //augCovar -= crossCovar * gain.transpose()
+    scaleVector(-1.0, crossCovar, DIM*DIM);
+    transposedMultiplyAdd(crossCovar, gain, augCovar, AUGDIM, DIM, AUGDIM);
+
+    delete gain;
 }
 
-void ukf::update(double acc[3], double rotation[3])
+void ukf::update(double* acc, double* rotation)
 {
     predict(rotation);
 
@@ -156,10 +162,10 @@ double *ukf::gamma(int index)
 	return vectorIndex(gammas, index, DIM);
 }
 
-int main()
+/*int main()
 {
 	ukf filter(3);
 	double gyro [3] = {};
 	filter.update(gyro, gyro);
 	return 0;
-}
+}*/

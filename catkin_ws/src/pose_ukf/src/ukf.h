@@ -13,7 +13,7 @@ class ukf
 {
 	public:
     	ukf(int dim);
-    	void update(double acc[3], double gyro[3]);
+    	void update(double* acc, double* gyro);
 
 	private:
     	int AUGDIM;

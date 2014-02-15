@@ -28,6 +28,8 @@ void averageOuterProductOfVectors(
 		,int dim2);
 void subtractMultipleVectors(double *vectors, double *subtrahend
 		, int num_vectors, int dim);
-
+void solve(double * A, double *B, double *C, int dim1, int dim2);
+void leftMultiplyAdd(double* A, double* B, double* C, int dim1, int dim2, int dim3);
+void transposedMultiplyAdd(double* A, double* B, double* C, int dim1, int dim2, int dim3);
 
 #endif /* MATRIX_UTILS_H_ */

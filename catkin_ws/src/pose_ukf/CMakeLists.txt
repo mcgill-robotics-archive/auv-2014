@@ -4,7 +4,13 @@ project(pose_ukf)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin 
+  REQUIRED 
+  roscpp
+  std_msgs
+  geometry_msgs
+  sensor_msgs
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -78,7 +84,7 @@ find_package(catkin REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES pose_ukf
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS  roscpp std_msgs geometry_msgs sensor_msgs
 #  DEPENDS system_lib
 )
 
@@ -91,21 +97,26 @@ catkin_package(
 # include_directories(include)
 
 ## Declare a cpp library
-# add_library(pose_ukf
-#   src/${PROJECT_NAME}/pose_ukf.cpp
-# )
+#add_library(ukf
+#  src/ukf.cpp
+#)
 
 ## Declare a cpp executable
-# add_executable(pose_ukf_node src/pose_ukf_node.cpp)
+add_executable(pose_ukf
+  src/ros_pose.cpp 
+  src/ukf.cpp
+  src/matrix_utils.cpp
+  src/rotation_vector_utils.cpp
+)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(pose_ukf_node pose_ukf_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(pose_ukf_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(pose_ukf
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -147,7 +158,7 @@ catkin_package(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_pose_ukf.cpp)
+catkin_add_gtest(${PROJECT_NAME}-test test/test_ukf.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

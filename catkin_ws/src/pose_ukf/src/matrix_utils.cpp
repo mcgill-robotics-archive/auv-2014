@@ -126,6 +126,7 @@ void solve(double * A, double *B, double *C, int dim1, int dim2)
 	//This method solves the equation CB=A
 	//given dim1*dim2 matrix A and dim2*dim2 matrix B
 	double *rootB = new double[dim2*dim2]();
+	double *D = new double[dim2*dim1]();
 	cholesky(B, rootB, dim2);
 
 	//Now we have rootB*rootB^T = B
@@ -143,12 +144,68 @@ void solve(double * A, double *B, double *C, int dim1, int dim2)
 			double temp = 0;
 			for(int k = 0; k < col; k++)
 			{
+				temp += D[row*dim2+k]*rootB[col*dim2+k];
+			}
+			D[row*dim2+col] = (A[row*dim2+col]-temp)/rootB[col*dim2+col];
+		}
+	}
+
+	//Now we have C*rootB = D
+	for(int col = dim2 - 1; col >= 0; col--)
+	{
+		for(int row = 0; row<dim1;row++)
+		{
+			double temp = 0;
+			for(int k = dim2-1; k > col; k--)
+			{
 				temp += C[row*dim2+k]*rootB[k*dim2+col];
 			}
 			C[row*dim2+col] = (A[row*dim2+col]-temp)/rootB[col*dim2+col];
 		}
 	}
 
-	//Now we have C*rootB = D
+	delete rootB;
+	delete D;
+}
 
+void leftMultiplyAdd(double* A, double* B, double* C, int dim1, int dim2, int dim3)
+{
+	//Multiply A*B and add the result to in C
+	//A: dim1 x dim2
+	//B: dim2 x dim3
+	//C: dim1 x dim3
+
+	for(int row = 0; row < dim1; row++)
+	{
+		for(int col = 0; col < dim3; col++)
+		{
+			int temp = 0;
+			for(int i = 0; i < dim2; i++)
+			{
+				temp += A[row*dim2 + i]*B[i*dim3 + col];
+			}
+			C[row*dim3 + col] += temp;
+		}
+	}
+}
+
+void transposedMultiplyAdd(double* A, double* B, double* C, int dim1, int dim2, int dim3)
+{
+	//Multiply A*B^T and add the result to C
+	//A: dim1 x dim2
+	//B: dim3 x dim2
+	//C: dim1 x dim3
+
+	for(int row = 0; row < dim1; row++)
+	{
+		for(int col = 0; col < dim3; col++)
+		{
+			int temp = 0;
+			for(int i = 0; i < dim2; i++)
+			{
+				temp += A[row*dim2 + i]*B[col*dim2 + i];
+			}
+			C[row*dim3 + col] += temp;
+		}
+	}
 }
