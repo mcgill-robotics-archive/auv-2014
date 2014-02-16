@@ -10,13 +10,13 @@
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Vector3.h"
 #include "geometry_msgs/Quaternion.h"
-#include "geometry_msgs/IMU.h"
+#include "sensor_msgs/Imu.h"
 
 #include "ukf.h"
 
 ros::Publisher pub;
 ros::Subscriber sub;
-ukf::ukf estimator;
+ukf estimator(3);
 double acc[3], gyro[3], quaternion[4];
 
 void vectorToArray(double array[3], geometry_msgs::Vector3 vector) {
@@ -36,7 +36,8 @@ void dataCallback(const sensor_msgs::Imu::ConstPtr& imu) {
 	vectorToArray(acc, imu->linear_acceleration);
 	vectorToArray(gyro, imu->angular_velocity);
 
-	estimator.update(quaternion, acc, gyro);
+	//TODO: replace gyro with gyro*delta_t
+	estimator.update(acc, gyro);
 	geometry_msgs::Quaternion quat = geometry_msgs::Quaternion();
 	arrayToQuaternion(quat, quaternion);
 
@@ -48,10 +49,10 @@ void dataCallback(const sensor_msgs::Imu::ConstPtr& imu) {
 	pub.publish(posStamped);
 }
 
+
 int main (int argc, char **argv) {
 	ros::init(argc, argv, "pose_ukf");
 	ros::NodeHandle node;
-	estimator = ukf::ukf();
 
 	pub = node.advertise<geometry_msgs::PoseStamped>("ukf", 100);
 	sub = node.subscribe("imu_data", 100, dataCallback);
