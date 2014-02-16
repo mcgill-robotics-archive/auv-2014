@@ -48,7 +48,6 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    motor.msg
    solenoid.msg
-   batteryStatus.msg
  )
 
 ## Generate services in the 'srv' folder
