@@ -1,10 +1,3 @@
-/*
- * ukf.h
- *
- *  Created on: Jan 22, 2014
- *      Author: mkrogius
- */
-
 #ifndef UKF_H_
 #define UKF_H_
 
@@ -13,7 +6,7 @@ class ukf
 {
 	public:
     	ukf(int dim);
-    	void update(double* acc, double* gyro);
+    	void update(double* acc, double* gyro, double* quaternion);
 
 	private:
     	int AUGDIM;

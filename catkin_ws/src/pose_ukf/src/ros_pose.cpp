@@ -1,10 +1,3 @@
-/*
- * ros_pose.cpp
- *
- *  Created on: Jan 22, 2014
- *      Author: mkrogius, Alan Yang
- */
-
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/PoseStamped.h"
@@ -25,21 +18,25 @@ void vectorToArray(double array[3], geometry_msgs::Vector3 vector) {
 	array[2] = vector.z;
 }
 
-void arrayToQuaternion(geometry_msgs::Quaternion quaternion, double array[4]) {
-	quaternion.w = array[0];
-	quaternion.x = array[1];
-	quaternion.y = array[2];
-	quaternion.z = array[3];
+void arrayToQuaternion(geometry_msgs::Quaternion* quaternion, double array[4]) {
+	quaternion->w = array[0];
+	quaternion->x = array[1];
+	quaternion->y = array[2];
+	quaternion->z = array[3];
 }
 
 void dataCallback(const sensor_msgs::Imu::ConstPtr& imu) {
 	vectorToArray(acc, imu->linear_acceleration);
 	vectorToArray(gyro, imu->angular_velocity);
 
+	for (int i = 0; i < 3; i++)
+	{
+		gyro[i] *= 0.026;
+	}
 	//TODO: replace gyro with gyro*delta_t
-	estimator.update(acc, gyro);
+	estimator.update(acc, gyro, quaternion);
 	geometry_msgs::Quaternion quat = geometry_msgs::Quaternion();
-	arrayToQuaternion(quat, quaternion);
+	arrayToQuaternion(&quat, quaternion);
 
 	geometry_msgs::PoseStamped posStamped = geometry_msgs::PoseStamped();
 	posStamped.header = imu->header;

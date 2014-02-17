@@ -1,9 +1,4 @@
-/*
- * rotation_vector_utils.cpp
- *
- *  Created on: Jan 22, 2014
- *      Author: mkrogius, Alan Yang
- */
+
 
 #include <cmath>
 #include <algorithm>
@@ -11,11 +6,11 @@
 
 #include "rotation_vector_utils.h"
 
-void rotateThisByThat(double result[3], double toRotate[3], double rotation[3]) {
+void rotateThisByThat(double toRotate[3], double rotation[3], double result[3]) {
 	double angle = norm(rotation);
 	
 	if (angle == 0.0) {
-		std::copy(rotation, rotation + 2, result);
+		std::copy(toRotate, toRotate + 3, result);
 		return;
 	}
 	
@@ -54,13 +49,13 @@ void cross(double result[3], double v1[3], double v2[3]) {
 	result[2] = v1[0]*v2[1] - v1[1]*v2[0];
 }
 
-void inverse(double result[3], double rotationVector[3]) {
+void inverse(double rotationVector[3], double result[3]) {
 	for (int i = 0; i < 3; i++) {
 		result[i] = -1.0 * rotationVector[i];
 	}
 }
 
-void composeRotations(double result[3], double r1[3], double r2[3]) {
+void composeRotations(double r1[3], double r2[3], double result[3]) {
 	double q1[] = {1, 0, 0, 0};
 	double q2[] = {1, 0, 0, 0};
 	
@@ -76,6 +71,10 @@ void quaternionFromRotationVector(double quaternion[4], double rotation[3]) {
 	double angle = norm(rotation);
 	
 	if (angle == 0) {
+		quaternion[0] = 1.0;
+		quaternion[1] = 0.0;
+		quaternion[2] = 0.0;
+		quaternion[3] = 0.0;
 		return;
 	}
 	
@@ -98,17 +97,18 @@ void quaternionMultiply(double q[4], double p[4]) {
 }
 
 void rotationVectorFromQuaternion(double rotation[3], double quaternion[4]) {
-	std::copy(quaternion + 1, quaternion + 3, rotation);
+	std::copy(quaternion + 1, quaternion + 4, rotation);
 	double sine = norm(rotation);
 	
 	if (sine == 0.0) {
-		std::fill(rotation, rotation + 2, 0.0);
+		std::fill(rotation, rotation + 3, 0.0);
+		return;
 	}
 	
-	double angle = atan2(sine, quaternion[0]);
+	double halfAngle = atan2(sine, quaternion[0]);
 	
 	for (int i = 0; i < 3; i++) {
-		rotation[i] = rotation[i] * angle / sine;
+		rotation[i] = rotation[i] * 2.0 * halfAngle / sine;
 	}
 }
 

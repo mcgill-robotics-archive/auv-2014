@@ -1,10 +1,3 @@
-/*
- * ukf.cpp
- *
- *  Created on: Jan 22, 2014
- *      Author: mkrogius
- */
-
 #include "ukf.h"
 #include "matrix_utils.h"
 #include "rotation_vector_utils.h"
@@ -50,11 +43,11 @@ void ukf::generateSigmas()
 	//This writes the square root of covar into the first AUGDIM sigmas
 	cholesky(augCovar, sigmas, AUGDIM);
 	//Now we make a copy of it into the second
-	matrixCopy(sigmas, &(sigmas[AUGDIM*AUGDIM]), AUGDIM);
+	vectorCopy(sigmas, &(sigmas[AUGDIM*AUGDIM]), AUGDIM*AUGDIM);
 
 	//Now we scale the sigmas
 	scaleVector(sqrt(AUGDIM), sigmas, AUGDIM*AUGDIM);
-	scaleVector(sqrt(AUGDIM), sigma(AUGDIM), AUGDIM*AUGDIM);
+	scaleVector(-1.0*sqrt(AUGDIM), sigma(AUGDIM), AUGDIM*AUGDIM);
 
 	for (int i = 0; i < 2*AUGDIM; i++)
 	{
@@ -81,13 +74,14 @@ void ukf::propogateSigmas(double *rotation)
 
 void ukf::recoverPrediction()
 {
-	averageVectors(augState, sigmas, 2*AUGDIM, AUGDIM);
+	averageVectors(sigmas, augState, 2*AUGDIM, AUGDIM);
 
 	subtractMultipleVectors(sigmas, augState, 2*AUGDIM, AUGDIM);
 
-	averageOuterProductOfVectors(augCovar, sigmas, sigmas
+	averageOuterProduct(sigmas, sigmas, augCovar
 			,2*AUGDIM, AUGDIM, AUGDIM);
 	//TODO: Add in process covariance
+	addDiagonal(augCovar, 0.0001, AUGDIM);
 }
 
 void ukf::predict(double rotation[3])
@@ -121,17 +115,17 @@ void ukf::correct(double acc[3])
 void ukf::recoverCorrection(double *acc)
 {
 
-	averageVectors(predMsmt, gammas, 2*AUGDIM, DIM);
+	averageVectors(gammas, predMsmt, 2*AUGDIM, DIM);
 
 	subtractMultipleVectors(sigmas, augState, 2*AUGDIM, AUGDIM);
 	subtractMultipleVectors(gammas, predMsmt, 2*AUGDIM, DIM);
 
-	averageOuterProductOfVectors(measCovar, gammas, gammas, 2*AUGDIM, DIM, DIM);
-	averageOuterProductOfVectors(crossCovar, sigmas, gammas, 2*AUGDIM, AUGDIM, DIM);
+	averageOuterProduct(gammas, gammas, measCovar, 2*AUGDIM, DIM, DIM);
+	averageOuterProduct(sigmas, gammas, crossCovar, 2*AUGDIM, AUGDIM, DIM);
 
-
+	// gain = crosscovar * meascovar^-1
 	double *gain = new double[AUGDIM*DIM]();
-    solve(measCovar, crossCovar, gain, AUGDIM, DIM);
+    solve(crossCovar, measCovar, gain, AUGDIM, DIM);
 
     //augmentedPose += gain * (acc - predictedMeasurement)
     subtractVectors(acc, predMsmt, DIM);
@@ -140,16 +134,17 @@ void ukf::recoverCorrection(double *acc)
     //augCovar -= crossCovar * gain.transpose()
     scaleVector(-1.0, crossCovar, DIM*DIM);
     transposedMultiplyAdd(crossCovar, gain, augCovar, AUGDIM, DIM, AUGDIM);
-
+    addDiagonal(augCovar, 0.0001, AUGDIM);
     delete gain;
 }
 
-void ukf::update(double* acc, double* rotation)
+void ukf::update(double* acc, double* rotation, double *quaternion)
 {
     predict(rotation);
 
-    correct(acc);
-    //TODO: return quaternionFromRotationVector(self.augmentedPose[0:3])
+    //correct(acc);
+
+    quaternionFromRotationVector(quaternion, augState);
 }
 
 double *ukf::sigma(int index)
