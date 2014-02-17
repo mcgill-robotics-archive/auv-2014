@@ -3,7 +3,7 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/String.h>
-#include <std_msgs/Bool.h>
+#include <std_msgs/Empty.h>
 #include <controls/motorCommands.h>
 #include <arduino_msgs/solenoid.h>
 
@@ -29,10 +29,12 @@ const static int battPin = A3;
 unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
 unsigned long batteryCurrentSchedule;
-
+boolean killSwitchEngaged = false;
 int boundCheck(int x){
   if(x> 500 || x< -500){
-    nh.logerror("Motor Speed out of bound!");
+    char msg[70];
+    String("Motor Speed out of bound: " + String(x) +" !").toCharArray(msg,70);
+    nh.logerror(msg);
     return 0;  
   }
   return x;
@@ -56,8 +58,12 @@ void solenoidCb( const arduino_msgs::solenoid& msg){
   digitalWrite(19,msg.dropper1.data);
 }
 
-void killSwitchCb( const std_msgs::Bool& msg){
-  digitalWrite(0,msg.data);
+void killSwitchCb( const std_msgs::Empty& msg){
+  if(!killSwitchEngaged){
+    nh.logwarn("Kill switch engaged! Initiating self-destruction!");
+    killSwitchEngaged = true;
+    digitalWrite(7,HIGH);
+  }
 }
 
 ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
@@ -67,7 +73,7 @@ ros::Publisher battCurrPub0("/arduino/batteryCurrent0", &batteryCurrent0);
 ros::Publisher battCurrPub1("/arduino/batteryCurrent1", &batteryCurrent1);
 ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
-ros::Subscriber<std_msgs::Bool> killSwitch_sub("/arduino/KillSwitch", &killSwitchCb);
+ros::Subscriber<std_msgs::Empty> killSwitch_sub("/arduino/KillSwitch", &killSwitchCb);
 
 void setup(){
   for(int i = 0; i<6; i++){
