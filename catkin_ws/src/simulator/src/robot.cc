@@ -25,6 +25,7 @@ namespace gazebo
 class Robot : public ModelPlugin
 {
 public:
+
 	/**
 	 * Constructor
 	 */
@@ -32,6 +33,7 @@ public:
 		int argc = 0;
 		ros::init(argc, NULL, "Robot Plugin");
 		std::cout<<"Robot plugin node created."<<std::endl;
+		noOfIterations = 0;
 	};
 
 	/**
@@ -67,8 +69,7 @@ public:
 		// Torpedo Launch Sub topic subscriber
 		this->torpedoLaunchSub = this->node->subscribe("simulator/torpedo", 1000, &Robot::torpedoCallBack, this);;
 
-		// Listen to the update event. This event is broadcast every
-		// simulation iteration.
+		// Listen to the update event. This event is broadcast every simulation iteration.
 		this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&Robot::OnUpdate, this, _1));
 	};
 
@@ -76,6 +77,8 @@ public:
 	 * Called on every simulation iteration
 	 */
 	void OnUpdate(const common::UpdateInfo & /*_info*/) {
+		++noOfIterations;
+		if (noOfIterations % 500 == 0) applyDrag();
 		ros::spinOnce();
 	};
 
@@ -85,11 +88,6 @@ public:
 	 * @param msg Twist message
 	 */
 	void moveCallback(const geometry_msgs::Twist::ConstPtr& msg) {
-		std::cout << "DEBUG::";
-		std::cout << "linear vel: <" << msg->linear.x << ", " << msg->linear.y
-				 << ", " << msg->linear.z << std::endl;
-		std::cout << "angular vel: " << msg->angular.x << ", " << msg->angular.y
-				 << ", " << msg->angular.z << std::endl;
 		this->model->SetLinearVel(math::Vector3(msg->linear.x, msg->linear.y, -msg->linear.z));
 		this->model->SetAngularVel(math::Vector3(msg->angular.x, msg->angular.y, msg->angular.z));
 	};
@@ -152,6 +150,25 @@ public:
 	 * applies the corresponding wrench.
 	 */
 	void applyDrag() {
+		// adjustments for robot's local yaw w.r.t. robot's (model's) yaw
+		/*
+		float modelYaw = this->model->GetRelativePose().rot.GetYaw();
+
+		math::Vector3 dummyAsEuler = this->model->GetLink("dummy")->GetRelativePose().rot.GetAsEuler();
+
+		float dummyYaw = dummyAsEuler.z;
+		
+		this->model->GetLink("dummy")->SetRelativePose(
+			math::Pose(this->model->GetLink("dummy")->GetRelativePose().pos,
+				math::Vector3(
+					dummyAsEuler.x, // same 
+						dummyAsEuler.y, // same
+							this->model->GetRelativePose().rot.GetYaw() - 1.57079632679)), // model's yaw - pi/2 
+								true,
+									true);
+		*/
+		// adjustments over
+
 		math::Vector3 linearVelocity = model->GetRelativeLinearVel();
 		math::Vector3 angularVelocity = model->GetRelativeAngularVel();
 		
@@ -166,7 +183,7 @@ public:
 		q = angularVelocity.y;
 		r = angularVelocity.z;
 		
-		//if (!shouldApplyDrag(u,v,w,p,q,r)) return;
+		//std::cout << "Angular: " << p << ", " << q << ", " << r << "." << std::endl;
 		
 		magnitude = sqrt(u*u + v*v + w*w);
 		
@@ -176,9 +193,11 @@ public:
 			translationalDragVector.z = w/magnitude;
 		}
 		
-		//Drag force = -0.5 * Area * density* |speed|^2 * dragCoefficent
+		//Drag force = -0.5 * Area * density * |speed|^2 * drag coefficient
 		translationalDragMagnitude = -.5 * .118 * 1000 * (u*u + v*v + w*w) * .8;
-		ROS_DEBUG("Drag force: %f | Speed = %f", translationalDragMagnitude, magnitude);
+		
+		ROS_INFO("Drag force: %f | Speed = %f", translationalDragMagnitude, magnitude);
+		
 		translationalDragVector.x = translationalDragVector.x * translationalDragMagnitude;
 		translationalDragVector.y = translationalDragVector.y * translationalDragMagnitude;
 		translationalDragVector.z = translationalDragVector.z * translationalDragMagnitude;
@@ -214,16 +233,14 @@ public:
 		std::cout << "Applying drag force:" << std::endl;
 		std::cout << "fx:" << forceVector.x << ", fy:" << forceVector.y << " fz:" << forceVector.z;
 		std::cout << " taoX:" << torqueVector.x << ", taoY:" << torqueVector.y << " taoZ:" << torqueVector.z << std::endl;
-		
+
 		client.call(applyBodyWrench);
 
-		if (applyBodyWrench.response.success) {
-			//ROS_INFO("ApplyBodyWrench call successful.");
-		} else {
-			//ROS_ERROR("ApplyBodyWrench call failed.");
+		if (!applyBodyWrench.response.success) {
+			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
 	}
-
+	
 	/**
 	 * Function to handle Wrench messages passed to topic 'controls/wrench/'
 	 * @param msg Wrench to be applied to robot
@@ -247,10 +264,10 @@ public:
 
 		// adjustments over
 	
-		// check if its worth trying to apply the wrench
+		// check if its worth trying to apply the wrench - e.g.: if everything is 0, just return.
 		if (!shouldApplyForce(msg.force.x, msg.force.y, msg.force.z, msg.torque.x, msg.torque.y, msg.torque.z))	return;
 
-		// appply the wrench
+		// apply the wrench
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = msg;
@@ -263,8 +280,6 @@ public:
 		if (!applyBodyWrench.response.success) {
 			ROS_ERROR("ApplyBodyWrench call failed.");
 		}
-		
-		//applyDrag();
 	}
 
 	void simulatorMarkerCallBack(const std_msgs::Bool::ConstPtr& msg) {
@@ -291,10 +306,14 @@ private:
 	}	
 	
 	bool inRangeForce(float x) {
-		return abs(x) > .0000001;
+		if (x==0 || x==-0) return false;
+		if (x>0) {
+			if (x>.00001) return true;
+		}
+		if (x<-.00001) return true;
+		return false;
 	}
 
-private:
 	// CONSTANTS
 
 	// for wrench computation
@@ -333,7 +352,10 @@ private:
 
 	/** Torpedo Launch Sub topic subscriber */
 	ros::Subscriber	torpedoLaunchSub;
+	
+	int noOfIterations;
 };
+
 // Register this plugin with the simulator
 GZ_REGISTER_MODEL_PLUGIN(Robot)
 }
