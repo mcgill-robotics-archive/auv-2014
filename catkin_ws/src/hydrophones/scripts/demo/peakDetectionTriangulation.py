@@ -3,12 +3,12 @@
 # IMPORTS
 import time
 import serial
-import numpy as np
-import sys
-import rospy
+from numpy import linalg, fft
+# import sys
+# import rospy
 # from geometry_msgs.msg import PointStamped
-from threading import Thread
-from math import sqrt, pow
+# from threading import Thread
+from math import sqrt, sin, cos, pi
 
 # VARIABLES
 NUMBER_OF_MICS = 4  # SELF-EXPLANATORY
@@ -16,11 +16,13 @@ DIMENSIONS = 3      # DIMENSIONS OF SOLUTION
 DISTANCE_X = 0.565  # DISTANCE M1 <---> M3
 DISTANCE_Y = 0.349  # DISTANCE M2 <---> M3
 SPEED = 343         # SPEED IN AIR
-MAX_DELAY = 10000   # MAXIMUM DELAYAY BEFORE RESET (TICKS)
-THRESHOLD = 0      # VOLUME THRESHOLD (OUT OF 330) - EXPERIMENTAL VALUE
-TICK_TIME = 40      # TIME PER LOOP CYCLE (MICROSECONDS) - EXPERIMENTAL VALUE
-TEENSY_PATH = '/dev/teensy'
+MAX_DELAY = 10000   # MAXIMUM DELAY BEFORE RESET (TICKS)
+THRESHOLD = 10      # VOLUME THRESHOLD (OUT OF 128) - EXPERIMENTAL VALUE
+TICK_TIME = 15      # TIME PER LOOP CYCLE (MICROSECONDS) - EXPERIMENTAL VALUE
+TEENSY_PATH = "/dev/tty.usbmodem10131"  # 'dev/teensy'
 
+
+# MIC OBJECT
 class mic(object):
     __slots__ = ['value', 'peak', 'time', 'done']
 
@@ -33,10 +35,14 @@ class mic(object):
         self.time = 0
         self.done = False
 
+
+# CREATE MIC OBJECTS
 mics = [mic() for x in xrange(NUMBER_OF_MICS)]
+
 
 # ESTABLISH CONNECTION
 def connect():
+
     print 'connecting to teensy...'
 
     # KEEP TRYING UNTIL WORKS
@@ -44,7 +50,6 @@ def connect():
     while not done:
         try:
             ser = serial.Serial(TEENSY_PATH)
-            ser.open()
             done = True
         except serial.serialutil.SerialException:
             print 'connection failed'
@@ -54,26 +59,28 @@ def connect():
 
     return ser
 
+
 # PARSE
 def parse(str):
     if str[0] is '0':
-        mics[0].value = abs(long(str[2:]) - 330)
+        mics[0].value = abs(long(str[1:]) - 128)
     elif str[0] is '1':
-        mics[1].value = abs(long(str[2:]) - 330)
+        mics[1].value = abs(long(str[1:]) - 128)
     elif str[0] is '2':
-        mics[2].value = abs(long(str[2:]) - 330)
+        mics[2].value = abs(long(str[1:]) - 128)
     elif str[0] is '3':
-        mics[3].value = abs(long(str[2:]) - 330)
+        mics[3].value = abs(long(str[1:]) - 128)
         return True
 
     return False
 
+
 # TRIANGULATE
 def triangulate(dtx, dty):
-    sx = dtx*SPEED # Distance M1 <---> M2
-    sy = dty*SPEED # Distance M1 <---> M3
+    sx = dtx*SPEED  # Distance M1 <---> M2
+    sy = dty*SPEED  # Distance M1 <---> M3
 
-    phi = pi/2 # Angle between M1 and M2 in rads
+    phi = pi / 2  # Angle between M1 and M2 in rads
 
     # Initial Guess
     r1 = 10
@@ -84,8 +91,8 @@ def triangulate(dtx, dty):
 
     # Position Vector
     R = [Y[0], sx, sy, DISTANCE_X, DISTANCE_Y]
-    F = [0,0]
-    J = [[0,0],[0,0]]
+    F = [0, 0]
+    J = [[0, 0], [0, 0]]
 
     # Tolerance
     t = 1e-9
@@ -96,28 +103,28 @@ def triangulate(dtx, dty):
 
     # As long as the error is higher than the tolerance
     while e > t:
-        R = [ Y[0], sx, sy, DISTANCE_X, DISTANCE_Y ]
+        R = [Y[0], sx, sy, DISTANCE_X, DISTANCE_Y]
         theta = Y[1]
 
         # Calculate the function
         F = [(R[0] + R[2])**2 - (R[0] + R[1])**2 + R[3]**2 - 2*(R[0] + R[2]) * R[3] * cos(theta),
-            (R[0] + R[2])**2 + R[4]**2 - R[0]**2 - 2 * (R[0]+R[2]) * R[4] * cos(theta-phi)]
+             (R[0] + R[2])**2 + R[4]**2 - R[0]**2 - 2 * (R[0]+R[2]) * R[4] * cos(theta-phi)]
 
         J[0][0] = 2 * R[2] - 2 * R[1] - 2 * R[3] * cos(theta)
         J[0][1] = 2 * (R[0] + R[2]) * R[3] * sin(theta)
         J[1][0] = 2 * R[2] - 2 * R[4] * cos(theta - phi)
         J[1][1] = 2 * (R[0] + R[2]) * R[4] * sin(theta - phi)
-        
+
         delta_x = -linalg.solve(J, F)
-        
+
         Y += delta_x
-        
+
         e = sqrt(delta_x[0]**2 + delta_x[1]**2)
-        
+
         if i > 1000:
-            print "****Did not converge within ", i, " iterations.**** with e = ", e
+            print "WARNING: Did not converge within ", i, " iterations with e = ", e
             e = 0
-        
+
         i += 1
 
     x = Y[0] * cos(Y[1])
@@ -127,6 +134,8 @@ def triangulate(dtx, dty):
 
     return coordinates
 
+
+# COMPUTE
 def everything():
     # INCREMENT TIMER AND CHECK FOR PEAKS
     for i in xrange(NUMBER_OF_MICS):
@@ -134,11 +143,11 @@ def everything():
             # found peak: reset time
             mics[i].peak = mics[i].value
             mics[i].time = 0
-        else: 
+        else:
             mics[i].time += 1
             if mics[i].time > MAX_DELAY:
                 # max_delay has passed
-                mics[i].done = true
+                mics[i].done = True
 
     # CHECK IF ALL ARE DONE
     for i in xrange(NUMBER_OF_MICS):
@@ -150,7 +159,8 @@ def everything():
     all = True
     for i in xrange(NUMBER_OF_MICS):
         if mics[i].peak < THRESHOLD:
-            all = false
+            all = False
+            print mics[i].peak
             break
 
     # PERFORM CALCULATIONS
@@ -164,6 +174,7 @@ def everything():
     for i in xrange(NUMBER_OF_MICS):
         mics[i].reset()
 
+
 # MAIN
 try:
     # CONNECT
@@ -175,13 +186,15 @@ try:
             # READ SERIAL DATA AND PUBLISH TOPIC
             line = ser.readline().rstrip()
 
-            if __name__ == '__main__':
-                try:
-                    if parse(line):
-                        everything()
-                except rospy.ROSInterruptException:
-                    pass
+            # if __name__ == '__main__':
+            #     try:
+            #         if parse(line):
+            #             everything()
+            #     except rospy.ROSInterruptException:
+            #         pass
 
+            if parse(line):
+                everything()
         except serial.serialutil.SerialException:
             # PEACE OUT IF CONNECTION DROPS
             print 'connection dropped'
@@ -193,5 +206,6 @@ except KeyboardInterrupt:
     # CTRL-C FRIENDLY
     print ''
     print 'goodbye!'
+    ser.close()
     time.sleep(1)
     exit(0)

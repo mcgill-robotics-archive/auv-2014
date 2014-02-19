@@ -21,8 +21,7 @@ import PS3Controller  # custom modules for acquiring ps3 input
 from VARIABLES import *  # file containing all the shared variables and parameters
 
 import sys
-from subprocess import call
-import thread
+
 import rospy  # ros module for subscribing to topics
 import pygame  # module top play the alarm
 
@@ -307,10 +306,10 @@ class CentralUi(QtGui.QMainWindow):
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
             #QtCore.QTimer.singleShot(0, self.planner)
-            thread.start_new_thread(self.planner, ())
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
+            velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 0)
             #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
     def planner(self):
@@ -337,7 +336,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic,1)
 
     ## Method for the ps3 control
     #
@@ -367,7 +366,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 1)
 
     ## create and layout imu graphics
     #
