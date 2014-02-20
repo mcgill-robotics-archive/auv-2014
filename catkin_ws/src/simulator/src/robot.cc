@@ -183,7 +183,7 @@ public:
 		q = angularVelocity.y;
 		r = angularVelocity.z;
 		
-		//std::cout << "Angular: " << p << ", " << q << ", " << r << "." << std::endl;
+		std::cout << "Angular: " << p << ", " << q << ", " << r << "." << std::endl;
 		
 		magnitude = sqrt(u*u + v*v + w*w);
 		
@@ -209,16 +209,22 @@ public:
 		forceVector.z = -translationalDragVector.z;
 				
 		geometry_msgs::Vector3 torqueVector;
-		torqueVector.x = -(KP * p * abs(p));
-		torqueVector.y = -(KQ * q * abs(q));
-		torqueVector.z = -(KR * r * abs(r));
+		float abs_p=p, abs_q=q, abs_r=r;
+
+		if (p<0) abs_p = -p;
+		if (q<0) abs_q = -q;
+		if (r<0) abs_r = -r;
+		
+		torqueVector.x = -(p * abs_p);
+		torqueVector.y = -(q * abs_q);
+		torqueVector.z = -(r * abs_r);
 
 		geometry_msgs::Wrench wrench;
 
 		wrench.force = forceVector;
 		wrench.torque = torqueVector;
 
-		if (!shouldApplyForce(forceVector.x, forceVector.y, forceVector.z, torqueVector.x, torqueVector.y, torqueVector.z)) return;		
+		//if (!shouldApplyForce(forceVector.x, forceVector.y, forceVector.z, torqueVector.x, torqueVector.y, torqueVector.z)) return;		
 
 		// ApplyBodyWrench message
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
