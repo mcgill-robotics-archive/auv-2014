@@ -33,7 +33,7 @@ void dataCallback(const sensor_msgs::Imu::ConstPtr& imu) {
 	{
 		gyro[i] *= 0.026;
 	}
-	//TODO: replace gyro with gyro*delta_t
+
 	estimator.update(acc, gyro, quaternion);
 	geometry_msgs::Quaternion quat = geometry_msgs::Quaternion();
 	arrayToQuaternion(&quat, quaternion);

@@ -179,15 +179,15 @@ class ukf:
 
         self.predict(numpy.matrix(gyro).transpose())
         self.correct(acc)
-        print(self.augmentedPose[0:3])
 
         return QuaternionUtils.quaternionFromRotationVector(self.augmentedPose[0:3])
 
 if __name__ == '__main__':
     estimator = ukf()
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    #estimate = estimator.update([-0.3828125, -0.229687511921, 7.96250009537]
+    #    ,[0.246787205338, -0.00300747156143, 0.010275458917])
+    estimate = estimator.update([0,0,9.8],[0.1,0,0])
+    estimate = estimator.update([0,0,9.8],[3.041592,0,0])
     estimate = estimator.update([0,0,9.8],[0.01,0,0])
     estimate = estimator.update([0,0,9.8],[0.01,0,0])
     estimate = estimator.update([0,0,9.8],[0.01,0,0])
