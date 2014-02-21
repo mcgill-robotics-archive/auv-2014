@@ -26,7 +26,7 @@ add_message_files(
 generate_messages()
 
 catkin_package(
-  DEPENDS
+  CATKIN_DEPENDS
     roscpp
     gazebo_ros
     message_runtime
@@ -47,6 +47,7 @@ target_link_libraries(create_torpedo ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 set(CMAKE_INSTALL_RPATH "${roscpp_LIBRARY_DIRS}")
 add_library(robot SHARED src/robot.cc)
+add_dependencies(robot ${PROJECT_NAME}_generate_messages_cpp)
 set_target_properties(robot PROPERTIES COMPILE_FLAGS "${roscpp_CFLAGS_OTHER}")
 set_target_properties(robot PROPERTIES LINK_FLAGS "${roscpp_LDFLAGS_OTHER}")
 
