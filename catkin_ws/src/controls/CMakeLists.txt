@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  planner
 )
 
 ## System dependencies are found with CMake's conventions
@@ -84,7 +85,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES controls
-#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs
+  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs planner
 #  DEPENDS system_lib
 )
 

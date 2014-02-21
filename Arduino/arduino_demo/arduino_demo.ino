@@ -9,20 +9,19 @@
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
-std_msgs::Int16 batteryCurrent0;
-std_msgs::Int16 batteryCurrent1;
+std_msgs::Int16 batteryCurrent;
 std_msgs::Int16 batteryVoltage0;
 std_msgs::Int16 batteryVoltage1;
 //PINOUT:
-//Motor control   : 0 - 5
+//Motor control   : 2 - 7
 //Solenoid valve  : 14 - 19 
 //Depth sensor    :  A0
 //Battery voltage : A3, A4
-//Battery current : A5, A6
-//Kill switch     : 7
+//Battery current : A5
+//Kill switch     : 0
 Servo myservo[6];
 const static int depthPin = A0;      // select the input pin for the potentiometer
-const static int motorControlPin = 0 ; 
+const static int motorControlPin = 2 ; 
 const static int solenoidValvePin = 14;
 const static int battPin = A3;
 
@@ -62,15 +61,14 @@ void killSwitchCb( const std_msgs::Empty& msg){
   if(!killSwitchEngaged){
     nh.logwarn("Kill switch engaged! Initiating self-destruction!");
     killSwitchEngaged = true;
-    digitalWrite(7,HIGH);
+    digitalWrite(0,HIGH);
   }
 }
 
 ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
 ros::Publisher battVoltPub0("/arduino/batteryVoltage0", &batteryVoltage0);
 ros::Publisher battVoltPub1("/arduino/batteryVoltage1", &batteryVoltage1);
-ros::Publisher battCurrPub0("/arduino/batteryCurrent0", &batteryCurrent0);
-ros::Publisher battCurrPub1("/arduino/batteryCurrent1", &batteryCurrent1);
+ros::Publisher battCurrPub("/arduino/batteryCurrent", &batteryCurrent);
 ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
 ros::Subscriber<std_msgs::Empty> killSwitch_sub("/arduino/KillSwitch", &killSwitchCb);
@@ -82,15 +80,14 @@ void setup(){
     //SolenoidValve setup  
     pinMode(14+i,OUTPUT);
    }
-   
+   pinMode(0,OUTPUT);
   //ros node initializtion
   nh.initNode();
   nh.advertise(depth);        //depth sensor
   
   nh.advertise(battVoltPub0);     //battery level
   nh.advertise(battVoltPub1);
-  nh.advertise(battCurrPub0);
-  nh.advertise(battCurrPub1);
+  nh.advertise(battCurrPub);
   
   nh.subscribe(killSwitch_sub);// kill switch
   nh.subscribe(motor_sub);    //motor 
@@ -101,12 +98,8 @@ void loop(){
   long currentTime = millis();
   
   if(batteryCurrentSchedule < currentTime){
-    batteryCurrent0.data = analogRead(battPin + 2);
-    batteryCurrent1.data = analogRead(battPin + 3);
-    
-    battCurrPub0.publish(&batteryCurrent0);
-    battCurrPub1.publish(&batteryCurrent1);
-    
+    batteryCurrent.data = analogRead(battPin + 2);
+    battCurrPub.publish(&batteryCurrent);    
     batteryCurrentSchedule += 100;     //Update at 10 Hz
   }
   
