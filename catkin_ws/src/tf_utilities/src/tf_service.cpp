@@ -9,9 +9,13 @@
 bool transform(tf_utilities::transform::Request&, tf_utilities::transform::Response&);
 geometry_msgs::PoseStamped& transformPose(const tf::TransformListener&, const geometry_msgs::PoseStamped&, std::string target_frame);
 
+// Global variables
 tf::TransformListener listener(ros::Duration(10));
 geometry_msgs::PoseStamped transformedPose;
 
+// The service routine call
+// Takes the pose in current frame and target frame
+// Gives the transformed pose in target frame
 bool transform(tf_utilities::transform::Request& req,
 				tf_utilities::transform::Response& res) {
 	res.trans_pose = transformPose(listener, req.pose, req.target_frame);
@@ -19,6 +23,7 @@ bool transform(tf_utilities::transform::Request& req,
 	ROS_INFO("Transformed");
 }
 
+// Use the tf listener to transform the pose
 geometry_msgs::PoseStamped& transformPose(const tf::TransformListener& listener, 
 					const geometry_msgs::PoseStamped& pose, std::string target_frame) {
 	
