@@ -2,9 +2,9 @@ import math
 
 class dead_reck():
     #This estimator makes the assumption that pitch and roll are always zero
-
     hasTarget = False
 
+    #Position of target
     x = 0
     y = 0
 
@@ -50,11 +50,11 @@ class dead_reck():
 
     def getState(self):
         return {
-                'hasTarget':hasTarget
-                ,'x':x
-                ,'y':y
-                ,'targetID':targetID
-                ,'time':time
-                ,'yawOfTarget':yawOfTarget
-                ,'heading':heading
+                'hasTarget':self.hasTarget
+                ,'x':self.x
+                ,'y':self.y
+                ,'targetID':self.targetID
+                ,'time':self.time
+                ,'yawOfTarget':self.yawOfTarget
+                ,'heading':self.heading
                 }
