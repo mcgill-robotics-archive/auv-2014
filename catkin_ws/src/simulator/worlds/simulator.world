@@ -65,13 +65,13 @@
 		</visual>
       </link>
 
-	<joint name="dummyj" type="revolute">
+	<joint name="rrf_joint" type="revolute">
 		<parent>body</parent>
-		<child>dummy</child>
+		<child>robot_reference_frame</child>
 		<axis>0 0 1</axis>
 	</joint>
 	
-	<link name="dummy">
+	<link name="robot_reference_frame">
 		<pose>0 0 0 3.14159265359 0 1.57079632679</pose>
 	</link>
 
