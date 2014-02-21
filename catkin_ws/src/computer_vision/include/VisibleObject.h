@@ -13,14 +13,13 @@
 
 class VisibleObject {
 
-	public:
+public:
 
 	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame) = 0;
 	cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
-
 	virtual ~VisibleObject();
 
-	private:
+private:
 
 	virtual void applyFilter(cv::Mat& currentFrame) = 0;
 };

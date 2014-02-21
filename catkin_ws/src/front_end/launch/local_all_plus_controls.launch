@@ -1,0 +1,25 @@
+<launch>
+	<!-- launches 3 nodes: front-end, controls, simulator -->
+	<!-- Written by David Lavoie-Boutin, Jan 16, McGill Robotics -->
+	
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find simulator)/worlds/simulator.world"/>
+	<!-- Parameters -->
+  <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
+    <!-- more default parameters can be changed here -->
+  </include>
+
+	<!-- front-end -->
+	    <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>
+        <!-- CVNode front-->
+            <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
+        <!-- CVNode down -->
+            <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
+        <!-- Controls -->
+            <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>
+        <!-- dummy nodes for now -->
+            <node name="gazeboDepthEstimator" pkg="controls" type="gazeboDepthEstimator"  respawn="false" output="screen"/>
+            <node name="distanceCalculator" pkg="planner" type="distanceCalculator"  respawn="false" output="screen"/>
+
+</launch>

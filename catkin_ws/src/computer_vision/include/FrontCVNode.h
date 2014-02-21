@@ -3,7 +3,7 @@
 
 #include "CVNode.h"
 #include "Buoy.h"
-#include "Door.h"
+#include "Gate.h"
 
 
 //#include "computer_vision/StereoCameraImages.h"

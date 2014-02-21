@@ -1,0 +1,17 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$Buoy_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Buoy.h" alt="" coords="1313,83,1935,112"/>
+<area shape="rect" id="node11" href="$CVNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h" alt="" coords="1969,83,2612,112"/>
+<area shape="rect" id="node20" href="$Door_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h" alt="" coords="668,83,1289,112"/>
+<area shape="rect" id="node25" href="$MarkerTarget_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/MarkerTarget.h" alt="" coords="2636,83,3305,112"/>
+<area shape="rect" id="node30" href="$LineTarget_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/LineTarget.h" alt="" coords="3329,83,3983,112"/>
+<area shape="rect" id="node35" href="$VisibleObject_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/VisibleObject.cpp" alt="" coords="4007,83,4668,112"/>
+<area shape="rect" id="node5" href="$FrontCVNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/FrontCVNode.h" alt="" coords="1277,160,1949,189"/>
+<area shape="rect" id="node9" href="$Buoy_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/Buoy.cpp" alt="" coords="640,160,1253,189"/>
+<area shape="rect" id="node7" href="$FrontCVNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/FrontCVNode.cpp" alt="" coords="1281,237,1945,267"/>
+<area shape="rect" id="node13" href="$DownCVNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCVNode.h" alt="" coords="3317,160,3995,189"/>
+<area shape="rect" id="node18" href="$CVNode_8cpp.html" title="TODO since it will be renamed and its purpose will change a bit lulzy lulzo." alt="" coords="1973,160,2608,189"/>
+<area shape="rect" id="node15" href="$DownCVNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/DownCVNode.cpp" alt="" coords="3323,237,3989,267"/>
+<area shape="rect" id="node23" href="$Door_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/Door.cpp" alt="" coords="5,160,616,189"/>
+<area shape="rect" id="node28" href="$MarkerTarget_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/MarkerTarget.cpp" alt="" coords="2632,160,3293,189"/>
+<area shape="rect" id="node33" href="$LineTarget_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/LineTarget.cpp" alt="" coords="4019,160,4664,189"/>
+</map>

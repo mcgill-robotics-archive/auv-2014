@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -86,30 +86,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">FrontCVNode Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="FrontCVNode" --><!-- doxytag: inherits="CVNode" --><div class="dynheader">
+<!-- doxytag: class="FrontCVNode" --><!-- doxytag: inherits="CVNode" -->
+<p><code>#include &lt;<a class="el" href="FrontCVNode_8h_source.html">FrontCVNode.h</a>&gt;</code></p>
+<div class="dynheader">
 Inheritance diagram for FrontCVNode:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="classFrontCVNode.png" usemap="#FrontCVNode_map" alt=""/>
-  <map id="FrontCVNode_map" name="FrontCVNode_map">
-<area href="classCVNode.html" alt="CVNode" shape="rect" coords="0,0,90,24"/>
-</map>
- </div></div>
+<div class="center"><img src="classFrontCVNode__inherit__graph.png" border="0" usemap="#FrontCVNode_inherit__map" alt="Inheritance graph"/></div>
+<map name="FrontCVNode_inherit__map" id="FrontCVNode_inherit__map">
+<area shape="rect" id="node2" href="classCVNode.html" title="CVNode" alt="" coords="20,5,92,35"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for FrontCVNode:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFrontCVNode__coll__graph.png" border="0" usemap="#FrontCVNode_coll__map" alt="Collaboration graph"/></div>
+<map name="FrontCVNode_coll__map" id="FrontCVNode_coll__map">
+<area shape="rect" id="node2" href="classCVNode.html" title="CVNode" alt="" coords="20,5,92,35"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classFrontCVNode-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrontCVNode.html#a257f34e366cea40de0635d4965649898">FrontCVNode</a> (ros::NodeHandle &amp;nodeHandle, std::list&lt; std::string &gt; topicList, int receptionRate)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a257f34e366cea40de0635d4965649898"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrontCVNode.html#aa1a9998febc50680afae7836c0a77eea">FrontCVNode</a> (ros::NodeHandle &amp;nodeHandle, std::string topicName, int receptionRate, int bufferSize)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aa1a9998febc50680afae7836c0a77eea"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFrontCVNode.html#afc18df682418ee0778e00ba82f847872">~FrontCVNode</a> ()</td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a257f34e366cea40de0635d4965649898"></a><!-- doxytag: member="FrontCVNode::FrontCVNode" ref="a257f34e366cea40de0635d4965649898" args="(ros::NodeHandle &amp;nodeHandle, std::list&lt; std::string &gt; topicList, int receptionRate)" -->
+<a class="anchor" id="aa1a9998febc50680afae7836c0a77eea"></a><!-- doxytag: member="FrontCVNode::FrontCVNode" ref="aa1a9998febc50680afae7836c0a77eea" args="(ros::NodeHandle &amp;nodeHandle, std::string topicName, int receptionRate, int bufferSize)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classFrontCVNode.html#a257f34e366cea40de0635d4965649898">FrontCVNode::FrontCVNode</a> </td>
+          <td class="memname"><a class="el" href="classFrontCVNode.html#aa1a9998febc50680afae7836c0a77eea">FrontCVNode::FrontCVNode</a> </td>
           <td>(</td>
           <td class="paramtype">ros::NodeHandle &amp;&#160;</td>
           <td class="paramname"><em>nodeHandle</em>, </td>
@@ -117,14 +125,20 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::list&lt; std::string &gt;&#160;</td>
-          <td class="paramname"><em>topicList</em>, </td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>topicName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>receptionRate</em>&#160;</td>
+          <td class="paramname"><em>receptionRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bufferSize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -140,14 +154,25 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="afc18df682418ee0778e00ba82f847872"></a><!-- doxytag: member="FrontCVNode::~FrontCVNode" ref="afc18df682418ee0778e00ba82f847872" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classFrontCVNode.html#afc18df682418ee0778e00ba82f847872">FrontCVNode::~FrontCVNode</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<<<<<<< HEAD
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="FrontCVNode_8h_source.html">FrontCVNode.h</a></li>
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/FrontCVNode.cpp</li>
-=======
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="FrontCVNode_8h_source.html">FrontCVNode.h</a></li>
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/FrontCVNode.cpp</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="FrontCVNode_8h_source.html">FrontCVNode.h</a></li>
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="FrontCVNode_8cpp.html">FrontCVNode.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -155,7 +180,7 @@ Public Member Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -167,11 +192,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
