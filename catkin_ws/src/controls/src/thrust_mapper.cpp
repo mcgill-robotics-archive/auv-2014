@@ -13,6 +13,7 @@ Maps voltage to motor command
 #include "std_msgs/Float64.h"
 #include "gazebo_msgs/ModelStates.h"
 #include "controls/motorCommands.h"
+#include <string>
 
 //global vars
 ros::Publisher voltage_publisher;
@@ -26,10 +27,10 @@ double T_MAX;
 
 ros::NodeHandle n;
 
-float limit_check(float value, float min, float max, char* string){
+float limit_check(float value, float min, float max, char* value_type, char* value_id ){
 	if (value > max | value < min) {
 
-		ROS_WARN("Limit values have been exceeded: %s. Value is %f", string, value);
+		ROS_WARN("%s: %s value has been exceeded. Value is %f", value_type, value_id, value);
 
 		value = 0;
 
@@ -52,11 +53,11 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	controls::motorCommands motorCommands;
 
 	//Limit check for input wrench values
-	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Force X");
-	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Force Y");
-	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Force Z");
-	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Torque Y");
-	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MIN, T_MAX, "Torque Z");
+	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Force" ,"X");
+	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Force", "Y");
+	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Force", "Z");
+	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Torque", "Y");
+	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MIN, T_MAX, "Torque", "Z");
 
 
 
@@ -88,19 +89,28 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	    	voltage[i] = (thrust[i]-2.5582)/0.9609;
 	    }
 	}
-	//Add saturation statement, ROS_INFO("VALUE TOO GREAT")
+	
 	//Saturation of voltage values
+	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
+ 	for (int i=0; i<6; i++)
+	{
+		voltage[i] = limit_check(voltage[i], VOLTAGE_MIN, VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
 
+	}	
 
+	
 
 	//map voltages to motor commands
-	//Conversion to integer between -128 and +127
+	//Conversion to integer between -500 and +500
 	//linear for now TODO change mapping according to test
+	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
 	{
+		
+
 		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-(MOTOR_CMD_MIN)) + (MOTOR_CMD_MIN);
 	//Apply limit check to motor command 
-		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR");//Find way to pass which motor into string, create and loop through enumerator
+		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//Find way to pass which motor into string, create and loop through enumerator
 
 	}
 
