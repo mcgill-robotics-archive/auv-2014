@@ -18,12 +18,24 @@ const int CANNY_LOW_THRESHOLD = 200;
 const int KERNEL_SIZE = 3;
 /**
  * The gate's orange height/width ratio used to filter false positive readings on a frame.
+ * The real ration is 16:1. If the ratio is less than 4:1, it's probably not the gate.
  */
-const int GATE_RATIO = 16; // It's 1:16 for the width and height.
+const int MIN_GATE_RATIO = 4;
 /**
  * The deviation tolerance
  */
 int gate_ratio_error = 5;
+
+/**
+ * The angle at which rectangles should be.
+ */
+const int DESIRED_ANGLE_OF_RECT = 90;
+
+/**
+ * The accepted error for the angle of a rectangle.
+ */
+const int ANGLE_RECT_ERROR = 5;
+
 /**
  * The focal length of the lenses.
  */
