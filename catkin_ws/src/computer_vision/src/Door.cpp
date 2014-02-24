@@ -131,63 +131,88 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 		// Gets the contour to analyse in this loop iteration.
 		std::vector<cv::Point> contourToAnalyse = detectedContours.at(rectangleID);
 
-//		// Approximates a polygonal curve(s) with the specified precision on the contourToAnalyse vector.
-//		std::vector<cv::Point> contourAfterPolygonApproximation;
-//		approxPolyDP(contourToAnalyse, contourAfterPolygonApproximation, polygon_approximation_threshold, true);
-
 		// Gets the number of points that define this contour.
 		int numberOfPointsInContour = contourToAnalyse.size();
-
-		// Displays only the contours that have a number of points in the specified range and respect the ratio.
-		std::cout << "[DEBUG] Number of points in this contour= " << numberOfPointsInContour << std::endl;
 
 		// Finds a rotated rectangle that defines the contour of the object.
 		cv::RotatedRect foundRectangle = cv::minAreaRect(cv::Mat(contourToAnalyse));
 
 		// Determining the Width, Height and Ratio of the rotated rectangle.
+		// Here by convention the height is the longest side of the rectangle.
 		float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
 		float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
-		float heightWidthRatio = std::abs(height / width - GATE_RATIO);
-		float angle = foundRectangle.angle;
+		float heightWidthRatio = height / width;
 
-		// The angle of the rectangle will always be between [-90:0).
-		if (numberOfPointsInContour >= MIN_NUMBER_POINTS && (angle <= -80 || angle >= -10)) {
+		/* Calculate the angle of the rectangle. It is in interval [0, 180) and
+		works as expected (i.e. rectangle on its side has angle 0, rectangle upright has
+		angle 90) */
+		cv::Point2f vertices[4];
+		foundRectangle.points(vertices);
+		cv::Point2f p = vertices[0], q = vertices[1];
+		cv::Point2f diff = p - q;
+		float distanceFirstPoints = sqrt(diff.x * diff.x + diff.y * diff.y);
+		//Check whether the two points we have form a width or a height.
+		if(std::abs(distanceFirstPoints - width) < std::abs(distanceFirstPoints - height)) {
+			p = q;
+			q = vertices[2];
+		}
+
+		float opp = std::abs(p.y - q.y); //Want positive opposite side value
+		//Get signed adjacent value (it's the highest point minus the lowest point)
+		float adj = p.x - q.x;
+		if(q.y < p.y)
+			adj = -adj;
+
+		float rectangleAngle = atan(opp / adj) * 180.0 / 3.141592654;
+		if(rectangleAngle < 0)
+			rectangleAngle = 180 + rectangleAngle;
+
+		float angleError = std::abs(rectangleAngle - DESIRED_ANGLE_OF_RECT);
+
+		// First, make sure that our ratio is acceptably close to what we expect
+		// Also, we need at least 4 points in our contour.
+		if (	heightWidthRatio > MIN_GATE_RATIO && 
+			numberOfPointsInContour >= 4 &&
+			angleError < ANGLE_RECT_ERROR	) {
 
 			// Add the rectangle that is a potential match for the orange cylinders of the gate.
 			potentialMatchRectangles.push_back(foundRectangle);
-
-			cv::Point2f vertices[4];
-			foundRectangle.points(vertices);
-
-			// Goes through each vertex and connects them to write the edges of the rectangle.
-			for (int i = 0; i < 4; ++i) {
-				std::cout << "[DEBUG] (" << i << ") = (" << vertices[i].x << ";" << vertices[i].y << ")" << std::endl;
-				cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
-			}
 			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
 
 			// Write the text information right next to the rectangle.
 			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / (height * CAMERA_SENSOR_HEIGHT);
+
 			// Draws text containing the dimensions on each rectangles.
-			putText(currentFrame, "Width=" + boost::lexical_cast<std::string>(width),
-					cv::Point(vertices[0].x, vertices[0].y),
-					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-					CV_AA);
-			putText(currentFrame, "Height=" + boost::lexical_cast<std::string>(height),
-					cv::Point(vertices[0].x, vertices[0].y + 10),
-					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-					CV_AA);
+			
 			putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(approximateDistanceWithObject),
-					cv::Point(vertices[0].x, vertices[0].y + 20),
-					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-					CV_AA);
-			putText(currentFrame, "Angle=" + boost::lexical_cast<std::string>(angle),
 					cv::Point(vertices[0].x, vertices[0].y + 30),
 					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 					CV_AA);
+			
 		} else {
+			std::cout << "[DEBUG] Rejected rectangle: Points in contour: " << numberOfPointsInContour << 
+					"  Ratio error: " << heightWidthRatio << "  Angle: " << rectangleAngle << std::endl;
 			drawPointsOfContour(currentFrame, contourToAnalyse, RED_BGRX);
 		}
+
+		// Goes through each vertex and connects them to write the edges of the rectangle.
+		for (int i = 0; i < 4; ++i) {
+			cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
+		}
+
+		putText(currentFrame, "Width=" + boost::lexical_cast<std::string>(width),
+				cv::Point(vertices[0].x, vertices[0].y),
+				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+				CV_AA);
+		putText(currentFrame, "Height=" + boost::lexical_cast<std::string>(height),
+				cv::Point(vertices[0].x, vertices[0].y + 10),
+				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+				CV_AA);
+		putText(currentFrame, "Angle=" + boost::lexical_cast<std::string>(rectangleAngle),
+				cv::Point(vertices[0].x, vertices[0].y + 20),
+				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+				CV_AA);
+
 	}
 
 	int numberOfPotentialMatch = potentialMatchRectangles.size();

@@ -11,7 +11,7 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-from resizableUI1 import *
+from resizableUI2 import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
@@ -33,6 +33,7 @@ from sensor_msgs.msg import Image
 from gazebo_msgs.msg import ModelStates
 from computer_vision.msg import VisibleObjectData
 
+
 ## Popup for low battery
 #
 # little class for displaying a popup when battery reaches critical levels
@@ -49,15 +50,18 @@ class BatteryWarningUi(QtGui.QDialog):
         QtCore.QObject.connect(self.battery_warning_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
 
         self.battery_warning_ui.progressBar.setValue(misc_vars.low_battery_threshold/misc_vars.max_voltage*100)
+
     ## Stops the alarm sound
     #  @param self The object pointer
     def stop_alarm(self):
         pygame.mixer.music.stop()
 
+
 ## Main window class linking ROS with the UI and controllers
 class CentralUi(QtGui.QMainWindow):
 
     empty_battery_signal = QtCore.pyqtSignal()
+
     ## constructor of the main window for the ui
     #
     #  it integrates the actual window as well as variables for the graphing areas and the video monitoring array
@@ -95,11 +99,9 @@ class CentralUi(QtGui.QMainWindow):
         ## Pose Visualiser widget
         self.pose_ui = PoseViewWidget(self)
 
-
-        #TODO: change name of verticalLayout to prevent potential naming conflicts
         self.ui.verticalLayout.addWidget(self.pose_ui)
 
-        # create initial data sets for imu, depth and pressure graphs
+        # create initial data sets for imu, depth graphs
         ## the data set for accelerometer 1
         self.acc1_data = []
         ##data set accelerometer 2
@@ -118,8 +120,7 @@ class CentralUi(QtGui.QMainWindow):
         self.mag2_data = []
         ##dataset magnetmeter 3
         self.mag3_data = []
-        ##dataset pressure graph
-        self.pressure_data = []
+
         ##dataset depth graph
         self.depth_data = []
 
@@ -312,9 +313,6 @@ class CentralUi(QtGui.QMainWindow):
             velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 0)
             #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
-    def planner(self):
-        call(['rosrun planner Planner'], shell=True)
-
     ##  Method for the keyboard controller
     #
     #   activated when the key_timer times out,
@@ -370,7 +368,7 @@ class CentralUi(QtGui.QMainWindow):
 
     ## create and layout imu graphics
     #
-    #  create all the gaphs in the imu area and adds a data set to the graph
+    #  create all the graphs in the imu area and adds a data set to the graph
     #  @param self the object pointer
     def create_plots(self):
         # fill the data sets with dummy data
@@ -384,20 +382,22 @@ class CentralUi(QtGui.QMainWindow):
             self.mag1_data.append(0)
             self.mag2_data.append(0)
             self.mag3_data.append(0)
-            self.pressure_data.append(0)
             self.depth_data.append(0)
 
-        # IMU PLOTS
+
+        # DEPTH GRAPH
+        self.depth_graph = self.ui.imugraphics.addPlot(title="Depth")
+        self.depth_curve = self.depth_graph.plot(pen="y")
+        self.depth_graph.setXRange(0, misc_vars.length_plot)
 
         # create and layout imu graphics
-        self.ui.imugraphics.addPlot()
+
         ##the accelerometer 1 plot
         self.acc1 = self.ui.imugraphics.addPlot(title="Accelerometer1")
         ##the accelerometer 1 curve
         self.acc1_curve = self.acc1.plot(pen="y")
         self.acc1.setXRange(0, misc_vars.length_plot)
 
-        self.ui.imugraphics.nextRow()
         ##the accelerometer 2 plot
         self.acc2 = self.ui.imugraphics.addPlot(title="Accelerometer2")
         ##the accelerometer 2 curve
@@ -410,18 +410,17 @@ class CentralUi(QtGui.QMainWindow):
         self.acc3_curve = self.acc3.plot(pen="y")
         self.acc3.setXRange(0, misc_vars.length_plot)
 
-        self.ui.imugraphics.nextRow()
-
         self.gy1 = self.ui.imugraphics.addPlot(title="Gyro1")
         self.gy1_curve = self.gy1.plot(pen="r")
         self.gy1.setXRange(0, misc_vars.length_plot)
+
+        self.ui.imugraphics.nextRow()
 
         self.gy2 = self.ui.imugraphics.addPlot(title="Gyro2")
         self.gy2_curve = self.gy2.plot(pen="r")
         self.gy2.setXRange(0, misc_vars.length_plot)
 
         self.ui.imugraphics.nextRow()
-
         self.gy3 = self.ui.imugraphics.addPlot(title="Gyro3")
         self.gy3_curve = self.gy3.plot(pen="r")
         self.gy3.setXRange(0, misc_vars.length_plot)
@@ -430,8 +429,6 @@ class CentralUi(QtGui.QMainWindow):
         self.mag1_curve = self.mag1.plot(pen="b")
         self.mag1.setXRange(0, misc_vars.length_plot)
 
-        self.ui.imugraphics.nextRow()
-
         self.mag2 = self.ui.imugraphics.addPlot(title="Magnetometer2")
         self.mag2_curve = self.mag2.plot(pen="b")
         self.mag2.setXRange(0, misc_vars.length_plot)
@@ -439,27 +436,6 @@ class CentralUi(QtGui.QMainWindow):
         self.mag3 = self.ui.imugraphics.addPlot(title="Magnetometer3")
         self.mag3_curve = self.mag3.plot(pen="b")
         self.mag3.setXRange(0, misc_vars.length_plot)
-
-        # PRESSURE GRAPH
-        self.pressure_graph = self.ui.pressure.addPlot(title="Pressure")
-        self.pressure_curve = self.pressure_graph.plot(pen="y")
-        self.pressure_graph.setXRange(0, misc_vars.length_plot)
-
-        # DEPTH GRAPH
-        self.depth_graph = self.ui.depth.addPlot(title="Depth")
-        self.depth_curve = self.depth_graph.plot(pen="y")
-        self.depth_graph.setXRange(0, misc_vars.length_plot)
-
-    # the following update the data sets displayed by each graph
-    ## update the data displayed in the pressure graph
-    #
-    #appends the last value received by the pressure_callback the the existing dataset and removes the first entry
-    #@param self the object pointer
-    #@param data_input the data passed by the pressure_callback
-    def pressure_graph_update(self, data_input):
-        self.pressure_data.append(data_input)
-        self.pressure_data.pop(0)
-        self.pressure_curve.setData(self.pressure_data)
 
     ## updates the data displayed by the depth graph
     #
@@ -527,7 +503,6 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
         #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
-        rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
         rospy.Subscriber(ROS_Topics.right_pre_topic, Image, self.pre_right_callback)
@@ -549,6 +524,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.cv_rel_y.setText(str(data.y_distance))
         self.ui.cv_rel_z.setText(str(data.z_distance))
 
+    #TODO:fix this, not working
     def sim_pose_callback(self, model_states_data):
         robot_pose = model_states_data.pose[0]
         x = robot_pose.orientation.x
@@ -556,6 +532,7 @@ class CentralUi(QtGui.QMainWindow):
         z = robot_pose.orientation.z
         w = robot_pose.orientation.w
         self.imu_graph_updater(x, y, z, w)
+
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
@@ -712,14 +689,6 @@ class CentralUi(QtGui.QMainWindow):
     #@param depth_data the data received by the subscriber
     def depth_callback(self, depth_data):
         self.depth_graph_update(depth_data.data)
-
-    ## callback for the pressure topic
-    #
-    #calls to update the proper graph and passes the received data
-    #@param self the object pointer
-    #@param pressure_data the data received by the subscriber
-    def pressure_callback(self, pressure_data):
-        self.pressure_graph_update(pressure_data.data)
 
     # LOW BATTERY ALARM
     ## callback for the battery voltage topic
