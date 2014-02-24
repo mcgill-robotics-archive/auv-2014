@@ -101,7 +101,7 @@ class CentralUi(QtGui.QMainWindow):
 
         self.ui.verticalLayout.addWidget(self.pose_ui)
 
-        # create initial data sets for imu, depth and pressure graphs
+        # create initial data sets for imu, depth graphs
         ## the data set for accelerometer 1
         self.acc1_data = []
         ##data set accelerometer 2
@@ -120,8 +120,7 @@ class CentralUi(QtGui.QMainWindow):
         self.mag2_data = []
         ##dataset magnetmeter 3
         self.mag3_data = []
-        ##dataset pressure graph
-        self.pressure_data = []
+
         ##dataset depth graph
         self.depth_data = []
 
@@ -383,7 +382,6 @@ class CentralUi(QtGui.QMainWindow):
             self.mag1_data.append(0)
             self.mag2_data.append(0)
             self.mag3_data.append(0)
-            self.pressure_data.append(0)
             self.depth_data.append(0)
 
 
@@ -400,7 +398,6 @@ class CentralUi(QtGui.QMainWindow):
         self.acc1_curve = self.acc1.plot(pen="y")
         self.acc1.setXRange(0, misc_vars.length_plot)
 
-        self.ui.imugraphics.nextRow()
         ##the accelerometer 2 plot
         self.acc2 = self.ui.imugraphics.addPlot(title="Accelerometer2")
         ##the accelerometer 2 curve
@@ -413,18 +410,17 @@ class CentralUi(QtGui.QMainWindow):
         self.acc3_curve = self.acc3.plot(pen="y")
         self.acc3.setXRange(0, misc_vars.length_plot)
 
-        self.ui.imugraphics.nextRow()
-
         self.gy1 = self.ui.imugraphics.addPlot(title="Gyro1")
         self.gy1_curve = self.gy1.plot(pen="r")
         self.gy1.setXRange(0, misc_vars.length_plot)
+
+        self.ui.imugraphics.nextRow()
 
         self.gy2 = self.ui.imugraphics.addPlot(title="Gyro2")
         self.gy2_curve = self.gy2.plot(pen="r")
         self.gy2.setXRange(0, misc_vars.length_plot)
 
         self.ui.imugraphics.nextRow()
-
         self.gy3 = self.ui.imugraphics.addPlot(title="Gyro3")
         self.gy3_curve = self.gy3.plot(pen="r")
         self.gy3.setXRange(0, misc_vars.length_plot)
@@ -433,8 +429,6 @@ class CentralUi(QtGui.QMainWindow):
         self.mag1_curve = self.mag1.plot(pen="b")
         self.mag1.setXRange(0, misc_vars.length_plot)
 
-        self.ui.imugraphics.nextRow()
-
         self.mag2 = self.ui.imugraphics.addPlot(title="Magnetometer2")
         self.mag2_curve = self.mag2.plot(pen="b")
         self.mag2.setXRange(0, misc_vars.length_plot)
@@ -442,11 +436,6 @@ class CentralUi(QtGui.QMainWindow):
         self.mag3 = self.ui.imugraphics.addPlot(title="Magnetometer3")
         self.mag3_curve = self.mag3.plot(pen="b")
         self.mag3.setXRange(0, misc_vars.length_plot)
-
-        # PRESSURE GRAPH
-        self.pressure_graph = self.ui.pressure.addPlot(title="Pressure")
-        self.pressure_curve = self.pressure_graph.plot(pen="y")
-        self.pressure_graph.setXRange(0, misc_vars.length_plot)
 
     ## updates the data displayed by the depth graph
     #
@@ -514,7 +503,6 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
         #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
-        rospy.Subscriber(ROS_Topics.pressure, Float32, self.pressure_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
         rospy.Subscriber(ROS_Topics.right_pre_topic, Image, self.pre_right_callback)
