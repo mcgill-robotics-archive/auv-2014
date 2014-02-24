@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Resizable tentative 2.ui'
 #
-# Created: Mon Feb 24 07:11:39 2014
+# Created: Mon Feb 24 07:24:54 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -275,7 +275,7 @@ class Ui_RoboticsMain(object):
         self.imugraphics = GraphicsLayoutWidget(self.centralwidget)
         self.imugraphics.setEnabled(True)
         self.imugraphics.setMinimumSize(QtCore.QSize(0, 0))
-        self.imugraphics.setMaximumSize(QtCore.QSize(640, 980))
+        self.imugraphics.setMaximumSize(QtCore.QSize(1920, 980))
         self.imugraphics.setObjectName(_fromUtf8("imugraphics"))
         self.verticalLayout123.addWidget(self.imugraphics)
         self.verticalLayout_2.addLayout(self.verticalLayout123)
