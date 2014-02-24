@@ -11,7 +11,7 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-from resizableUI1 import *
+from resizableUI2 import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
