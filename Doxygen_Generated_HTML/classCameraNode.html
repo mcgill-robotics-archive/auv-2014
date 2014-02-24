@@ -74,39 +74,55 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">CameraNode Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="CameraNode" -->
+<p><code>#include &lt;<a class="el" href="CameraNode_8h_source.html">CameraNode.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for CameraNode:</div>
+<div class="dyncontent">
+<div class="center"><img src="classCameraNode__inherit__graph.png" border="0" usemap="#CameraNode_inherit__map" alt="Inheritance graph"/></div>
+<map name="CameraNode_inherit__map" id="CameraNode_inherit__map">
+<area shape="rect" id="node3" href="classDownCameraNode.html" title="DownCameraNode" alt="" coords="5,83,139,112"/><area shape="rect" id="node5" href="classFrontCameraNode.html" title="FrontCameraNode" alt="" coords="163,83,291,112"/><area shape="rect" id="node7" href="classSoftCameraNode.html" title="SoftCameraNode" alt="" coords="315,83,437,112"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+
 <p><a href="classCameraNode-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#a72f371aedef6ce69302331b94fe50143">CameraNode</a> (ros::NodeHandle &amp;nodeHandle, const char *topicName, const char *captureSource, int transmissionRate)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classCameraNode.html">CameraNode</a> object.  <a href="#a72f371aedef6ce69302331b94fe50143"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3a466dc9357b5200fb6843a6d64c5c8"></a><!-- doxytag: member="CameraNode::~CameraNode" ref="ab3a466dc9357b5200fb6843a6d64c5c8" args="()" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#ab3a466dc9357b5200fb6843a6d64c5c8">~CameraNode</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases the memory used by the <a class="el" href="classCameraNode.html">CameraNode</a> object. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa81ee53bd35608308071047604b60e88"></a><!-- doxytag: member="CameraNode::sendImages" ref="aa81ee53bd35608308071047604b60e88" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#aa81ee53bd35608308071047604b60e88">sendImages</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a frame from the camera and sends it to the computer vision node. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#a8d178a289f1021dcd019a9cd06211cd4">CameraNode</a> (ros::NodeHandle &amp;nodeHandle, const std::string topicName, int <a class="el" href="classCameraNode.html#a2a726e70a2a58c4e04c08f2f007e812b">transmissionRate</a>, int bufferSize)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classCameraNode.html">CameraNode</a> object.  <a href="#a8d178a289f1021dcd019a9cd06211cd4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#ab3a466dc9357b5200fb6843a6d64c5c8">~CameraNode</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Releases the memory used by the <a class="el" href="classCameraNode.html">CameraNode</a> object.  <a href="#ab3a466dc9357b5200fb6843a6d64c5c8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#ad6774f8b6d6321e507d1222e27ceb36b">sendImages</a> ()=0</td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">cv_bridge::CvImage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#a7aa1d06e88ccc869cc96ae8cb74ea136">toCvImage</a> (cv::Mat *pFrame)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function used to convert an opencv image to cv_bridge image.  <a href="#a7aa1d06e88ccc869cc96ae8cb74ea136"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#a2a726e70a2a58c4e04c08f2f007e812b">transmissionRate</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">image_transport::Publisher&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCameraNode.html#af8f0444b9cc5caa7b73c59e5126d7fd2">cvNodePublisher</a></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a72f371aedef6ce69302331b94fe50143"></a><!-- doxytag: member="CameraNode::CameraNode" ref="a72f371aedef6ce69302331b94fe50143" args="(ros::NodeHandle &amp;nodeHandle, const char *topicName, const char *captureSource, int transmissionRate)" -->
+<a class="anchor" id="a8d178a289f1021dcd019a9cd06211cd4"></a><!-- doxytag: member="CameraNode::CameraNode" ref="a8d178a289f1021dcd019a9cd06211cd4" args="(ros::NodeHandle &amp;nodeHandle, const std::string topicName, int transmissionRate, int bufferSize)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCameraNode.html#a72f371aedef6ce69302331b94fe50143">CameraNode::CameraNode</a> </td>
+          <td class="memname"><a class="el" href="classCameraNode.html#a8d178a289f1021dcd019a9cd06211cd4">CameraNode::CameraNode</a> </td>
           <td>(</td>
           <td class="paramtype">ros::NodeHandle &amp;&#160;</td>
           <td class="paramname"><em>nodeHandle</em>, </td>
@@ -114,20 +130,20 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype">const std::string&#160;</td>
           <td class="paramname"><em>topicName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>captureSource</em>, </td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>transmissionRate</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>transmissionRate</em>&#160;</td>
+          <td class="paramname"><em>bufferSize</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -152,14 +168,98 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 </div>
 </div>
+<a class="anchor" id="ab3a466dc9357b5200fb6843a6d64c5c8"></a><!-- doxytag: member="CameraNode::~CameraNode" ref="ab3a466dc9357b5200fb6843a6d64c5c8" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCameraNode.html#ab3a466dc9357b5200fb6843a6d64c5c8">CameraNode::~CameraNode</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Releases the memory used by the <a class="el" href="classCameraNode.html">CameraNode</a> object. </p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ad6774f8b6d6321e507d1222e27ceb36b"></a><!-- doxytag: member="CameraNode::sendImages" ref="ad6774f8b6d6321e507d1222e27ceb36b" args="()=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classCameraNode.html#ad6774f8b6d6321e507d1222e27ceb36b">CameraNode::sendImages</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Implemented in <a class="el" href="classFrontCameraNode.html#adcd668bcd9d3b048a3778b98c5850b58">FrontCameraNode</a>, <a class="el" href="classDownCameraNode.html#aa5583adc3f7ad3c25e81d659449c1daf">DownCameraNode</a>, and <a class="el" href="classSoftCameraNode.html#aef423785155fdf241951d8c2c89262a0">SoftCameraNode</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7aa1d06e88ccc869cc96ae8cb74ea136"></a><!-- doxytag: member="CameraNode::toCvImage" ref="a7aa1d06e88ccc869cc96ae8cb74ea136" args="(cv::Mat *pFrame)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cv_bridge::CvImage <a class="el" href="classCameraNode.html#a7aa1d06e88ccc869cc96ae8cb74ea136">CameraNode::toCvImage</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat *&#160;</td>
+          <td class="paramname"><em>pFrame</em></td><td>)</td>
+          <td><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Helper function used to convert an opencv image to cv_bridge image. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pFrame</td><td>Pointer to the opencv image to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="af8f0444b9cc5caa7b73c59e5126d7fd2"></a><!-- doxytag: member="CameraNode::cvNodePublisher" ref="af8f0444b9cc5caa7b73c59e5126d7fd2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">image_transport::Publisher <a class="el" href="classCameraNode.html#af8f0444b9cc5caa7b73c59e5126d7fd2">CameraNode::cvNodePublisher</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2a726e70a2a58c4e04c08f2f007e812b"></a><!-- doxytag: member="CameraNode::transmissionRate" ref="a2a726e70a2a58c4e04c08f2f007e812b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classCameraNode.html#a2a726e70a2a58c4e04c08f2f007e812b">CameraNode::transmissionRate</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<<<<<<< HEAD
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="CameraNode_8h_source.html">CameraNode.h</a></li>
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/CameraNode.cpp</li>
-=======
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="CameraNode_8h_source.html">CameraNode.h</a></li>
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/CameraNode.cpp</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="CameraNode_8h_source.html">CameraNode.h</a></li>
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="CameraNode_8cpp.html">CameraNode.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -167,7 +267,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -179,11 +279,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

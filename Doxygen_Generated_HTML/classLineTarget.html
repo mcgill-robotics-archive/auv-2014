@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -86,38 +86,189 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">LineTarget Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="LineTarget" --><!-- doxytag: inherits="VisibleObject" --><div class="dynheader">
+<!-- doxytag: class="LineTarget" --><!-- doxytag: inherits="VisibleObject" -->
+<p><code>#include &lt;<a class="el" href="LineTarget_8h_source.html">LineTarget.h</a>&gt;</code></p>
+<div class="dynheader">
 Inheritance diagram for LineTarget:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="classLineTarget.png" usemap="#LineTarget_map" alt=""/>
-  <map id="LineTarget_map" name="LineTarget_map">
-<area href="classVisibleObject.html" alt="VisibleObject" shape="rect" coords="0,0,87,24"/>
-</map>
- </div></div>
+<div class="center"><img src="classLineTarget__inherit__graph.png" border="0" usemap="#LineTarget_inherit__map" alt="Inheritance graph"/></div>
+<map name="LineTarget_inherit__map" id="LineTarget_inherit__map">
+<area shape="rect" id="node2" href="classVisibleObject.html" title="VisibleObject" alt="" coords="5,5,104,35"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for LineTarget:</div>
+<div class="dyncontent">
+<div class="center"><img src="classLineTarget__coll__graph.png" border="0" usemap="#LineTarget_coll__map" alt="Collaboration graph"/></div>
+<map name="LineTarget_coll__map" id="LineTarget_coll__map">
+<area shape="rect" id="node2" href="classVisibleObject.html" title="VisibleObject" alt="" coords="5,5,104,35"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classLineTarget-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd9a9fe3187ec925a3d3053242fcd25b"></a><!-- doxytag: member="LineTarget::retrieveObjectData" ref="acd9a9fe3187ec925a3d3053242fcd25b" args="(cv::Mat &amp;currentFrame)" -->
-std::vector<br class="typebreak"/>
-&lt; computer_vision::VisibleObjectData * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveObjectData</b> (cv::Mat &amp;currentFrame)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f83897ebe705fb03085bbd15c017432"></a><!-- doxytag: member="LineTarget::thresh_callback" ref="a4f83897ebe705fb03085bbd15c017432" args="(int, void *)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>thresh_callback</b> (int, void *)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7001fe14b9f0d9f2042c5d51229d4dbf"></a><!-- doxytag: member="LineTarget::relativeYaw" ref="a7001fe14b9f0d9f2042c5d51229d4dbf" args="(cv::RotatedRect line)" -->
-double&#160;</td><td class="memItemRight" valign="bottom"><b>relativeYaw</b> (cv::RotatedRect line)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab6e6a2f3e377d03166800688fa2249b0"></a><!-- doxytag: member="LineTarget::isVisible" ref="ab6e6a2f3e377d03166800688fa2249b0" args="(cv::RotatedRect line)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVisible</b> (cv::RotatedRect line)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLineTarget.html#a1383e981a7384f15652d02805849e437">LineTarget</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak"/>
+&lt; computer_vision::VisibleObjectData * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLineTarget.html#acd9a9fe3187ec925a3d3053242fcd25b">retrieveObjectData</a> (cv::Mat &amp;currentFrame)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLineTarget.html#a44e557a9068920281f21af593246e77f">applyFilter</a> (cv::Mat &amp;image)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies filter so we can detect the line.  <a href="#a44e557a9068920281f21af593246e77f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLineTarget.html#a4f83897ebe705fb03085bbd15c017432">thresh_callback</a> (int, void *)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLineTarget.html#a7001fe14b9f0d9f2042c5d51229d4dbf">relativeYaw</a> (cv::RotatedRect line)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates found line and returns relative yaw between the sub and the line.  <a href="#a7001fe14b9f0d9f2042c5d51229d4dbf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLineTarget.html#ab6e6a2f3e377d03166800688fa2249b0">isVisible</a> (cv::RotatedRect line)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines Whether there is currently a visible line.  <a href="#ab6e6a2f3e377d03166800688fa2249b0"></a><br/></td></tr>
 </table>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a1383e981a7384f15652d02805849e437"></a><!-- doxytag: member="LineTarget::LineTarget" ref="a1383e981a7384f15652d02805849e437" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classLineTarget.html#a1383e981a7384f15652d02805849e437">LineTarget::LineTarget</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a44e557a9068920281f21af593246e77f"></a><!-- doxytag: member="LineTarget::applyFilter" ref="a44e557a9068920281f21af593246e77f" args="(cv::Mat &amp;image)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classLineTarget.html#a44e557a9068920281f21af593246e77f">LineTarget::applyFilter</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>image</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Applies filter so we can detect the line. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>Current frame given from video </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Create Window </p>
+
+<p>Implements <a class="el" href="classVisibleObject.html">VisibleObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab6e6a2f3e377d03166800688fa2249b0"></a><!-- doxytag: member="LineTarget::isVisible" ref="ab6e6a2f3e377d03166800688fa2249b0" args="(cv::RotatedRect line)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classLineTarget.html#ab6e6a2f3e377d03166800688fa2249b0">LineTarget::isVisible</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::RotatedRect&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Determines Whether there is currently a visible line. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>Line found using contours </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Whether line is visible or not </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7001fe14b9f0d9f2042c5d51229d4dbf"></a><!-- doxytag: member="LineTarget::relativeYaw" ref="a7001fe14b9f0d9f2042c5d51229d4dbf" args="(cv::RotatedRect line)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double <a class="el" href="classLineTarget.html#a7001fe14b9f0d9f2042c5d51229d4dbf">LineTarget::relativeYaw</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::RotatedRect&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Evaluates found line and returns relative yaw between the sub and the line. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>Line found using contours </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Relative yaw between the sub and the line </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="acd9a9fe3187ec925a3d3053242fcd25b"></a><!-- doxytag: member="LineTarget::retrieveObjectData" ref="acd9a9fe3187ec925a3d3053242fcd25b" args="(cv::Mat &amp;currentFrame)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; computer_vision::VisibleObjectData * &gt; <a class="el" href="classLineTarget.html#acd9a9fe3187ec925a3d3053242fcd25b">LineTarget::retrieveObjectData</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>currentFrame</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Implements <a class="el" href="classVisibleObject.html#a0a74714bb131337fb8b9a9a3b50532f2">VisibleObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4f83897ebe705fb03085bbd15c017432"></a><!-- doxytag: member="LineTarget::thresh_callback" ref="a4f83897ebe705fb03085bbd15c017432" args="(int, void *)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classLineTarget.html#a4f83897ebe705fb03085bbd15c017432">LineTarget::thresh_callback</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Detect edges using canny</p>
+<p>Find contours</p>
+<p>Draw contours</p>
+<p>Show in a window </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<<<<<<< HEAD
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="LineTarget_8h_source.html">LineTarget.h</a></li>
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/LineTarget.cpp</li>
-=======
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="LineTarget_8h_source.html">LineTarget.h</a></li>
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/LineTarget.cpp</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="LineTarget_8h_source.html">LineTarget.h</a></li>
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="LineTarget_8cpp.html">LineTarget.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -125,7 +276,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVisible</b> (cv::Ro
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -137,11 +288,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVisible</b> (cv::Ro
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

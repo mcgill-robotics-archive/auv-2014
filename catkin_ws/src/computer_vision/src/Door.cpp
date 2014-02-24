@@ -148,8 +148,6 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 		float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
 		float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
 		float heightWidthRatio = std::abs(height / width - GATE_RATIO);
-		foundRectangle.size.width = width;
-		foundRectangle.size.height = height;
 		float angle = foundRectangle.angle;
 
 		// The angle of the rectangle will always be between [-90:0).

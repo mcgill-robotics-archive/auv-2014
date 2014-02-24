@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['ximureceiver',['XimuReceiver',['../classXimuReceiver.html',1,'']]],
   ['xml_5fallocator',['xml_allocator',['../structxml__allocator.html',1,'']]],
   ['xml_5fattribute_5fstruct',['xml_attribute_struct',['../structpugi_1_1xml__attribute__struct.html',1,'pugi']]],
   ['xml_5fbuffered_5fwriter',['xml_buffered_writer',['../classxml__buffered__writer.html',1,'']]],

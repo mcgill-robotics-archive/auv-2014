@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -83,7 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -114,41 +114,222 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2b7006221c6c2eb9ade34303d6d82ff5"></a><!-- doxytag: member="VARIABLES::ROS_Topics::battery_voltage" ref="a2b7006221c6c2eb9ade34303d6d82ff5" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>battery_voltage</b> = &quot;battery_voltage&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa289dd899d95b10854a84f9708ff6136"></a><!-- doxytag: member="VARIABLES::ROS_Topics::pressure" ref="aa289dd899d95b10854a84f9708ff6136" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>pressure</b> = &quot;pressure&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0132ce1a4eae7a13de6d6144f882caaf"></a><!-- doxytag: member="VARIABLES::ROS_Topics::depth" ref="a0132ce1a4eae7a13de6d6144f882caaf" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b> = &quot;depth&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ae1e02972a594a31f5898ac75ea2e17"></a><!-- doxytag: member="VARIABLES::ROS_Topics::left_pre_topic" ref="a9ae1e02972a594a31f5898ac75ea2e17" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>left_pre_topic</b> = &quot;/simulator/camera1/image_raw&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a648975976ebf696a1cf4e6fb0a11b732"></a><!-- doxytag: member="VARIABLES::ROS_Topics::right_pre_topic" ref="a648975976ebf696a1cf4e6fb0a11b732" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>right_pre_topic</b> = &quot;/simulator/camera2/image_raw&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6d3ca5fce27fc58a763407ba033b6064"></a><!-- doxytag: member="VARIABLES::ROS_Topics::bottom_pre_topic" ref="a6d3ca5fce27fc58a763407ba033b6064" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>bottom_pre_topic</b> = &quot;/simulator/camera3/image_raw&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9491916951b92b239fd87cdf2f2414c6"></a><!-- doxytag: member="VARIABLES::ROS_Topics::left_post_topic" ref="a9491916951b92b239fd87cdf2f2414c6" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>left_post_topic</b> = &quot;/front_cv_camera1&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd353339b779093d84606879421c7e38"></a><!-- doxytag: member="VARIABLES::ROS_Topics::right_post_topic" ref="abd353339b779093d84606879421c7e38" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>right_post_topic</b> = &quot;/front_cv_camera2&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5cce28ed29736290be52cfc2fb055923"></a><!-- doxytag: member="VARIABLES::ROS_Topics::bottom_post_topic" ref="a5cce28ed29736290be52cfc2fb055923" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>bottom_post_topic</b> = &quot;/down_cv_camera&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac664814892a6122bb55756ca96f71fbd"></a><!-- doxytag: member="VARIABLES::ROS_Topics::simulator_pose" ref="ac664814892a6122bb55756ca96f71fbd" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>simulator_pose</b> = &quot;/gazebo/model_states&quot;</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a744951bfe17962822778ceb341db85d6"></a><!-- doxytag: member="VARIABLES::ROS_Topics::imu_raw" ref="a744951bfe17962822778ceb341db85d6" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>imu_raw</b> = 'pose'</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84fc35188cd55c7ae3f75bdc3607d609"></a><!-- doxytag: member="VARIABLES::ROS_Topics::imu_filtered" ref="a84fc35188cd55c7ae3f75bdc3607d609" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>imu_filtered</b> = 'pose'</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87f6ce9ee67be2e063327445694c4276"></a><!-- doxytag: member="VARIABLES::ROS_Topics::vel_topic" ref="a87f6ce9ee67be2e063327445694c4276" args="" -->
-string&#160;</td><td class="memItemRight" valign="bottom"><b>vel_topic</b> = '/setPoints'</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a2b7006221c6c2eb9ade34303d6d82ff5">battery_voltage</a> = &quot;battery_voltage&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#aa289dd899d95b10854a84f9708ff6136">pressure</a> = &quot;pressure&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a0132ce1a4eae7a13de6d6144f882caaf">depth</a> = &quot;depth&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a9ae1e02972a594a31f5898ac75ea2e17">left_pre_topic</a> = &quot;/simulator/camera1/image_raw&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a648975976ebf696a1cf4e6fb0a11b732">right_pre_topic</a> = &quot;/simulator/camera2/image_raw&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a6d3ca5fce27fc58a763407ba033b6064">bottom_pre_topic</a> = &quot;/simulator/camera3/image_raw&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a9491916951b92b239fd87cdf2f2414c6">left_post_topic</a> = &quot;/left_camera/camera/image_color&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#abd353339b779093d84606879421c7e38">right_post_topic</a> = &quot;/right_camera/camera/image_color&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a5cce28ed29736290be52cfc2fb055923">bottom_post_topic</a> = &quot;/down_camera/camera/image_color&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#ac664814892a6122bb55756ca96f71fbd">simulator_pose</a> = &quot;/gazebo/model_states&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a744951bfe17962822778ceb341db85d6">imu_raw</a> = 'pose'</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a84fc35188cd55c7ae3f75bdc3607d609">imu_filtered</a> = 'pose'</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a87f6ce9ee67be2e063327445694c4276">vel_topic</a> = '/<a class="el" href="Interface_8cpp.html#a8f0416a3bc2fa1dd9fae4dac778a22a2">setPoints</a>'</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#a4fb74471cced2a5256527009e63ac8b6">cv_data</a> = 'front_cv_data'</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1ROS__Topics.html#ad5eb1088262697f686b70f90b8c5e6cc">planner_task</a> = 'planner/task'</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>variables for the ros topic names </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<<<<<<< HEAD
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/VARIABLES.py</li>
-=======
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/VARIABLES.py</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+</div><hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a2b7006221c6c2eb9ade34303d6d82ff5"></a><!-- doxytag: member="VARIABLES::ROS_Topics::battery_voltage" ref="a2b7006221c6c2eb9ade34303d6d82ff5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a2b7006221c6c2eb9ade34303d6d82ff5">VARIABLES.ROS_Topics::battery_voltage</a> = &quot;battery_voltage&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5cce28ed29736290be52cfc2fb055923"></a><!-- doxytag: member="VARIABLES::ROS_Topics::bottom_post_topic" ref="a5cce28ed29736290be52cfc2fb055923" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a5cce28ed29736290be52cfc2fb055923">VARIABLES.ROS_Topics::bottom_post_topic</a> = &quot;/down_camera/camera/image_color&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6d3ca5fce27fc58a763407ba033b6064"></a><!-- doxytag: member="VARIABLES::ROS_Topics::bottom_pre_topic" ref="a6d3ca5fce27fc58a763407ba033b6064" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a6d3ca5fce27fc58a763407ba033b6064">VARIABLES.ROS_Topics::bottom_pre_topic</a> = &quot;/simulator/camera3/image_raw&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4fb74471cced2a5256527009e63ac8b6"></a><!-- doxytag: member="VARIABLES::ROS_Topics::cv_data" ref="a4fb74471cced2a5256527009e63ac8b6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a4fb74471cced2a5256527009e63ac8b6">VARIABLES.ROS_Topics::cv_data</a> = 'front_cv_data'<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0132ce1a4eae7a13de6d6144f882caaf"></a><!-- doxytag: member="VARIABLES::ROS_Topics::depth" ref="a0132ce1a4eae7a13de6d6144f882caaf" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a0132ce1a4eae7a13de6d6144f882caaf">VARIABLES.ROS_Topics::depth</a> = &quot;depth&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a84fc35188cd55c7ae3f75bdc3607d609"></a><!-- doxytag: member="VARIABLES::ROS_Topics::imu_filtered" ref="a84fc35188cd55c7ae3f75bdc3607d609" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a84fc35188cd55c7ae3f75bdc3607d609">VARIABLES.ROS_Topics::imu_filtered</a> = 'pose'<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a744951bfe17962822778ceb341db85d6"></a><!-- doxytag: member="VARIABLES::ROS_Topics::imu_raw" ref="a744951bfe17962822778ceb341db85d6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a744951bfe17962822778ceb341db85d6">VARIABLES.ROS_Topics::imu_raw</a> = 'pose'<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9491916951b92b239fd87cdf2f2414c6"></a><!-- doxytag: member="VARIABLES::ROS_Topics::left_post_topic" ref="a9491916951b92b239fd87cdf2f2414c6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a9491916951b92b239fd87cdf2f2414c6">VARIABLES.ROS_Topics::left_post_topic</a> = &quot;/left_camera/camera/image_color&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9ae1e02972a594a31f5898ac75ea2e17"></a><!-- doxytag: member="VARIABLES::ROS_Topics::left_pre_topic" ref="a9ae1e02972a594a31f5898ac75ea2e17" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a9ae1e02972a594a31f5898ac75ea2e17">VARIABLES.ROS_Topics::left_pre_topic</a> = &quot;/simulator/camera1/image_raw&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad5eb1088262697f686b70f90b8c5e6cc"></a><!-- doxytag: member="VARIABLES::ROS_Topics::planner_task" ref="ad5eb1088262697f686b70f90b8c5e6cc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#ad5eb1088262697f686b70f90b8c5e6cc">VARIABLES.ROS_Topics::planner_task</a> = 'planner/task'<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa289dd899d95b10854a84f9708ff6136"></a><!-- doxytag: member="VARIABLES::ROS_Topics::pressure" ref="aa289dd899d95b10854a84f9708ff6136" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#aa289dd899d95b10854a84f9708ff6136">VARIABLES.ROS_Topics::pressure</a> = &quot;pressure&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="abd353339b779093d84606879421c7e38"></a><!-- doxytag: member="VARIABLES::ROS_Topics::right_post_topic" ref="abd353339b779093d84606879421c7e38" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#abd353339b779093d84606879421c7e38">VARIABLES.ROS_Topics::right_post_topic</a> = &quot;/right_camera/camera/image_color&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a648975976ebf696a1cf4e6fb0a11b732"></a><!-- doxytag: member="VARIABLES::ROS_Topics::right_pre_topic" ref="a648975976ebf696a1cf4e6fb0a11b732" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a648975976ebf696a1cf4e6fb0a11b732">VARIABLES.ROS_Topics::right_pre_topic</a> = &quot;/simulator/camera2/image_raw&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac664814892a6122bb55756ca96f71fbd"></a><!-- doxytag: member="VARIABLES::ROS_Topics::simulator_pose" ref="ac664814892a6122bb55756ca96f71fbd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#ac664814892a6122bb55756ca96f71fbd">VARIABLES.ROS_Topics::simulator_pose</a> = &quot;/gazebo/model_states&quot;<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a87f6ce9ee67be2e063327445694c4276"></a><!-- doxytag: member="VARIABLES::ROS_Topics::vel_topic" ref="a87f6ce9ee67be2e063327445694c4276" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">string <a class="el" href="classVARIABLES_1_1ROS__Topics.html#a87f6ce9ee67be2e063327445694c4276">VARIABLES.ROS_Topics::vel_topic</a> = '/<a class="el" href="Interface_8cpp.html#a8f0416a3bc2fa1dd9fae4dac778a22a2">setPoints</a>'<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/<a class="el" href="VARIABLES_8py.html">VARIABLES.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -156,7 +337,7 @@ string&#160;</td><td class="memItemRight" valign="bottom"><b>vel_topic</b> = '/s
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -168,11 +349,7 @@ string&#160;</td><td class="memItemRight" valign="bottom"><b>vel_topic</b> = '/s
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

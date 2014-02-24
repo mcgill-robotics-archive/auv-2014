@@ -29,9 +29,13 @@ int gate_ratio_error = 5;
  */
 const float FOCAL_LENGTH = 8;
 /**
- * The height of the gate in millimeters.
+ * The height of the gate in meters.
  */
-const float DOOR_REAL_HEIGHT = 1219.2;
+const float DOOR_REAL_HEIGHT = 1.2;
+/**
+ * The distance between the cylinders' centers in meters.
+ */
+const float DISTANCE_BETWEEN_ORANGE_CYLINDER = 3.1262;
 /**
  * The eight of the sensor of the camera in millimeters.
  */

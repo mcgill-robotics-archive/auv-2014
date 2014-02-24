@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['acc',['acc',['../namespaceimu__publisher.html#a536503ebc32e67260db0f634d9bd39c2',1,'imu_publisher']]],
   ['acc1',['acc1',['../classcentral__app_1_1CentralUi.html#ad1f9f805badec64cde946599f18d379d',1,'central_app::CentralUi']]],
   ['acc1_5fcurve',['acc1_curve',['../classcentral__app_1_1CentralUi.html#a9a7701e2ac0309ed708b8a65ac920b2f',1,'central_app::CentralUi']]],
   ['acc1_5fdata',['acc1_data',['../classcentral__app_1_1CentralUi.html#ae46e6d1352e919248ec0f32172236c41',1,'central_app::CentralUi']]],
@@ -9,5 +10,25 @@ var searchData=
   ['acc3',['acc3',['../classcentral__app_1_1CentralUi.html#aec8d0f124623b47f78b9ca2172d5f2d9',1,'central_app::CentralUi']]],
   ['acc3_5fcurve',['acc3_curve',['../classcentral__app_1_1CentralUi.html#a2bd95a9121e28efbb2e585bb03e60c6c',1,'central_app::CentralUi']]],
   ['acc3_5fdata',['acc3_data',['../classcentral__app_1_1CentralUi.html#a70aec9133dafcba413c8635c6dcb6595',1,'central_app::CentralUi']]],
-  ['alarm_5ffile',['alarm_file',['../classcentral__app_1_1CentralUi.html#aa68443a56df9803059aa773451d6ff37',1,'central_app::CentralUi']]]
+  ['accx',['accX',['../structInertialAndMagStruct.html#a640a72c226c43d581986a433fe568c80',1,'InertialAndMagStruct']]],
+  ['accy',['accY',['../structInertialAndMagStruct.html#ad42e8fb47c109c63dcbce0f21f845bff',1,'InertialAndMagStruct']]],
+  ['accz',['accZ',['../structInertialAndMagStruct.html#a08dab5d83708e3e42c1b5b3dcdb4dd81',1,'InertialAndMagStruct']]],
+  ['actionquit',['actionQuit',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#aae309728eaf57375dcdc06e1ba2592ff',1,'CompleteUI_declaration::Ui_RoboticsMain.actionQuit()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#ac2611d429c675d4263ac54f37a1a38a3',1,'resizableUI1::Ui_RoboticsMain.actionQuit()']]],
+  ['alarm_5ffile',['alarm_file',['../classcentral__app_1_1CentralUi.html#aa68443a56df9803059aa773451d6ff37',1,'central_app::CentralUi']]],
+  ['alloc',['alloc',['../structxml__parser.html#a213cf019cbf45f5049acdcae296a2976',1,'xml_parser::alloc()'],['../structxpath__query__impl.html#ae568b8642d48e729f2ccc2a50467c847',1,'xpath_query_impl::alloc()']]],
+  ['allocate',['allocate',['../structxml__memory__management__function__storage.html#abb6865f8d07d27fd9273737c59f6e941',1,'xml_memory_management_function_storage']]],
+  ['allocator',['allocator',['../structxml__memory__page.html#adf8fa143123a842baa59b82fc3d83c3b',1,'xml_memory_page']]],
+  ['ang',['ang',['../namespaceimu__publisher.html#a76dec9c5b8a8d7759d095a5558cfcf23',1,'imu_publisher']]],
+  ['ang_5fcov',['ang_cov',['../namespaceimu__publisher.html#aafaf4258150cbf2a80d885991f033ec9',1,'imu_publisher']]],
+  ['angularcmd_5fvel',['angularcmd_vel',['../classresizableUI1_1_1Ui__RoboticsMain.html#a14b0351345d3aefad18c70e7f9dca215',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['angularhorizantal',['angularHorizantal',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#afe17144e066cb2af9de7c949e41e1e00',1,'CompleteUI_declaration::Ui_RoboticsMain.angularHorizantal()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#ab5269dc788541a6c7f9d325ea145ced5',1,'resizableUI1::Ui_RoboticsMain.angularHorizantal()']]],
+  ['angularvertical',['angularVertical',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a75a5ed5bd717cc256e4854daf6be8d5a',1,'CompleteUI_declaration::Ui_RoboticsMain.angularVertical()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#ad323812431705672698e3f4354568029',1,'resizableUI1::Ui_RoboticsMain.angularVertical()']]],
+  ['angularx',['angularX',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a773c143591b9e1fe88c9ca98eb9e5383',1,'CompleteUI_declaration::Ui_RoboticsMain.angularX()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#a3617527b328b25fc3bc39d08f96505f5',1,'resizableUI1::Ui_RoboticsMain.angularX()']]],
+  ['angulary',['angularY',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a86405b473668ff72cb6a6353f1e166ef',1,'CompleteUI_declaration::Ui_RoboticsMain.angularY()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#a3e30b37dea53728fedbe3a3195a3427b',1,'resizableUI1::Ui_RoboticsMain.angularY()']]],
+  ['angularz',['angularZ',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#af44b5f0c0a1ecbdcb80462e72a3e5dee',1,'CompleteUI_declaration::Ui_RoboticsMain.angularZ()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#ac058adf67d1c9b6cbd465ce08620f98f',1,'resizableUI1::Ui_RoboticsMain.angularZ()']]],
+  ['app',['app',['../classcentral__app_1_1CentralUi.html#ad02b6acce55ef894f09832af93b2063f',1,'central_app::CentralUi']]],
+  ['appwindow',['AppWindow',['../classcentral__app_1_1CentralUi.html#a01a4f8276b67ee49d69e0d7fd0a562a6',1,'central_app::CentralUi']]],
+  ['attemptps3',['attemptPS3',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a14d0ea91c115c401cab4ae0dcdfde64a',1,'CompleteUI_declaration::Ui_RoboticsMain.attemptPS3()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#a9bd8409bee8e4c9da8022e5e5f43cabf',1,'resizableUI1::Ui_RoboticsMain.attemptPS3()']]],
+  ['autonomouscontrol',['autonomousControl',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a17f9bfe88da3421c9e4b8fd390822d5a',1,'CompleteUI_declaration::Ui_RoboticsMain.autonomousControl()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#a658a097e7377bd22e2b859d29a1978e5',1,'resizableUI1::Ui_RoboticsMain.autonomousControl()']]],
+  ['axis',['axis',['../structaxis__to__type.html#ac9d75681918ad98c980db0f49b570b50',1,'axis_to_type']]]
 ];

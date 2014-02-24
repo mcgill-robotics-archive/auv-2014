@@ -1,0 +1,13 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$CameraNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CameraNode.h" alt="" coords="1792,83,2461,112"/>
+<area shape="rect" id="node25" href="$Camera_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/Camera.cpp" alt="" coords="2485,83,3115,112"/>
+<area shape="rect" id="node5" href="$DownCameraNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCameraNode.h" alt="" coords="692,160,1396,189"/>
+<area shape="rect" id="node13" href="$FrontCameraNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/FrontCameraNode.h" alt="" coords="2137,160,2836,189"/>
+<area shape="rect" id="node20" href="$SoftCameraNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/SoftCameraNode.h" alt="" coords="1420,160,2113,189"/>
+<area shape="rect" id="node23" href="$CameraNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/CameraNode.cpp" alt="" coords="2860,160,3521,189"/>
+<area shape="rect" id="node7" href="$DownCameraNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/DownCameraNode.cpp" alt="" coords="5,237,699,267"/>
+<area shape="rect" id="node9" href="$DownCVNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/DownCVNode.cpp" alt="" coords="723,237,1389,267"/>
+<area shape="rect" id="node11" href="$SoftCameraNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/SoftCameraNode.cpp" alt="" coords="1424,237,2109,267"/>
+<area shape="rect" id="node15" href="$FrontCameraNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/FrontCameraNode.cpp" alt="" coords="2137,237,2828,267"/>
+<area shape="rect" id="node17" href="$FrontCVNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/FrontCVNode.cpp" alt="" coords="2852,237,3516,267"/>
+</map>
