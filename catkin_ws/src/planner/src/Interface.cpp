@@ -1,5 +1,11 @@
 #include "Interface.h"
 #include "planner/currentCVTask.h"
+#include <vector>
+#include <cmath>
+
+//totally going to need to tweak these values at some point
+double maxDepthError = 0.5;
+double maxHeadingError = 0.5;
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
@@ -7,14 +13,13 @@ ros::Publisher control_pub;
 ros::Publisher checkpoints_pub;
 ros::Publisher taskPubFront;
 ros::Publisher taskPubDown;
-//ros::Rate loop_rate(50);
 
 /**
  * Our current orientation from state estimation
  */
 double Self_XDistance;
 double Self_YDistance;
-double Self_ZDistance;
+double Self_Depth;
 double Self_Yaw;
 double Self_Pitch;
 
@@ -54,7 +59,7 @@ double* getVisibleObjectOrientation () {
 void setOurOrientation(gazebo_msgs::ModelStates msg) {
   Self_XDistance = msg.pose[0].position.x;
   Self_YDistance = msg.pose[0].position.y;
-  Self_ZDistance = msg.pose[0].position.z;
+  Self_Depth = msg.pose[0].position.z;
   Self_Yaw = 0;
   Self_Pitch = 0;
 }
@@ -64,10 +69,19 @@ double* getOurOrientation () {
   double returnArray[5];
   returnArray[0] = Self_XDistance;
   returnArray[1] = Self_YDistance;
-  returnArray[2] = Self_ZDistance;
+  returnArray[2] = Self_Depth;
   returnArray[3] = Self_Yaw;
   returnArray[4] = Self_Pitch;
   return returnArray;
+}
+
+void setDepth(std_msgs::Float32 msg) {
+  Self_Depth = msg.data;
+}
+
+bool isCorrectDepth(double desiredDepth) {
+  double error = abs(Self_Depth - desiredDepth);
+  return (error < maxDepthError);
 }
 
 void setVisionObj (int objIndex) {
@@ -80,7 +94,7 @@ void setVisionObj (int objIndex) {
     case 0 : msgFront.currentCVTask = msgFront.NOTHING;
              msgDown.currentCVTask = msgFront.NOTHING;
       break;
-    case 1 : msgFront.currentCVTask = msgFront.GATE;\
+    case 1 : msgFront.currentCVTask = msgFront.GATE;
              msgDown.currentCVTask = msgFront.NOTHING;
       break;
     case 2 : msgDown.currentCVTask = msgFront.LANE;
@@ -93,14 +107,12 @@ void setVisionObj (int objIndex) {
 
   taskPubFront.publish(msgFront);
   taskPubDown.publish(msgDown);
-  //loop_rate.sleep();
 }
 
 void weAreHere (std::string task) {
   std_msgs::String msg;
   msg.data = task;
   checkpoints_pub.publish(msg);
-  //loop_rate.sleep();
 }
 
 void setPoints (double pointControl[]) {
@@ -131,7 +143,6 @@ void setPoints (double pointControl[]) {
   msgControl.Depth.data = pointControl[15];
 
   control_pub.publish(msgControl);
- // loop_rate.sleep();
 }
 
 void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth) {
@@ -146,13 +157,8 @@ void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_ang
   setPoints(pointControl);
 }
 
-//LEGACY -- NOT FOR TOUCHING
-void ps3Control () {}
-
 void rosSleep(int length) {
-  //Get the time and store it in the time variable.
   ros::Time time = ros::Time::now();
-  //Wait a duration of one second.
   ros::Duration d = ros::Duration(length, 0);
   d.sleep();
 }
@@ -163,6 +169,7 @@ int main (int argc, char **argv) {
 
   ros::Subscriber CV_sub = n.subscribe("visible_data", 1000, setVisibleObjectOrientation);
   ros::Subscriber Pose_sub = n.subscribe("gazebo/model_states", 1000, setOurOrientation);
+  ros::Subscriber Depth_sub = n.subscribe("depth", 1000, setDepth);
 
   taskPubFront = n.advertise<planner::currentCVTask>("currentCVTask_Front", 1000); 
   taskPubDown = n.advertise<planner::currentCVTask>("currentCVTask_Down", 1000); 
@@ -181,3 +188,5 @@ int main (int argc, char **argv) {
   return 0;
 }
 
+//LEGACY -- NOT FOR TOUCHING
+void ps3Control () {}

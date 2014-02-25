@@ -24,7 +24,7 @@ int Task_Gate::Execute() {
 	Set pos to (2.0, 0, 0, 0, 8.8) first
 	
 	*/
-	setPosition(-2.0, -1, 0, 0.0, 8.8);	loop_rate.sleep();
+	setPosition(0.0, 0.0, 0.0, 0.0, 8.8);	loop_rate.sleep();
 
 	std::cout<<"Gate Task completed"<<std::endl;
 	weAreHere("Finishing GATE task");	loop_rate.sleep();
