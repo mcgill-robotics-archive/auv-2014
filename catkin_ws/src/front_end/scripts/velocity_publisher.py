@@ -4,12 +4,13 @@
 import rospy
 from planner.msg import setPoints
 
+
 def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set_null):
     vel_pub = rospy.Publisher(ros_topic, setPoints)
 
     msg = setPoints()
 
-    if ( set_null!=0 ):
+    if set_null != 0:
         #create the publisher for the cmd_vel topic
 
         # define the twist message from the joystick input
@@ -33,7 +34,7 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set
 
         vel_pub.publish(msg)
     else:
-        # define the twist message from the joystick input
+        # close down the channel for the planner to start
         
         msg.XSpeed.data = 0
         msg.YSpeed.data = 0

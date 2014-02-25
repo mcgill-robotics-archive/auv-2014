@@ -11,7 +11,7 @@
 #Ui declarations and GUI libraries
 
 from pose_view_widget import PoseViewWidget
-from resizableUI2 import *
+from no_imu import *
 from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
@@ -28,9 +28,7 @@ import pygame  # module top play the alarm
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
 from std_msgs.msg import Float64
-from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
-from gazebo_msgs.msg import ModelStates
 from computer_vision.msg import VisibleObjectData
 
 
@@ -99,28 +97,9 @@ class CentralUi(QtGui.QMainWindow):
         ## Pose Visualiser widget
         self.pose_ui = PoseViewWidget(self)
 
-        self.ui.verticalLayout.addWidget(self.pose_ui)
+        self.ui.poseVizFrame.addWidget(self.pose_ui)
 
         # create initial data sets for imu, depth graphs
-        ## the data set for accelerometer 1
-        self.acc1_data = []
-        ##data set accelerometer 2
-        self.acc2_data = []
-        ##dataset accelerometer 3
-        self.acc3_data = []
-        ##dataset gyroscope 1
-        self.gy1_data = []
-        ##dataset gyroscope 2
-        self.gy2_data = []
-        ##dataset gyroscope 3
-        self.gy3_data = []
-        ##dataset magnetmeter 1
-        self.mag1_data = []
-        ##dataset magnetmeter 2
-        self.mag2_data = []
-        ##dataset magnetmeter 3
-        self.mag3_data = []
-
         ##dataset depth graph
         self.depth_data = []
 
@@ -373,69 +352,12 @@ class CentralUi(QtGui.QMainWindow):
     def create_plots(self):
         # fill the data sets with dummy data
         for i in range(0, misc_vars.length_plot, 1):
-            self.acc1_data.append(0)
-            self.acc2_data.append(0)
-            self.acc3_data.append(0)
-            self.gy1_data.append(0)
-            self.gy2_data.append(0)
-            self.gy3_data.append(0)
-            self.mag1_data.append(0)
-            self.mag2_data.append(0)
-            self.mag3_data.append(0)
             self.depth_data.append(0)
-
 
         # DEPTH GRAPH
         self.depth_graph = self.ui.imugraphics.addPlot(title="Depth")
         self.depth_curve = self.depth_graph.plot(pen="y")
         self.depth_graph.setXRange(0, misc_vars.length_plot)
-
-        # create and layout imu graphics
-
-        ##the accelerometer 1 plot
-        self.acc1 = self.ui.imugraphics.addPlot(title="Accelerometer1")
-        ##the accelerometer 1 curve
-        self.acc1_curve = self.acc1.plot(pen="y")
-        self.acc1.setXRange(0, misc_vars.length_plot)
-
-        ##the accelerometer 2 plot
-        self.acc2 = self.ui.imugraphics.addPlot(title="Accelerometer2")
-        ##the accelerometer 2 curve
-        self.acc2_curve = self.acc2.plot(pen="y")
-        self.acc2.setXRange(0, misc_vars.length_plot)
-
-        ##the accelerometer 3 plot
-        self.acc3 = self.ui.imugraphics.addPlot(title="Accelerometer3")
-        ##the accelerometer 3 curve
-        self.acc3_curve = self.acc3.plot(pen="y")
-        self.acc3.setXRange(0, misc_vars.length_plot)
-
-        self.gy1 = self.ui.imugraphics.addPlot(title="Gyro1")
-        self.gy1_curve = self.gy1.plot(pen="r")
-        self.gy1.setXRange(0, misc_vars.length_plot)
-
-        self.ui.imugraphics.nextRow()
-
-        self.gy2 = self.ui.imugraphics.addPlot(title="Gyro2")
-        self.gy2_curve = self.gy2.plot(pen="r")
-        self.gy2.setXRange(0, misc_vars.length_plot)
-
-        self.ui.imugraphics.nextRow()
-        self.gy3 = self.ui.imugraphics.addPlot(title="Gyro3")
-        self.gy3_curve = self.gy3.plot(pen="r")
-        self.gy3.setXRange(0, misc_vars.length_plot)
-
-        self.mag1 = self.ui.imugraphics.addPlot(title="Magnetometer1")
-        self.mag1_curve = self.mag1.plot(pen="b")
-        self.mag1.setXRange(0, misc_vars.length_plot)
-
-        self.mag2 = self.ui.imugraphics.addPlot(title="Magnetometer2")
-        self.mag2_curve = self.mag2.plot(pen="b")
-        self.mag2.setXRange(0, misc_vars.length_plot)
-
-        self.mag3 = self.ui.imugraphics.addPlot(title="Magnetometer3")
-        self.mag3_curve = self.mag3.plot(pen="b")
-        self.mag3.setXRange(0, misc_vars.length_plot)
 
     ## updates the data displayed by the depth graph
     #
@@ -447,51 +369,6 @@ class CentralUi(QtGui.QMainWindow):
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
 
-    ## updates the data displayed by the IMU graph
-    #
-    #appends the last value received by the imu callback to the existing dataset and removes the first entry
-    #@param self the object pointer
-    #@param x data first data in the pose message returned by the imu callback
-    #@param y data second data in the pose message returned by the imu callback
-    #@param z data third data in the pose message returned by the imu callback
-    #@param w data last data in the pose message returned by the imu callback
-    def imu_graph_updater(self, x, y, z, w):
-        self.acc1_data.append(x)
-        self.acc1_data.pop(0)
-        self.acc1_curve.setData(self.acc1_data)
-
-        self.acc2_data.append(y)
-        self.acc2_data.pop(0)
-        self.acc2_curve.setData(self.acc2_data)
-
-        self.acc3_data.append(z)
-        self.acc3_data.pop(0)
-        self.acc3_curve.setData(self.acc3_data)
-
-        self.gy1_data.append(y)
-        self.gy1_data.pop(0)
-        self.gy1_curve.setData(self.gy1_data)
-
-        self.gy2_data.append(z)
-        self.gy2_data.pop(0)
-        self.gy2_curve.setData(self.gy2_data)
-
-        self.gy3_data.append(w)
-        self.gy3_data.pop(0)
-        self.gy3_curve.setData(self.gy3_data)
-
-        self.mag1_data.append(x)
-        self.mag1_data.pop(0)
-        self.mag1_curve.setData(self.mag1_data)
-
-        self.mag2_data.append(y)
-        self.mag2_data.pop(0)
-        self.mag2_curve.setData(self.mag2_data)
-
-        self.mag3_data.append(z)
-        self.mag3_data.pop(0)
-        self.mag3_curve.setData(self.mag3_data)
-
     ##initiallize the ros subscribers
     #
     #initiallize the ros node and starts all the ros subscribers and maps each topic to the correct callback
@@ -500,7 +377,7 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
+        #rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
         #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
@@ -512,10 +389,12 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
         rospy.Subscriber(ROS_Topics.cv_data, VisibleObjectData, self.cv_data_callback)
         rospy.Subscriber(ROS_Topics.planner_task, String, self.planner_callback)
+
+        #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
 
-    def planner_callback(self, data):
-        self.ui.logObject.append(data.data)
+    def planner_callback(self, string_data):
+        self.ui.logObject.append(string_data.data)
 
     def cv_data_callback(self, data):
         self.ui.cv_rel_pitch.setText(str(data.pitch_angle))
@@ -523,15 +402,6 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.cv_rel_x.setText(str(data.x_distance))
         self.ui.cv_rel_y.setText(str(data.y_distance))
         self.ui.cv_rel_z.setText(str(data.z_distance))
-
-    #TODO:fix this, not working
-    def sim_pose_callback(self, model_states_data):
-        robot_pose = model_states_data.pose[0]
-        x = robot_pose.orientation.x
-        y = robot_pose.orientation.y
-        z = robot_pose.orientation.z
-        w = robot_pose.orientation.w
-        self.imu_graph_updater(x, y, z, w)
 
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
@@ -668,20 +538,6 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.posBottom.setText("No video feed")
 
     # GRAPHS CALLBACKS
-    ## callback function for the imu topic
-    #
-    #stores the data received in variable
-    #
-    # calls to update the proper graph
-    #@param self the object pointer
-    #@param pose_data the pose message received by the subscriber
-    def imu_callback(self, pose_data):
-        x = pose_data.orientation.x
-        y = pose_data.orientation.y
-        z = pose_data.orientation.z
-        w = pose_data.orientation.w
-        self.imu_graph_updater(x, y, z, w)
-
     ## callback for the depth topic
     #
     #calls to update the proper graph and passes the received data
@@ -713,16 +569,16 @@ class CentralUi(QtGui.QMainWindow):
 
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
+
     ## launch the popup for the low battery
     #
     #@param self the object pointer
     def open_low_battery_dialog(self):
         self.warning_ui.exec_()
-try:
-    if __name__ == "__main__":
-        app = QtGui.QApplication(sys.argv)
-        AppWindow = CentralUi()
-        AppWindow.show()
-        sys.exit(app.exec_())
-except KeyboardInterrupt:
-    sys.exit(0)
+
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    AppWindow = CentralUi()
+    AppWindow.show()
+    sys.exit(app.exec_())
+
