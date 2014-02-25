@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>RoboticsMain</class>
+ <widget class="QMainWindow" name="RoboticsMain">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
+    <width>1036</width>
     <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Robotics Diagnostics and Testing</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="Robotics_graphical_ressources.qrc">
+    <normaloff>:/Images/Only-Logo.png</normaloff>:/Images/Only-Logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_5" stretch="0,0,1">
@@ -30,7 +34,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="vidArray" rowstretch="1,0,0" columnstretch="1,0,0">
+         <layout class="QGridLayout" name="vidArray" rowstretch="1,0" columnstretch="1,0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetMaximumSize</enum>
           </property>
@@ -712,11 +716,6 @@
      </layout>
     </item>
    </layout>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>layoutWidget_2</zorder>
-   <zorder>preLeft</zorder>
-   <zorder>postLeft</zorder>
    <zorder>line_3</zorder>
    <zorder></zorder>
   </widget>
@@ -725,7 +724,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1036</width>
      <height>25</height>
     </rect>
    </property>

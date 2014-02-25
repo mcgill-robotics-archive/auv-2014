@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'no_imu_gr_resizable.ui'
 #
-# Created: Tue Feb 25 11:10:44 2014
+# Created: Tue Feb 25 11:17:21 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,11 +14,14 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1024, 768)
-        self.centralwidget = QtGui.QWidget(MainWindow)
+class Ui_RoboticsMain(object):
+    def setupUi(self, RoboticsMain):
+        RoboticsMain.setObjectName(_fromUtf8("RoboticsMain"))
+        RoboticsMain.resize(1036, 768)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/Images/Only-Logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        RoboticsMain.setWindowIcon(icon)
+        self.centralwidget = QtGui.QWidget(RoboticsMain)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
@@ -325,53 +328,53 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addLayout(self.controller_select)
         self.verticalLayout_5.addLayout(self.horizontalLayout)
         self.verticalLayout_5.setStretch(2, 1)
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1024, 25))
+        RoboticsMain.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(RoboticsMain)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1036, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(MainWindow)
+        RoboticsMain.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(RoboticsMain)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
-        MainWindow.setStatusBar(self.statusbar)
+        RoboticsMain.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(RoboticsMain)
+        QtCore.QMetaObject.connectSlotsByName(RoboticsMain)
 
-    def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
-        self.postRight.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.postLeft.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.preLeft.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.preRight.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.preBottom.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.posBottom.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setText(QtGui.QApplication.translate("MainWindow", "IMU Pose", None, QtGui.QApplication.UnicodeUTF8))
-        self.bat_lbl.setText(QtGui.QApplication.translate("MainWindow", "Battery State", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_11.setText(QtGui.QApplication.translate("MainWindow", "X", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_12.setText(QtGui.QApplication.translate("MainWindow", "Y", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_13.setText(QtGui.QApplication.translate("MainWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_17.setText(QtGui.QApplication.translate("MainWindow", "Linear", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_14.setText(QtGui.QApplication.translate("MainWindow", "Roll", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_15.setText(QtGui.QApplication.translate("MainWindow", "Pitch", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_16.setText(QtGui.QApplication.translate("MainWindow", "Yaw", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_18.setText(QtGui.QApplication.translate("MainWindow", "Angular", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Relative distance to object", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_10.setText(QtGui.QApplication.translate("MainWindow", "Z", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_8.setText(QtGui.QApplication.translate("MainWindow", "X", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_9.setText(QtGui.QApplication.translate("MainWindow", "Y", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Relative angle to object", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_20.setText(QtGui.QApplication.translate("MainWindow", "Yaw", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_21.setText(QtGui.QApplication.translate("MainWindow", "Pitch", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Approximate resolution", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setToolTip(QtGui.QApplication.translate("MainWindow", "<html><head/><body><p>Approximate resolution to set the size of the video displays</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setItemText(0, QtGui.QApplication.translate("MainWindow", "1024*768", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setItemText(1, QtGui.QApplication.translate("MainWindow", "1280*720", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setItemText(2, QtGui.QApplication.translate("MainWindow", "1920x1080", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_19.setText(QtGui.QApplication.translate("MainWindow", "Select Controller", None, QtGui.QApplication.UnicodeUTF8))
-        self.keyboardControl.setText(QtGui.QApplication.translate("MainWindow", "Keyboard", None, QtGui.QApplication.UnicodeUTF8))
-        self.manualControl.setText(QtGui.QApplication.translate("MainWindow", "PS3", None, QtGui.QApplication.UnicodeUTF8))
-        self.autonomousControl.setText(QtGui.QApplication.translate("MainWindow", "Autonomus", None, QtGui.QApplication.UnicodeUTF8))
-        self.attemptPS3.setText(QtGui.QApplication.translate("MainWindow", "Change", None, QtGui.QApplication.UnicodeUTF8))
+    def retranslateUi(self, RoboticsMain):
+        RoboticsMain.setWindowTitle(QtGui.QApplication.translate("RoboticsMain", "Robotics Diagnostics and Testing", None, QtGui.QApplication.UnicodeUTF8))
+        self.postRight.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.postLeft.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.preLeft.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.preRight.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.preBottom.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.posBottom.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Pose", None, QtGui.QApplication.UnicodeUTF8))
+        self.bat_lbl.setText(QtGui.QApplication.translate("RoboticsMain", "Battery State", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_11.setText(QtGui.QApplication.translate("RoboticsMain", "X", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_12.setText(QtGui.QApplication.translate("RoboticsMain", "Y", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_13.setText(QtGui.QApplication.translate("RoboticsMain", "Z", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_17.setText(QtGui.QApplication.translate("RoboticsMain", "Linear", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_14.setText(QtGui.QApplication.translate("RoboticsMain", "Roll", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_15.setText(QtGui.QApplication.translate("RoboticsMain", "Pitch", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_16.setText(QtGui.QApplication.translate("RoboticsMain", "Yaw", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_18.setText(QtGui.QApplication.translate("RoboticsMain", "Angular", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_7.setText(QtGui.QApplication.translate("RoboticsMain", "Relative distance to object", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_10.setText(QtGui.QApplication.translate("RoboticsMain", "Z", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_8.setText(QtGui.QApplication.translate("RoboticsMain", "X", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setText(QtGui.QApplication.translate("RoboticsMain", "Y", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("RoboticsMain", "Relative angle to object", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_20.setText(QtGui.QApplication.translate("RoboticsMain", "Yaw", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_21.setText(QtGui.QApplication.translate("RoboticsMain", "Pitch", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("RoboticsMain", "Approximate resolution", None, QtGui.QApplication.UnicodeUTF8))
+        self.resSelect.setToolTip(QtGui.QApplication.translate("RoboticsMain", "<html><head/><body><p>Approximate resolution to set the size of the video displays</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.resSelect.setItemText(0, QtGui.QApplication.translate("RoboticsMain", "1024*768", None, QtGui.QApplication.UnicodeUTF8))
+        self.resSelect.setItemText(1, QtGui.QApplication.translate("RoboticsMain", "1280*720", None, QtGui.QApplication.UnicodeUTF8))
+        self.resSelect.setItemText(2, QtGui.QApplication.translate("RoboticsMain", "1920x1080", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_19.setText(QtGui.QApplication.translate("RoboticsMain", "Select Controller", None, QtGui.QApplication.UnicodeUTF8))
+        self.keyboardControl.setText(QtGui.QApplication.translate("RoboticsMain", "Keyboard", None, QtGui.QApplication.UnicodeUTF8))
+        self.manualControl.setText(QtGui.QApplication.translate("RoboticsMain", "PS3", None, QtGui.QApplication.UnicodeUTF8))
+        self.autonomousControl.setText(QtGui.QApplication.translate("RoboticsMain", "Autonomus", None, QtGui.QApplication.UnicodeUTF8))
+        self.attemptPS3.setText(QtGui.QApplication.translate("RoboticsMain", "Change", None, QtGui.QApplication.UnicodeUTF8))
 
 from pyqtgraph import GraphicsLayoutWidget
 import Robotics_graphical_ressources_rc
