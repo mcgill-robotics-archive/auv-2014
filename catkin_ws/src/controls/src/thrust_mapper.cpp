@@ -17,6 +17,7 @@ Maps voltage to motor command
 
 //global vars
 ros::Publisher voltage_publisher;
+double VOLTAGE_MAX;
 double VOLTAGE_MIN;
 int32_t MOTOR_CMD_MAX;
 int32_t MOTOR_CMD_MIN;
@@ -33,6 +34,7 @@ float limit_check(float value, float min, float max, char* value_type, char* val
 		ROS_WARN("%s: %s value has been exceeded. Value is %f", value_type, value_id, value);
 
 		value = 0;
+		return value;
 
 	}
 	else {
@@ -47,13 +49,11 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	float voltage[6] = {0, 0, 0, 0, 0, 0};
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
 	
-	double VOLTAGE_MAX;
-	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
 
 	controls::motorCommands motorCommands;
 
 	//Limit check for input wrench values
-	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Force" ,"X");
+	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Force", "X");
 	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Force", "Y");
 	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Force", "Z");
 	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Torque", "Y");
@@ -114,6 +114,8 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 
 	}
 
+
+
 	motorCommands.cmd_x1=motor_cmd[0];
 	motorCommands.cmd_x2=motor_cmd[1];
 	motorCommands.cmd_y1=motor_cmd[2];
@@ -136,6 +138,7 @@ int main(int argc, char **argv)
 	//ros::NodeHandle n;
 
 	//Parameters
+	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
 	n.param<double>("voltage/min", VOLTAGE_MIN, 0.0);
 	n.param<int32_t>("motorCommands/min", MOTOR_CMD_MIN, 0.0);
 	n.param<int32_t>("motorCommands/max", MOTOR_CMD_MAX, 0.0);

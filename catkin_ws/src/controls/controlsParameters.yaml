@@ -16,6 +16,11 @@ setPoints/YawSpeed/value: 0
 
 setPoints/Pitch/value: 0
 
+ep_XPos/max: 30
+ep_YPos/max: 30
+
+XSpeed/max: 30
+YSpeed/max: 30
 
 # isActive parameters are not used yet -Nick 1/25
 # setPoints/XPos/isActive: 1

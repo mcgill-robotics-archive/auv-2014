@@ -97,6 +97,16 @@ double estimated_Depth = 0;
 double estimated_Pitch = 0;
 double estimated_Yaw = 0;
 
+double F_MIN;
+double F_MAX;
+double T_MIN;
+double T_MAX;
+
+double EP_XPOS_MAX;
+double EP_YPOS_MAX;
+double XSPEED_MAX;
+double YSPEED_MAX;
+
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	ROS_DEBUG("Subscriber received set points");
@@ -156,6 +166,30 @@ void estimatedDepth_callback(const std_msgs::Float64 data)
 	estimated_Depth = data.data;
 }
 
+float output_limit_check(float value, float min, float max, char* value_name ){
+	if (value > max | value < min) {
+
+		ROS_WARN("%s: %s value has been exceeded. Value is %f.", value_name, value);
+
+		value = 0;
+		return value;
+
+	}
+	else {
+		return value;
+	}
+}
+
+float input_limit_check(float value, float max, char* value_name) {
+	if (value > max) {
+
+		ROS_INFO("%s:  value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
+		value=max;
+
+
+	}
+}
+
 int main(int argc, char **argv)
 {
 	//Create ROS Node
@@ -192,6 +226,16 @@ int main(int argc, char **argv)
     n.param<double>("coefs/drag", cd, 0.0);
     n.param<double>("coefs/gravity", g, 9.81);
     n.param<double>("coefs/dt", dt, 0.1);
+
+    n.param<double>("force/min", F_MIN, 0.0);
+	n.param<double>("force/max", F_MAX, 0.0);
+	n.param<double>("torque/min", T_MIN, 0.0);
+	n.param<double>("torque/max", T_MAX, 0.0);
+
+	n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
+	n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
+	n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
+	n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
 
 
 	//initializations
@@ -257,7 +301,7 @@ int main(int argc, char **argv)
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
-		ros::spinOnce();	//is it a problem to have this at the top not the bottom?
+		ros::spinOnce();	//Updates all variables 
 		
 		// Decoupled Controllers
 
@@ -273,6 +317,7 @@ int main(int argc, char **argv)
 		{
 			ep_XPos_prev = ep_XPos;
 			ep_XPos = setPoint_XPos - estimated_XPos;
+			ep_XPos=input_limit_check(ep_XPos, EP_XPOS_MAX, "X Position Error term");
 			ei_XPos += ep_XPos*dt;
 			ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 			Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
@@ -283,6 +328,7 @@ int main(int argc, char **argv)
         if (isActive_XSpeed)
         {
         	OL_coef_x = 1;
+           	setPoint_XSpeed=input_limit_check(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	//ROS_INFO("controlling xspeed");
         }
@@ -292,6 +338,7 @@ int main(int argc, char **argv)
 		{
 			ep_YPos_prev = ep_YPos;
 			ep_YPos = setPoint_YPos - estimated_YPos;
+			ep_YPos=input_limit_check(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
 			ei_YPos += ep_YPos*dt;
 			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
@@ -301,6 +348,7 @@ int main(int argc, char **argv)
         if (isActive_YSpeed)
         {
         	OL_coef_y = 1;
+        	setPoint_YSpeed=input_limit_check(setPoint_YSpeed, YSPEED_MAX, "Y Speed");
         	Fy = OL_coef_y*setPoint_YSpeed;
         }
 
@@ -343,6 +391,12 @@ int main(int argc, char **argv)
         	OL_coef_yaw = 1;
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
+		//Limit check for output force/torque values
+		Fx=output_limit_check(Fx, F_MIN, F_MAX, "Force: X");
+		Fy=output_limit_check(Fy, F_MIN, F_MAX, "Force: Y");
+		Fz=output_limit_check(Fz, F_MIN, F_MAX, "Force: Z");
+		Ty=output_limit_check(Ty, T_MIN, T_MAX, "Torque: Y");
+		Tz=output_limit_check(Tz, T_MIN, T_MAX, "Torque: Z");
 
 		// Assemble Wrench
 		wrenchMsg.force.x = Fx;
