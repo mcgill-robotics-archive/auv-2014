@@ -120,6 +120,17 @@ class Door : public VisibleObject {
 	void applyFilter(cv::Mat& currentFrame);
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
+
+	struct PoleCandidate {
+		float h, w, angle, dist;
+		cv::Point2f center;
+	};
+
+	bool m_isVisible;
+	double m_yawAngle;
+	double m_xDistance;
+	double m_yDistance;
+	double m_zDistance;
 };
 
 #endif
