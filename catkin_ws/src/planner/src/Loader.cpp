@@ -57,6 +57,10 @@ void Loader::loadInvoker(){
 		//std::cout<<"Adding default gate task because config does not work..."<< std::endl; // works now!!!
 		//main_Invoker->AddTask(main_Taskfactory->makeTask("1v1")); // works now!!!
 	}
+
+	//adds the end task after all other tasks have been loaded
+	main_Invoker->AddTask(main_Taskfactory->getEndTask());
+
 	//To make sure the invoker doesn't get loaded agian unless needed
 	isInvokerLoaded = true;
 	std::cout<<"Done loading invoker"<< std::endl;
@@ -78,6 +82,8 @@ Invoker* Loader::getInvoker(){
 	return main_Invoker;
 }
 
+
+//probably not used?
 void Loader::GetMap()
 {
 	//Figure out a way to return all the info in the map.

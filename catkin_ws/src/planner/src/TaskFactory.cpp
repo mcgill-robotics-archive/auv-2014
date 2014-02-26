@@ -38,6 +38,10 @@ int TaskFactory::parseVersion(std::string id){
 
 }
 
+Task* TaskFactory::getEndTask(){
+	return new Task_Kill();	
+}
+
 Task* TaskFactory::makeTask(std::string id){
 
 	//parses the string into the id task number and id version number 
