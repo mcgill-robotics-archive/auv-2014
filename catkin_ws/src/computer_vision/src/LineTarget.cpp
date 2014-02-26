@@ -22,6 +22,8 @@ RNG rng(12345);
 //	executeVideo (video);
 //}
 
+double calculateSize (double x1, double x2, double y1, double y2);
+double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
 
 LineTarget::LineTarget() {
@@ -49,7 +51,7 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
         if (visibility) {
                 // Get object data
                 // [...]
-								std::cout << "VISIBLE" << std::endl;
+				std::cout << "VISIBLE" << std::endl;
                 // Return gathered data to caller
                 visibleObjectData->object_type = visibleObjectData->LANE;
                 visibleObjectData->pitch_angle = 0.0;
@@ -59,7 +61,7 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
                 visibleObjectData->z_distance = 0.0;
 
                 messagesToReturn.push_back(visibleObjectData);
-								visibility = false;
+				visibility = false;
                 return (messagesToReturn);
         } else {
                 return (messagesToReturn);
@@ -151,11 +153,27 @@ void LineTarget::thresh_callback(int, void* )
 
 		  //draws located line
 		  line.points(vertices);
+		  double sizeLong;
+		  double sizeWide;
 		  for (int i = 0; i < 4; ++i){
 			  cv::line(drawing, vertices[i], vertices[(i + 1) % 4], cv::Scalar(0, 255, 0), 1, CV_AA);
 		  }
-		  int centerX = line.center.x;
-		  int centerY = line.center.y;
+		  sizeLong = calculateSize(vertices[0].x, vertices[(0 + 1) % 4].x, vertices[0].y,vertices[(0 + 1) % 4].y);
+		  sizeWide = calculateSize(vertices[0].x, vertices[(0 - 1) % 4].x ,vertices[0].y, vertices[(0 - 1) % 4].y);
+		  //change
+		  if (sizeLong < sizeWide) {
+			  double temp;
+			  temp = sizeLong;
+			  sizeLong = sizeWide;
+			  sizeWide = temp;
+		  }
+		  //cout << "Size Long:" << sizeLong << "\n";
+		  //cout << "Size Wide" << sizeWide << "\n";
+
+		  double centerX = line.center.x;
+		  double centerY = line.center.y;
+		  double yDistancePixels;
+		  double xDistancePixels;
 
 		  cv::line(drawing, Point(centerX, centerY), Point(centerX,centerY), cv::Scalar(0, 0, 255),2,8, 0 );
 		  cv::line(drawing, Point(drawing.size().width/2, drawing.size().height/2), Point(drawing.size().width/2, drawing.size().height/2), cv::Scalar(255, 0, 0),2,8, 0 );
@@ -166,10 +184,12 @@ void LineTarget::thresh_callback(int, void* )
 		  //invert the X and Y to be in the coordinate system of the robot
 		  //yDistance = drawing.size().width/2 - centerX;
  		  //xDistance = drawing.size().height/2 - centerY;
- 		  yDistance = centerX - drawing.size().width/2;
- 		  xDistance = drawing.size().height/2 - centerY;
- 		  cout << "xDistance: " << xDistance << "\n";
- 		  cout << "yDistance: " << yDistance << "\n";
+ 		  yDistancePixels = centerX - drawing.size().width/2;
+ 		  xDistancePixels = drawing.size().height/2 - centerY;
+ 		  yDistance = convertFromPixelsToMetres(yDistancePixels, sizeLong);
+ 		  xDistance = convertFromPixelsToMetres(xDistancePixels, sizeLong);
+ 		  //cout << "xDistance: " << xDistance << "\n";
+ 		  //cout << "yDistance: " << yDistance << "\n";
 
 
   /// Show in a window
@@ -183,6 +203,22 @@ void LineTarget::thresh_callback(int, void* )
  */
 double distance (cv::RotatedRect line){
 	return 0.;
+}
+
+double calculateSize (double x1, double x2, double y1, double y2){
+	double xCoordSquared;
+	double yCoordSquared;
+	double sizeLong;
+	xCoordSquared = std::pow ((x1 - x2), 2);
+	yCoordSquared = std::pow ((y1 - y2), 2);
+	sizeLong = std::sqrt (xCoordSquared + yCoordSquared);
+	return sizeLong;
+}
+
+double convertFromPixelsToMetres(int distance, double longSize) {
+	double distanceMetres;
+	distanceMetres = (distance * 1.2)/ longSize;
+	return distanceMetres;
 }
 
 /**
@@ -207,8 +243,8 @@ double LineTarget::relativeYaw(cv::RotatedRect line){
 	if (line.size.height <  line.size.width){
 		angle = angle+90;
 	}
-	cout << "Relative Yaw Is " << angle << endl;
-	cout<< " -----------------------------------------------" << endl;
+	//cout << "Relative Yaw Is " << angle << endl;
+	//cout<< " -----------------------------------------------" << endl;
 	return angle;
 }
 
