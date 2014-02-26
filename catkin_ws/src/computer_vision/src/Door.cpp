@@ -4,6 +4,7 @@
  * @author Jean-Sebastien Dery
  * @author Renaud Dagenais
  * @author Haris Haidary
+ * @author Frederic Lafrance
  */
 
 #include "Door.h"

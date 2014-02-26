@@ -5,6 +5,7 @@
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
 #include "std_msgs/Float64.h"
+#include "std_msgs/Float32.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Int64.h"
 #include "simulator/ThrusterForces.h"
@@ -24,6 +25,10 @@ void setOurOrientation (gazebo_msgs::ModelStates msg);
 //BEWARE: RETURNS ADDRESS OF ARRAY
 double* getOurOrientation ();
 
+void setDepth(std_msgs::Float32 msg);
+
+bool isCorrectDepth(double desiredDepth);
+
 void setVisionObj (int objIndex);
 
 void weAreHere (std::string task);
@@ -35,9 +40,9 @@ void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth
 void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
 
 void rosSleep(int length);
-//LEGACY -- NOT FOR TOUCHING
-void ps3Control ();
 
 int main (int argc, char **argv);
+
+void ps3Control (); //LEGACY -- NOT FOR TOUCHING
 
 #endif // Interface_h
