@@ -57,42 +57,29 @@ Door::~Door() {
  *  not present in the current frame, it returns the zero pointer (NULL).
  */
 std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Mat& currentFrame) {
-	bool isVisible;
-	double yawAngle = -90.0;
-	double pitchAngle = 90.0;
-	double xDistance = 1;
-	double yDistance = 3;
-	double zDistance = 4;
-	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 
-	// Creates a pointer that will point to a computer_vision::VisibleObjectData object.
-	computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();
+	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
+	m_isVisible = false;
 
 	applyFilter(currentFrame);
 
-	ROS_INFO("%s", "The processing for the Gate object is completed. Now creating the ROS message.");
+	//ROS_INFO("%s", "The processing for the Gate object is completed. Now creating the ROS message.");
 
-	// Check if door is visible
-	isVisible = true;
-
-	if (isVisible) {
-		// Get object data
-		// [...]
+	if (m_isVisible) {
+		computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();		
 
 		// Return gathered data to caller
 		visibleObjectData->object_type = visibleObjectData->DOOR;
-		visibleObjectData->pitch_angle = yawAngle;
-		visibleObjectData->yaw_angle = pitchAngle;
-		visibleObjectData->x_distance = xDistance;
-		visibleObjectData->y_distance = yDistance;
-		visibleObjectData->z_distance = zDistance;
+		visibleObjectData->yaw_angle = m_yawAngle;
+		visibleObjectData->pitch_angle = 0.0; //Pitch angle is not used anymore
+		visibleObjectData->x_distance = m_xDistance;
+		visibleObjectData->y_distance = m_yDistance;
+		visibleObjectData->z_distance = m_zDistance;
 
-		messagesToReturn.push_back(visibleObjectData);
+		messagesToReturn.push_back(visibleObjectData);	
+	} 
 
-		return (messagesToReturn);
-	} else {
-		return (messagesToReturn);
-	}
+	return (messagesToReturn);
 }
 
 /**
@@ -104,18 +91,18 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 	HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_hsv_value_threshold);
 	HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, start_hsv_value_threshold);
 
-	std::vector<cv::RotatedRect> potentialMatchRectangles;
+	std::vector<PoleCandidate> potentialMatchRectangles;
 
 	// Ok so what I need to do is accept more rectangles and apply logic to filter them
 	// no bounds for the maximum of points, and only filter for a percentage of the heigh relative to the image resolution.
 	// also, the rectangles should be almost vertically aligned.
 
-	ROS_INFO("%s", "Applying filter to the current frame.");
+	//ROS_INFO("%s", "Applying filter to the current frame.");
 
 	centerOfCurrentFrame.x = currentFrame.cols/2;
 	centerOfCurrentFrame.y = currentFrame.rows/2;
 	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
-	ROS_INFO("%s", ("Width of image=" + boost::lexical_cast<std::string>(currentFrame.cols) + " pixels. Height of image="  + boost::lexical_cast<std::string>(currentFrame.rows) + " pixels.").c_str());
+	//ROS_INFO("%s", ("Width of image=" + boost::lexical_cast<std::string>(currentFrame.cols) + " pixels. Height of image="  + boost::lexical_cast<std::string>(currentFrame.rows) + " pixels.").c_str());
 
 	// Converts the current frame to HSV in order to ease color filtering (with varying brightness).
 	cv::Mat currentFrameInHSV = convertFromBGRXToHSV(currentFrame);
@@ -176,12 +163,13 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 			numberOfPointsInContour >= 4 &&
 			angleError < ANGLE_RECT_ERROR	) {
 
-			// Add the rectangle that is a potential match for the orange cylinders of the gate.
-			potentialMatchRectangles.push_back(foundRectangle);
-			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
+			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / 
+							(height * CAMERA_SENSOR_HEIGHT);
 
-			// Write the text information right next to the rectangle.
-			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / (height * CAMERA_SENSOR_HEIGHT);
+			// Add the rectangle that is a potential match for the orange cylinders of the gate.
+			PoleCandidate found = {height, width, rectangleAngle, approximateDistanceWithObject, foundRectangle.center};
+			potentialMatchRectangles.push_back(found);
+			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
 
 			// Draws text containing the dimensions on each rectangles.
 			
@@ -219,26 +207,58 @@ void Door::applyFilter(cv::Mat& currentFrame) {
 	int numberOfPotentialMatch = potentialMatchRectangles.size();
 	//  Here I assume that the two rectangles that I have are the orange cylinders of the gate.
 	if (numberOfPotentialMatch == 2) {
-		cv::RotatedRect rectangleOne = potentialMatchRectangles.at(0);
-		cv::RotatedRect rectangleTwo = potentialMatchRectangles.at(1);
+		m_isVisible = true;
+		PoleCandidate p1 = potentialMatchRectangles[0];
+		PoleCandidate p2 = potentialMatchRectangles[1];
 
-		cv::Point2f centerOfRectangleOne = rectangleOne.center;
-		cv::Point2f centerOfRectangleTwo = rectangleTwo.center;
+		PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
+		PoleCandidate& farthest = (p2.dist < p1.dist) ? p2 : p1;
 
-		float centerX = (centerOfRectangleOne.x + centerOfRectangleTwo.x)/2;
-		float centerY = (centerOfRectangleOne.y + centerOfRectangleTwo.y)/2;
+		//Calculate the yaw angle by triangle-solving
+		float distDiff = std::abs(p1.dist - p2.dist);
+		float mPerPxAtClosestPole = DOOR_REAL_HEIGHT / closest.h;
+		float perceivedGateWidth = std::abs(p1.center.x - p2.center.x) * mPerPxAtClosestPole;
+		
+		std::cout << "[DEBUG] m/px closest: " << mPerPxAtClosestPole << " perceived: " << perceivedGateWidth << std::endl;
+
+		//Solve for theta in distDiff² = GATE_SZ² + perceived² - 2 x GATE_SZ x perceived x cos(theta) (law of cosines)
+		const float GATE_WIDTH_SQR = DISTANCE_BETWEEN_ORANGE_CYLINDER * DISTANCE_BETWEEN_ORANGE_CYLINDER;
+		const float PERCEIVED_SQR = perceivedGateWidth * perceivedGateWidth;
+		const float DIST_DIFF_SQR = distDiff * distDiff;
+		float cosTheta = (GATE_WIDTH_SQR + PERCEIVED_SQR - DIST_DIFF_SQR) / 
+			(2.0 * DISTANCE_BETWEEN_ORANGE_CYLINDER * perceivedGateWidth);
+
+		m_yawAngle = acos(cosTheta) * 180.0 / 3.141592654;
+
+		//Get the center point of the gate in the x,y plane
+		float mPerPxAtFarthestPole = DOOR_REAL_HEIGHT / farthest.h;
+		float perceivedFarGateWidth = std::abs(p1.center.x - p2.center.x) * mPerPxAtFarthestPole;
+
+		//TODO Fred: This doesn't actually work 
+		float closePoleOffest = (closest.center.x - centerOfCurrentFrame.x) * mPerPxAtClosestPole;
+		float sign = (farthest.center.x < closest.center.x) ? -1.0 : 1.0;
+		m_yDistance = closePoleOffest + sign * perceivedFarGateWidth / 2.0;
+
+		float smallestDistance = (p1.dist < p2.dist) ? p1.dist : p2.dist;
+		m_xDistance = smallestDistance + (distDiff / 2.0);
+		
+
+		float estimatedMPerPxAtCenter = mPerPxAtClosestPole + 
+				((mPerPxAtClosestPole - mPerPxAtFarthestPole) / 2.0);
+
+
+		//Draw the point on-screen
 		cv::Point centerPoint;
-		centerPoint.x = centerX;
-		centerPoint.y = centerY;
+		centerPoint.x = (p1.center.x + p2.center.x)/2;
+		centerPoint.y = (p1.center.y + p2.center.y)/2;
 
-		centimetersPerPixel = DOOR_REAL_HEIGHT/rectangleOne.size.height*10;
-
-		float relativeYAxis = (centerPoint.x - centerOfCurrentFrame.x) * centimetersPerPixel;
-		float relativeZAxis = -(centerPoint.y - centerOfCurrentFrame.y) * centimetersPerPixel;
+		m_zDistance = (centerPoint.y - centerOfCurrentFrame.y) * estimatedMPerPxAtCenter;
 
 		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
+		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA); 
 
-		cv::line(currentFrame, centerOfRectangleOne, centerOfRectangleTwo, WHITE_BGRX, 1, CV_AA);
+		std::cout << "[DEBUG] Door found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> angle " << 
+				m_yawAngle << std::endl;
 	}
 }
 
