@@ -12,6 +12,8 @@
 #include "Task_Gate.h"
 #include "Task_Lane.h"
 
+#include "Task_Kill.h"
+
 //#include "Config.hpp"
 //#include "Task.cpp"
 
@@ -25,6 +27,8 @@ class TaskFactory{
 	int parseVersion(std::string id);
 
 	Task* makeTask(std::string id);
+
+	Task* getEndTask();
 
 };
 
