@@ -64,4 +64,5 @@ class misc_vars(object):
     low_battery_threshold = 2.0
     max_voltage = 24.0
     GUI_UPDATE_PERIOD = 10 #ms
-    length_plot = 25
+    length_plot = 50
+    depth_max = 0

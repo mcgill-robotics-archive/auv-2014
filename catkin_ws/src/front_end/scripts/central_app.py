@@ -76,7 +76,6 @@ class CentralUi(QtGui.QMainWindow):
 
         self.ui.setupUi(self)
         self.resizeSliders()
-
         
         ## dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
@@ -96,18 +95,24 @@ class CentralUi(QtGui.QMainWindow):
 
         ## Pose Visualiser widget
         self.pose_ui = PoseViewWidget(self)
-
         self.ui.poseVizFrame.addWidget(self.pose_ui)
 
         # create initial data sets for imu, depth graphs
         ##dataset depth graph
         self.depth_data = []
+        # fill the data sets with dummy data
+        for i in range(0, misc_vars.length_plot, 1):
+            self.depth_data.append(0)
 
-        # create the plots and start the ros subscribers
-        self.create_plots()
+        #add the DEPTH GRAPH to the ui
+        self.depth_graph = self.ui.imugraphics.addPlot(title="Depth")
+        self.depth_curve = self.depth_graph.plot(pen="y")
+        self.depth_graph.setXRange(0, misc_vars.length_plot)
+        self.depth_graph.setYRange(0, misc_vars.depth_max)
+        
         self.start_ros_subscriber()
 
-        ## creates the timers to enable or disable the ps3
+        ## creates the timers to enable or disable the ps3 controller
         self.ps3_timer = QtCore.QTimer()
         ## creates the timers to enable or disable the keyboard controllers
         self.key_timer = QtCore.QTimer()
@@ -345,20 +350,6 @@ class CentralUi(QtGui.QMainWindow):
         # publish to ros topic
         velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 1)
 
-    ## create and layout imu graphics
-    #
-    #  create all the graphs in the imu area and adds a data set to the graph
-    #  @param self the object pointer
-    def create_plots(self):
-        # fill the data sets with dummy data
-        for i in range(0, misc_vars.length_plot, 1):
-            self.depth_data.append(0)
-
-        # DEPTH GRAPH
-        self.depth_graph = self.ui.imugraphics.addPlot(title="Depth")
-        self.depth_curve = self.depth_graph.plot(pen="y")
-        self.depth_graph.setXRange(0, misc_vars.length_plot)
-
     ## updates the data displayed by the depth graph
     #
     #appends the last value received by the depth_callback to the existing dataset and removes the first entry
@@ -368,6 +359,9 @@ class CentralUi(QtGui.QMainWindow):
         self.depth_data.append(data_input)
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
+        if data_input > misc_vars.depth_max:
+            misc_vars.depth_max = data_input
+            self.depth_graph.setYRange(0, misc_vars.depth_max)
 
     ##initiallize the ros subscribers
     #
@@ -414,6 +408,7 @@ class CentralUi(QtGui.QMainWindow):
             self.left_pre_image = data  # Save the ros image for processing by the display thread
         finally:
             pass
+
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
     #takes the data received on the ros topic and records it to a variable
@@ -435,6 +430,7 @@ class CentralUi(QtGui.QMainWindow):
             self.bottom_pre_image = data  # Save the ros image for processing by the display thread
         finally:
             pass
+
     ## when a frame is received, all the data is recorded in the appropriate variable
     #
     #takes the data received on the ros topic and records it to a variable
@@ -467,6 +463,7 @@ class CentralUi(QtGui.QMainWindow):
             self.bottom_post_image = data  # Save the ros image for processing by the display thread
         finally:
             pass
+
     ##updates the video frames displayed
     #
     # simply converts the image data from the ros message received

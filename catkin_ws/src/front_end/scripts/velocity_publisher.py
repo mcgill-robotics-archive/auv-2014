@@ -23,14 +23,14 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set
         msg.YawSpeed.data = yaw_vel
 
 
-        msg.XPos.isActive=0
-        msg.YPos.isActive=0
-        msg.Depth.isActive=1
-        msg.Yaw.isActive=0
-        msg.Pitch.isActive=1
-        msg.XSpeed.isActive=1
-        msg.YSpeed.isActive=1
-        msg.YawSpeed.isActive=1
+        msg.XPos.isActive = 0
+        msg.YPos.isActive = 0
+        msg.Depth.isActive = 1
+        msg.Yaw.isActive = 0
+        msg.Pitch.isActive = 1
+        msg.XSpeed.isActive = 1
+        msg.YSpeed.isActive = 1
+        msg.YawSpeed.isActive = 1
 
         vel_pub.publish(msg)
     else:
@@ -44,14 +44,14 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set
         msg.YawSpeed.data = 0
 
 
-        msg.XPos.isActive=0
-        msg.YPos.isActive=0
-        msg.Depth.isActive=0
-        msg.Yaw.isActive=0
-        msg.Pitch.isActive=0
-        msg.XSpeed.isActive=0
-        msg.YSpeed.isActive=0
-        msg.YawSpeed.isActive=0
+        msg.XPos.isActive = 0
+        msg.YPos.isActive = 0
+        msg.Depth.isActive = 0
+        msg.Yaw.isActive = 0
+        msg.Pitch.isActive = 0
+        msg.XSpeed.isActive = 0
+        msg.YSpeed.isActive = 0
+        msg.YawSpeed.isActive = 0
 
         vel_pub.publish(msg)
 
