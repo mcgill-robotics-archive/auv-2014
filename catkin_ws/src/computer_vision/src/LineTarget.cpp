@@ -1,4 +1,4 @@
-*
+/*
  * LineTarget.cpp
  *
  *  Created on: Jan 16, 2014
