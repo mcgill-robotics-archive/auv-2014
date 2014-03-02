@@ -166,13 +166,11 @@ void estimatedDepth_callback(const std_msgs::Float64 data)
 }
 
 float output_limit_check(float value, float min, float max, char* value_name ){
-	if (value > max | value < min) {
-
-		ROS_WARN("%s: %s value has been exceeded. Value is %f.", value_name, value);
-
+	//returns zero and warns if out of range
+	if (value > max | value < min) { //out of range
+		ROS_WARN("%s: value has been exceeded. Value is %f.", value_name, value);
 		value = 0;
 		return value;
-
 	}
 	else {
 		return value;
@@ -180,13 +178,12 @@ float output_limit_check(float value, float min, float max, char* value_name ){
 }
 
 float input_limit_check(float value, float max, char* value_name) {
+	//saturates if out of range
 	if (value > max) {
-
-		ROS_INFO("%s:  value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
+		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
 		value=max;
-
-
 	}
+	return value;
 }
 
 int main(int argc, char **argv)
