@@ -3,6 +3,8 @@
  *
  *  Created on: Jan 16, 2014
  *      Author: thuy-anh
+        Author: Usman Ehtesham Gul
+        Author: Joel Lat
  */
 #include "LineTarget.h"
 
