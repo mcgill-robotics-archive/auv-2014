@@ -1,5 +1,5 @@
 #ifndef CV_DOOR_H
-#define CV_DOOR_H
+#define CV_GATE_H
 
 #include "VisibleObject.h"
 
@@ -106,16 +106,18 @@ cv::Scalar HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_
 // TO BE REMOVED (FOR DESIGN PROJECT PRESENTATION ONLY)
 const char* FILTERED_WINDOW = "Filtered Feed";
 
-// Door class
-class Door : public VisibleObject {
+/**
+ * The Gate class that defines the gate visible object.
+ */
+class Gate : public VisibleObject {
 
-	public:
+public:
 
-	Door();
-	~Door();
+	Gate();
+	~Gate();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
-	private:
+private:
 
 	void applyFilter(cv::Mat& currentFrame);
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
@@ -134,4 +136,3 @@ class Door : public VisibleObject {
 };
 
 #endif
-

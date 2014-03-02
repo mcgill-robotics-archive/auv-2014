@@ -7,7 +7,7 @@
  * @author Frederic Lafrance
  */
 
-#include "Door.h"
+#include "Gate.h"
 
 #define USE_CV_WINDOWS 1
 
@@ -21,7 +21,7 @@ cv::Point centerOfCurrentFrame;
 /**
  * Constructor.
  */
-Door::Door() {
+Gate::Gate() {
 	ROS_INFO("%s", "The Gate object has been created.");
 
 #ifdef USE_CV_WINDOWS
@@ -42,7 +42,7 @@ Door::Door() {
 /**
  * Destructor.
  */
-Door::~Door() {
+Gate::~Gate() {
 #ifdef USE_CV_WINDOWS
 	cv::destroyWindow(COLOR_THRESH_WINDOW);
 #endif
@@ -56,7 +56,7 @@ Door::~Door() {
  *  which contains the information gathered on the door. If the door is
  *  not present in the current frame, it returns the zero pointer (NULL).
  */
-std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Mat& currentFrame) {
 
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 	m_isVisible = false;
@@ -87,7 +87,7 @@ std::vector<computer_vision::VisibleObjectData*> Door::retrieveObjectData(cv::Ma
  *
  * @param currentFrame The frame to which we need to apply the filters.
  */
-void Door::applyFilter(cv::Mat& currentFrame) {
+void Gate::applyFilter(cv::Mat& currentFrame) {
 	HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_hsv_value_threshold);
 	HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, start_hsv_value_threshold);
 
@@ -268,7 +268,7 @@ void Door::applyFilter(cv::Mat& currentFrame) {
  * @param frameInHSV The frame in HSV color space.
  * @return The std::vector of std::vector of points containing the clouds of all contours in the image.
  */
-std::vector<std::vector<cv::Point> > Door::findContoursFromHSVFrame(const cv::Mat& frameInHSV) {
+std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV) {
 	// Creates the Mat object that will contain the filtered image (inRange HSV).
 	cv::Mat inRangeHSVFrame;
 	// Generates a new Mat object that only contains a certain range of HSV values.
@@ -295,7 +295,7 @@ std::vector<std::vector<cv::Point> > Door::findContoursFromHSVFrame(const cv::Ma
  * @param frame The cv::Mat object on which the points will be drawn.
  * @param contour The vector containing the points to be drawn.
  */
-void Door::drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR) {
+void Gate::drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR) {
 	// Draw each single point that forms the polygon.
 	for (int j = 0; j < contour.size(); j++) {
 		cv::Point singlePoint = contour.at(j);
