@@ -218,9 +218,10 @@ double calculateSize (double x1, double x2, double y1, double y2){
 }
 
 double convertFromPixelsToMetres(int distance, double longSize) {
-	double distanceMetres;
-	distanceMetres = (distance * 1.2)/ longSize;
-	return distanceMetres;
+//	double distanceMetres;
+//	distanceMetres = (distance * 1.2)/ longSize;
+//	return distanceMetres;
+	return distance * 1.2 / longSize;
 }
 
 /**
@@ -229,9 +230,10 @@ double convertFromPixelsToMetres(int distance, double longSize) {
  * @return Whether line is visible or not
  */
 bool LineTarget::isVisible(cv::RotatedRect line){
-	if (line.size.height != 0 || line.size.width !=0)
-		return true;
-	return false;
+//	if (line.size.height != 0 || line.size.width !=0)
+//		return true;
+//	return false;
+	return (line.size.height != 0 || line.size.width != 0);
 }
 
 /**
@@ -242,9 +244,9 @@ bool LineTarget::isVisible(cv::RotatedRect line){
 double LineTarget::relativeYaw(cv::RotatedRect line){
 	double angle = line.angle;
 	//re-adjust incorrect angles
-	if (line.size.height <  line.size.width){
+	if (line.size.height <  line.size.width)
 		angle = angle+90;
-	}
+
 	//cout << "Relative Yaw Is " << angle << endl;
 	//cout<< " -----------------------------------------------" << endl;
 	return angle;
