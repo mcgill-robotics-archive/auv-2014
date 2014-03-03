@@ -26,8 +26,6 @@ double F_MAX;
 double T_MIN;
 double T_MAX;
 
-ros::NodeHandle n;
-
 float limit_check(float value, float min, float max, char* value_type, char* value_id ){
 	if (value > max | value < min) {
 
@@ -53,16 +51,16 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	controls::motorCommands motorCommands;
 
 	//Limit check for input wrench values
-	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Force", "X");
-	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Force", "Y");
-	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Force", "Z");
-	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Torque", "Y");
-	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MIN, T_MAX, "Torque", "Z");
+	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Net Force", "X");
+	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Net Force", "Y");
+	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Net Force", "Z");
+	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Net Torque", "Y");
+	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MIN, T_MAX, "Net Torque", "Z");
 
 
 
 	ROS_DEBUG("Subscriber received wrench");
-
+	//Account for geometry of the robot, thruster placement:
 	thrust[0] = 0.5 * wrenchMsg.force.x;
 	thrust[1] = thrust[0];
 	thrust[2] = 0.5 * wrenchMsg.force.y + 1.6667 * wrenchMsg.torque.z;
@@ -105,13 +103,9 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	//linear for now TODO change mapping according to test
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
-	{
-		
-
-		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-(MOTOR_CMD_MIN)) + (MOTOR_CMD_MIN);
-	//Apply limit check to motor command 
-		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//Find way to pass which motor into string, create and loop through enumerator
-
+	{	
+		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-MOTOR_CMD_MIN) + MOTOR_CMD_MIN;
+		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
 
 
@@ -135,7 +129,7 @@ int main(int argc, char **argv)
 {
 	// ROS subscriber setup
 	ros::init(argc,argv,"thrust_mapper");
-	//ros::NodeHandle n;
+	ros::NodeHandle n;
 
 	//Parameters
 	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
@@ -146,7 +140,9 @@ int main(int argc, char **argv)
 	n.param<double>("force/max", F_MAX, 0.0);
 	n.param<double>("torque/min", T_MIN, 0.0);
 	n.param<double>("torque/max", T_MAX, 0.0);
+	ROS_INFO("Fmin is %f", F_MIN);
 
+	//TODO raise warning if any of these variables == their default of 0. This means bad parameter file.
 
 	ros::Subscriber thrust_subscriber = n.subscribe("/controls/wrench", 1000, thrust_callback);
 	//add clock subscription
