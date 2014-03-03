@@ -1,12 +1,12 @@
-gains/kp: 10
+gains/kp: 7
 gains/ki: 0.1
-gains/kd: 10
+gains/kd: 8
 
 
-setPoints/XPos/value: 2.7
+setPoints/XPos/value: 5
 setPoints/XSpeed/value: 0
 
-setPoints/YPos/value: 0.5
+setPoints/YPos/value: 0
 setPoints/YSpeed/value: 0
 
 setPoints/Depth/value: 8.8
@@ -49,7 +49,7 @@ voltage/min: -20
 voltage/max: 20
 motorCommands/min: -500
 motorCommands/max: 500
-force/min: -100
-force/max: 100
+force/min: -30
+force/max: 30
 torque/min: -100
 torque/max: 100

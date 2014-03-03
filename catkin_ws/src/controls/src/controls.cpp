@@ -285,7 +285,6 @@ int main(int argc, char **argv)
 	ROS_INFO("controls waiting for all subscribers to have content...");
 	while (ready == 0)
 	{
-	       
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		ready = 1;		 
 		if (setPoints_subscriber.getNumPublishers() == 0) {ready = 0;}
@@ -338,7 +337,7 @@ int main(int argc, char **argv)
 			ei_YPos += ep_YPos*dt;
 			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
-			Fy *= -1; //flip direction to account for relative coordinate system
+			Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV 
 		}
         
         if (isActive_YSpeed)
@@ -357,7 +356,7 @@ int main(int argc, char **argv)
 			ei_Depth += ep_Depth*dt;
 			ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 			Fz = kp*ep_Depth + ki*ei_Depth + kd*ed_Depth;
-			Fz *= -1; //flip direction to account for relative coordinate system
+			//Fz *= -1; //flip direction to account for relative coordinate system - don't have to do this because depth isnt relative like the others
 			//Fz = 0; // workaround temp
 			//Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}

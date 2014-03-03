@@ -1,6 +1,6 @@
  <launch>
-	<!-- launches 3 nodes: testControls, controls, simulator -->
-	<!-- Written by Nick Speal, Jan 21, McGill Robotics -->
+	<!-- launches nodes: testControls, controls, simulator, gazeboDepthEstimator -->
+	<!-- Written by Nick Speal, March 2, McGill Robotics -->
 	
   <!-- Parameters -->
   <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
@@ -14,17 +14,18 @@
 
 	<!-- Controls systems -->
 	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>
-          <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
+          <!-- <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/> -->
   
   <!-- state estimation stuff -->
           <node name="gazeboDepthEstimator" pkg="controls" type="gazeboDepthEstimator"  respawn="false" output="screen"/>
+          
+  <!--
           <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
           <node name="distanceCalculator" pkg="planner" type="distanceCalculator"  respawn="false" output="screen"/>
+  -->
 
-
-
-
-
+  <!-- CVNode front-->
+  <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
 
   <!-- RQT Plot -->
   
