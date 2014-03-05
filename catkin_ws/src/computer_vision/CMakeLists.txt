@@ -203,7 +203,11 @@ target_link_libraries(SoftCameraNode Camera)
 target_link_libraries(SoftCameraNode CameraNode)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
 
+add_executable (distanceCalculator src/distanceCalculator.cpp)
+target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
+
 # This makes sure message headers are generated before being used
 add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
 add_dependencies(CVTestNode computer_vision_gencpp)
+add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})
