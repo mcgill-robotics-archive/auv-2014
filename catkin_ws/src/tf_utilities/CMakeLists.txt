@@ -175,3 +175,6 @@ target_link_libraries(tf_listener ${catkin_LIBRARIES})
 
 add_executable(tf_service src/tf_service.cpp)
 target_link_libraries(tf_service ${catkin_LIBRARIES})
+
+add_executable(sample_client src/tf_client_sample.cpp)
+target_link_libraries(sample_client ${catkin_LIBRARIES})

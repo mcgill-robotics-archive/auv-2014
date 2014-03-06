@@ -21,6 +21,8 @@ bool transform(tf_utilities::transform::Request& req,
 	res.trans_pose = transformPose(listener, req.pose, req.target_frame);
 	// For debugging
 	ROS_INFO("Transformed");
+
+	return true;
 }
 
 // Use the tf listener to transform the pose
