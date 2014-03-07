@@ -1,4 +1,4 @@
-<launch>
+	<launch>
 	<!-- launches 3 nodes: front-end, controls, simulator -->
 	<!-- Written by David Lavoie-Boutin, Jan 16, McGill Robotics -->
 	
