@@ -1,10 +1,3 @@
-/**
-* Listens to TF between robot and objects and publishes fake CV data
-*@author Nick Speal
-*@modified March 7
-*/
-
-
 #include "distanceCalculator.h"
 double X; double Y; double Z;
 double Yaw; double Pitch;
@@ -14,25 +7,25 @@ double robot_x; double robot_y; double robot_z;
 double gate_x; double gate_y; double gate_z;
 
 planner::currentCVTask currentCVTask_Front;
-//planner::currentCVTask currentCVTask_Down;
+//planner::currentCVTask currentCVTask_Front;
 
 
 
-void currentCVTask_callback(const ros::MessageEvent<planner::currentCVTask const>& event)
-{
-  const ros::M_string& header = event.getConnectionHeader();
-  std::string topic = header.at("topic");
-  //ROS_INFO("Current topic is: %s", topic);
+void setGazeboPretendThings(gazebo_msgs::ModelStates msg) {
+  robot_x = msg.pose[0].position.x;
+  robot_y = msg.pose[0].position.y;
+  robot_z = msg.pose[0].position.z;
 
-  //const planner::currentCVTask& temp = event.getMessage(); //store in global variable
-  //ROS_INFO("Current task is %i", currentCVTask_Front.currentCVTask);
-} 
-/*
+  gate_x = msg.pose[1].position.x;
+  gate_y = msg.pose[1].position.y;
+  gate_z = msg.pose[1].position.z;
+}
+
 void currentCVTask_Front_callback(planner::currentCVTask msg)
 {
   currentCVTask_Front = msg;
 }
-*/
+
 /*
 Uncomment once the Front version works
 void currentCVTask_Down_callback(std_msgs::String data)
@@ -47,9 +40,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle n;
 
-  //ros::Subscriber CV_sub = n.subscribe("gazebo/model_states", 1000, setGazeboPretendThings);
-  ros::Subscriber currentCVTask_Front_sub = n.subscribe("currentCVTask_Front", 1000, currentCVTask_callback);
-  //ros::Subscriber currentCVTask_Front_sub = n.subscribe("currentCVTask_Front", 1000, currentCVTask_Front_callback);
+  ros::Subscriber CV_sub = n.subscribe("gazebo/model_states", 1000, setGazeboPretendThings);
+  ros::Subscriber currentCVTask_Front_sub = n.subscribe("currentCVTask_Front", 1000, currentCVTask_Front_callback);
   //ros::Subscriber currentCVTask_Down_sub = n.subscribe("currentCVTask_Down", 1000, currentCVTask_Down_callback); //uncomment once the front version works
 
   ros::Publisher pose_pub = n.advertise<computer_vision::VisibleObjectData>("/front_cv_data", 1000);
