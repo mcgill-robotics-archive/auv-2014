@@ -2,12 +2,11 @@
 #define distanceCalculator_h
 
 #include "ros/ros.h"
-#include <tf/transform_listener.h>
-
 #include "gazebo_msgs/ModelStates.h"
 #include "computer_vision/VisibleObjectData.h"
 #include "std_msgs/String.h"
 #include "planner/currentCVTask.h"
+
 
 class distanceCalculator {
 
@@ -18,3 +17,4 @@ class distanceCalculator {
 };
 
 #endif // rosTest_h
+

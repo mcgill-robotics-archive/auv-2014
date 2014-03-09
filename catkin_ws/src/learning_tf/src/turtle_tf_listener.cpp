@@ -22,10 +22,12 @@ int main(int argc, char** argv){
   ros::Rate rate(10.0);
   while (node.ok()){
     tf::StampedTransform transform;
-    try{
-	ros::Time past = ros::Time::now() - ros::Duration(5.0);      
-	listener.waitForTransform("/turtle2", "/turtle1", past, ros::Duration(1.0));	
-	listener.lookupTransform("/turtle2", "/turtle1", past, transform);
+    try
+    {
+      	// ros::Time past = ros::Time::now() - ros::Duration(5.0);      
+      	// listener.waitForTransform("/turtle2", "/turtle1", past, ros::Duration(1.0));	
+      	// listener.lookupTransform("/turtle2", "/turtle1", past, transform);
+        listener.lookupTransform("gate_center_sim", "camera1_reoriented", ros::Time(0), transform);
     }
     catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
@@ -42,4 +44,4 @@ int main(int argc, char** argv){
     rate.sleep();
   }
   return 0;
-};
+}
