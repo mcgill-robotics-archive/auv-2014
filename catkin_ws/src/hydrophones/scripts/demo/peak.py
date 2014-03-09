@@ -3,7 +3,7 @@
 # IMPORTS
 import time
 import serial
-from numpy import linalg, fft
+from numpy import linalg
 # import sys
 # import rospy
 # from geometry_msgs.msg import PointStamped
@@ -11,14 +11,14 @@ from numpy import linalg, fft
 from math import sqrt, sin, cos, pi
 
 # VARIABLES
-NUMBER_OF_MICS = 4  # SELF-EXPLANATORY
-DIMENSIONS = 3      # DIMENSIONS OF SOLUTION
-DISTANCE_X = 0.565  # DISTANCE M1 <---> M3
-DISTANCE_Y = 0.349  # DISTANCE M2 <---> M3
-SPEED = 343         # SPEED IN AIR
-MAX_DELAY = 10000   # MAXIMUM DELAY BEFORE RESET (TICKS)
-THRESHOLD = 10      # VOLUME THRESHOLD (OUT OF 128) - EXPERIMENTAL VALUE
-TICK_TIME = 15      # TIME PER LOOP CYCLE (MICROSECONDS) - EXPERIMENTAL VALUE
+NUMBER_OF_MICS = 4      # SELF-EXPLANATORY
+DIMENSIONS = 3          # DIMENSIONS OF SOLUTION
+DISTANCE_X = 0.565      # DISTANCE M1 <---> M3
+DISTANCE_Y = 0.349      # DISTANCE M2 <---> M3
+SPEED = 343             # SPEED IN AIR
+MAX_DELAY = 10000       # MAXIMUM DELAY BEFORE RESET (TICKS)
+THRESHOLD = 10          # VOLUME THRESHOLD (OUT OF 128) - EXPERIMENTAL VALUE
+TICK_TIME = 15          # TIME PER LOOP CYCLE (MICROSECONDS) - EXPERIMENTAL VALUE
 TEENSY_PATH = "/dev/tty.usbmodem10131"  # 'dev/teensy'
 
 
