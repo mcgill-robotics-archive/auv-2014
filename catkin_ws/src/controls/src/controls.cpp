@@ -59,10 +59,8 @@ Roadmap
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64.h"
-//#include "gazebo_msgs/ModelStates.h" //old
 
 #include "planner/setPoints.h"	
-#include "planner/ValueControl.h" //useless? / deprecated?
 #include "computer_vision/VisibleObjectData.h"
 #include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
 
@@ -96,9 +94,7 @@ double estimated_Depth = 0;
 double estimated_Pitch = 0;
 double estimated_Yaw = 0;
 
-double F_MIN;
 double F_MAX;
-double T_MIN;
 double T_MAX;
 
 double EP_XPOS_MAX;
@@ -132,7 +128,6 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 old way with model states from gazebo
 
 void estimatedState_callback(const gazebo_msgs::ModelStates data)
-
 {
 	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model (robot as opposed to buoys etc) with [0]
 	ROS_DEBUG("Subscriber received estimated data");
@@ -157,7 +152,6 @@ void estimatedState_callback(const computer_vision::VisibleObjectData data)
     estimated_YPos = data.y_distance;
     estimated_Pitch = data.pitch_angle; 
 	estimated_Yaw = data.yaw_angle; 
-
 }
 
 void estimatedDepth_callback(const std_msgs::Float64 data)
@@ -168,7 +162,7 @@ void estimatedDepth_callback(const std_msgs::Float64 data)
 float output_limit_check(float value, float min, float max, char* value_name ){
 	//returns zero and warns if out of range
 	if (value > max | value < min) { //out of range
-		ROS_WARN("%s: value has been exceeded. Value is %f.", value_name, value);
+		ROS_WARN("%s: value has been exceeded. Value is %f. Setting to 0.", value_name, value);
 		value = 0;
 		return value;
 	}
@@ -177,12 +171,18 @@ float output_limit_check(float value, float min, float max, char* value_name ){
 	}
 }
 
-float input_limit_check(float value, float max, char* value_name) {
+float saturate(float value, float max, char* value_name) {
 	//saturates if out of range
 	if (value > max) {
 		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
 		value=max;
 	}
+	else if (value < -1*max)
+	{
+		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
+		value=-1*max;
+	}
+
 	return value;
 }
 
@@ -221,11 +221,9 @@ int main(int argc, char **argv)
     n.param<double>("coefs/buoyancy", buoyancy, 0.02);
     n.param<double>("coefs/drag", cd, 0.0);
     n.param<double>("coefs/gravity", g, 9.81);
-    n.param<double>("coefs/dt", dt, 0.1);
+    n.param<double>("coefs/dt", dt, 0.01);
 
-    n.param<double>("force/min", F_MIN, 0.0);
 	n.param<double>("force/max", F_MAX, 0.0);
-	n.param<double>("torque/min", T_MIN, 0.0);
 	n.param<double>("torque/max", T_MAX, 0.0);
 
 	n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
@@ -312,18 +310,19 @@ int main(int argc, char **argv)
 		{
 			ep_XPos_prev = ep_XPos;
 			ep_XPos = setPoint_XPos - estimated_XPos;
-			ep_XPos=input_limit_check(ep_XPos, EP_XPOS_MAX, "X Position Error term");
+			ep_XPos=saturate(ep_XPos, EP_XPOS_MAX, "X Position Error term");
 			ei_XPos += ep_XPos*dt;
 			ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 			Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
 			Fx *= -1; //flip direction to account for relative coordinate system
 			//ROS_INFO("controlling xpos");
+			ROS_INFO("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 		}
         
         if (isActive_XSpeed)
         {
         	OL_coef_x = 1;
-           	setPoint_XSpeed=input_limit_check(setPoint_XSpeed, XSPEED_MAX, "X Speed");
+           	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	//ROS_INFO("controlling xspeed");
         }
@@ -333,7 +332,7 @@ int main(int argc, char **argv)
 		{
 			ep_YPos_prev = ep_YPos;
 			ep_YPos = setPoint_YPos - estimated_YPos;
-			ep_YPos=input_limit_check(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
+			ep_YPos=saturate(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
 			ei_YPos += ep_YPos*dt;
 			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
@@ -343,7 +342,7 @@ int main(int argc, char **argv)
         if (isActive_YSpeed)
         {
         	OL_coef_y = 1;
-        	setPoint_YSpeed=input_limit_check(setPoint_YSpeed, YSPEED_MAX, "Y Speed");
+        	setPoint_YSpeed=saturate(setPoint_YSpeed, YSPEED_MAX, "Y Speed");
         	Fy = OL_coef_y*setPoint_YSpeed;
         }
 
@@ -387,11 +386,11 @@ int main(int argc, char **argv)
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
 		//Limit check for output force/torque values
-		Fx=output_limit_check(Fx, F_MIN, F_MAX, "Force: X");
-		Fy=output_limit_check(Fy, F_MIN, F_MAX, "Force: Y");
-		Fz=output_limit_check(Fz, F_MIN, F_MAX, "Force: Z");
-		Ty=output_limit_check(Ty, T_MIN, T_MAX, "Torque: Y");
-		Tz=output_limit_check(Tz, T_MIN, T_MAX, "Torque: Z");
+		Fx=saturate(Fx, F_MAX, "Force: X");
+		Fy=saturate(Fy, F_MAX, "Force: Y");
+		Fz=saturate(Fz, F_MAX, "Force: Z");
+		Ty=saturate(Ty, T_MAX, "Torque: Y");
+		Tz=saturate(Tz, T_MAX, "Torque: Z");
 
 		// Assemble Wrench
 		wrenchMsg.force.x = Fx;

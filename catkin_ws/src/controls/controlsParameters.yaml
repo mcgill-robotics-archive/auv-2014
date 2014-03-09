@@ -1,9 +1,9 @@
-gains/kp: 7
-gains/ki: 0.1
-gains/kd: 8
+gains/kp: 5
+gains/ki: 0.00
+gains/kd: 30
 
 
-setPoints/XPos/value: 5
+setPoints/XPos/value: 0
 setPoints/XSpeed/value: 0
 
 setPoints/YPos/value: 0
@@ -16,8 +16,8 @@ setPoints/YawSpeed/value: 0
 
 setPoints/Pitch/value: 0
 
-ep_XPos/max: 30
-ep_YPos/max: 30
+ep_XPos/max: 10
+ep_YPos/max: 10
 
 XSpeed/max: 30
 YSpeed/max: 30
@@ -49,7 +49,7 @@ voltage/min: -20
 voltage/max: 20
 motorCommands/min: -500
 motorCommands/max: 500
-force/min: -30
+force/min: -30 # removed from controls node, not sure about thrust_mapper
 force/max: 30
-torque/min: -100
+torque/min: -100 # removed from controls node, not sure about thrust_mapper
 torque/max: 100
