@@ -56,3 +56,7 @@ target_link_libraries(robot ${roscpp_LIBRARIES} ${catkin_LIBRARIES} ${GAZEBO_LIB
 add_executable(tf_broadcaster_simulator src/tf_broadcaster_simulator.cpp)
 target_link_libraries(tf_broadcaster_simulator ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 add_dependencies(tf_broadcaster_simulator ${catkin_EXPORTED_TARGETS})
+
+add_executable(gazeboDepthEstimator src/gazeboDepthEstimator.cpp)
+target_link_libraries(gazeboDepthEstimator ${catkin_LIBRARIES})
+add_dependencies(gazeboDepthEstimator ${catkin_EXPORTED_TARGETS})
