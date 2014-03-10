@@ -63,6 +63,7 @@ Roadmap
 #include "planner/setPoints.h"	
 #include "computer_vision/VisibleObjectData.h"
 #include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
+#include <math.h>
 
 // using namespace std; //what does this do?!?!
 
@@ -216,7 +217,6 @@ int main(int argc, char **argv)
     n.param<double>("gains/kd", kd, 0.0);
 
    
-
     n.param<double>("coefs/mass", m, 30.0);
     n.param<double>("coefs/buoyancy", buoyancy, 0.02);
     n.param<double>("coefs/drag", cd, 0.0);
