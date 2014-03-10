@@ -12,7 +12,19 @@
     <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
 
   <!-- RQT PLOT -->
-    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"/>
-
+    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
+    args=
+    "
+      /controls/wrench/force/z
+      /setPoints/Depth/data
+      /depthCalculated/data
+    "
+    />
 
 </launch>
+
+      <!--
+      /controls/wrench/force/x
+      /setPoints/yPos/data
+      /front_cv_data/x-distance
+      -->
