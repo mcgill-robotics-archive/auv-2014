@@ -1,6 +1,6 @@
 gains/kp: 5
 gains/ki: 0.00
-gains/kd: 30
+gains/kd: 50
 
 
 setPoints/XPos/value: 0
