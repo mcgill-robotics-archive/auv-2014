@@ -5,7 +5,7 @@ First integrated 5DOF control system
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
 Open Loop Speed Control.	
 
-Written by Nick Speal Jan 10.
+Created by Nick Speal Jan 10.
 */
 
 
@@ -29,7 +29,7 @@ ros params
 remove old depthcontroller relics
 
 subscribe to estimated position from planner?
-different gains for different axes?
+different gains for different axes
 add a saturate functionality to the forces
 	should integral error accumulate?
 fix coordinate system integration with Gen and Mathieu
@@ -233,11 +233,14 @@ int main(int argc, char **argv)
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
 	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
 	ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
-	//add clock subscription
+	//TO DO: add clock subscription
 
 	//ROS Publisher setup
 	ros::Publisher wrench_publisher = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 100);
 	geometry_msgs::Wrench wrenchMsg; //define variable to publish
+	ros::Publisher debug_publisher = n.advertise<controls::debugControls>("/controls/debug", 100); // debug publisher with custom debug msg
+	controls::debugControls debugMsg;
+
 
 	ros::Rate loop_rate(1/dt); //100 hz??
 	
@@ -352,7 +355,70 @@ int main(int argc, char **argv)
 		wrenchMsg.torque.y = Ty;
 		wrenchMsg.torque.z = Tz;
 
+		// Assemble Debug
+
+			// Error
+			debugMsg.xError.proportional = ep_XPos;
+			debugMsg.yError.proportional = ep_YPos;
+			debugMsg.depthError.proportional = ep_Depth;
+			debugMsg.pitchError.proportional = ep_Pitch;
+			debugMsg.yawError.proportional = ep_Yaw;
+
+			debugMsg.xError.integral = ei_XPos;
+			debugMsg.yError.integral = ei_YPos;
+			debugMsg.depthError.integral = ei_Depth;
+			debugMsg.pitchError.integral = ei_Pitch;
+			debugMsg.yawError.integral = ei_Yaw;
+
+			debugMsg.xError.derivative = ed_XPos;
+			debugMsg.yError.derivative = ed_YPos;
+			debugMsg.depthError.derivative = ed_Depth;
+			debugMsg.pitchError.derivative = ed_Pitch;
+			debugMsg.yawError.derivative = ed_Yaw;
+
+			// Gains
+			/*
+			debugMsg.xGain.proportional = kpX;
+			debugMsg.yGain.proportional = kpY;
+			debugMsg.depthGain.proportional = kpDepth;
+			debugMsg.pitchGain.proportional = kpPitch;
+			debugMsg.yawGain.proportional = kpYaw;
+
+			debugMsg.xGain.integral = kiX;
+			debugMsg.yGain.integral = kiY;
+			debugMsg.depthGain.integral = kiDepth;
+			debugMsg.pitchGain.integral = kiPitch;
+			debugMsg.yawGain.integral = kiYaw;
+
+			debugMsg.xGain.derivative = kdX;
+			debugMsg.yGain.derivative = kdY;
+			debugMsg.depthGain.derivative = kdDepth;
+			debugMsg.pitchGain.derivative = kdPitch;
+			debugMsg.yawGain.derivative = kdYaw;
+			*/
+
+			// Forces
+			debugMsg.xForce.proportional = kp*ep_XPos;
+			debugMsg.yForce.proportional = kp*ep_YPos;
+			debugMsg.depthForce.proportional = kp*ep_Depth;
+			debugMsg.pitchForce.proportional = kp*ep_Pitch;
+			debugMsg.yawForce.proportional = kp*ep_Yaw;
+
+			debugMsg.xForce.integral = kp*ei_XPos;
+			debugMsg.yForce.integral = kp*ei_YPos;
+			debugMsg.depthForce.integral = kp*ei_Depth;
+			debugMsg.pitchForce.integral = kp*ei_Pitch;
+			debugMsg.yawForce.integral = kp*ei_Yaw;
+
+			debugMsg.xForce.derivative = kp*ed_XPos;
+			debugMsg.yForce.derivative = kp*ed_YPos;
+			debugMsg.depthForce.derivative = kp*ed_Depth;
+			debugMsg.pitchForce.derivative = kp*ed_Pitch;
+			debugMsg.yawForce.derivative = kp*ed_Yaw;
+
+
 		wrench_publisher.publish(wrenchMsg);
+		debug_publisher.publish(debugMsg);
 		loop_rate.sleep();
 
 
