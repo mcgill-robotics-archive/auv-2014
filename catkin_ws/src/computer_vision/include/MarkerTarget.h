@@ -19,7 +19,7 @@ class MarkerTarget : public VisibleObject
 {
 public:
 	MarkerTarget();
-
+	int add(int, int);
 	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 	virtual void applyFilter(cv::Mat& currentFrame);
 private:
@@ -65,6 +65,7 @@ private:
 	cv::Mat_<float> intrinsic;
 
 	// ===== Bin-finding functions =====
+public:	
 	/* Finds bins on the bottom of the pool. Returns a list of bin corners, grouped by 4.*/
 	Point2DVec findBins(cv::Mat& frame);
 

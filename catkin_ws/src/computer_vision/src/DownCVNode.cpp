@@ -41,7 +41,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	this->frontEndPublisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
 	
-	//this->visibleObjectList.push_back(new MarkerTarget());
+	this->visibleObjectList.push_back(new MarkerTarget());
 
 	// FIXME: There is a problem with LineTarget::retrieveObjectData()
 	this->visibleObjectList.push_back(new LineTarget());
