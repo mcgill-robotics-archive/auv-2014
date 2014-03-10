@@ -164,6 +164,11 @@ add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
 
+catkin_add_gtest(marker_target_test tests/marker_target_test.cpp)
+if(TARGET marker_target_test)
+   target_link_libraries(marker_target_test MarkerTarget)
+endif()
+
 add_library(LineTarget src/LineTarget.cpp)
 target_link_libraries(LineTarget VisibleObject)
 target_link_libraries(LineTarget ${catkin_LIBRARIES})
