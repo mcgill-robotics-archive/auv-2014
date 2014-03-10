@@ -35,7 +35,6 @@ add a saturate functionality to the forces
 fix coordinate system integration with Gen and Mathieu
 
 
-/*
 
 
 /*
@@ -60,12 +59,11 @@ Roadmap
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64.h"
-//#include "gazebo_msgs/ModelStates.h" //old
 
 #include "planner/setPoints.h"	
-#include "planner/ValueControl.h" //useless? / deprecated?
 #include "computer_vision/VisibleObjectData.h"
 #include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
+#include <math.h>
 
 // using namespace std; //what does this do?!?!
 
@@ -97,6 +95,14 @@ double estimated_Depth = 0;
 double estimated_Pitch = 0;
 double estimated_Yaw = 0;
 
+double F_MAX;
+double T_MAX;
+
+double EP_XPOS_MAX;
+double EP_YPOS_MAX;
+double XSPEED_MAX;
+double YSPEED_MAX;
+
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	ROS_DEBUG("Subscriber received set points");
@@ -123,7 +129,6 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 old way with model states from gazebo
 
 void estimatedState_callback(const gazebo_msgs::ModelStates data)
-
 {
 	// Pose contains the pose of all the models in the simulator. Grab the pose of the first model (robot as opposed to buoys etc) with [0]
 	ROS_DEBUG("Subscriber received estimated data");
@@ -148,12 +153,38 @@ void estimatedState_callback(const computer_vision::VisibleObjectData data)
     estimated_YPos = data.y_distance;
     estimated_Pitch = data.pitch_angle; 
 	estimated_Yaw = data.yaw_angle; 
-
 }
 
 void estimatedDepth_callback(const std_msgs::Float64 data)
 {
 	estimated_Depth = data.data;
+}
+
+float output_limit_check(float value, float min, float max, char* value_name ){
+	//returns zero and warns if out of range
+	if (value > max | value < min) { //out of range
+		ROS_WARN("%s: value has been exceeded. Value is %f. Setting to 0.", value_name, value);
+		value = 0;
+		return value;
+	}
+	else {
+		return value;
+	}
+}
+
+float saturate(float value, float max, char* value_name) {
+	//saturates if out of range
+	if (value > max) {
+		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
+		value=max;
+	}
+	else if (value < -1*max)
+	{
+		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
+		value=-1*max;
+	}
+
+	return value;
 }
 
 int main(int argc, char **argv)
@@ -164,10 +195,10 @@ int main(int argc, char **argv)
 
 	//specify ROSCONSOLE verbosity level
 	//Fred Lafrance: temporarily commented because of compile error	
-	if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
-	{
-   		ros::console::notifyLoggerLevelsChanged();
-	}
+	//if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
+	//{
+   	//	ros::console::notifyLoggerLevelsChanged();
+	//}
 
 	//Parameters
 	double m; //mass in kg
@@ -186,12 +217,19 @@ int main(int argc, char **argv)
     n.param<double>("gains/kd", kd, 0.0);
 
    
-
     n.param<double>("coefs/mass", m, 30.0);
     n.param<double>("coefs/buoyancy", buoyancy, 0.02);
     n.param<double>("coefs/drag", cd, 0.0);
     n.param<double>("coefs/gravity", g, 9.81);
-    n.param<double>("coefs/dt", dt, 0.1);
+    n.param<double>("coefs/dt", dt, 0.01);
+
+	n.param<double>("force/max", F_MAX, 0.0);
+	n.param<double>("torque/max", T_MAX, 0.0);
+
+	n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
+	n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
+	n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
+	n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
 
 
 	//initializations
@@ -248,7 +286,6 @@ int main(int argc, char **argv)
 	ROS_INFO("controls waiting for all subscribers to have content...");
 	while (ready == 0)
 	{
-	       
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		ready = 1;		 
 		if (setPoints_subscriber.getNumPublishers() == 0) {ready = 0;}
@@ -260,7 +297,7 @@ int main(int argc, char **argv)
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
-		ros::spinOnce();	//is it a problem to have this at the top not the bottom?
+		ros::spinOnce();	//Updates all variables 
 		
 		// Decoupled Controllers
 
@@ -276,16 +313,19 @@ int main(int argc, char **argv)
 		{
 			ep_XPos_prev = ep_XPos;
 			ep_XPos = setPoint_XPos - estimated_XPos;
+			ep_XPos=saturate(ep_XPos, EP_XPOS_MAX, "X Position Error term");
 			ei_XPos += ep_XPos*dt;
 			ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 			Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
 			Fx *= -1; //flip direction to account for relative coordinate system
 			//ROS_INFO("controlling xpos");
+			ROS_INFO("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 		}
         
         if (isActive_XSpeed)
         {
         	OL_coef_x = 1;
+           	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	//ROS_INFO("controlling xspeed");
         }
@@ -295,15 +335,17 @@ int main(int argc, char **argv)
 		{
 			ep_YPos_prev = ep_YPos;
 			ep_YPos = setPoint_YPos - estimated_YPos;
+			ep_YPos=saturate(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
 			ei_YPos += ep_YPos*dt;
 			ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 			Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
-			Fy *= -1; //flip direction to account for relative coordinate system
+			Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV 
 		}
         
         if (isActive_YSpeed)
         {
         	OL_coef_y = 1;
+        	setPoint_YSpeed=saturate(setPoint_YSpeed, YSPEED_MAX, "Y Speed");
         	Fy = OL_coef_y*setPoint_YSpeed;
         }
 
@@ -316,7 +358,7 @@ int main(int argc, char **argv)
 			ei_Depth += ep_Depth*dt;
 			ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 			Fz = kp*ep_Depth + ki*ei_Depth + kd*ed_Depth;
-			Fz *= -1; //flip direction to account for relative coordinate system
+			//Fz *= -1; //flip direction to account for relative coordinate system - don't have to do this because depth isnt relative like the others
 			//Fz = 0; // workaround temp
 			//Fz += buoyancy*m*g; //Account for positive buoyancy bias
 		}
@@ -346,6 +388,12 @@ int main(int argc, char **argv)
         	OL_coef_yaw = 1;
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
+		//Limit check for output force/torque values
+		Fx=saturate(Fx, F_MAX, "Force: X");
+		Fy=saturate(Fy, F_MAX, "Force: Y");
+		Fz=saturate(Fz, F_MAX, "Force: Z");
+		Ty=saturate(Ty, T_MAX, "Torque: Y");
+		Tz=saturate(Tz, T_MAX, "Torque: Z");
 
 		// Assemble Wrench
 		wrenchMsg.force.x = Fx;

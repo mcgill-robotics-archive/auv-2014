@@ -52,11 +52,10 @@ class ROS_Topics(object):
     right_post_topic = "/right_camera/camera/image_color"
     bottom_post_topic = "/down_camera/camera/image_color"
     simulator_pose = "/gazebo/model_states"
-    imu_raw = 'pose'
-    imu_filtered='pose'
+    imu_filtered = 'pose'
     vel_topic = '/setPoints'
     cv_data = 'front_cv_data'
-    planner_task='planner/task'
+    planner_task = 'planner/task'
 
 
 ##    various parameters and constants
@@ -65,4 +64,5 @@ class misc_vars(object):
     low_battery_threshold = 2.0
     max_voltage = 24.0
     GUI_UPDATE_PERIOD = 10 #ms
-    length_plot = 25
+    length_plot = 50
+    depth_max = 0

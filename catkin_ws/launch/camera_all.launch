@@ -1,0 +1,5 @@
+<launch>
+<include file="camera_down_left.launch" />
+<include file="camera_down_right.launch" />
+<include file="camera_front.launch" />
+</launch>

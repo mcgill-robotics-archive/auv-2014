@@ -1,6 +1,28 @@
 var searchData=
 [
+  ['gate_5fratio',['GATE_RATIO',['../Door_8h.html#a744d36df89943b9fb1ed5537abc73d15',1,'Door.h']]],
+  ['gate_5fratio_5ferror',['gate_ratio_error',['../Door_8h.html#a261b0e1d7a0518972f594b3772da6b5d',1,'Door.h']]],
+  ['gate_5fx',['gate_x',['../distanceCalculator_8cpp.html#a0ccf7f22fc51075fb9da90f6d479154f',1,'distanceCalculator.cpp']]],
+  ['gate_5fy',['gate_y',['../distanceCalculator_8cpp.html#a8a7297ee4b366ffa8a65575709b27d06',1,'distanceCalculator.cpp']]],
+  ['gate_5fz',['gate_z',['../distanceCalculator_8cpp.html#af8e6b27c8e43abbd3fb9bbad0ef6cd03',1,'distanceCalculator.cpp']]],
+  ['green_5fbgrx',['GREEN_BGRX',['../Door_8h.html#a559873840a48d3d63754bf1720804e23',1,'Door.h']]],
+  ['gridlayout',['gridLayout',['../classresizableUI1_1_1Ui__RoboticsMain.html#a3e241111860bccb0456155ec4032d315',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['gridlayout_5f2',['gridLayout_2',['../classresizableUI1_1_1Ui__RoboticsMain.html#a2b8c6e64e71459e4a780ad7d393c06c3',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['gridlayout_5f3',['gridLayout_3',['../classresizableUI1_1_1Ui__RoboticsMain.html#a2cdccbff1fdf3c88862a14f3be94d71f',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['gridlayout_5f5',['gridLayout_5',['../classresizableUI1_1_1Ui__RoboticsMain.html#a3b521f9358f6036c1ecb712f0dbe98a3',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['gridlayout_5f6',['gridLayout_6',['../classresizableUI1_1_1Ui__RoboticsMain.html#afc0cc784d001518be856256c4e0af81b',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['gridlayout_5f7',['gridLayout_7',['../classresizableUI1_1_1Ui__RoboticsMain.html#af1592b91641928f9f7b09eeaf74d1aaa',1,'resizableUI1::Ui_RoboticsMain']]],
+  ['gui_5fupdate_5fperiod',['GUI_UPDATE_PERIOD',['../classVARIABLES_1_1misc__vars.html#ab5b64b6626b94b997b59d8e818c3e9d4',1,'VARIABLES::misc_vars']]],
+  ['gy1',['gy1',['../classcentral__app_1_1CentralUi.html#ae5a96f7d033ae027f86f2a285e9f117c',1,'central_app::CentralUi']]],
+  ['gy1_5fcurve',['gy1_curve',['../classcentral__app_1_1CentralUi.html#a62e545d8843723536e9ffc0824b4165b',1,'central_app::CentralUi']]],
   ['gy1_5fdata',['gy1_data',['../classcentral__app_1_1CentralUi.html#ac68b7a4e8b67ac0530f3fbdf2fc531f9',1,'central_app::CentralUi']]],
+  ['gy2',['gy2',['../classcentral__app_1_1CentralUi.html#ac4bb3fcec06ab6717e6582d18ed8cfd7',1,'central_app::CentralUi']]],
+  ['gy2_5fcurve',['gy2_curve',['../classcentral__app_1_1CentralUi.html#a9552938dcfbf7b842345f65b7f89d859',1,'central_app::CentralUi']]],
   ['gy2_5fdata',['gy2_data',['../classcentral__app_1_1CentralUi.html#a6a4e63f422158eb154b6fd0a0da8f12a',1,'central_app::CentralUi']]],
-  ['gy3_5fdata',['gy3_data',['../classcentral__app_1_1CentralUi.html#ae7b3383a7461cc0a97d3a9289441f882',1,'central_app::CentralUi']]]
+  ['gy3',['gy3',['../classcentral__app_1_1CentralUi.html#a9af237e8f37dc7b0ddb11c084885cb70',1,'central_app::CentralUi']]],
+  ['gy3_5fcurve',['gy3_curve',['../classcentral__app_1_1CentralUi.html#a2590e277f5253411eda5a3be94d8c455',1,'central_app::CentralUi']]],
+  ['gy3_5fdata',['gy3_data',['../classcentral__app_1_1CentralUi.html#ae7b3383a7461cc0a97d3a9289441f882',1,'central_app::CentralUi']]],
+  ['gyrx',['gyrX',['../structInertialAndMagStruct.html#ad449b6d22f746a590cad6b047d3dccf1',1,'InertialAndMagStruct']]],
+  ['gyry',['gyrY',['../structInertialAndMagStruct.html#ac3854f49aa50ce9eb05cb75f6ed5dbe3',1,'InertialAndMagStruct']]],
+  ['gyrz',['gyrZ',['../structInertialAndMagStruct.html#a0f79bb00037cdc0bd4f1d741d85b6ea2',1,'InertialAndMagStruct']]]
 ];

@@ -3,11 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<<<<<<< HEAD
-<title>McGill Robotics: RoboSub 2014: /home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h Source File</title>
-=======
-<title>McGill Robotics: RoboSub 2014: /home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h Source File</title>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<title>McGill Robotics: RoboSub 2014: /home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -83,68 +79,76 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<<<<<<< HEAD
-<div class="title">/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h</div>  </div>
-=======
-<div class="title">/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h</div>  </div>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<div class="title">/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/Door.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef CV_DOOR_H</span>
+<a href="Door_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef CV_DOOR_H</span>
 <a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define CV_DOOR_H</span>
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
-<a name="l00004"></a>00004 <span class="preprocessor">#include &quot;VisibleObject.h&quot;</span>
+<a name="l00004"></a>00004 <span class="preprocessor">#include &quot;<a class="code" href="VisibleObject_8h.html">VisibleObject.h</a>&quot;</span>
 <a name="l00005"></a>00005 
 <a name="l00006"></a>00006 <span class="comment">// Defines the different constants used:</span>
-<a name="l00010"></a>00010 <span class="comment"></span><span class="keyword">const</span> <span class="keywordtype">int</span> CANNY_RATIO = 3;
-<a name="l00014"></a>00014 <span class="keyword">const</span> <span class="keywordtype">int</span> CANNY_LOW_THRESHOLD = 200;
-<a name="l00018"></a>00018 <span class="keyword">const</span> <span class="keywordtype">int</span> KERNEL_SIZE = 3;
-<a name="l00022"></a>00022 <span class="keyword">const</span> <span class="keywordtype">int</span> GATE_RATIO = 16; <span class="comment">// It&#39;s 1:16 for the width and height.</span>
-<a name="l00026"></a>00026 <span class="comment"></span><span class="keyword">const</span> <span class="keywordtype">int</span> GATE_RATIO_ERROR = 5;
-<a name="l00030"></a>00030 <span class="keyword">const</span> <span class="keywordtype">float</span> FOCAL_LENGTH = 8;
-<a name="l00034"></a>00034 <span class="keyword">const</span> <span class="keywordtype">float</span> DOOR_REAL_HEIGHT = 1219.2;
-<a name="l00038"></a>00038 <span class="keyword">const</span> <span class="keywordtype">float</span> CAMERA_SENSOR_HEIGHT = 6.26;
-<a name="l00042"></a>00042 <span class="keyword">const</span> <span class="keywordtype">int</span> ESCAPE_KEY = 27;
-<a name="l00046"></a>00046 <span class="keyword">const</span> <span class="keywordtype">int</span> TIME_BETWEEN_FRAME = 150; <span class="comment">// This is in milliseconds.</span>
-<a name="l00050"></a>00050 <span class="comment"></span><span class="keyword">const</span> <span class="keywordtype">int</span> MIN_NUMBER_EDGES = 4;
-<a name="l00054"></a>00054 <span class="keyword">const</span> <span class="keywordtype">int</span> MAX_NUMBER_EDGES = 50;
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 <span class="comment">// Defines the basic colors used in the BGRX color space.</span>
-<a name="l00057"></a>00057 <span class="keyword">const</span> cv::Scalar GREEN_BGRX = cv::Scalar(0, 255, 0);
-<a name="l00058"></a>00058 <span class="keyword">const</span> cv::Scalar BLUE_BGRX = cv::Scalar(255, 0, 0);
-<a name="l00059"></a>00059 <span class="keyword">const</span> cv::Scalar RED_BGRX = cv::Scalar(0, 0, 255);
-<a name="l00060"></a>00060 <span class="keyword">const</span> cv::Scalar WHITE_BGRX = cv::Scalar(255, 255, 255);
-<a name="l00061"></a>00061 <span class="keyword">const</span> cv::Scalar MAUVE_BGRX = cv::Scalar(212, 115, 212);
-<a name="l00062"></a>00062 <span class="keyword">const</span> cv::Scalar HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, 40);
-<a name="l00063"></a>00063 <span class="keyword">const</span> cv::Scalar HSV_ENDING_FILTER_RANGE = cv::Scalar(20, 255, 220);
+<a name="l00010"></a><a class="code" href="Door_8h.html#ae6c25bfaaf8cfdfae862aea2158c67e6">00010</a> <span class="comment"></span><span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#ae6c25bfaaf8cfdfae862aea2158c67e6" title="The ratio used in the canny transform to determine shape contours.">CANNY_RATIO</a> = 3;
+<a name="l00014"></a><a class="code" href="Door_8h.html#ac1679e771947821e43881f50971c52ec">00014</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#ac1679e771947821e43881f50971c52ec" title="The lowest threshold used in the canny transform to determine shape contours.">CANNY_LOW_THRESHOLD</a> = 200;
+<a name="l00018"></a><a class="code" href="Door_8h.html#abb21bc54fdc6b0745375e7b84e4aad8b">00018</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#abb21bc54fdc6b0745375e7b84e4aad8b" title="The Kernel size used for the Gaussian Blur filter (used to compensate camera sensor noise)...">KERNEL_SIZE</a> = 3;
+<a name="l00022"></a><a class="code" href="Door_8h.html#a744d36df89943b9fb1ed5537abc73d15">00022</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a744d36df89943b9fb1ed5537abc73d15" title="The gate&#39;s orange height/width ratio used to filter false positive readings on a frame.">GATE_RATIO</a> = 16; <span class="comment">// It&#39;s 1:16 for the width and height.</span>
+<a name="l00026"></a><a class="code" href="Door_8h.html#a261b0e1d7a0518972f594b3772da6b5d">00026</a> <span class="comment"></span><span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a261b0e1d7a0518972f594b3772da6b5d" title="The deviation tolerance.">gate_ratio_error</a> = 5;
+<a name="l00030"></a><a class="code" href="Door_8h.html#af834cc85d13112a872a5f034dd519c17">00030</a> <span class="keyword">const</span> <span class="keywordtype">float</span> <a class="code" href="Door_8h.html#af834cc85d13112a872a5f034dd519c17" title="The focal length of the lenses.">FOCAL_LENGTH</a> = 8;
+<a name="l00034"></a><a class="code" href="Door_8h.html#a07743f5aeb419dbbc28ba8b8b8e8a6a9">00034</a> <span class="keyword">const</span> <span class="keywordtype">float</span> <a class="code" href="Door_8h.html#a07743f5aeb419dbbc28ba8b8b8e8a6a9" title="The height of the gate in meters.">DOOR_REAL_HEIGHT</a> = 1.2;
+<a name="l00038"></a><a class="code" href="Door_8h.html#a8d0b70959acd50bef8b70cea3c53314b">00038</a> <span class="keyword">const</span> <span class="keywordtype">float</span> <a class="code" href="Door_8h.html#a8d0b70959acd50bef8b70cea3c53314b" title="The distance between the cylinders&#39; centers in meters.">DISTANCE_BETWEEN_ORANGE_CYLINDER</a> = 3.1262;
+<a name="l00042"></a><a class="code" href="Door_8h.html#a39d77b8132c5a0a4545716a389298274">00042</a> <span class="keyword">const</span> <span class="keywordtype">float</span> <a class="code" href="Door_8h.html#a39d77b8132c5a0a4545716a389298274" title="The eight of the sensor of the camera in millimeters.">CAMERA_SENSOR_HEIGHT</a> = 6.26;
+<a name="l00046"></a><a class="code" href="Door_8h.html#aa52b0276f30f3c3eaa3477ea1c809d62">00046</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#aa52b0276f30f3c3eaa3477ea1c809d62" title="The escape key&#39;s ID.">ESCAPE_KEY</a> = 27;
+<a name="l00050"></a><a class="code" href="Door_8h.html#adf1bae538785e99e62f0507927117568">00050</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#adf1bae538785e99e62f0507927117568" title="The delay between each frame on the stream, in milliseconds.">TIME_BETWEEN_FRAME</a> = 150; <span class="comment">// This is in milliseconds.</span>
+<a name="l00054"></a><a class="code" href="Door_8h.html#a80aacfe92df8d0bc3ba25855965abd78">00054</a> <span class="comment"></span><span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a80aacfe92df8d0bc3ba25855965abd78" title="The minimum number of edges that a shape must have in order to be accepted for further filtering...">MIN_NUMBER_POINTS</a> = 4;
+<a name="l00058"></a><a class="code" href="Door_8h.html#aac890b65aaad88bce9ea196132639d28">00058</a> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#aac890b65aaad88bce9ea196132639d28" title="The maximum number of edges that a shape must have in order to be accepted for further filtering...">max_number_points</a> = 100;
+<a name="l00059"></a>00059 
+<a name="l00063"></a><a class="code" href="Door_8h.html#a6a2a78162ee04c237160ddb614c71d8d">00063</a> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a6a2a78162ee04c237160ddb614c71d8d" title="The end of the threshold for the hue.">end_hsv_hue_threshold</a> = 20;
 <a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="comment">// TO BE REMOVED (FOR DESIGN PROJECT PRESENTATION ONLY)</span>
-<a name="l00066"></a>00066 <span class="keyword">const</span> <span class="keywordtype">char</span>* FILTERED_WINDOW = <span class="stringliteral">&quot;Filtered Feed&quot;</span>;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068 <span class="comment">// Door class</span>
-<a name="l00069"></a><a class="code" href="classDoor.html">00069</a> <span class="keyword">class </span><a class="code" href="classDoor.html">Door</a> : <span class="keyword">public</span> <a class="code" href="classVisibleObject.html">VisibleObject</a> {
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071         <span class="keyword">public</span>:
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073         <a class="code" href="classDoor.html#a3dbbbd7a49698a8461d3c22df60bd2d3" title="This object is used to detect the gate object.">~Door</a>();
-<a name="l00074"></a>00074         std::vector&lt;computer_vision::VisibleObjectData*&gt; <a class="code" href="classDoor.html#a13540f7d0f7267fa055f6dcd13302e60" title="Applies the necessary filters to the current frame, checks if the door object is present and...">retrieveObjectData</a>(cv::Mat&amp; currentFrame);
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076         <span class="keyword">private</span>:
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078         <span class="keywordtype">void</span> applyFilter(cv::Mat&amp; currentFrame);
-<a name="l00079"></a>00079         std::vector&lt;std::vector&lt;cv::Point&gt; &gt; findContoursFromHSVFrame(<span class="keyword">const</span> cv::Mat&amp; frameInHSV);
-<a name="l00080"></a>00080         <span class="keywordtype">void</span> drawPointsOfContour(cv::Mat&amp; frame, std::vector&lt;cv::Point&gt; contour);
-<a name="l00081"></a>00081 };
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083 <span class="preprocessor">#endif</span>
-<a name="l00084"></a>00084 <span class="preprocessor"></span>
+<a name="l00068"></a><a class="code" href="Door_8h.html#ab8978331ece890cf4e94381ba1f7a1ac">00068</a> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#ab8978331ece890cf4e94381ba1f7a1ac" title="The end of the threshold for the value.">end_hsv_value_threshold</a> = 220;
+<a name="l00069"></a>00069 
+<a name="l00073"></a><a class="code" href="Door_8h.html#a705bb0032a67f28a95efd114438c1919">00073</a> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a705bb0032a67f28a95efd114438c1919" title="The start of the threshold for the value.">start_hsv_value_threshold</a> = 40;
+<a name="l00074"></a>00074 
+<a name="l00078"></a><a class="code" href="Door_8h.html#a5192a4731809b430f964dfb850960a46">00078</a> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a5192a4731809b430f964dfb850960a46" title="The threshold used for approximating polygons.">polygon_approximation_threshold</a> = 3;
+<a name="l00079"></a>00079 
+<a name="l00083"></a><a class="code" href="Door_8h.html#a85bcba8e2dad0076d3a82d9e99c3b479">00083</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="Door_8h.html#a85bcba8e2dad0076d3a82d9e99c3b479" title="The maximum range that the HSV values can take.">MAX_HSV_VALUE</a> = 255;
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085 <span class="comment">// Defines the basic colors used in the BGRX color space.</span>
+<a name="l00086"></a><a class="code" href="Door_8h.html#a559873840a48d3d63754bf1720804e23">00086</a> <span class="keyword">const</span> cv::Scalar <a class="code" href="Door_8h.html#a559873840a48d3d63754bf1720804e23">GREEN_BGRX</a> = cv::Scalar(0, 255, 0);
+<a name="l00087"></a><a class="code" href="Door_8h.html#adc3bf96dc6e1aede5bce7f23eee92877">00087</a> <span class="keyword">const</span> cv::Scalar <a class="code" href="Door_8h.html#adc3bf96dc6e1aede5bce7f23eee92877">BLUE_BGRX</a> = cv::Scalar(255, 0, 0);
+<a name="l00088"></a><a class="code" href="Door_8h.html#a68c1f012fcc87b9b266bc0e2c3f7d4c7">00088</a> <span class="keyword">const</span> cv::Scalar <a class="code" href="Door_8h.html#a68c1f012fcc87b9b266bc0e2c3f7d4c7">RED_BGRX</a> = cv::Scalar(0, 0, 255);
+<a name="l00089"></a><a class="code" href="Door_8h.html#abfe39544fa70f483f3fb43eed9d7ef21">00089</a> <span class="keyword">const</span> cv::Scalar <a class="code" href="Door_8h.html#abfe39544fa70f483f3fb43eed9d7ef21">WHITE_BGRX</a> = cv::Scalar(255, 255, 255);
+<a name="l00090"></a><a class="code" href="Door_8h.html#a087f1abb26ac5bd439142e12fb8862a4">00090</a> <span class="keyword">const</span> cv::Scalar <a class="code" href="Door_8h.html#a087f1abb26ac5bd439142e12fb8862a4">MAUVE_BGRX</a> = cv::Scalar(212, 115, 212);
+<a name="l00091"></a><a class="code" href="Door_8h.html#a8abd4ac4858bbf9ea34b1ba124826a2d">00091</a> cv::Scalar <a class="code" href="Door_8h.html#a8abd4ac4858bbf9ea34b1ba124826a2d">HSV_STARTING_FILTER_RANGE</a> = cv::Scalar(0, 0, <a class="code" href="Door_8h.html#a705bb0032a67f28a95efd114438c1919" title="The start of the threshold for the value.">start_hsv_value_threshold</a>);
+<a name="l00092"></a><a class="code" href="Door_8h.html#af7f38ef6a0d535640c6e3e46be314dea">00092</a> cv::Scalar <a class="code" href="Door_8h.html#af7f38ef6a0d535640c6e3e46be314dea">HSV_ENDING_FILTER_RANGE</a> = cv::Scalar(<a class="code" href="Door_8h.html#a6a2a78162ee04c237160ddb614c71d8d" title="The end of the threshold for the hue.">end_hsv_hue_threshold</a>, 255, <a class="code" href="Door_8h.html#ab8978331ece890cf4e94381ba1f7a1ac" title="The end of the threshold for the value.">end_hsv_value_threshold</a>);
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094 <span class="comment">// TO BE REMOVED (FOR DESIGN PROJECT PRESENTATION ONLY)</span>
+<a name="l00095"></a><a class="code" href="Door_8h.html#a0c020d21cde3b04f1422af354c0b75a4">00095</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="Door_8h.html#a0c020d21cde3b04f1422af354c0b75a4">FILTERED_WINDOW</a> = <span class="stringliteral">&quot;Filtered Feed&quot;</span>;
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097 <span class="comment">// Door class</span>
+<a name="l00098"></a><a class="code" href="classDoor.html">00098</a> <span class="keyword">class </span><a class="code" href="classDoor.html">Door</a> : <span class="keyword">public</span> <a class="code" href="classVisibleObject.html">VisibleObject</a> {
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100         <span class="keyword">public</span>:
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102         <a class="code" href="classDoor.html#a5191a649ed79b50f886e5c43b473c369" title="Constructor.">Door</a>();
+<a name="l00103"></a>00103         <a class="code" href="classDoor.html#a3dbbbd7a49698a8461d3c22df60bd2d3" title="Destructor.">~Door</a>();
+<a name="l00104"></a>00104         std::vector&lt;computer_vision::VisibleObjectData*&gt; <a class="code" href="classDoor.html#a13540f7d0f7267fa055f6dcd13302e60" title="Applies the necessary filters to the current frame, checks if the door object is present and...">retrieveObjectData</a>(cv::Mat&amp; currentFrame);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         <span class="keyword">private</span>:
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108         <span class="keywordtype">void</span> applyFilter(cv::Mat&amp; currentFrame);
+<a name="l00109"></a>00109         std::vector&lt;std::vector&lt;cv::Point&gt; &gt; findContoursFromHSVFrame(<span class="keyword">const</span> cv::Mat&amp; frameInHSV);
+<a name="l00110"></a>00110         <span class="keywordtype">void</span> drawPointsOfContour(cv::Mat&amp; frame, std::vector&lt;cv::Point&gt; contour, cv::Scalar COLOR);
+<a name="l00111"></a>00111 };
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 <span class="preprocessor">#endif</span>
+<a name="l00114"></a>00114 <span class="preprocessor"></span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -156,11 +160,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:30 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

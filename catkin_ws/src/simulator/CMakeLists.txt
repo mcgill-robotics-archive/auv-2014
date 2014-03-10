@@ -26,7 +26,7 @@ add_message_files(
 generate_messages()
 
 catkin_package(
-  DEPENDS
+  CATKIN_DEPENDS
     roscpp
     gazebo_ros
     message_runtime
@@ -47,7 +47,16 @@ target_link_libraries(create_torpedo ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
 set(CMAKE_INSTALL_RPATH "${roscpp_LIBRARY_DIRS}")
 add_library(robot SHARED src/robot.cc)
+add_dependencies(robot ${PROJECT_NAME}_generate_messages_cpp)
 set_target_properties(robot PROPERTIES COMPILE_FLAGS "${roscpp_CFLAGS_OTHER}")
 set_target_properties(robot PROPERTIES LINK_FLAGS "${roscpp_LDFLAGS_OTHER}")
 
 target_link_libraries(robot ${roscpp_LIBRARIES} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+add_executable(tf_broadcaster_simulator src/tf_broadcaster_simulator.cpp)
+target_link_libraries(tf_broadcaster_simulator ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+add_dependencies(tf_broadcaster_simulator ${catkin_EXPORTED_TARGETS})
+
+add_executable(gazeboDepthEstimator src/gazeboDepthEstimator.cpp)
+target_link_libraries(gazeboDepthEstimator ${catkin_LIBRARIES})
+add_dependencies(gazeboDepthEstimator ${catkin_EXPORTED_TARGETS})

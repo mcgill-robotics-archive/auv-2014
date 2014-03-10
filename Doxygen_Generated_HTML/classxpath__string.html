@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -91,35 +91,268 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac8b63876bb7f9ad6f709e8b2c823557"></a><!-- doxytag: member="xpath_string::xpath_string" ref="aac8b63876bb7f9ad6f709e8b2c823557" args="(const char_t *str, xpath_allocator *alloc)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>xpath_string</b> (const char_t *str, <a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae0661540ff7edecdf8a74f919b15f2eb"></a><!-- doxytag: member="xpath_string::xpath_string" ref="ae0661540ff7edecdf8a74f919b15f2eb" args="(const char_t *str, bool use_heap)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>xpath_string</b> (const char_t *str, bool use_heap)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac46dc4ad206c24ade43acff34c241883"></a><!-- doxytag: member="xpath_string::xpath_string" ref="ac46dc4ad206c24ade43acff34c241883" args="(const char_t *begin, const char_t *end, xpath_allocator *alloc)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>xpath_string</b> (const char_t *begin, const char_t *end, <a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab0d867c56d390213cf0fbe7334e1cc0"></a><!-- doxytag: member="xpath_string::append" ref="aab0d867c56d390213cf0fbe7334e1cc0" args="(const xpath_string &amp;o, xpath_allocator *alloc)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>append</b> (const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;o, <a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c5d08cda063f380e065f87041d20b39"></a><!-- doxytag: member="xpath_string::c_str" ref="a0c5d08cda063f380e065f87041d20b39" args="() const " -->
-const char_t *&#160;</td><td class="memItemRight" valign="bottom"><b>c_str</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1238d6fdad0766a21965cfeb668f5a5b"></a><!-- doxytag: member="xpath_string::length" ref="a1238d6fdad0766a21965cfeb668f5a5b" args="() const " -->
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>length</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ade42a938746bcba171b70bfb88c3c568"></a><!-- doxytag: member="xpath_string::data" ref="ade42a938746bcba171b70bfb88c3c568" args="(xpath_allocator *alloc)" -->
-char_t *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> (<a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a4f1988a700e20405c0f2c23d4e08a9"></a><!-- doxytag: member="xpath_string::empty" ref="a2a4f1988a700e20405c0f2c23d4e08a9" args="() const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42fc30d8b2434d89e724436f99458abd"></a><!-- doxytag: member="xpath_string::operator==" ref="a42fc30d8b2434d89e724436f99458abd" args="(const xpath_string &amp;o) const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;o) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afca32de44459a6805b90c517d5d5ab75"></a><!-- doxytag: member="xpath_string::operator!=" ref="afca32de44459a6805b90c517d5d5ab75" args="(const xpath_string &amp;o) const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;o) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8cab48475690223df758e5ab2368533"></a><!-- doxytag: member="xpath_string::uses_heap" ref="ac8cab48475690223df758e5ab2368533" args="() const " -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>uses_heap</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#a6c415f55011c6b816446d7454d1e9d2c">xpath_string</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#aac8b63876bb7f9ad6f709e8b2c823557">xpath_string</a> (const char_t *str, <a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#ae0661540ff7edecdf8a74f919b15f2eb">xpath_string</a> (const char_t *str, bool use_heap)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#ac46dc4ad206c24ade43acff34c241883">xpath_string</a> (const char_t *begin, const char_t *end, <a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#aab0d867c56d390213cf0fbe7334e1cc0">append</a> (const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;o, <a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const char_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#a0c5d08cda063f380e065f87041d20b39">c_str</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#a1238d6fdad0766a21965cfeb668f5a5b">length</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">char_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#ade42a938746bcba171b70bfb88c3c568">data</a> (<a class="el" href="classxpath__allocator.html">xpath_allocator</a> *alloc)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#a2a4f1988a700e20405c0f2c23d4e08a9">empty</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#a42fc30d8b2434d89e724436f99458abd">operator==</a> (const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;o) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#afca32de44459a6805b90c517d5d5ab75">operator!=</a> (const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;o) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classxpath__string.html#ac8cab48475690223df758e5ab2368533">uses_heap</a> () const </td></tr>
 </table>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a6c415f55011c6b816446d7454d1e9d2c"></a><!-- doxytag: member="xpath_string::xpath_string" ref="a6c415f55011c6b816446d7454d1e9d2c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxpath__string.html#a6c415f55011c6b816446d7454d1e9d2c">xpath_string::xpath_string</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aac8b63876bb7f9ad6f709e8b2c823557"></a><!-- doxytag: member="xpath_string::xpath_string" ref="aac8b63876bb7f9ad6f709e8b2c823557" args="(const char_t *str, xpath_allocator *alloc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxpath__string.html#a6c415f55011c6b816446d7454d1e9d2c">xpath_string::xpath_string</a> </td>
+          <td>(</td>
+          <td class="paramtype">const char_t *&#160;</td>
+          <td class="paramname"><em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classxpath__allocator.html">xpath_allocator</a> *&#160;</td>
+          <td class="paramname"><em>alloc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline, explicit]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae0661540ff7edecdf8a74f919b15f2eb"></a><!-- doxytag: member="xpath_string::xpath_string" ref="ae0661540ff7edecdf8a74f919b15f2eb" args="(const char_t *str, bool use_heap)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxpath__string.html#a6c415f55011c6b816446d7454d1e9d2c">xpath_string::xpath_string</a> </td>
+          <td>(</td>
+          <td class="paramtype">const char_t *&#160;</td>
+          <td class="paramname"><em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>use_heap</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline, explicit]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac46dc4ad206c24ade43acff34c241883"></a><!-- doxytag: member="xpath_string::xpath_string" ref="ac46dc4ad206c24ade43acff34c241883" args="(const char_t *begin, const char_t *end, xpath_allocator *alloc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classxpath__string.html#a6c415f55011c6b816446d7454d1e9d2c">xpath_string::xpath_string</a> </td>
+          <td>(</td>
+          <td class="paramtype">const char_t *&#160;</td>
+          <td class="paramname"><em>begin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char_t *&#160;</td>
+          <td class="paramname"><em>end</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classxpath__allocator.html">xpath_allocator</a> *&#160;</td>
+          <td class="paramname"><em>alloc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="aab0d867c56d390213cf0fbe7334e1cc0"></a><!-- doxytag: member="xpath_string::append" ref="aab0d867c56d390213cf0fbe7334e1cc0" args="(const xpath_string &amp;o, xpath_allocator *alloc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classxpath__string.html#aab0d867c56d390213cf0fbe7334e1cc0">xpath_string::append</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;&#160;</td>
+          <td class="paramname"><em>o</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classxpath__allocator.html">xpath_allocator</a> *&#160;</td>
+          <td class="paramname"><em>alloc</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0c5d08cda063f380e065f87041d20b39"></a><!-- doxytag: member="xpath_string::c_str" ref="a0c5d08cda063f380e065f87041d20b39" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char_t* <a class="el" href="classxpath__string.html#a0c5d08cda063f380e065f87041d20b39">xpath_string::c_str</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ade42a938746bcba171b70bfb88c3c568"></a><!-- doxytag: member="xpath_string::data" ref="ade42a938746bcba171b70bfb88c3c568" args="(xpath_allocator *alloc)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char_t* <a class="el" href="classxpath__string.html#ade42a938746bcba171b70bfb88c3c568">xpath_string::data</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classxpath__allocator.html">xpath_allocator</a> *&#160;</td>
+          <td class="paramname"><em>alloc</em></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2a4f1988a700e20405c0f2c23d4e08a9"></a><!-- doxytag: member="xpath_string::empty" ref="a2a4f1988a700e20405c0f2c23d4e08a9" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classxpath__string.html#a2a4f1988a700e20405c0f2c23d4e08a9">xpath_string::empty</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1238d6fdad0766a21965cfeb668f5a5b"></a><!-- doxytag: member="xpath_string::length" ref="a1238d6fdad0766a21965cfeb668f5a5b" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t <a class="el" href="classxpath__string.html#a1238d6fdad0766a21965cfeb668f5a5b">xpath_string::length</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="afca32de44459a6805b90c517d5d5ab75"></a><!-- doxytag: member="xpath_string::operator!=" ref="afca32de44459a6805b90c517d5d5ab75" args="(const xpath_string &amp;o) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xpath_string::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;&#160;</td>
+          <td class="paramname"><em>o</em></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a42fc30d8b2434d89e724436f99458abd"></a><!-- doxytag: member="xpath_string::operator==" ref="a42fc30d8b2434d89e724436f99458abd" args="(const xpath_string &amp;o) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool xpath_string::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classxpath__string.html">xpath_string</a> &amp;&#160;</td>
+          <td class="paramname"><em>o</em></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac8cab48475690223df758e5ab2368533"></a><!-- doxytag: member="xpath_string::uses_heap" ref="ac8cab48475690223df758e5ab2368533" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classxpath__string.html#ac8cab48475690223df758e5ab2368533">xpath_string::uses_heap</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<<<<<<< HEAD
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/planner/include/pugixml/src/pugixml.cpp</li>
-=======
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/planner/include/pugixml/src/pugixml.cpp</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/planner/include/pugixml/src/<a class="el" href="pugixml_8cpp.html">pugixml.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -127,7 +360,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>uses_heap</b> () cons
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -139,11 +372,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>uses_heap</b> () cons
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

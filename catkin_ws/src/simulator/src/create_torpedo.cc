@@ -51,7 +51,6 @@ namespace gazebo {
 	 */
 
 	void createCallback(const std_msgs::Bool::ConstPtr& msg) {
-		ROS_INFO("create torpedo call back");
 	    if (msg->data) {
 		sdf::SDF torpedoSDF;
 		std::string torpedoString;
@@ -82,7 +81,7 @@ namespace gazebo {
     </model>\
 </sdf>";
 
-		physics::ModelPtr robot = world->GetModel("my_robot");
+		physics::ModelPtr robot = world->GetModel("robot");
 		math::Pose pose = robot->GetWorldPose();
 		int x = pose.pos.x;
 		int y = pose.pos.y;
@@ -100,44 +99,19 @@ namespace gazebo {
 		    boost::lexical_cast<std::string>(yaw) + secondPart;
 
 		torpedoSDF.SetFromString(torpedoString);
-		/*"<sdf version ='1.4'>		\
-		  <model name='torpedo'>\
-		  <pose>-2 -2 1 0 0 0</pose>\
-		  <static>false</static>\
-		  <link name='body'>\
-		  <collision name='visual'>\
-		  <geometry>\
-		  <mesh>\
-		  <uri>file://../models/Torpedo.dae</uri>\
-		  <scale> .01 .01 .01</scale>\
-		  </mesh>\
-		  </geometry>\
-		  </collision>\
-		  <visual name='visual'>\
-		  <geometry>\
-		  <mesh>\
-		  <uri>file://../models/Torpedo.dae</uri>\
-		  <scale> .01 .01 .01</scale>\
-		  </mesh>\
-		  </geometry>\
-		  </visual>\
-		  </link>\
-		  <plugin name='launch_torpedo' filename='liblaunch_torpedo.so'></plugin>\
-		  </model>\
-		  </sdf>"*/
 		world->InsertModelSDF(torpedoSDF);
 	    }
 	};
 
     private:
-	physics::WorldPtr world;
-	event::ConnectionPtr updateConnection;
+		physics::WorldPtr world;
+		event::ConnectionPtr updateConnection;
 
-	// ROS NodeHandle
-	ros::NodeHandle* node;
-	//ROS Subscriber
-	ros::Subscriber sub;
-    };
+		// ROS NodeHandle
+		ros::NodeHandle* node;
+		//ROS Subscriber
+		ros::Subscriber sub;
+};
 
-    GZ_REGISTER_WORLD_PLUGIN(CreateTorpedo)
+GZ_REGISTER_WORLD_PLUGIN(CreateTorpedo)
 }

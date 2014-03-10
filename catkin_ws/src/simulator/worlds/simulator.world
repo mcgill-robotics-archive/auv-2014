@@ -29,15 +29,11 @@
 
 	<!-- robot -->
     <model name="robot">
-
       <plugin name="robot" filename="librobot.so"></plugin>
-
       <static>false</static>
-
-      <pose>2.7 -3.5 1 0 0 3.14</pose>
+      <pose>2.7 -3.5 1 0 0 3.14159265359</pose>
 
       <link name='body'>
-
       	<inertial>
       		<mass>700</mass>
       		<inertia>
@@ -69,75 +65,21 @@
 		</visual>
       </link>
 
-	<!-- imu 
-      <joint name='imu' type='revolute'>
+	<joint name="rrf_joint" type="revolute">
 		<parent>body</parent>
-		<child>imu_link</child>
-		<axis>1 0 0</axis>
-		<pose>0 0 0 0 0 0</pose>
-      </joint>
+		<child>robot_reference_frame</child>
+		<axis>0 0 1</axis>
+	</joint>
 	
-	<link name='imu_link'>
-	<pose>0 0.2 0 0 0 -1.507</pose>
-      
-      <inertial>
-        <mass>0.1</mass>
-      </inertial>
-      
-      <visual name="visual">
-        <geometry>
-          <box>
-            <size>0.001 0.001 0.001</size>
-          </box>
-        </geometry>
-      </visual>
-      
-      <collision name="collision">
-        <geometry>
-          <box>
-            <size>0.001 0.001 0.001</size>
-          </box>
-        </geometry>
-      </collision>
-      
-      <sensor name="imu" type="imu">
-        <imu>
-          <topic>simulator/imu</topic>
-          <noise>
-            <type>gaussian</type>
-            <rate>
-              <mean>0.0</mean>
-              <stddev>2e-4</stddev>
-              <bias_mean>0.0000075</bias_mean>
-              <bias_stddev>0.0000008</bias_stddev>
-            </rate>
-            <accel>
-              <mean>0.0</mean>
-              <stddev>1.7e-2</stddev>
-              <bias_mean>0.1</bias_mean>
-              <bias_stddev>0.001</bias_stddev>
-            </accel>
-          </noise>
-        </imu>
-        <always_on>1</always_on>
-        <update_rate>1000</update_rate>
-
-	  <plugin name="imu_controller" filename="libgazebo_ros_imu.so">
-		<alwaysOn>true</alwaysOn>
-		<updateRate>50.0</updateRate> 
-		<bodyName>imu_link</bodyName>
-		<topicName>imu_data</topicName>
-      </plugin>
-      </sensor>	
-
-    </link>
-	 imu done -->
+	<link name="robot_reference_frame">
+		<pose>0 0 0 3.14159265359 0 1.57079632679</pose>
+	</link>
 
 	  <!-- camera1 -->
       <joint name='camera1' type='revolute'>
 		<parent>body</parent>
 		<child>camera1_link</child>
-		<axis>1 0 0</axis>
+		<axis>0 0 1</axis>
 		<pose>0 0 0 0 0 0</pose>
       </joint>
 
@@ -205,7 +147,7 @@
       <joint name='camera2' type='revolute'>
 		<parent>body</parent>
 		<child>camera2_link</child>
-		<axis>1 0 0</axis>
+		<axis>0 0 1</axis>
 		<pose>0 0 0 0 0 0</pose>
       </joint>
 
@@ -272,7 +214,7 @@
       <joint name='camera3' type='revolute'>
 		<parent>body</parent>
 		<child>camera3_link</child>
-		<axis>1 0 0</axis>
+		<axis>0 0 1</axis>
 		<pose>0 0 0 0 0 0</pose>
       </joint>
 

@@ -74,13 +74,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><b>gazebo</b>      </li>
+      <li class="navelem"><a class="el" href="namespacegazebo.html">gazebo</a>      </li>
       <li class="navelem"><a class="el" href="classgazebo_1_1Robot.html">Robot</a>      </li>
     </ul>
   </div>
@@ -91,13 +91,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#aaaed9474beb729faf3414885e1a249bd">applyDrag</a>()</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#aecfdbca97d599c44c1a3923709c81e65">adjustModelYaw</a>()</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a43b1cfc25b9777c7ff5254555c29bcca">applyDrag</a>()</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a605b3db4c341323184070a12bf0e4937">calculateDragForce</a>(math::Vector3 linearVelocity)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a185b7d788b25bcca1750bf63c719aa6a">calculateDragTorque</a>(math::Vector3 angularVelocity)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a07ef12a4a9114ceab06996a0ca7277bf">controlsWrenchCallBack</a>(const geometry_msgs::Wrench msg)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#aa98567a6cbe4ea8c3e9c603e12b2d355">inRangeForce</a>(float x)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a3ab985a656a3b5c98e197944373de038">Load</a>(physics::ModelPtr _parent, sdf::ElementPtr)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a855c76f724bcdacd2205e9a27cf6e924">moveCallback</a>(const geometry_msgs::Twist::ConstPtr &amp;msg)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a294cc6a4663b4fbebecb4cd9f0810560">OnUpdate</a>(const common::UpdateInfo &amp;)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#aecbe46165aa022525d20905024b32e18">Robot</a>()</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a615813405fde9b1e07ca82def89d8935">shouldApplyForce</a>(float u, float v, float w, float p, float q, float r)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a6009e61333383b9e50c12d6925b36701">simulatorMarkerCallBack</a>(const std_msgs::Bool::ConstPtr &amp;msg)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a42980e975e21bac573bdc127858d1142">thrusterForcesCallBack</a>(const simulator::ThrusterForces::ConstPtr &amp;msg)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#ad4d1c5f88c66c91de148eed6d0b49127">torpedoCallBack</a>(const std_msgs::Bool::ConstPtr &amp;msg)</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classgazebo_1_1Robot.html#a310a155f6449df8741a783efea52d482">~Robot</a>()</td><td><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td><td><code> [inline]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
@@ -105,7 +112,7 @@ This is the complete list of members for <a class="el" href="classgazebo_1_1Robo
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -117,11 +124,7 @@ This is the complete list of members for <a class="el" href="classgazebo_1_1Robo
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

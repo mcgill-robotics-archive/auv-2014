@@ -1,17 +1,20 @@
 var searchData=
 [
+  ['_7ebuffer_5fholder',['~buffer_holder',['../structbuffer__holder.html#a43e10af0ca501bfa9bd1c2a012937876',1,'buffer_holder']]],
+  ['_7ebuoy',['~Buoy',['../classBuoy.html#a34ae5ebfeb9b47e7801120e26759a16d',1,'Buoy']]],
   ['_7ecamera',['~Camera',['../classCamera.html#ad1897942d0ccf91052386388a497349f',1,'Camera']]],
   ['_7ecameranode',['~CameraNode',['../classCameraNode.html#ab3a466dc9357b5200fb6843a6d64c5c8',1,'CameraNode']]],
   ['_7ecvnode',['~CVNode',['../classCVNode.html#a03bc29bcbeb07db109e94ee419658c40',1,'CVNode']]],
   ['_7edoor',['~Door',['../classDoor.html#a3dbbbd7a49698a8461d3c22df60bd2d3',1,'Door']]],
-<<<<<<< HEAD
-  ['_7enonlinearanalyticconditionalgaussianodo',['~NonLinearAnalyticConditionalGaussianOdo',['../classBFL_1_1NonLinearAnalyticConditionalGaussianOdo.html#a0b8edd8d1b22f07b283a7044f3ae46d5',1,'BFL::NonLinearAnalyticConditionalGaussianOdo']]],
-  ['_7eodomestimation',['~OdomEstimation',['../classestimation_1_1OdomEstimation.html#a3a4b6757d6a035211d017a28973c5dfc',1,'estimation::OdomEstimation']]],
-  ['_7eodomestimationnode',['~OdomEstimationNode',['../classestimation_1_1OdomEstimationNode.html#a7875c25b1f0eb1ee8b975c823d3104aa',1,'estimation::OdomEstimationNode']]],
-  ['_7erobot',['~Robot',['../classgazebo_1_1Robot.html#a310a155f6449df8741a783efea52d482',1,'gazebo::Robot']]],
-  ['_7etestekf',['~TestEKF',['../classTestEKF.html#afabcd9694f42c81fbd415c9d4d5e5e19',1,'TestEKF::~TestEKF()'],['../classTestEKF.html#afabcd9694f42c81fbd415c9d4d5e5e19',1,'TestEKF::~TestEKF()']]],
-=======
-  ['_7erobot',['~Robot',['../classgazebo_1_1Robot.html#a310a155f6449df8741a783efea52d482',1,'gazebo::Robot']]],
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
-  ['_7evisibleobject',['~VisibleObject',['../classVisibleObject.html#a011f27293148a7bf33ee15e188fbf673',1,'VisibleObject']]]
+  ['_7edowncameranode',['~DownCameraNode',['../classDownCameraNode.html#ab372c10a511f4038577507d616cc4951',1,'DownCameraNode']]],
+  ['_7edowncvnode',['~DownCVNode',['../classDownCVNode.html#affbe4db5d7ae4e1f9556f8f3e0c163b6',1,'DownCVNode']]],
+  ['_7efrontcameranode',['~FrontCameraNode',['../classFrontCameraNode.html#a7f414b15f47cfb344aa61eec14d3ba8c',1,'FrontCameraNode']]],
+  ['_7efrontcvnode',['~FrontCVNode',['../classFrontCVNode.html#afc18df682418ee0778e00ba82f847872',1,'FrontCVNode']]],
+  ['_7erobot',['~Robot',['../classRobot.html#a924320124b09c2f2ac1621aa210d5f38',1,'Robot::~Robot()'],['../classgazebo_1_1Robot.html#a310a155f6449df8741a783efea52d482',1,'gazebo::Robot::~Robot()']]],
+  ['_7esoftcameranode',['~SoftCameraNode',['../classSoftCameraNode.html#a62cfff074de290d905fabd429d288fb2',1,'SoftCameraNode']]],
+  ['_7evisibleobject',['~VisibleObject',['../classVisibleObject.html#a011f27293148a7bf33ee15e188fbf673',1,'VisibleObject']]],
+  ['_7exml_5fbuffered_5fwriter',['~xml_buffered_writer',['../classxml__buffered__writer.html#aa0aaa7ca5b9b61fb0e9dd79502e8d728',1,'xml_buffered_writer']]],
+  ['_7expath_5fallocator_5fcapture',['~xpath_allocator_capture',['../structxpath__allocator__capture.html#a09d4f62de6a543483b94eec405667101',1,'xpath_allocator_capture']]],
+  ['_7expath_5fstack_5fdata',['~xpath_stack_data',['../structxpath__stack__data.html#a1df4e020ecc629b398336969c8490d98',1,'xpath_stack_data']]],
+  ['_7expath_5fvariable_5fstring',['~xpath_variable_string',['../structxpath__variable__string.html#a8e5e421f2e963e6196d2812a623ee912',1,'xpath_variable_string']]]
 ];
