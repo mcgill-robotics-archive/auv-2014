@@ -50,6 +50,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   motorCommands.msg
+  VectorPID.msg
+  DebugControls.msg
 )
 
 ## Generate services in the 'srv' folder

@@ -5,41 +5,26 @@
 # Errors
 
 VectorPID xError
-
 VectorPID yError
-
 VectorPID depthError
-
 VectorPID pitchError
-
 VectorPID yawError
-
 
 # Gains
 
 VectorPID xGain
-
 VectorPID yGain
-
-Vector PID depthGain
-
+VectorPID depthGain
 VectorPID pitchGain
-
 VectorPID yawGain
-
 
 # PID Forces (and Torques)
 
 VectorPID xForce
-
 VectorPID yForce
-
 VectorPID depthForce
-
 VectorPID pitchForce
-
 VectorPID yawForce
-
 
 # Total Forces?
 

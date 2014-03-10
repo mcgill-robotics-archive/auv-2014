@@ -55,15 +55,15 @@ Roadmap
 
 */
 #include "ros/ros.h"
+#include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
+
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64.h"
-
 #include "planner/setPoints.h"	
 #include "computer_vision/VisibleObjectData.h"
-#include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
-#include <math.h>
+#include "controls/DebugControls.h"
 
 // using namespace std; //what does this do?!?!
 
@@ -276,8 +276,8 @@ int main(int argc, char **argv)
 	//ROS Publisher setup
 	ros::Publisher wrench_publisher = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 100);
 	geometry_msgs::Wrench wrenchMsg; //define variable to publish
-	ros::Publisher debug_publisher = n.advertise<controls::debugControls>("/controls/debug", 100); // debug publisher with custom debug msg
-	controls::debugControls debugMsg;
+	ros::Publisher debug_publisher = n.advertise<controls::DebugControls>("/controls/debug", 100); // debug publisher with custom debug msg
+	controls::DebugControls debugMsg;
 
 
 	ros::Rate loop_rate(1/dt); //100 hz??
