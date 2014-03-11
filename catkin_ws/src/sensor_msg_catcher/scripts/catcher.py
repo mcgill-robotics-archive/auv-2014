@@ -83,7 +83,9 @@ def accCallback(data):
 def gyroCallback(data):
     global omega
     omega = data.vector
-    
+    omega.x -= 0.0006
+    omega.y -= 0.01444
+    omega.z -= -0.000135
 
 def init():
     rospy.init_node('sensor_catcher')

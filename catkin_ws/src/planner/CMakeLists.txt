@@ -61,11 +61,6 @@ project(planner)
  add_dependencies(Planner ${catkin_EXPORTED_TARGETS})
 
 
- add_executable (distanceCalculator src/distanceCalculator.cpp)
- target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
- add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})
-
-
  add_executable (CurrentCVTaskPublisher src/CurrentCVTaskPublisher.cpp)
  target_link_libraries(CurrentCVTaskPublisher ${catkin_LIBRARIES})
  add_dependencies(CurrentCVTaskPublisher ${catkin_EXPORTED_TARGETS})

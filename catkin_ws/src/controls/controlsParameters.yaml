@@ -1,23 +1,23 @@
-gains/kp: 10
-gains/ki: 0.1
-gains/kd: 10
+gains/kp: 15
+gains/ki: 0.00
+gains/kd: 150
 
 
-setPoints/XPos/value: 2.7
+setPoints/XPos/value: 0
 setPoints/XSpeed/value: 0
 
-setPoints/YPos/value: 0.5
+setPoints/YPos/value: 0
 setPoints/YSpeed/value: 0
 
-setPoints/Depth/value: 8.8
+setPoints/Depth/value: 10
 
 setPoints/Yaw/value: 0
 setPoints/YawSpeed/value: 0
 
 setPoints/Pitch/value: 0
 
-ep_XPos/max: 30
-ep_YPos/max: 30
+ep_XPos/max: 10
+ep_YPos/max: 10
 
 XSpeed/max: 30
 YSpeed/max: 30
@@ -42,14 +42,12 @@ coefs/drag: 0.1
 coefs/gravity: 9.81
 coefs/dt: 0.1
 
-surfaceHeight: 10.0
-
 #thrust_mapper parameters
 voltage/min: -20 
 voltage/max: 20
 motorCommands/min: -500
 motorCommands/max: 500
-force/min: -100
-force/max: 100
-torque/min: -100
+force/min: -30 # removed from controls node, not sure about thrust_mapper
+force/max: 30
+torque/min: -100 # removed from controls node, not sure about thrust_mapper
 torque/max: 100

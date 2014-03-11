@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   message_generation
+  tf
 )
 
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
@@ -163,6 +164,11 @@ add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
 
+catkin_add_gtest(marker_target_test tests/marker_target_test.cpp)
+if(TARGET marker_target_test)
+   target_link_libraries(marker_target_test MarkerTarget)
+endif()
+
 add_library(LineTarget src/LineTarget.cpp)
 target_link_libraries(LineTarget VisibleObject)
 target_link_libraries(LineTarget ${catkin_LIBRARIES})
@@ -203,7 +209,11 @@ target_link_libraries(SoftCameraNode Camera)
 target_link_libraries(SoftCameraNode CameraNode)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
 
+add_executable (distanceCalculator src/distanceCalculator.cpp)
+target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
+
 # This makes sure message headers are generated before being used
 add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
 add_dependencies(CVTestNode computer_vision_gencpp)
+add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})

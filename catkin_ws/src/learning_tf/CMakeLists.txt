@@ -106,6 +106,10 @@ include_directories(
 ## Declare a cpp executable
 # add_executable(learning_tf_node src/learning_tf_node.cpp)
 
+add_executable(turtle_tf_broadcaster src/turtle_tf_broadcaster.cpp)
+add_executable(turtle_tf_listener src/turtle_tf_listener.cpp)
+add_executable(frame_tf_broadcaster src/frame_tf_broadcaster.cpp)
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(learning_tf_node learning_tf_generate_messages_cpp)
@@ -114,6 +118,10 @@ include_directories(
 # target_link_libraries(learning_tf_node
 #   ${catkin_LIBRARIES}
 # )
+
+target_link_libraries(turtle_tf_broadcaster ${catkin_LIBRARIES})
+target_link_libraries(turtle_tf_listener ${catkin_LIBRARIES})
+target_link_libraries(frame_tf_broadcaster ${catkin_LIBRARIES})
 
 #############
 ## Install ##

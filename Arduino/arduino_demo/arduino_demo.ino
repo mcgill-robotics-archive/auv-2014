@@ -18,7 +18,6 @@ std_msgs::Int16 batteryVoltage1;
 //Depth sensor    :  A0
 //Battery voltage : A3, A4
 //Battery current : A5
-//Kill switch     : 0
 Servo myservo[6];
 const static int depthPin = A0;      // select the input pin for the potentiometer
 const static int motorControlPin = 2 ; 
@@ -76,11 +75,10 @@ ros::Subscriber<std_msgs::Empty> killSwitch_sub("/arduino/KillSwitch", &killSwit
 void setup(){
   for(int i = 0; i<6; i++){
     //MotorControl setup
-    myservo[i].attach(i); 
+    myservo[i].attach(i+2); 
     //SolenoidValve setup  
     pinMode(14+i,OUTPUT);
    }
-   pinMode(0,OUTPUT);
   //ros node initializtion
   nh.initNode();
   nh.advertise(depth);        //depth sensor

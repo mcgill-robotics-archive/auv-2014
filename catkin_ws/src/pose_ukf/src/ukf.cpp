@@ -5,9 +5,8 @@
 
 //Length of the state vector
 const double INITIAL_COVARIANCE = 0.01;
-
 const double PROCESS_VARIANCE = 0.01;
-const double MEASUREMENT_VARIANCE = 0.01;
+const double MEASUREMENT_VARIANCE = 0.1;
 
 
 ukf::ukf(int dim)
@@ -80,8 +79,8 @@ void ukf::recoverPrediction()
 
 	averageOuterProduct(sigmas, sigmas, augCovar
 			,2*AUGDIM, AUGDIM, AUGDIM);
-	//TODO: Add in process covariance
-	addDiagonal(augCovar, 0.0001, AUGDIM);
+
+	//addDiagonal(augCovar, PROCESS_VARIANCE, AUGDIM);
 }
 
 void ukf::predict(double rotation[3])
@@ -123,6 +122,9 @@ void ukf::recoverCorrection(double *acc)
 	averageOuterProduct(gammas, gammas, measCovar, 2*AUGDIM, DIM, DIM);
 	averageOuterProduct(sigmas, gammas, crossCovar, 2*AUGDIM, AUGDIM, DIM);
 
+	//Include measurement variance
+	addDiagonal(measCovar, MEASUREMENT_VARIANCE, DIM);
+
 	// gain = crosscovar * meascovar^-1
 	double *gain = new double[AUGDIM*DIM]();
     solve(crossCovar, measCovar, gain, AUGDIM, DIM);
@@ -134,7 +136,7 @@ void ukf::recoverCorrection(double *acc)
     //augCovar -= crossCovar * gain.transpose()
     scaleVector(-1.0, crossCovar, DIM*DIM);
     transposedMultiplyAdd(crossCovar, gain, augCovar, AUGDIM, DIM, AUGDIM);
-    addDiagonal(augCovar, 0.0001, AUGDIM);
+    //addDiagonal(augCovar, 0.000001, AUGDIM);
     delete gain;
 }
 
@@ -142,7 +144,7 @@ void ukf::update(double* acc, double* rotation, double *quaternion)
 {
     predict(rotation);
 
-    //correct(acc);
+    correct(acc);
 
     quaternionFromRotationVector(quaternion, augState);
 }

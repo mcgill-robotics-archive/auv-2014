@@ -134,7 +134,7 @@ def triangulate(dtx, dty):
 
     # As long as the error is higher than the tolerance
     while e > t:
-        R = [ Y[0], sx, sy, DISTANCE_X, DISTANCE_Y ]
+        R = [ Y[0], sx, sy, DISTANCE_X, DISTANCE_Y]
         theta = Y[1]
 
         # Calculate the function
@@ -144,7 +144,7 @@ def triangulate(dtx, dty):
         J[0][1] = 2 * (R[0] + R[2]) * R[3] * sin(theta)
         J[1][0] = 2 * R[2] - 2 * R[4] * cos(theta - phi)
         J[1][1] = 2 * (R[0] + R[2]) * R[4] * sin(theta - phi)
-        
+
         delta_x = -linalg.solve(J, F)
         
         Y += delta_x

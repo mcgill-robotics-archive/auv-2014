@@ -4,6 +4,9 @@
 #include "VisibleObject.h"
 
 // Defines the different constants used for the filters of the gate:
+#define SIMULATOR 1
+
+// Defines the different constants used:
 /**
  * The ratio used in the canny transform to determine shape contours.
  */
@@ -37,9 +40,14 @@ const int DESIRED_ANGLE_OF_RECT = 90;
 const int ANGLE_RECT_ERROR = 5;
 
 /**
- * The focal length of the lenses.
+ * The focal length of the lenses in meters.
  */
-const float FOCAL_LENGTH = 8;
+#if SIMULATOR
+const float FOCAL_LENGTH = 0.02;
+#else
+const float FOCAL_LENGTH = 0.008;
+#endif
+
 /**
  * The height of the gate in meters.
  */
@@ -49,9 +57,13 @@ const float DOOR_REAL_HEIGHT = 1.2;
  */
 const float DISTANCE_BETWEEN_ORANGE_CYLINDER = 3.1262;
 /**
- * The eight of the sensor of the camera in millimeters.
+ * The eight of the sensor of the camera in meters.
  */
-const float CAMERA_SENSOR_HEIGHT = 6.26;
+#if SIMULATOR
+const float CAMERA_SENSOR_HEIGHT = 0.04;
+#else
+const float CAMERA_SENSOR_HEIGHT = 0.626;
+#endif
 /**
  * The escape key's ID.
  */

@@ -1,0 +1,13 @@
+digraph G {
+"world" -> "robotBody_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 33890000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"world" -> "camera1_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 32030000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"camera1_SO" -> "camera1_reoriented"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 32020000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"world" -> "camera2_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 31160000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"camera2_SO" -> "camera2_reoriented"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 31170000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"world" -> "camera3_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 31160000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"camera3_SO" -> "camera3_reoriented"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 31160000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"world" -> "robot_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 32790000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"world" -> "gate_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 31550000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"gate_SO" -> "gate_center_sim"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 31550000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+"world" -> "line1_SO"[label="Broadcaster: /tf_broadcaster_simulator\nAverage rate: 30330000.000 Hz\nMost recent transform: 0.000 \nBuffer length: 0.000 sec\n"];
+}

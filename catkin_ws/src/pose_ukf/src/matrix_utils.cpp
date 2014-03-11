@@ -197,7 +197,7 @@ void leftMultiplyAdd(double* A, double* B, double* C, int dim1, int dim2, int di
 	{
 		for(int col = 0; col < dim3; col++)
 		{
-			int temp = 0;
+			double temp = 0;
 			for(int i = 0; i < dim2; i++)
 			{
 				temp += A[row*dim2 + i]*B[i*dim3 + col];
@@ -218,7 +218,7 @@ void transposedMultiplyAdd(double* A, double* B, double* C, int dim1, int dim2, 
 	{
 		for(int col = 0; col < dim3; col++)
 		{
-			int temp = 0;
+			double temp = 0;
 			for(int i = 0; i < dim2; i++)
 			{
 				temp += A[row*dim2 + i]*B[col*dim2 + i];

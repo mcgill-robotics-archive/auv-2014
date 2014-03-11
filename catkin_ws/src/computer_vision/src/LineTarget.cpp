@@ -208,13 +208,14 @@ double distance (cv::RotatedRect line){
 }
 
 double calculateSize (double x1, double x2, double y1, double y2){
-	double xCoordSquared;
-	double yCoordSquared;
-	double sizeLong;
-	xCoordSquared = std::pow ((x1 - x2), 2);
-	yCoordSquared = std::pow ((y1 - y2), 2);
-	sizeLong = std::sqrt (xCoordSquared + yCoordSquared);
-	return sizeLong;
+//	double xCoordSquared;
+//	double yCoordSquared;
+//	double sizeLong;
+//	xCoordSquared = std::pow ((x1 - x2), 2);
+//	yCoordSquared = std::pow ((y1 - y2), 2);
+//	sizeLong = std::sqrt (xCoordSquared + yCoordSquared);
+//	return sizeLong;
+	return std::sqrt(std::pow ((x1 - x2), 2) + std::pow ((y1 - y2), 2));
 }
 
 double convertFromPixelsToMetres(int distance, double longSize) {
