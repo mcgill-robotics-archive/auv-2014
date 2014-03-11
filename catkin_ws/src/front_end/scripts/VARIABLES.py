@@ -17,8 +17,8 @@ class vel_vars(object):
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
-    z_position = 5
-    z_position_step = 0.5
+    z_position = 0
+    z_position_step = 0.2
 
     MAX_YAW_VEL = 5
     MAX_PITCH_ANGLE = PI/4
@@ -48,7 +48,7 @@ class ROS_Topics(object):
     left_pre_topic = "/simulator/camera1/image_raw"
     right_pre_topic = "/simulator/camera2/image_raw"
     bottom_pre_topic = "/simulator/camera3/image_raw"
-    left_post_topic = "/left_camera/camera/image_color"
+    left_post_topic = "/front_cv_camera1"
     right_post_topic = "/right_camera/camera/image_color"
     bottom_post_topic = "/down_camera/camera/image_color"
     simulator_pose = "/gazebo/model_states"

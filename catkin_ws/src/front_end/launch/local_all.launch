@@ -8,11 +8,9 @@
 	<!-- front-end -->
 	      <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
 
-	<!-- Controls systems -->
-        <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
-	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>          
-        <!-- CVNode front-->
-                <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
-        <!-- CVNode down -->
-                <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
+    
+	<!-- CVNode front-->
+	<node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
+	<!-- CVNode down -->
+	<node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
 </launch>
