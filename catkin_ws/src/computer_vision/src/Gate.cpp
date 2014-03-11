@@ -25,8 +25,7 @@ Gate::Gate() {
 	ROS_INFO("%s", "The Gate object has been created.");
 
 #ifdef USE_CV_WINDOWS
-	ROS_INFO("%s",
-			"Creating the window that will be displaying the frame after the HSV threshold is applied.");
+	ROS_INFO("%s", "Creating the window that will be displaying the frame after the HSV threshold is applied.");
 	cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 	cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 

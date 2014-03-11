@@ -3,7 +3,7 @@
 
 #include "VisibleObject.h"
 
-// Defines the different constants used:
+// Defines the different constants used for the filters of the gate:
 /**
  * The ratio used in the canny transform to determine shape contours.
  */
@@ -107,7 +107,7 @@ cv::Scalar HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_
 const char* FILTERED_WINDOW = "Filtered Feed";
 
 /**
- * The Gate class that defines the gate visible object.
+ * The Gate class that defines the feature detection filters that will be applied to detect the gate object.
  */
 class Gate : public VisibleObject {
 
@@ -119,7 +119,7 @@ public:
 
 private:
 
-	void applyFilter(cv::Mat& currentFrame);
+	//void applyFilter(cv::Mat& currentFrame);
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
 

@@ -17,9 +17,10 @@ public:
 
 	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame) = 0;
 	cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
-	virtual ~VisibleObject();
+	virtual ~VisibleObject() = 0;
+	virtual void applyFilter(cv::Mat& currentFrame) = 0;
 
-private:
+protected:
 
 	virtual void applyFilter(cv::Mat& currentFrame) = 0;
 };
