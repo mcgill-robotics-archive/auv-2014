@@ -1,6 +1,10 @@
 #include "FrontCVNode.h"
 #include "FrontCameraNode.h"
 
+
+ros::Publisher visibleObjectDataPublisher;
+ros::Publisher frontCVCamera1Publisher;
+
 /**
  * @brief Main method used by ROS when the node is launched.
  *
@@ -8,10 +12,6 @@
  * @param argv The arguments passed when the process is started.
  * @return The termination status of the processe's execution.
  */
-
-ros::Publisher visibleObjectDataPublisher;
-ros::Publisher frontCVCamera1Publisher;
-
 int main(int argc, char **argv) {
 
 	ros::init(argc, argv, FRONT_CV_NODE_NAME);
@@ -44,7 +44,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 
 	// Create topics with front end
 	frontEndPublisher = pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, bufferSize);
-	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(DATA_TOPIC_NAME, 10);
+	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 
 	// Construct the list of VisibleObjects
 	this->visibleObjectList.push_back(new Gate());
@@ -53,7 +53,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 }
 
-/*
+/**
  * @brief Destructor.
  *
  * Releases the memory used by the FrontCVNode.
@@ -62,6 +62,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 FrontCVNode::~FrontCVNode() {
 	cv::destroyWindow(FRONT_CAMERA_NODE_TOPIC);
 
+	// Releases the memory used by the cv::Mat object for the image.
 	delete pLastImageLeftCamera;
 	delete pLastImageRightCamera;
 }
@@ -77,10 +78,6 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
 	cv_bridge::CvImagePtr pCurrentFrame;
 	cv::Mat currentFrame;
-
-	// TODO: Extract both images from the message.
-
-	// TODO: Apply stereo vision.
 
 	try {
 		// Convert sensor_msgs to an opencv image
@@ -100,7 +97,6 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 
-
 		// Publish the VisibleObjectData messages.
 		for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it != messagesToPublish.end(); ++it) {
 			computer_vision::VisibleObjectData messageToSend;
@@ -113,8 +109,7 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 			frontEndVisibleObjectDataPublisher.publish(messageToSend);
 		}
 
-
-		// Publish the images.
+		// Publishes the image after the filters have added information on them.
 		cv_bridge::CvImage currentImage;
 		currentImage.header.stamp    = ros::Time::now();
 		currentImage.encoding        = sensor_msgs::image_encodings::BGR8;

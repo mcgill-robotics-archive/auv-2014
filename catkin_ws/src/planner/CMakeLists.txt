@@ -18,7 +18,7 @@ project(planner)
    FILES
    ValueControl.msg
    setPoints.msg
-   currentCVTask.msg
+   CurrentCVTask.msg
  )
 
 ## Generate services in the 'srv' folder
