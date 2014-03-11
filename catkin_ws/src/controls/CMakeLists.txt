@@ -50,6 +50,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   motorCommands.msg
+  VectorPID.msg
+  DebugControls.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -175,17 +177,14 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(depthController src/depthController.cpp)
 add_executable(controls src/controls.cpp)
 add_executable(testControls src/testControls.cpp)
-add_executable(gazeboDepthEstimator src/gazeboDepthEstimator.cpp)
 add_executable(thrust_mapper src/thrust_mapper.cpp)
 
 target_link_libraries(controls ${catkin_LIBRARIES})
 target_link_libraries(depthController ${catkin_LIBRARIES})
 target_link_libraries(testControls ${catkin_LIBRARIES})
-target_link_libraries(gazeboDepthEstimator ${catkin_LIBRARIES})
 target_link_libraries(thrust_mapper ${catkin_LIBRARIES})
 
 add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
 add_dependencies(controls ${catkin_EXPORTED_TARGETS})
 add_dependencies(testControls ${catkin_EXPORTED_TARGETS})
-add_dependencies(gazeboDepthEstimator ${catkin_EXPORTED_TARGETS})
 add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})

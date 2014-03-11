@@ -1,0 +1,9 @@
+<launch>
+	<!-- launches simulator, controls, and distanceCalculator: everything the planner should need. -->
+
+  <include file="$(find simulator)/launch/simulator.launch" />
+  <include file="$(find controls)/launch/controls.launch" />
+
+  <!-- state estimation stuff -->
+    <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
+</launch>

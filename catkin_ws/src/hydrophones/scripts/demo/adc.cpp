@@ -1,6 +1,7 @@
 /* DEFINES */
-#define NUMBER_OF_MICS  3           // SELF-EXPLANATORY
-#define PERIOD          15          // PERIOD AT WHICH TO POLL FOR SERIAL DATA
+#define NUMBER_OF_MICS  3                   // SELF-EXPLANATORY
+#define FREQUENCY       500                 // SAMPLING FREQUENCY (Hz)
+#define PERIOD          1000 / FREQUENCY    // PERIOD AT WHICH TO POLL FOR SERIAL DATA (ms)
 
 /* PINS */
 const int micPins[NUMBER_OF_MICS] = { A3, A1, A2 };

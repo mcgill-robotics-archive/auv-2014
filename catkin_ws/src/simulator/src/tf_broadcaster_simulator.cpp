@@ -46,10 +46,11 @@ void poseCallback3(const gazebo_msgs::ModelStates msg){
   br.sendTransform(tf::StampedTransform(transform, ros::Time(0), "world", "gate_SO"));
 
   //TF between gate_SO and gate_center_sim -center of the gate as perceived in the simulator
+  //position of the gate_center_sim origin as seen in the gate_SO frame
   static tf::TransformBroadcaster br2;
   static tf::Transform transform2;
-  static tfScalar px = 0.5; //position
-  static tfScalar py = -0.5;
+  static tfScalar px = 1.5; //position
+  static tfScalar py = -0.6;
   static tfScalar pz = 0;
   //orientation
   static tfScalar pitch = PI/2;  //-rotate about the world z, or gate y

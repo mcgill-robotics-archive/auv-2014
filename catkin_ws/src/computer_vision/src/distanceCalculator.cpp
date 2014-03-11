@@ -7,7 +7,7 @@
 
 #include "distanceCalculator.h"
 
-int CV_PUBLISHING_RATE = 2; //publish at 2 Hz, just like CV
+int CV_PUBLISHING_RATE = 100; //publish at 2 Hz, just like CV - but 100 hz to match controls and simulate IMU smoothing.
 planner::currentCVTask currentCVTask_Front;
 
 /* Generic current task callback
@@ -61,7 +61,7 @@ computer_vision::VisibleObjectData tf2CV(const std::string& targetFrame,const st
   double roll; //unused, but needs to be sent to getRPY method
   
   m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
-  ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle);
+  //ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output
 
   return msg;
 }
@@ -82,7 +82,7 @@ int main(int argc, char** argv){
     msgCV = tf2CV("camera1_reoriented", "gate_center_sim");
     cv_mock_pub_Front.publish(msgCV);
     loop_rate.sleep();
-    ROS_INFO("Current Time: %f", ros::Time::now().toSec());
+    //ROS_INFO("Current Time: %f", ros::Time::now().toSec());
   }
   return 0;
 }

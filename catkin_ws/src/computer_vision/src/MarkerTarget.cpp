@@ -402,3 +402,7 @@ void MarkerTarget::estimatePose(MarkerDescriptor& inOutMarker) {
 	 * from the robot to the object, so we negate that. */
 	inOutMarker.pitch_angle = -(atanPitch * PI / 180.0);
 }
+
+int MarkerTarget::add(int x, int y) {
+	return x+y;
+}
