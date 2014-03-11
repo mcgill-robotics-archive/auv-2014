@@ -145,6 +145,10 @@ private:
 	double m_xDistance;
 	double m_yDistance;
 	double m_zDistance;
+
+protected:
+
+	void applyFilter(cv::Mat& currentFrame);
 };
 
 #endif
