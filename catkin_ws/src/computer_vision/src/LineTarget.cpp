@@ -8,9 +8,6 @@
  */
 #include "LineTarget.h"
 
-#include "cv.h"      // include it to used Main OpenCV functions.
-#include "highgui.h" //include it to use GUI functions.
-#include <math.h>
 int kernelSize = 3;
 Mat src; Mat src_gray;
 cv::Mat filteredImage;

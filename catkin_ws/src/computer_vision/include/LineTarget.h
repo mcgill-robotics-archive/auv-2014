@@ -10,7 +10,6 @@
 
 #include "VisibleObject.h"
 
-
 using namespace cv;
 using namespace std;
 
@@ -29,7 +28,5 @@ class LineTarget : public VisibleObject {
 	bool isVisible(cv::RotatedRect line);
 
 };
-
-
 
 #endif /* LINETARGET_H_ */
