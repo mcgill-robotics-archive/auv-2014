@@ -17,7 +17,7 @@ class vel_vars(object):
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
-    z_position = 0
+    z_position = 9
     z_position_step = 0.2
 
     MAX_YAW_VEL = 5
