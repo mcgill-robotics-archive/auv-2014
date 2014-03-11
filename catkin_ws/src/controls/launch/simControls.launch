@@ -15,16 +15,21 @@
     <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
     args=
     "
-      /controls/wrench/force/z
-      /setPoints/Depth/data
-      /depthCalculated/data
+      /controls/wrench/force/x
+      /setPoints/YPos/data
+      /front_cv_data/x_distance
     "
     />
 
 </launch>
 
       <!--
-      /controls/wrench/force/x
-      /setPoints/yPos/data
-      /front_cv_data/x-distance
+
+      -->
+
+      <!--
+      /controls/debug/xGain/proportional
+      /controls/wrench/force/z
+      /setPoints/Depth/data
+      /depthCalculated/data
       -->

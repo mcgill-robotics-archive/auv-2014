@@ -1,0 +1,1 @@
+https://bitbucket.org/osrf/gazebo/issue/1014/libgazebo_ros_api_pluginso-undefined

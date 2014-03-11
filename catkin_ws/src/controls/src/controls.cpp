@@ -63,7 +63,7 @@ Roadmap
 #include "std_msgs/Float64.h"
 #include "planner/setPoints.h"	
 #include "computer_vision/VisibleObjectData.h"
-#include "controls/DebugControls.h"
+#include "controls/DebugControls.h"	
 
 // using namespace std; //what does this do?!?!
 
@@ -425,6 +425,11 @@ int main(int argc, char **argv)
 			debugMsg.yawError.derivative = ed_Yaw;
 
 			// Gains
+			
+			debugMsg.xGain.proportional = kp;
+			debugMsg.xGain.integral = ki;
+			debugMsg.xGain.derivative = kd;
+
 			/*
 			debugMsg.xGain.proportional = kpX;
 			debugMsg.yGain.proportional = kpY;
