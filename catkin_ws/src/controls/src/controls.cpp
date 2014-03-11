@@ -324,7 +324,7 @@ int main(int argc, char **argv)
         
         if (isActive_XSpeed)
         {
-        	OL_coef_x = 1;
+        	OL_coef_x = 5;
            	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	//ROS_INFO("controlling xspeed");
@@ -344,7 +344,7 @@ int main(int argc, char **argv)
         
         if (isActive_YSpeed)
         {
-        	OL_coef_y = 1;
+        	OL_coef_y = 5;
         	setPoint_YSpeed=saturate(setPoint_YSpeed, YSPEED_MAX, "Y Speed");
         	Fy = OL_coef_y*setPoint_YSpeed;
         }
