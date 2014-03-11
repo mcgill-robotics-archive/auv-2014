@@ -1,18 +1,18 @@
 <launch>
 	<!-- launches 3 nodes: front-end, controls, simulator -->
 	<!-- Written by David Lavoie-Boutin, Jan 16, McGill Robotics -->
-	
-  <!-- Launch Simulator -->
-  <include file="$(find simulator)/launch/simulator.launch" />
+
+	<!-- Launch Simulator -->
+	<include file="$(find simulator)/launch/simulator.launch" />
+
+	<!-- controls -->
+	<include file="$(find controls)/launch/controls.launch" />
 
 	<!-- front-end -->
-	      <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
+	<include file="$(find front_end)/launch/front_end.launch"/>
 
-	<!-- Controls systems -->
-        <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
-	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>          
-        <!-- CVNode front-->
-                <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
-        <!-- CVNode down -->
-                <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
+	<!-- CVNode front -->
+	<node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
+	<!-- CVNode down -->
+	<node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
 </launch>

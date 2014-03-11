@@ -152,8 +152,8 @@ void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth
 }
 
 void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth) {
-  double pointControl[16] = {1, x_pos, 1, y_pos, 1, pitch_angle, 
-    1, yaw_angle, 0, 0, 0, 0, 0, 0, 1, depth};
+  double pointControl[16] = {1, x_pos, 1, y_pos, 0, pitch_angle, 
+    0, yaw_angle, 0, 0, 0, 0, 0, 0, 1, depth};
   setPoints(pointControl);
 }
 

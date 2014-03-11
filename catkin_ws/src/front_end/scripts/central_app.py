@@ -44,6 +44,7 @@ class BatteryWarningUi(QtGui.QDialog):
         ## store the ui object
         self.battery_warning_ui = Ui_warning()
         self.battery_warning_ui.setupUi(self)
+        
 
         QtCore.QObject.connect(self.battery_warning_ui.buttonBox, QtCore.SIGNAL("accepted()"), self.stop_alarm)
 
@@ -76,7 +77,7 @@ class CentralUi(QtGui.QMainWindow):
 
         self.ui.setupUi(self)
         self.resizeSliders()
-        
+        self.ui.label_13.setText("Depth")
         ## dummy variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
 
