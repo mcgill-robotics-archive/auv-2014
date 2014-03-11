@@ -82,7 +82,7 @@ int main(int argc, char** argv){
     msgCV = tf2CV("camera1_reoriented", "gate_center_sim");
     cv_mock_pub_Front.publish(msgCV);
     loop_rate.sleep();
-    ROS_INFO("Current Time: %f", ros::Time::now().toSec());
+    //ROS_INFO("Current Time: %f", ros::Time::now().toSec());
   }
   return 0;
 }
