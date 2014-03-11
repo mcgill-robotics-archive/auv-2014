@@ -319,7 +319,7 @@ int main(int argc, char **argv)
 			Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
 			Fx *= -1; //flip direction to account for relative coordinate system
 			//ROS_INFO("controlling xpos");
-			ROS_INFO("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
+			//ROS_INFO("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 		}
         
         if (isActive_XSpeed)
@@ -352,7 +352,7 @@ int main(int argc, char **argv)
         //Z 
 		if (isActive_Depth)
 		{
-			ROS_INFO("setPointDepth: %f | estimatedDepth: %f", setPoint_Depth, estimated_Depth);
+			//ROS_INFO("setPointDepth: %f | estimatedDepth: %f", setPoint_Depth, estimated_Depth);
 			ep_Depth_prev = ep_Depth;
 			ep_Depth = setPoint_Depth - estimated_Depth;
 			ei_Depth += ep_Depth*dt;
