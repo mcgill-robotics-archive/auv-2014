@@ -10,7 +10,7 @@ int Task_Lane::Execute() {
 
 	std::cout << ">> Executing Lane Task" << std::endl;
 	weAreHere("Beginning LANE task");	loop_rate.sleep();
-
+/*
 	std::cout<<"Lane Task finding lane marker"<<std::endl;
 	setVisionObj(2);	loop_rate.sleep();
 	setVelocity(0.0, 0.0, 0.0, 3);	loop_rate.sleep();
@@ -23,7 +23,7 @@ int Task_Lane::Execute() {
 
 	std::cout<<"Lane Task going where no lane task has gone before"<<std::endl;
 	setVelocity(20.0, 0.0, 0.0, 5); loop_rate.sleep();
-
+*/
 	std::cout<<"Lane Task completed"<<std::endl;
 	weAreHere("Finishing LANE task");	loop_rate.sleep();
 

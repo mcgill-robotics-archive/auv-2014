@@ -33,7 +33,7 @@ public:
 	Robot() {
 		int argc = 0;
 		ros::init(argc, NULL, "Robot Plugin");
-		std::cout<<"Robot plugin node created."<<std::endl;
+		std::cout << "Robot plugin node created." << std::endl;
 		noOfIterations = 0;
 	};
 
@@ -49,7 +49,7 @@ public:
 	 */
 	void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/) {
 		// Store the pointer to the model
-		this->model = _parent;
+		if (_parent != NULL) this->model = _parent;
 
 		// private ROS NodeHandle
 		this->node = new ros::NodeHandle("~");
@@ -65,9 +65,6 @@ public:
 
 		// Marker Drop Sub topic subscriber 
 		this->markerDropSub = this->node->subscribe("simulator/marker", 1000, &Robot::simulatorMarkerCallBack, this);
-
-		// Torpedo Launch Sub topic subscriber
-		this->torpedoLaunchSub = this->node->subscribe("simulator/torpedo", 1000, &Robot::torpedoCallBack, this);;
 
 		// Listen to the update event. This event is broadcast every simulation iteration.
 		this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&Robot::OnUpdate, this, _1));
@@ -135,6 +132,7 @@ public:
 		// ApplyBodyWrench msg
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
+		applyBodyWrench.request.reference_frame = (std::string) "robot::dummy";
 		applyBodyWrench.request.wrench = wrench;
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
@@ -241,6 +239,7 @@ public:
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
 		applyBodyWrench.request.wrench = msg;
 		applyBodyWrench.request.reference_frame = "robot::robot_reference_frame";
+
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
@@ -272,12 +271,6 @@ public:
 	void simulatorMarkerCallBack(const std_msgs::Bool::ConstPtr& msg) {
 		if (msg->data) {
 			ROS_INFO("Dropped Marker");
-		}
-	}
-
-	void torpedoCallBack(const std_msgs::Bool::ConstPtr& msg) {
-		if (msg->data) {
-			ROS_INFO("Shot torpedo");
 		}
 	}
 
