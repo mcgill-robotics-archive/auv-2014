@@ -18,11 +18,13 @@ def publish():
     vis_msg.y_distance = state['y']
     vis_msg.z_distance = state['z']
     vis_msg.yaw_angle = state['yawOfTarget']
+    vis_msg.pitch_angle = state['pitchOfTarget']
 
     state_msg.visibleObjectData = vis_msg
     state_msg.hasTarget = state['hasTarget']
+    state_msg.depth = state['depth']
 
-    #Todo: Depth, velocity, pitch, yaw
+    #Todo: velocity, pitch, yaw
 
     pub.publish(state_msg)
 
@@ -32,7 +34,7 @@ def cvCallback(visObject):
     #TODO: remove conversion to angle once CV publishes in radians
     estimator.updateCV(hasTarget, visObject.object_type,
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
-                       visObject.yaw_angle*math.pi/180)
+                       visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
     publish()
 
 def imuCallback(poseStamped):
@@ -43,9 +45,11 @@ def imuCallback(poseStamped):
     angle = 2*math.atan2(sin,cos)
 
     estimator.updateOrientation(angle)
+    publish()
 
 def depthCallback(depth):
-    estimator.updateDepth(depth)
+    estimator.updateDepth(depth.data)
+    publish()
 
 # Init the ros node, subscribers and publishers
 # And run the node
@@ -56,8 +60,8 @@ def init():
 
     # Subscribe to different inputing topics
     rospy.Subscriber('front_cv_data', VisibleObjectData, cvCallback)
-    rospy.Subscriber('imu_topic', PoseStamped, imuCallback)
-    rospy.Subscriber('depth_topic', Float64, depthCallback)
+    rospy.Subscriber('pose', PoseStamped, imuCallback)
+    rospy.Subscriber('depth', Float64, depthCallback)
 
     # Publish the filtered data to a topic
     pub = rospy.Publisher('state_estimate', AUVState)
