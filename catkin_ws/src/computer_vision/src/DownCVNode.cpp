@@ -28,6 +28,13 @@ int main(int argc, char **argv) {
 	ros::shutdown();
 }
 
+void DownCVNode::listenToPlanner(planner::CurrentCVTask msg) {
+	this->visibleObjectList.clear();
+	if (msg.currentCVTask == 3) {
+		this->visibleObjectList.push_back(new LineTarget());
+	}
+}
+
 /**
  * @brief Constructor.
  *
@@ -41,10 +48,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	this->frontEndPublisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 	
-	this->visibleObjectList.push_back(new MarkerTarget());
-
-	// FIXME: There is a problem with LineTarget::retrieveObjectData()
-	this->visibleObjectList.push_back(new LineTarget());
+	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_DOWN_TOPIC_NAME, 1000, &DownCVNode::listenToPlanner, this);
 
 	cv::namedWindow(DOWN_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 }

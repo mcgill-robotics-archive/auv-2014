@@ -10,7 +10,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <list>
 #include "computer_vision/VisibleObjectData.h"
-
+#include "planner/CurrentCVTask.h"
 #include "VisibleObject.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -34,6 +34,7 @@ class CVNode {
 	image_transport::ImageTransport* pImageTransport;
 	image_transport::Publisher frontEndPublisher;
 	ros::Publisher frontEndVisibleObjectDataPublisher;
+	ros::Subscriber plannerSubscriber;
 	std::list<VisibleObject*> visibleObjectList;
 
 	public:

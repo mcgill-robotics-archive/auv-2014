@@ -7,7 +7,9 @@
 #include "Buoy.h"
 
 Buoy::Buoy() {
-
+	cv::namedWindow("Filter", CV_WINDOW_KEEPRATIO);
+	cv::namedWindow("Threshold", CV_WINDOW_KEEPRATIO);
+	cv::namedWindow("Drawing", CV_WINDOW_KEEPRATIO);
 }
 
 Buoy::~Buoy() {
@@ -54,6 +56,7 @@ std::vector<computer_vision::VisibleObjectData*> Buoy::retrieveObjectData(cv::Ma
 		visibleObjectData->z_distance = zDistance;
 		detectedObjects.push_back(visibleObjectData);
 	} 
+	std::cout << "Detected Objects: " << detectedObjects.size() << std::endl;
 	return detectedObjects;
 }
 
@@ -218,32 +221,44 @@ float Buoy::getDistance(float radius, int imageHeight) {
  */
 std::vector<DetectedBuoy> Buoy::detectBuoys(cv::Mat* image, BuoyColorProfile buoy) {
 	// Compute color correction data from the color sample and target color once
-	/*static bool isColorCorrectionComputed = false;
+	static bool isColorCorrectionComputed = false;
 	if (!isColorCorrectionComputed) {
 		initColorCorrection();
 		isColorCorrectionComputed = true;
 	}
 	// Apply color correction
 	applyColorCorrection(image);
+	cv::imshow("Filter", *image);
 	// Threshold it
 	cv::Mat thresholdImage(image->rows, image->cols, CV_8UC1);
 	getThresholdImage(image, buoy, &thresholdImage);	
+	cv::imshow("Threshold", thresholdImage);
 	// Blur the image an do circle detection
 	cv::GaussianBlur(thresholdImage, thresholdImage, cv::Size(25, 25), 0);	
 	std::vector<cv::Vec3f> circles;
-	cv::HoughCircles(thresholdImage, circles, CV_HOUGH_GRADIENT, 2, thresholdImage.rows / 8, 225, 75);
-	// Process the circles*/
+	cv::HoughCircles(thresholdImage, circles, CV_HOUGH_GRADIENT, 2, thresholdImage.rows / 8, 50, 100);
+	std::cout << "Circles: " << circles.size() << std::endl;
+
+	// Draw detected circles.
+	cv::Mat drawing(image->rows, image->cols, CV_8UC1);
+	for (int i = 0; i < circles.size(); i++) {
+		cv::circle(drawing, cv::Point(circles[i][0], circles[i][1]), circles[i][2], cv::Scalar(255, 0, 0));
+		cv::imshow("Drawing", drawing);
+	}
+
+	// Process the circles
 	std::vector<DetectedBuoy> buoys;
-	/*for (int i = 0; i < circles.size(); i++) {
+	for (int i = 0; i < circles.size(); i++) {
   		cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
  		int radius = cvRound(circles[i][2]);
  		// Check that we have a well defined disk
- 		if (checkDisk(&thresholdImage, &center, radius, getSampleCount(radius, 0.15f), 0.90f)) {
+ 		if (checkDisk(&thresholdImage, &center, radius, getSampleCount(radius, 0.15f), 0.85f)) {
  			DetectedBuoy detected(center, radius);
  			// Calculate distance
  			detected.distance = getDistance(radius, image->rows);
  			buoys.push_back(detected);
  		}
- 	}*/
+ 	}
+ 	std::cout << "Buoys: " << buoys.size() << std::endl;
  	return buoys;
 }
