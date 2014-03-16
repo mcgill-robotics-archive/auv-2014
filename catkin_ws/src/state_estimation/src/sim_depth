@@ -5,15 +5,23 @@ from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped
 from gazebo_msgs.msg import ModelStates
 
+time = None
 
 def callback(modelStates):
-    index = modelStates.name.index('robot')
-    pub.publish(10.0 - modelStates.pose[index].position.z)
+    global time
+    if time:
+        if (rospy.get_time() - time) > 0.03:
+            index = modelStates.name.index('robot')
+            pub.publish(10.0 - modelStates.pose[index].position.z)
+            time = rospy.get_time()
+    else:
+        time = rospy.get_time()
+
 
 # Init the ros node, subscribers and publishers
 # And run the node
 def init():
-    global pub
+    global pub, time
     rospy.init_node('sim_depth')
 
     # Subscribe to different inputing topics

@@ -35,7 +35,6 @@ def cvCallback(visObject):
     estimator.updateCV(hasTarget, visObject.object_type,
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
                        visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
-    publish()
 
 def imuCallback(poseStamped):
     q = poseStamped.pose.orientation
@@ -49,7 +48,6 @@ def imuCallback(poseStamped):
 
 def depthCallback(depth):
     estimator.updateDepth(depth.data)
-    publish()
 
 # Init the ros node, subscribers and publishers
 # And run the node
