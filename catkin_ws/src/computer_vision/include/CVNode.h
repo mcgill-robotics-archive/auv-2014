@@ -18,6 +18,7 @@
 
 const std::string VIDEO_FEED_TOPIC_NAME = "camera_feed";
 const std::string FORWARD_CAMERAS_TOPIC_NAME = "forward_cameras_object";
+const int FRAME_VISIBILITY_THRESHOLD = 10;
 
 class CVNode {
 
@@ -36,7 +37,8 @@ class CVNode {
 	ros::Publisher frontEndVisibleObjectDataPublisher;
 	ros::Subscriber plannerSubscriber;
 	std::list<VisibleObject*> visibleObjectList;
-
+	int numFramesWithoutObject;
+	
 	public:
 	
 	CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize);

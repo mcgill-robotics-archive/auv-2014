@@ -60,8 +60,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	//this->visibleObjectList.push_back(new Buoy());
 	// Create a window to display the images received
 	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
-
-	
+	numFramesWithoutObject = 0;
 }
 
 /**
@@ -106,6 +105,14 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		// the received image to each visible object
 		for (std::list<VisibleObject*>::iterator it = visibleObjectList.begin(); it != visibleObjectList.end(); ++it) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
+		}
+
+		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
+		if (messagesToPublish.size() == 0) {
+			numFramesWithoutObject++;
+			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
+		} else {
+			numFramesWithoutObject = 0;
 		}
 
 		// Publish the VisibleObjectData messages.
