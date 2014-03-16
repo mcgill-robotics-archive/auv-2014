@@ -12,8 +12,6 @@ ros::Publisher checkpoints_pub;
 ros::Publisher taskPubFront;
 ros::Publisher taskPubDown;
 
-
-tf::TransformListener listener(ros::Duration(10));
 geometry_msgs::PoseStamped myPose;
 geometry_msgs::PoseStamped relativePose;
 /**
@@ -45,6 +43,7 @@ void estimatedDepth_callback(const std_msgs::Float64 msg) {
 * gets the position/heading of robot relative to chosen object
 */
 void setTransform (std::string referenceFrame) {
+  tf::TransformListener listener;
   listener.transformPose(referenceFrame, myPose, relativePose);
 }
 
@@ -52,6 +51,7 @@ void setTransform (std::string referenceFrame) {
 * determines the position and heading of our robot
 */
 void setPose() {
+  tf::TransformListener listener;
   geometry_msgs::PoseStamped emptyPose;
   emptyPose.header.frame_id = "dummy";
   emptyPose.pose.position.x = 0.0;
@@ -82,7 +82,7 @@ bool areWeThereYet_tf(std::string referenceFrame) {
   bool pxBounded = relativePose.pose.position.x < .1;
   bool pyBounded = relativePose.pose.position.y < .1;
   bool pzBounded = relativePose.pose.position.z < .1;
-  //rotationl bounds
+  //rotational bounds
   bool txBounded = relativePose.pose.orientation.x < .1;
   bool tyBounded = relativePose.pose.orientation.y < .1;
   bool tzBounded = relativePose.pose.orientation.z < .1;
