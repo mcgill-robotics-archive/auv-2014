@@ -57,11 +57,11 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES computer_vision
+  INCLUDE_DIRS include
+  LIBRARIES computer_vision
 #  CATKIN_DEPENDS cpp ros rospy std_msgs
 #  DEPENDS system_lib
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS roscpp std_msgs message_runtime
 )
 
 ###########
@@ -144,6 +144,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(VisibleObject src/VisibleObject.cpp)
 target_link_libraries(VisibleObject ${catkin_LIBRARIES})
+add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS})
 
 add_library(CVNode src/CVNode.cpp)
 target_link_libraries(CVNode ${catkin_LIBRARIES})
