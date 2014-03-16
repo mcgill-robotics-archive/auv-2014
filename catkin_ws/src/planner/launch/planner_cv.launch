@@ -6,10 +6,7 @@
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
 		<arg name="world_name" value="$(find simulator)/worlds/simulator.world"/>
 		<!-- more default parameters can be changed here -->
-	</include>       
-
-	<!-- front-end -->
-	<node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
+	</include>           
 
 	<!-- Controls systems -->
 	<node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>   
@@ -19,4 +16,9 @@
 
 	<!-- CVNode down -->
 	<node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+
+	  <!-- Planner
+          <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen"/>
+  -->
+
 </launch>

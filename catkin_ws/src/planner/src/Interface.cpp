@@ -28,6 +28,11 @@ double visible_Pitch;
  */
 std::string visionObj;
 
+void spinThread()
+{
+  ros::spin();
+}
+
 void estimatedState_callback(const computer_vision::VisibleObjectData data) {
   visible_XPos = data.x_distance;
   visible_YPos = data.y_distance;
@@ -70,6 +75,13 @@ bool areWeThereYet(std::vector<double> desired) {
   double pitchError = visible_Pitch - desired.at(2);
   double yawError = visible_Yaw - desired.at(3);
   double depthError = visible_Depth - desired.at(4);
+
+  /******below will show the errors in case of issues (comment out if needed)
+  std::cout<<"xError: " << xError <<std::endl;
+  std::cout<<"yError: " << yError <<std::endl;
+  std::cout<< "pitchError: " << pitchError <<std::endl;
+  std::cout<<"yawError: " << yawError <<std::endl;
+  std::cout<<"depthError: " << depthError << "\n---------------------------------------\n\n"; */
 
   return (xError < .1 && yError < .1 && pitchError < .1 &&
           yawError < .1 && depthError < .1);
@@ -182,7 +194,9 @@ int main (int argc, char **argv) {
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
-
+  ros::Rate loop_rate(10);
+  /****This is ros::spin() on a seperate thread*****/
+  boost::thread spin_thread(&spinThread);
 
   std::cout<<"Starting Loader"<< std::endl; 
   Loader* loader = new Loader();
@@ -190,9 +204,8 @@ int main (int argc, char **argv) {
   invoker->StartRun();
   std::cout<<"Done Loader"<< std::endl;  
 
-  ros::Rate loop_rate(10);
-  while ( ros::ok() ) {}
-  ros::spin();
+
+
   return 0;
 }
 

@@ -19,6 +19,9 @@
 #include "planner/currentCVTask.h"
 #include <vector>
 #include <cmath>
+#include <boost/thread.hpp>
+
+void spinThread();
 
 void estimatedState_callback(const computer_vision::VisibleObjectData data);
 
