@@ -15,19 +15,11 @@
 #include "computer_vision/VisibleObjectData.h"
 #include "gazebo_msgs/ModelStates.h"
 
-void setVisibleObjectOrientation (computer_vision::VisibleObjectData msg);
+void estimatedState_callback(const computer_vision::VisibleObjectData data);
 
-//BEWARE: RETURNS ADDRESS OF ARRAY
-double* getVisibleObjectOrientation ();
+void estimatedDepth_callback(const std_msgs::Float64 data);
 
-void setOurOrientation (gazebo_msgs::ModelStates msg);
-
-//BEWARE: RETURNS ADDRESS OF ARRAY
-double* getOurOrientation ();
-
-void setDepth(std_msgs::Float32 msg);
-
-bool isCorrectDepth(double desiredDepth);
+bool areWeThereYet(std::vector<double> desired);
 
 void setVisionObj (int objIndex);
 
@@ -37,7 +29,8 @@ void setPoints (double pointControl[]);
 
 void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth);
 
-void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
+//void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
+void setPosition (std::vector<double> desired);
 
 void rosSleep(int length);
 
