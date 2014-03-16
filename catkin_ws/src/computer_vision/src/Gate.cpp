@@ -165,21 +165,37 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / 
 							(height * CAMERA_SENSOR_HEIGHT);
 
-			// Add the rectangle that is a potential match for the orange cylinders of the gate.
-			PoleCandidate found = {height, width, rectangleAngle, approximateDistanceWithObject, foundRectangle.center};
-			potentialMatchRectangles.push_back(found);
-			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
-
-			// Draws text containing the dimensions on each rectangles.
+			/* We correct this distance, because it is only valid if the object is close to the center of the screen */
 			
-			putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(approximateDistanceWithObject),
+			//This is experimental.
+			/*float offsetRatio = std::abs(centerOfCurrentFrame.x - foundRectangle.center.x) / centerOfCurrentFrame.x;
+			approximateDistanceWithObject /= (1.0 + 0.06 * offsetRatio);
+			approximateDistanceWithObject *= (1.0 + 0.06 * offsetRatio);*/
+
+
+			//Take into account the y-axis difference.
+			float mPerPxAtObject = DOOR_REAL_HEIGHT / height;
+			float yMOffset = std::abs(centerOfCurrentFrame.x - foundRectangle.center.x) * mPerPxAtObject;
+			float objectAngle = atan(yMOffset / approximateDistanceWithObject);
+			float correctedDistance = approximateDistanceWithObject / cos(objectAngle);
+
+			// Add the rectangle that is a potential match for the orange cylinders of the gate.
+			PoleCandidate found = {height, width, rectangleAngle, objectAngle, correctedDistance, foundRectangle.center};
+			potentialMatchRectangles.push_back(found);
+
+
+			//Draw text on the image
+			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
+			putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(correctedDistance),
 					cv::Point(vertices[0].x, vertices[0].y + 30),
+					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+					CV_AA);
+			putText(currentFrame, "ObjectAngle=" + boost::lexical_cast<std::string>(objectAngle * 180.0 / 3.141592654),
+					cv::Point(vertices[0].x, vertices[0].y + 40),
 					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 					CV_AA);
 			
 		} else {
-			std::cout << "[DEBUG] Rejected rectangle: Points in contour: " << numberOfPointsInContour << 
-					"  Ratio error: " << heightWidthRatio << "  Angle: " << rectangleAngle << std::endl;
 			drawPointsOfContour(currentFrame, contourToAnalyse, RED_BGRX);
 		}
 
@@ -211,52 +227,44 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 		PoleCandidate p2 = potentialMatchRectangles[1];
 
 		PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
-		PoleCandidate& farthest = (p2.dist < p1.dist) ? p2 : p1;
+		PoleCandidate& farthest = (p1.dist < p2.dist) ? p2 : p1;
 
-		//Calculate the yaw angle by triangle-solving
-		float distDiff = std::abs(p1.dist - p2.dist);
+		const float CLOSEST_SQR = closest.dist * closest.dist;
+		const float FARTHEST_SQR = farthest.dist * farthest.dist;
+		const float GATE_SQR = GATE_WIDTH * GATE_WIDTH;
+		float cosFar = (FARTHEST_SQR + GATE_SQR - CLOSEST_SQR) / (2.0 * farthest.dist * GATE_WIDTH);
+
+		float angleRad = (3.141592654 / 2.0) - acos(cosFar) - farthest.objectAngleRad;
+
+		m_yawAngle = angleRad * 180.0 / 3.141592654;
+		if(closest.center.x < farthest.center.x)
+			m_yawAngle = -m_yawAngle;
+
+		//Get the x,y coordinates of the gate in the world
 		float mPerPxAtClosestPole = DOOR_REAL_HEIGHT / closest.h;
-		float perceivedGateWidth = std::abs(p1.center.x - p2.center.x) * mPerPxAtClosestPole;
-		
-		std::cout << "[DEBUG] m/px closest: " << mPerPxAtClosestPole << " perceived: " << perceivedGateWidth << std::endl;
+		int pxCenterGateX = std::min(p1.center.x, p2.center.x) + (std::abs(p1.center.x - p2.center.x) / 2);
+		m_yDistance = (pxCenterGateX - centerOfCurrentFrame.x) * mPerPxAtClosestPole;
+ 
 
-		//Solve for theta in distDiff² = GATE_SZ² + perceived² - 2 x GATE_SZ x perceived x cos(theta) (law of cosines)
-		const float GATE_WIDTH_SQR = DISTANCE_BETWEEN_ORANGE_CYLINDER * DISTANCE_BETWEEN_ORANGE_CYLINDER;
-		const float PERCEIVED_SQR = perceivedGateWidth * perceivedGateWidth;
-		const float DIST_DIFF_SQR = distDiff * distDiff;
-		float cosTheta = (GATE_WIDTH_SQR + PERCEIVED_SQR - DIST_DIFF_SQR) / 
-			(2.0 * DISTANCE_BETWEEN_ORANGE_CYLINDER * perceivedGateWidth);
-
-		m_yawAngle = acos(cosTheta) * 180.0 / 3.141592654;
-
-		//Get the center point of the gate in the x,y plane
-		float mPerPxAtFarthestPole = DOOR_REAL_HEIGHT / farthest.h;
-		float perceivedFarGateWidth = std::abs(p1.center.x - p2.center.x) * mPerPxAtFarthestPole;
-
-		//TODO Fred: This doesn't actually work 
-		float closePoleOffest = (closest.center.x - centerOfCurrentFrame.x) * mPerPxAtClosestPole;
-		float sign = (farthest.center.x < closest.center.x) ? -1.0 : 1.0;
-		m_yDistance = closePoleOffest + sign * perceivedFarGateWidth / 2.0;
-
+		//TODO Correct calculation of x-distance (relying on angle)
 		float smallestDistance = (p1.dist < p2.dist) ? p1.dist : p2.dist;
-		m_xDistance = smallestDistance + (distDiff / 2.0);
-		
+		m_xDistance = smallestDistance;
 
-		float estimatedMPerPxAtCenter = mPerPxAtClosestPole + 
-				((mPerPxAtClosestPole - mPerPxAtFarthestPole) / 2.0);
-
-
-		//Draw the point on-screen
 		cv::Point centerPoint;
 		centerPoint.x = (p1.center.x + p2.center.x)/2;
 		centerPoint.y = (p1.center.y + p2.center.y)/2;
 
+		float mPerPxAtFarthestPole = DOOR_REAL_HEIGHT / farthest.h;
+		float estimatedMPerPxAtCenter = mPerPxAtClosestPole + 
+				((mPerPxAtClosestPole - mPerPxAtFarthestPole) / 2.0);
 		m_zDistance = (centerPoint.y - centerOfCurrentFrame.y) * estimatedMPerPxAtCenter;
 
+
+		//Draw the point on-screen
 		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
 		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA); 
 
-		std::cout << "[DEBUG] Door found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> angle " << 
+		std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " << 
 				m_yawAngle << std::endl;
 	}
 }

@@ -55,7 +55,7 @@ const float DOOR_REAL_HEIGHT = 1.2;
 /**
  * The distance between the cylinders' centers in meters.
  */
-const float DISTANCE_BETWEEN_ORANGE_CYLINDER = 3.1262;
+const float GATE_WIDTH = 3.1262;
 /**
  * The eight of the sensor of the camera in meters.
  */
@@ -136,7 +136,7 @@ private:
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
 
 	struct PoleCandidate {
-		float h, w, angle, dist;
+		float h, w, rectangleAngleDeg, objectAngleRad, dist;
 		cv::Point2f center;
 	};
 

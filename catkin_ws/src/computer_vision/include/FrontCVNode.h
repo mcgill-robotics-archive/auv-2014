@@ -8,8 +8,9 @@
 
 // These variables need to be accessible from the main method in FrontCVNode.cpp.
 const std::string FRONT_CV_NODE_NAME = "front_cv";
-const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
-const std::string OUTPUT_DATA_TOPIC_NAME = "front_cv_data";
+const std::string CAMERA1_CV_TOPIC_NAME = "front_cv/camera1";
+const std::string CAMERA2_CV_TOPIC_NAME = "front_cv/camera2";
+const std::string OUTPUT_DATA_TOPIC_NAME = "front_cv/data";
 // TODO: Figure out name of topic the planner publishes to.
 const std::string PLANNER_DATA_FRONT_TOPIC_NAME = "currentCVTask_Front";
 const int FRONT_CV_NODE_RECEPTION_RATE = 10;
