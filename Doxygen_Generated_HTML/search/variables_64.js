@@ -1,4 +1,29 @@
 var searchData=
 [
-  ['depth_5fdata',['depth_data',['../classcentral__app_1_1CentralUi.html#abc1275877119b5946cda83d3ab22921e',1,'central_app::CentralUi']]]
+  ['data',['data',['../structbuffer__holder.html#a06c1e1004fac90848dfdb4fbc150cede',1,'buffer_holder::data()'],['../structxml__memory__page.html#abd99ed1563aa66fb3573a9208452685c',1,'xml_memory_page::data()'],['../structxml__stream__chunk.html#a365e2e228a0277467b25a0fea42b8518',1,'xml_stream_chunk::data()'],['../structxpath__memory__block.html#a7b00376d0eac172ab537b6b0964858a9',1,'xpath_memory_block::data()']]],
+  ['data_5fchar',['data_char',['../classxml__buffered__writer.html#a6f21e839a1c66901995c8aae5cc9ad7b',1,'xml_buffered_writer']]],
+  ['data_5ftopic_5fname',['DATA_TOPIC_NAME',['../DownCVNode_8h.html#ac8cff7e155f988b87babe1c720eca07e',1,'DATA_TOPIC_NAME():&#160;DownCVNode.h'],['../FrontCVNode_8h.html#ac8cff7e155f988b87babe1c720eca07e',1,'DATA_TOPIC_NAME():&#160;FrontCVNode.h']]],
+  ['data_5fu16',['data_u16',['../classxml__buffered__writer.html#aa969d3724efe221a68927947e3a5196d',1,'xml_buffered_writer']]],
+  ['data_5fu32',['data_u32',['../classxml__buffered__writer.html#afa54826d8227c4ee661e1a9cc1e1acf2',1,'xml_buffered_writer']]],
+  ['data_5fu8',['data_u8',['../classxml__buffered__writer.html#ac672c70ba0597cf94d35c352ac563891',1,'xml_buffered_writer']]],
+  ['deallocate',['deallocate',['../structxml__memory__management__function__storage.html#a1c80a9a045ed6cfb90b17a178e4b3512',1,'xml_memory_management_function_storage']]],
+  ['decreasedepth',['DecreaseDepth',['../classVARIABLES_1_1KeyMapping.html#a222dc10cb721a13a99bc4e2c569ac3c8',1,'VARIABLES::KeyMapping']]],
+  ['decreasex',['DecreaseX',['../classVARIABLES_1_1KeyMapping.html#af50c7d65dc824f589718703b80a195eb',1,'VARIABLES::KeyMapping']]],
+  ['decreasey',['DecreaseY',['../classVARIABLES_1_1KeyMapping.html#a085f1a611c7499a0e25cabb6c4aeabcb',1,'VARIABLES::KeyMapping']]],
+  ['deleter',['deleter',['../structbuffer__holder.html#a96e7067c68bc1f7a9ee7dd75c84f04e8',1,'buffer_holder']]],
+  ['delta_5ft',['delta_t',['../madgwick_8cpp.html#a057760780acc107536544fea90c8f6eb',1,'madgwick.cpp']]],
+  ['depth',['Depth',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a55774c2f843a9e1e99bcdc6b293895af',1,'CompleteUI_declaration::Ui_RoboticsMain.Depth()'],['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a6fa15ce6e2eccbc568cfe6cacb5a371e',1,'CompleteUI_declaration::Ui_RoboticsMain.depth()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#a7759fd5f22478c1057915c5bc40029b7',1,'resizableUI1::Ui_RoboticsMain.depth()'],['../classVARIABLES_1_1ROS__Topics.html#a0132ce1a4eae7a13de6d6144f882caaf',1,'VARIABLES::ROS_Topics.depth()'],['../classrosTest.html#a91e696ba199cd627ffc8897577c5f004',1,'rosTest::depth()']]],
+  ['depth_5fcurve',['depth_curve',['../classcentral__app_1_1CentralUi.html#af61fb8d98086e4293d806beacf3fb901',1,'central_app::CentralUi']]],
+  ['depth_5fdata',['depth_data',['../classcentral__app_1_1CentralUi.html#abc1275877119b5946cda83d3ab22921e',1,'central_app::CentralUi']]],
+  ['depth_5fgraph',['depth_graph',['../classcentral__app_1_1CentralUi.html#ae64a89082f273803a48540eabb3c8f41',1,'central_app::CentralUi']]],
+  ['distance',['distance',['../structDetectedBuoy.html#ac018ad07a9ee0189a58cc0a9263f5adf',1,'DetectedBuoy']]],
+  ['distance_5fbetween_5forange_5fcylinder',['DISTANCE_BETWEEN_ORANGE_CYLINDER',['../Door_8h.html#a8d0b70959acd50bef8b70cea3c53314b',1,'Door.h']]],
+  ['door_5freal_5fheight',['DOOR_REAL_HEIGHT',['../Door_8h.html#a07743f5aeb419dbbc28ba8b8b8e8a6a9',1,'Door.h']]],
+  ['down_5fcamera_5fnode_5fbuffer_5fsize',['DOWN_CAMERA_NODE_BUFFER_SIZE',['../DownCameraNode_8h.html#a6ccfcb75e0262864bd51436cd11ca86e',1,'DownCameraNode.h']]],
+  ['down_5fcamera_5fnode_5fname',['DOWN_CAMERA_NODE_NAME',['../DownCameraNode_8h.html#abe75a319a8de388e884121375c4754b7',1,'DownCameraNode.h']]],
+  ['down_5fcamera_5fnode_5ftopic',['DOWN_CAMERA_NODE_TOPIC',['../DownCameraNode_8h.html#af1ce2da69118a416322aefc38438cf60',1,'DownCameraNode.h']]],
+  ['down_5fcamera_5fnode_5ftransmission_5frate',['DOWN_CAMERA_NODE_TRANSMISSION_RATE',['../DownCameraNode_8h.html#a5d30cd1f707c062f5298f16384a09ae0',1,'DownCameraNode.h']]],
+  ['down_5fcv_5fnode_5fbuffer_5fsize',['DOWN_CV_NODE_BUFFER_SIZE',['../DownCVNode_8h.html#a4a592ec515b08b8d89c696d6b864333d',1,'DownCVNode.h']]],
+  ['down_5fcv_5fnode_5fname',['DOWN_CV_NODE_NAME',['../DownCVNode_8h.html#ab8630f1c4fe3cf0ba1044ca86f44c67c',1,'DownCVNode.h']]],
+  ['down_5fcv_5fnode_5freception_5frate',['DOWN_CV_NODE_RECEPTION_RATE',['../DownCVNode_8h.html#a2683b49d3a606e83fc675819f8b12a1d',1,'DownCVNode.h']]]
 ];

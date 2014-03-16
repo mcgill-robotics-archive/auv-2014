@@ -17,12 +17,12 @@ class vel_vars(object):
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
-    z_position = 0
-    z_position_step = 0.5
+    z_position = 9
+    z_position_step = 0.2
 
-    MAX_YAW_VEL = 10
+    MAX_YAW_VEL = 5
     MAX_PITCH_ANGLE = PI/4
-    MAX_LINEAR_VEL = 1
+    MAX_LINEAR_VEL = 5
 
 
 ##    Here we define the keyboard map for our controller
@@ -48,15 +48,14 @@ class ROS_Topics(object):
     left_pre_topic = "/simulator/camera1/image_raw"
     right_pre_topic = "/simulator/camera2/image_raw"
     bottom_pre_topic = "/simulator/camera3/image_raw"
-    left_post_topic = "/left_camera/camera/image_color"
+    left_post_topic = "/front_cv_camera1"
     right_post_topic = "/right_camera/camera/image_color"
     bottom_post_topic = "/down_camera/camera/image_color"
     simulator_pose = "/gazebo/model_states"
-    imu_raw = 'pose'
-    imu_filtered='pose'
+    imu_filtered = 'pose'
     vel_topic = '/setPoints'
     cv_data = 'front_cv_data'
-    planner_task='planner/task'
+    planner_task = 'planner/task'
 
 
 ##    various parameters and constants
@@ -65,4 +64,5 @@ class misc_vars(object):
     low_battery_threshold = 2.0
     max_voltage = 24.0
     GUI_UPDATE_PERIOD = 10 #ms
-    length_plot = 25
+    length_plot = 50
+    depth_max = 0

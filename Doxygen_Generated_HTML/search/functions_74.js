@@ -1,8 +1,27 @@
 var searchData=
 [
-<<<<<<< HEAD
-  ['testekf',['TestEKF',['../classTestEKF.html#a4b41422f6bdc7d83fb2357bd05446b61',1,'TestEKF::TestEKF()'],['../classTestEKF.html#a4b41422f6bdc7d83fb2357bd05446b61',1,'TestEKF::TestEKF()']]],
-=======
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
-  ['thrusterforcescallback',['thrusterForcesCallBack',['../classgazebo_1_1Robot.html#a42980e975e21bac573bdc127858d1142',1,'gazebo::Robot']]]
+  ['task',['Task',['../classTask.html#a0ca53354bdc006762a0fda68c64f7608',1,'Task::Task()'],['../classTask.html#ab102ea182b6b5b85050522bd74701a87',1,'Task::Task(std::string myid)']]],
+  ['task_5f1v1',['Task_1v1',['../classTask__1v1.html#ac0c4eb593a4e5a80de8b03932f8fafeb',1,'Task_1v1']]],
+  ['task_5f1v2',['Task_1v2',['../classTask__1v2.html#a1562679d02e382c7119e8a72742ae8cb',1,'Task_1v2']]],
+  ['task_5f2v1',['Task_2v1',['../classTask__2v1.html#adc5c267fafcc68d8db10e570edef2010',1,'Task_2v1']]],
+  ['task_5fgate',['Task_Gate',['../classTask__Gate.html#adf98f0ab447dd17492861c39aed64b82',1,'Task_Gate']]],
+  ['task_5flane',['Task_Lane',['../classTask__Lane.html#a2b7b7ea7097b7279ba9cfe68e6f33428',1,'Task_Lane']]],
+  ['taskfactory',['TaskFactory',['../classTaskFactory.html#a713438247729729bda8f984bc6283daf',1,'TaskFactory']]],
+  ['text_5foutput',['text_output',['../pugixml_8cpp.html#ad40396398fcbab11c9283b516f766413',1,'pugixml.cpp']]],
+  ['text_5foutput_5fcdata',['text_output_cdata',['../pugixml_8cpp.html#a21f7b54b5d3837583ca0da632f7c27fc',1,'pugixml.cpp']]],
+  ['text_5foutput_5fescaped',['text_output_escaped',['../pugixml_8cpp.html#affde71fa96c9fca0c49b21e22ba197c5',1,'pugixml.cpp']]],
+  ['thresh_5fcallback',['thresh_callback',['../classLineTarget.html#a4f83897ebe705fb03085bbd15c017432',1,'LineTarget']]],
+  ['throw_5ferror',['throw_error',['../structxpath__parser.html#a043353db574741cd4f460a042a0b22c6',1,'xpath_parser']]],
+  ['throw_5ferror_5foom',['throw_error_oom',['../structxpath__parser.html#aeb5c7d7a6f8c5705a769297f42960c3e',1,'xpath_parser']]],
+  ['thrust_5fcallback',['thrust_callback',['../thrust__mapper_8cpp.html#a27c8afe418750387162d5f18fcc5cb2f',1,'thrust_mapper.cpp']]],
+  ['thrusterforcescallback',['thrusterForcesCallBack',['../classRobot.html#a8adfd0c93a4ec49f6a38b010ff98396c',1,'Robot::thrusterForcesCallBack()'],['../classgazebo_1_1Robot.html#a42980e975e21bac573bdc127858d1142',1,'gazebo::Robot::thrusterForcesCallBack()']]],
+  ['tocvimage',['toCvImage',['../classCameraNode.html#a7aa1d06e88ccc869cc96ae8cb74ea136',1,'CameraNode']]],
+  ['tolower_5fascii',['tolower_ascii',['../pugixml_8cpp.html#afeba7a7ade93e89bc9c83aa616ea7ad6',1,'pugixml.cpp']]],
+  ['torpedocallback',['torpedoCallBack',['../classgazebo_1_1Robot.html#ad4d1c5f88c66c91de148eed6d0b49127',1,'gazebo::Robot']]],
+  ['torpedotask',['TorpedoTask',['../classTorpedoTask.html#a73ab9369054fc377c1f0ec62ed5d37ca',1,'TorpedoTask']]],
+  ['translate',['translate',['../classgl__widget_1_1GLWidget.html#a6bfa47f80626983a3d24dedbd750acee',1,'gl_widget::GLWidget.translate()'],['../pugixml_8cpp.html#ad4a1dbcf50be703f147af6fa20c76ff7',1,'translate():&#160;pugixml.cpp']]],
+  ['truncate',['truncate',['../classxpath__node__set__raw.html#aba48d228f554065702f3e6d5059f701d',1,'xpath_node_set_raw']]],
+  ['truncate_5fzeros',['truncate_zeros',['../pugixml_8cpp.html#ae4e5418ba6b9fb37fd27eb89a00de148',1,'pugixml.cpp']]],
+  ['try_5fimbue',['try_imbue',['../load__stream_8cpp.html#ad8d6aba69e766e7943f8ab363c1c80e3',1,'load_stream.cpp']]],
+  ['type',['type',['../classxpath__node__set__raw.html#a9c1dceb2d9a8e0747380bd12968fc9d8',1,'xpath_node_set_raw']]]
 ];

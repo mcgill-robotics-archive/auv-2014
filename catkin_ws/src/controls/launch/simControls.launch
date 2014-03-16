@@ -1,24 +1,35 @@
 <launch>
-	<!-- launches 3 nodes: testControls, controls, simulator -->
-	<!-- Written by Nick Speal, Jan 28, McGill Robotics -->
-	
-  <!-- Parameters: Needed for controls to work!!! -->
-  <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>
+	<!-- launches simulator, controls, testControls, currentCVTaskPublisher, distanceCalculator -->
 
+  <include file="$(find simulator)/launch/simulator.launch" />
+  <include file="$(find controls)/launch/controls.launch" />
 
-  <!-- Assume Gazebo & Roscore running-->
-  
-
-
-
-  <!-- Controls systems -->
-	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>
-          <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
+  <!--setPointPublisher -->
+  <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
   
   <!-- state estimation stuff -->
-          <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
-          <node name="distanceCalculator" pkg="planner" type="distanceCalculator"  respawn="false" output="screen"/>
-  
-  
+    <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
+    <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
+
+  <!-- RQT PLOT -->
+    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
+    args=
+    "
+      /controls/wrench/force/x
+      /setPoints/YPos/data
+      /front_cv_data/x_distance
+    "
+    />
 
 </launch>
+
+      <!--
+
+      -->
+
+      <!--
+      /controls/debug/xGain/proportional
+      /controls/wrench/force/z
+      /setPoints/Depth/data
+      /depthCalculated/data
+      -->

@@ -3,11 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<<<<<<< HEAD
-<title>McGill Robotics: RoboSub 2014: /home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/sensor_publisher/src/MadgwickAHRS.h Source File</title>
-=======
-<title>McGill Robotics: RoboSub 2014: /home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/sensor_publisher/src/MadgwickAHRS.h Source File</title>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<title>McGill Robotics: RoboSub 2014: /home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/sensor_publisher/src/MadgwickAHRS.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -83,14 +79,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<<<<<<< HEAD
-<div class="title">/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/sensor_publisher/src/MadgwickAHRS.h</div>  </div>
-=======
-<div class="title">/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/sensor_publisher/src/MadgwickAHRS.h</div>  </div>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<div class="title">/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/sensor_publisher/src/MadgwickAHRS.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//=====================================================================================================</span>
+<a href="MadgwickAHRS_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//=====================================================================================================</span>
 <a name="l00002"></a>00002 <span class="comment">// MadgwickAHRS.h</span>
 <a name="l00003"></a>00003 <span class="comment">//=====================================================================================================</span>
 <a name="l00004"></a>00004 <span class="comment">//</span>
@@ -108,14 +100,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00016"></a>00016 <span class="comment">//----------------------------------------------------------------------------------------------------</span>
 <a name="l00017"></a>00017 <span class="comment">// Variable declaration</span>
 <a name="l00018"></a>00018 
-<a name="l00019"></a>00019 <span class="keyword">extern</span> <span class="keyword">volatile</span> <span class="keywordtype">float</span> beta;                             <span class="comment">// algorithm gain</span>
-<a name="l00020"></a>00020 <span class="keyword">extern</span> <span class="keyword">volatile</span> <span class="keywordtype">float</span> q0, q1, q2, q3;   <span class="comment">// quaternion of sensor frame relative to auxiliary frame</span>
+<a name="l00019"></a>00019 <span class="keyword">extern</span> <span class="keyword">volatile</span> <span class="keywordtype">float</span> <a class="code" href="madgwick_8cpp.html#aa3182ca85755ae74966c066a34afc671">beta</a>;                             <span class="comment">// algorithm gain</span>
+<a name="l00020"></a>00020 <span class="keyword">extern</span> <span class="keyword">volatile</span> <span class="keywordtype">float</span> <a class="code" href="madgwick_8cpp.html#a431ba957897d0ee4cb2a4782020b2c0a">q0</a>, <a class="code" href="madgwick_8cpp.html#acd45017c63b41aaf3f17f8c2c02e3ac6">q1</a>, <a class="code" href="madgwick_8cpp.html#aadea61ec94d632a66f00f0968a5b366a">q2</a>, <a class="code" href="madgwick_8cpp.html#af3d630a4c75b875fb26bcb0812cfd22e">q3</a>;   <span class="comment">// quaternion of sensor frame relative to auxiliary frame</span>
 <a name="l00021"></a>00021 
 <a name="l00022"></a>00022 <span class="comment">//---------------------------------------------------------------------------------------------------</span>
 <a name="l00023"></a>00023 <span class="comment">// Function declarations</span>
 <a name="l00024"></a>00024 
-<a name="l00025"></a>00025 <span class="keywordtype">void</span> MadgwickAHRSupdate(<span class="keywordtype">float</span> gx, <span class="keywordtype">float</span> gy, <span class="keywordtype">float</span> gz, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az, <span class="keywordtype">float</span> mx, <span class="keywordtype">float</span> my, <span class="keywordtype">float</span> mz);
-<a name="l00026"></a>00026 <span class="keywordtype">void</span> MadgwickAHRSupdateIMU(<span class="keywordtype">float</span> gx, <span class="keywordtype">float</span> gy, <span class="keywordtype">float</span> gz, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az);
+<a name="l00025"></a>00025 <span class="keywordtype">void</span> <a class="code" href="madgwick_8cpp.html#a73bdfb327738bf2f7118814aa8c3912e">MadgwickAHRSupdate</a>(<span class="keywordtype">float</span> gx, <span class="keywordtype">float</span> gy, <span class="keywordtype">float</span> gz, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az, <span class="keywordtype">float</span> mx, <span class="keywordtype">float</span> my, <span class="keywordtype">float</span> mz);
+<a name="l00026"></a>00026 <span class="keywordtype">void</span> <a class="code" href="madgwick_8cpp.html#a5f0ca665bfd7f9c2097a509ced0d6128">MadgwickAHRSupdateIMU</a>(<span class="keywordtype">float</span> gx, <span class="keywordtype">float</span> gy, <span class="keywordtype">float</span> gz, <span class="keywordtype">float</span> ax, <span class="keywordtype">float</span> ay, <span class="keywordtype">float</span> az);
 <a name="l00027"></a>00027 
 <a name="l00028"></a>00028 <span class="preprocessor">#endif</span>
 <a name="l00029"></a>00029 <span class="preprocessor"></span><span class="comment">//=====================================================================================================</span>
@@ -127,7 +119,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -139,11 +131,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:30 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

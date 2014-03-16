@@ -262,6 +262,20 @@ TEST(rotation_utils_rotateThisByThat,multipleRotations)
     }
 }
 
+TEST(matrix_utils_composeRotations, simple_composition)
+{
+	double A[] = {0.98327,0.928374,0.12635};
+	double B[] = {0.423876,0.324682,0.938745};
+	double C[3] = {};
+	double expectedC[] = {0.88729352, 1.65648765, 1.00913355};
+	composeRotations(A,B,C);
+
+	for (int i = 0; i< 3; i++)
+	{
+		EXPECT_NEAR(expectedC[i], C[i], 1e-8);
+	}
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

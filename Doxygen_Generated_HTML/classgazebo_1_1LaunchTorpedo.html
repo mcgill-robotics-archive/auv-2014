@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -83,7 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -94,7 +94,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
   <div id="nav-path" class="navpath">
     <ul>
-      <li class="navelem"><b>gazebo</b>      </li>
+      <li class="navelem"><a class="el" href="namespacegazebo.html">gazebo</a>      </li>
       <li class="navelem"><a class="el" href="classgazebo_1_1LaunchTorpedo.html">LaunchTorpedo</a>      </li>
     </ul>
   </div>
@@ -109,51 +109,133 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="gazebo::LaunchTorpedo" -->
-<<<<<<< HEAD
-=======
 <p>class to give the torpedo a vector  
  <a href="classgazebo_1_1LaunchTorpedo.html#details">More...</a></p>
 
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
 <p><a href="classgazebo_1_1LaunchTorpedo-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>FSM</b> { <b>FSM_MOVE_FORWARD</b>, 
-<b>FSM_ROTATE</b>, 
-<b>FSM_STOP</b>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a7ea60c9390d2916700b9995f2dd2eb9d">FSM</a> { <a class="el" href="classgazebo_1_1LaunchTorpedo.html#a7ea60c9390d2916700b9995f2dd2eb9da0b7c90f59c803d13f483f07a3d01aad7">FSM_MOVE_FORWARD</a>, 
+<a class="el" href="classgazebo_1_1LaunchTorpedo.html#a7ea60c9390d2916700b9995f2dd2eb9da3f3c978d0eccd66a15c6959df0934118">FSM_ROTATE</a>, 
+<a class="el" href="classgazebo_1_1LaunchTorpedo.html#a7ea60c9390d2916700b9995f2dd2eb9da2bdd1e2aab326d237b9107a7d1d4d474">FSM_STOP</a>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24cd9f266a6a9e5082a65f0d567c1440"></a><!-- doxytag: member="gazebo::LaunchTorpedo::Load" ref="a24cd9f266a6a9e5082a65f0d567c1440" args="(physics::ModelPtr _parent, sdf::ElementPtr)" -->
-<<<<<<< HEAD
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Load</b> (physics::ModelPtr _parent, sdf::ElementPtr)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a25e8a91df0a2ca316df8931a11564b96"></a><!-- doxytag: member="gazebo::LaunchTorpedo::OnUpdate" ref="a25e8a91df0a2ca316df8931a11564b96" args="(const common::UpdateInfo &amp;)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>OnUpdate</b> (const common::UpdateInfo &amp;)</td></tr>
-=======
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a24cd9f266a6a9e5082a65f0d567c1440">Load</a> (physics::ModelPtr _parent, sdf::ElementPtr)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Load World. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a25e8a91df0a2ca316df8931a11564b96"></a><!-- doxytag: member="gazebo::LaunchTorpedo::OnUpdate" ref="a25e8a91df0a2ca316df8931a11564b96" args="(const common::UpdateInfo &amp;)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a25e8a91df0a2ca316df8931a11564b96">OnUpdate</a> (const common::UpdateInfo &amp;)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Start Launch. <br/></td></tr>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a24cd9f266a6a9e5082a65f0d567c1440">Load</a> (physics::ModelPtr _parent, sdf::ElementPtr)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Load World.  <a href="#a24cd9f266a6a9e5082a65f0d567c1440"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a25e8a91df0a2ca316df8931a11564b96">OnUpdate</a> (const common::UpdateInfo &amp;)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Start Launch.  <a href="#a25e8a91df0a2ca316df8931a11564b96"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a649d23d801c23e53b846b4213d753e0a"></a><!-- doxytag: member="gazebo::LaunchTorpedo::SPEED" ref="a649d23d801c23e53b846b4213d753e0a" args="" -->
-static const double&#160;</td><td class="memItemRight" valign="bottom"><b>SPEED</b> = 0.1</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1935fe9c992677c65a7a7b892b9e2693"></a><!-- doxytag: member="gazebo::LaunchTorpedo::PI" ref="a1935fe9c992677c65a7a7b892b9e2693" args="" -->
-static const double&#160;</td><td class="memItemRight" valign="bottom"><b>PI</b> = 3.14159265359</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a649d23d801c23e53b846b4213d753e0a">SPEED</a> = 0.1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1LaunchTorpedo.html#a1935fe9c992677c65a7a7b892b9e2693">PI</a> = 3.14159265359</td></tr>
 </table>
-<<<<<<< HEAD
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/simulator/src/launch_torpedo.cc</li>
-=======
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>class to give the torpedo a vector </p>
 <dl class="author"><dt><b>Author:</b></dt><dd>Jonathan Fokkan </dd></dl>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/simulator/src/launch_torpedo.cc</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+</div><hr/><h2>Member Enumeration Documentation</h2>
+<a class="anchor" id="a7ea60c9390d2916700b9995f2dd2eb9d"></a><!-- doxytag: member="gazebo::LaunchTorpedo::FSM" ref="a7ea60c9390d2916700b9995f2dd2eb9d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classgazebo_1_1LaunchTorpedo.html#a7ea60c9390d2916700b9995f2dd2eb9d">gazebo::LaunchTorpedo::FSM</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="a7ea60c9390d2916700b9995f2dd2eb9da0b7c90f59c803d13f483f07a3d01aad7"></a><!-- doxytag: member="FSM_MOVE_FORWARD" ref="a7ea60c9390d2916700b9995f2dd2eb9da0b7c90f59c803d13f483f07a3d01aad7" args="" -->FSM_MOVE_FORWARD</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a7ea60c9390d2916700b9995f2dd2eb9da3f3c978d0eccd66a15c6959df0934118"></a><!-- doxytag: member="FSM_ROTATE" ref="a7ea60c9390d2916700b9995f2dd2eb9da3f3c978d0eccd66a15c6959df0934118" args="" -->FSM_ROTATE</em>&nbsp;</td><td>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a7ea60c9390d2916700b9995f2dd2eb9da2bdd1e2aab326d237b9107a7d1d4d474"></a><!-- doxytag: member="FSM_STOP" ref="a7ea60c9390d2916700b9995f2dd2eb9da2bdd1e2aab326d237b9107a7d1d4d474" args="" -->FSM_STOP</em>&nbsp;</td><td>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a24cd9f266a6a9e5082a65f0d567c1440"></a><!-- doxytag: member="gazebo::LaunchTorpedo::Load" ref="a24cd9f266a6a9e5082a65f0d567c1440" args="(physics::ModelPtr _parent, sdf::ElementPtr)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classgazebo_1_1LaunchTorpedo.html#a24cd9f266a6a9e5082a65f0d567c1440">gazebo::LaunchTorpedo::Load</a> </td>
+          <td>(</td>
+          <td class="paramtype">physics::ModelPtr&#160;</td>
+          <td class="paramname"><em>_parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">sdf::ElementPtr&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Load World. </p>
+
+</div>
+</div>
+<a class="anchor" id="a25e8a91df0a2ca316df8931a11564b96"></a><!-- doxytag: member="gazebo::LaunchTorpedo::OnUpdate" ref="a25e8a91df0a2ca316df8931a11564b96" args="(const common::UpdateInfo &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classgazebo_1_1LaunchTorpedo.html#a25e8a91df0a2ca316df8931a11564b96">gazebo::LaunchTorpedo::OnUpdate</a> </td>
+          <td>(</td>
+          <td class="paramtype">const common::UpdateInfo &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Start Launch. </p>
+
+</div>
+</div>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a1935fe9c992677c65a7a7b892b9e2693"></a><!-- doxytag: member="gazebo::LaunchTorpedo::PI" ref="a1935fe9c992677c65a7a7b892b9e2693" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double <a class="el" href="classgazebo_1_1LaunchTorpedo.html#a1935fe9c992677c65a7a7b892b9e2693">gazebo::LaunchTorpedo::PI</a> = 3.14159265359<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a649d23d801c23e53b846b4213d753e0a"></a><!-- doxytag: member="gazebo::LaunchTorpedo::SPEED" ref="a649d23d801c23e53b846b4213d753e0a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double <a class="el" href="classgazebo_1_1LaunchTorpedo.html#a649d23d801c23e53b846b4213d753e0a">gazebo::LaunchTorpedo::SPEED</a> = 0.1<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/simulator/src/<a class="el" href="launch__torpedo_8cc.html">launch_torpedo.cc</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -161,7 +243,7 @@ static const double&#160;</td><td class="memItemRight" valign="bottom"><b>PI</b>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -173,11 +255,7 @@ static const double&#160;</td><td class="memItemRight" valign="bottom"><b>PI</b>
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

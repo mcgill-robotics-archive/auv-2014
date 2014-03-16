@@ -8,19 +8,19 @@
 #include <opencv/cv.h>
 #include <iostream>
 #include <cmath>
+#include <math.h>
 #include <boost/lexical_cast.hpp>
 #include "computer_vision/VisibleObjectData.h"
 
 class VisibleObject {
 
-	public:
+public:
 
 	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame) = 0;
 	cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
+	virtual ~VisibleObject() = 0;
 
-	virtual ~VisibleObject();
-
-	private:
+protected:
 
 	virtual void applyFilter(cv::Mat& currentFrame) = 0;
 };

@@ -18,7 +18,6 @@ std_msgs::Int16 batteryVoltage1;
 //Depth sensor    :  A0
 //Battery voltage : A3, A4
 //Battery current : A5
-//Kill switch     : 0
 Servo myservo[6];
 const static int depthPin = A0;      // select the input pin for the potentiometer
 const static int motorControlPin = 2 ; 
@@ -29,6 +28,13 @@ unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
 unsigned long batteryCurrentSchedule;
 boolean killSwitchEngaged = false;
+
+// Moving Average filter for depth data
+const static int WINDOW_WIDTH = 3;
+int depthReadings[WINDOW_WIDTH] = {0, 0, 0, 0, 0};
+int depthIndex = 0;
+int depthAverage = 0;
+
 int boundCheck(int x){
   if(x> 500 || x< -500){
     char msg[70];
@@ -76,11 +82,10 @@ ros::Subscriber<std_msgs::Empty> killSwitch_sub("/arduino/KillSwitch", &killSwit
 void setup(){
   for(int i = 0; i<6; i++){
     //MotorControl setup
-    myservo[i].attach(i); 
+    myservo[i].attach(i+2); 
     //SolenoidValve setup  
     pinMode(14+i,OUTPUT);
    }
-   pinMode(0,OUTPUT);
   //ros node initializtion
   nh.initNode();
   nh.advertise(depth);        //depth sensor
@@ -104,8 +109,14 @@ void loop(){
   }
   
   if(depthSensorSchedule < currentTime){
-    depth_msg.data = analogRead(depthPin );
+    int depthReading = analogRead(depthPin );
+    depth_msg.data = depthAverage + (depthReading - depthReadings[depthIndex]) / WINDOW_WIDTH;
     depth.publish(&depth_msg);
+
+    // Update list of depth readings
+    depthReadings[depthIndex] = depthReading;
+    depthIndex = (depthIndex + 1) % WINDOW_WIDTH;
+
     depthSensorSchedule += 200;        //Update at 5Hz  
   }
 

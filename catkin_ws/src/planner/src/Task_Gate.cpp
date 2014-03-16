@@ -11,21 +11,19 @@ int Task_Gate::Execute() {
 	std::cout << ">> Executing Gate Task" << std::endl;
 	weAreHere("Beginning GATE task");	loop_rate.sleep();
 
-	std::cout<<"Gate Task setting position relative to gate:  setPosition(-2, -1, 0, 0, 0, 8.8) "<<std::endl;
+	std::cout<<"Gate Task setting position relative to gate:  setPosition(-1, 0, 0, 0, 8.8) "<<std::endl;
 	setVisionObj(1);	loop_rate.sleep();
 	
-	/*once simulator and controls work:
-	
-	add method:
-	while (currentPos != desiredPos) {
-		setPosition(desiredPos)
+	//std::vector<double> desired =  (-1.0, 0.0, 0.0, 0.0, 8.8);
+	//double myPoints[] = {-1.0, 0.0, 0.0, 0.0, 8.8};
+	//std::vector<double> desired (myPoints, myPoints + sizeof(myPoints) / sizeof(double) );
+	double myPoints[5] = {-1.0, 0.0, 0.0, 0.0, 8.8};
+	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
+
+	while (!areWeThereYet(desired)) {
+		setPosition(desired);	loop_rate.sleep();
 	}
 	
-	Set pos to (2.0, 0, 0, 0, 8.8) first
-	
-	*/
-	setPosition(-2.0, -1, 0, 0.0, 8.8);	loop_rate.sleep();
-
 	std::cout<<"Gate Task completed"<<std::endl;
 	weAreHere("Finishing GATE task");	loop_rate.sleep();
 

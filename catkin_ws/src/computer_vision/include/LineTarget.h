@@ -10,7 +10,6 @@
 
 #include "VisibleObject.h"
 
-
 using namespace cv;
 using namespace std;
 
@@ -22,13 +21,12 @@ class LineTarget : public VisibleObject {
 	LineTarget();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
+
 	void applyFilter(cv::Mat& image);
 	void thresh_callback(int, void* );
 	double relativeYaw(cv::RotatedRect line);
 	bool isVisible(cv::RotatedRect line);
 
 };
-
-
 
 #endif /* LINETARGET_H_ */

@@ -61,3 +61,7 @@ add_dependencies(tf_broadcaster_simulator ${catkin_EXPORTED_TARGETS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 catkin_add_gtest(test_robot test/test_robot.cc)
 target_link_libraries(test_robot robot ${roscpp_LIBRARIES} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+
+add_executable(gazeboDepthEstimator src/gazeboDepthEstimator.cpp)
+target_link_libraries(gazeboDepthEstimator ${catkin_LIBRARIES})
+add_dependencies(gazeboDepthEstimator ${catkin_EXPORTED_TARGETS})

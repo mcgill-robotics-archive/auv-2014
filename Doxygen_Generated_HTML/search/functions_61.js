@@ -1,9 +1,29 @@
 var searchData=
 [
-<<<<<<< HEAD
-  ['addmeasurement',['addMeasurement',['../classestimation_1_1OdomEstimation.html#af2f5fa22f8d559f98ca64e8c8df1fbc9',1,'estimation::OdomEstimation::addMeasurement(const tf::StampedTransform &amp;meas)'],['../classestimation_1_1OdomEstimation.html#a525c4ab121cbdceca6a3a6db4c5f0a80',1,'estimation::OdomEstimation::addMeasurement(const tf::StampedTransform &amp;meas, const MatrixWrapper::SymmetricMatrix &amp;covar)']]],
-=======
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
-  ['applydrag',['applyDrag',['../classgazebo_1_1Robot.html#aaaed9474beb729faf3414885e1a249bd',1,'gazebo::Robot']]],
-  ['applyfilter',['applyFilter',['../classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234',1,'MarkerTarget']]]
+  ['addtask',['AddTask',['../classInvoker.html#a63abecfb701e07557ced3ceda718080c',1,'Invoker']]],
+  ['adjustmodelyaw',['adjustModelYaw',['../classgazebo_1_1Robot.html#aecfdbca97d599c44c1a3923709c81e65',1,'gazebo::Robot']]],
+  ['alloc_5fnode',['alloc_node',['../structxpath__parser.html#ae33adcc8eb125124967d95297daff351',1,'xpath_parser']]],
+  ['alloc_5fstring',['alloc_string',['../structxpath__parser.html#a109e4c472bb76911a2b49ee741d400af',1,'xpath_parser']]],
+  ['allocate',['allocate',['../classxpath__allocator.html#aad95aa445f2fdc7c3d1c19b1f3d67cb1',1,'xpath_allocator']]],
+  ['allocate_5fattribute',['allocate_attribute',['../pugixml_8cpp.html#aa5c147125f246a331c4a30df8e096960',1,'pugixml.cpp']]],
+  ['allocate_5fmemory',['allocate_memory',['../structxml__allocator.html#afac0b9fac2c2962972f60d0346eb4f39',1,'xml_allocator']]],
+  ['allocate_5fmemory_5foob',['allocate_memory_oob',['../structxml__allocator.html#a30bb557bc040de54c041c6d3dca6772e',1,'xml_allocator']]],
+  ['allocate_5fnode',['allocate_node',['../pugixml_8cpp.html#a6e4b9f37c4ab9fb598758530d69d8611',1,'pugixml.cpp']]],
+  ['allocate_5fnothrow',['allocate_nothrow',['../classxpath__allocator.html#aa66f3703548657eca5316392a2d79d00',1,'xpath_allocator']]],
+  ['allocate_5fpage',['allocate_page',['../structxml__allocator.html#a4b399b01e530220ec5849b912b84063b',1,'xml_allocator']]],
+  ['allocate_5fstring',['allocate_string',['../structxml__allocator.html#ac5ec2b5d41672d6494a2742e95e525b3',1,'xml_allocator']]],
+  ['allow_5finsert_5fchild',['allow_insert_child',['../pugixml_8cpp.html#a9a76bd4417ac5f4778004bbd1658175e',1,'pugixml.cpp']]],
+  ['any',['any',['../structutf8__writer.html#a288e9c5f3720b95ae6b77330ad38dd56',1,'utf8_writer::any()'],['../structutf16__writer.html#ac14e06db126fbbef4be7efdb80fbdf4a',1,'utf16_writer::any()'],['../structutf32__writer.html#aa94aaa4a13e755942e7da70ea7700d3e',1,'utf32_writer::any()']]],
+  ['append',['append',['../classxpath__string.html#aab0d867c56d390213cf0fbe7334e1cc0',1,'xpath_string::append()'],['../classxpath__node__set__raw.html#a0c02728de3d895a2d12df9666d60e414',1,'xpath_node_set_raw::append()']]],
+  ['append_5fattribute_5fll',['append_attribute_ll',['../pugixml_8cpp.html#aad3b67164b1e0fe8b1e9c57fe55dc8bc',1,'pugixml.cpp']]],
+  ['append_5fnode',['append_node',['../pugixml_8cpp.html#add30251379f717a3ebd53171dbb12f3c',1,'pugixml.cpp']]],
+  ['applydrag',['applyDrag',['../classRobot.html#a8b856b3b0ebe4881c711ed129975dbb0',1,'Robot::applyDrag()'],['../classgazebo_1_1Robot.html#a43b1cfc25b9777c7ff5254555c29bcca',1,'gazebo::Robot::applyDrag()']]],
+  ['applyfilter',['applyFilter',['../classLineTarget.html#a44e557a9068920281f21af593246e77f',1,'LineTarget::applyFilter()'],['../classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234',1,'MarkerTarget::applyFilter()']]],
+  ['as_5futf8',['as_utf8',['../namespacepugi.html#a390bb44f7ba92b1a8a4f9157799d2ca8',1,'pugi::as_utf8(const wchar_t *str)'],['../namespacepugi.html#ab4be9ab3dc86b13599b9f2fd2f778dfb',1,'pugi::as_utf8(const std::basic_string&lt; wchar_t &gt; &amp;str)']]],
+  ['as_5futf8_5fbegin',['as_utf8_begin',['../pugixml_8cpp.html#acf5b48bb1e377e9583eec8ba0e607898',1,'pugixml.cpp']]],
+  ['as_5futf8_5fend',['as_utf8_end',['../pugixml_8cpp.html#a1bc09bbcdecde39207659ed351487999',1,'pugixml.cpp']]],
+  ['as_5futf8_5fimpl',['as_utf8_impl',['../pugixml_8cpp.html#a5ff37130284fc41f3cb91b7351392ca0',1,'pugixml.cpp']]],
+  ['as_5fwide',['as_wide',['../namespacepugi.html#ac2a9782a1c3c725703c6e4533e735d9b',1,'pugi::as_wide(const char *str)'],['../namespacepugi.html#af33046c0db1ff7b3f63327d32fc6dca7',1,'pugi::as_wide(const std::string &amp;str)']]],
+  ['as_5fwide_5fimpl',['as_wide_impl',['../pugixml_8cpp.html#accfe3171da9b8a6cf354aca524a5c079',1,'pugixml.cpp']]],
+  ['attributes',['attributes',['../namespacepugi.html#a3742b144d87f70841216fed750a416c4',1,'pugi']]]
 ];

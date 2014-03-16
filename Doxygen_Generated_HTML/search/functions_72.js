@@ -1,9 +1,29 @@
 var searchData=
 [
+  ['reallocate',['reallocate',['../classxpath__allocator.html#a4dd502389202ec8e7420832112a571e5',1,'xpath_allocator']]],
   ['receiveimages',['receiveImages',['../classCVNode.html#a2bda3c09e8307869a6a8e4c62edf5c86',1,'CVNode']]],
+  ['recursive_5fcopy_5fskip',['recursive_copy_skip',['../pugixml_8cpp.html#aada7f66bd2b77338ef8b8089e7139f08',1,'pugixml.cpp']]],
   ['redraw_5fvideo_5fcallback',['redraw_video_callback',['../classcentral__app_1_1CentralUi.html#a305bb61d1a76ab3186086628772e6dee',1,'central_app::CentralUi']]],
+  ['relativeyaw',['relativeYaw',['../classLineTarget.html#a7001fe14b9f0d9f2042c5d51229d4dbf',1,'LineTarget']]],
+  ['release',['release',['../structbuffer__holder.html#add9b75027bdf15dee0e2dc88225d5b10',1,'buffer_holder::release()'],['../classxpath__allocator.html#a9436b8bdef3e0e0ff0df28c2af6a430d',1,'xpath_allocator::release()']]],
   ['reloadinvoker',['reLoadInvoker',['../classLoader.html#a37f584724da39b4a8abbd93b08772c88',1,'Loader']]],
+  ['remove_5fduplicates',['remove_duplicates',['../classxpath__node__set__raw.html#af82da6fa8d42f9dff9c55e7b93d96e26',1,'xpath_node_set_raw']]],
+  ['repub',['repub',['../namespaceodom__publisher.html#a2911205e5693addcb9da8f86bb33cd58',1,'odom_publisher']]],
+  ['reset_5frotation',['reset_rotation',['../classgl__widget_1_1GLWidget.html#acf69a1232ca5583f2ff1638d41a2ed75',1,'gl_widget::GLWidget']]],
+  ['reset_5fview',['reset_view',['../classgl__widget_1_1GLWidget.html#afcdeb12f17e37b04bebd6b8f0ebed248',1,'gl_widget::GLWidget']]],
+  ['resizegl',['resizeGL',['../classgl__widget_1_1GLWidget.html#ab1f6dafa0cf1cb3726e66a0211f2e9ae',1,'gl_widget::GLWidget']]],
   ['resizesliders',['resizeSliders',['../classcentral__app_1_1CentralUi.html#a7cef3f3d8b92d75ff2ebb08fab4c4020',1,'central_app::CentralUi']]],
-  ['retrieveobjectdata',['retrieveObjectData',['../classDoor.html#a13540f7d0f7267fa055f6dcd13302e60',1,'Door::retrieveObjectData()'],['../classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a',1,'MarkerTarget::retrieveObjectData()']]],
-  ['robot',['Robot',['../classgazebo_1_1Robot.html#aecbe46165aa022525d20905024b32e18',1,'gazebo::Robot']]]
+  ['restore_5fsettings',['restore_settings',['../classpose__view_1_1PoseView.html#a42bb71e566ef5c70f4977919978a92ec',1,'pose_view::PoseView.restore_settings()'],['../classpose__view__widget_1_1PoseViewWidget.html#a023d9aad0484a828058cb76226e49f27',1,'pose_view_widget::PoseViewWidget.restore_settings()']]],
+  ['retranslateui',['retranslateUi',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#acd190a8e1a5bca931cae596232b45c37',1,'CompleteUI_declaration::Ui_RoboticsMain.retranslateUi()'],['../classlow__battery__warning_1_1Ui__warning.html#a854be9f3a504abee825c01f7e94838a5',1,'low_battery_warning::Ui_warning.retranslateUi()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#a70d22c5c1380f4a769ef259d667bbb98',1,'resizableUI1::Ui_RoboticsMain.retranslateUi()']]],
+  ['retrieveobjectdata',['retrieveObjectData',['../classBuoy.html#a9d8a08f2d8fbc55a8690acc98f7ad420',1,'Buoy::retrieveObjectData()'],['../classDoor.html#a13540f7d0f7267fa055f6dcd13302e60',1,'Door::retrieveObjectData()'],['../classLineTarget.html#acd9a9fe3187ec925a3d3053242fcd25b',1,'LineTarget::retrieveObjectData()'],['../classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a',1,'MarkerTarget::retrieveObjectData()'],['../classVisibleObject.html#a0a74714bb131337fb8b9a9a3b50532f2',1,'VisibleObject::retrieveObjectData()']]],
+  ['rettype',['rettype',['../classxpath__ast__node.html#a2c3598521141ed4b763fe6c4f852234f',1,'xpath_ast_node']]],
+  ['reverse',['reverse',['../pugixml_8cpp.html#a7a6eedef949e55be650bd6d2df60d68d',1,'pugixml.cpp']]],
+  ['revert',['revert',['../classxpath__allocator.html#af1c3ec117935d4488bbd16adf807fbc1',1,'xpath_allocator']]],
+  ['rng',['rng',['../LineTarget_8cpp.html#a2bb3a617236eb1bd8ace5e140f519081',1,'LineTarget.cpp']]],
+  ['robot',['Robot',['../classRobot.html#a4fc7c70ae20623f05e06f2ecb388b6c4',1,'Robot::Robot()'],['../classgazebo_1_1Robot.html#aecbe46165aa022525d20905024b32e18',1,'gazebo::Robot::Robot()']]],
+  ['rossleep',['rosSleep',['../Interface_8h.html#afb8bd251a23410e528de3382b053e9f1',1,'rosSleep(int length):&#160;Interface.cpp'],['../Interface_8cpp.html#afb8bd251a23410e528de3382b053e9f1',1,'rosSleep(int length):&#160;Interface.cpp']]],
+  ['rostest',['rosTest',['../classrosTest.html#a526c389cdb9649dd296b89dbcdad9f6a',1,'rosTest::rosTest(double x, double y, double depth)'],['../classrosTest.html#ae7dabf08ff1bc7a268b0378d28c87490',1,'rosTest::rosTest(double x, double y, double depth, std::string id)']]],
+  ['rotate',['rotate',['../classgl__widget_1_1GLWidget.html#a9c636008b3e3576fd4eb91b3017e5a7e',1,'gl_widget::GLWidget']]],
+  ['round_5fnearest',['round_nearest',['../pugixml_8cpp.html#aaeb62784a181c44f2ee34c0172e00240',1,'pugixml.cpp']]],
+  ['round_5fnearest_5fnzero',['round_nearest_nzero',['../pugixml_8cpp.html#a08148576c17009ae574e2fc8cd3d17a9',1,'pugixml.cpp']]]
 ];

@@ -52,7 +52,6 @@ class PS3Controller(object):
             print "Shutting down the process..."
             self.controller_isPresent = False
 
-
     def initialize_controller(self):
         """
         This part will set all the Global variables used in PS3Controller.

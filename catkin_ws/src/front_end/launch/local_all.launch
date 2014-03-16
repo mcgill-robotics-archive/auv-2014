@@ -1,20 +1,18 @@
 <launch>
 	<!-- launches 3 nodes: front-end, controls, simulator -->
 	<!-- Written by David Lavoie-Boutin, Jan 16, McGill Robotics -->
-	
-  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
-  <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find simulator)/worlds/simulator.world"/>
-    <!-- more default parameters can be changed here -->
-  </include>
+
+	<!-- Launch Simulator -->
+	<include file="$(find simulator)/launch/simulator.launch" />
+
+	<!-- controls -->
+	<include file="$(find controls)/launch/controls.launch" />
 
 	<!-- front-end -->
-	      <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
+	<include file="$(find front_end)/launch/front_end.launch"/>
 
-	<!-- Controls systems -->
-	        <node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>          
-        <!-- CVNode front-->
-                <node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
-        <!-- CVNode down -->
-                <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
+	<!-- CVNode front -->
+	<node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
+	<!-- CVNode down -->
+	<node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
 </launch>

@@ -74,7 +74,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -83,7 +83,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -114,37 +114,166 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a88ea4cc7474a0073919d6a31d018a6c6"></a><!-- doxytag: member="VARIABLES::KeyMapping::PitchForward" ref="a88ea4cc7474a0073919d6a31d018a6c6" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>PitchForward</b> = QtCore.Qt.Key_I</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a016c34b0bacfcd9de4e13517d6bc919b"></a><!-- doxytag: member="VARIABLES::KeyMapping::PitchBackward" ref="a016c34b0bacfcd9de4e13517d6bc919b" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>PitchBackward</b> = QtCore.Qt.Key_K</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af771a8bc1c1ad498d3cc1449f9adf363"></a><!-- doxytag: member="VARIABLES::KeyMapping::YawLeft" ref="af771a8bc1c1ad498d3cc1449f9adf363" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>YawLeft</b> = QtCore.Qt.Key_J</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43267855af781cb768fd446e3a2c44ee"></a><!-- doxytag: member="VARIABLES::KeyMapping::YawRight" ref="a43267855af781cb768fd446e3a2c44ee" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>YawRight</b> = QtCore.Qt.Key_L</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed2f3272b5a5da32e90878827bc19e1e"></a><!-- doxytag: member="VARIABLES::KeyMapping::IncreaseDepth" ref="aed2f3272b5a5da32e90878827bc19e1e" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>IncreaseDepth</b> = QtCore.Qt.Key_R</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a222dc10cb721a13a99bc4e2c569ac3c8"></a><!-- doxytag: member="VARIABLES::KeyMapping::DecreaseDepth" ref="a222dc10cb721a13a99bc4e2c569ac3c8" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>DecreaseDepth</b> = QtCore.Qt.Key_W</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d446810669af38163d0703f9fa139e3"></a><!-- doxytag: member="VARIABLES::KeyMapping::IncreaseX" ref="a7d446810669af38163d0703f9fa139e3" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>IncreaseX</b> = QtCore.Qt.Key_F</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af50c7d65dc824f589718703b80a195eb"></a><!-- doxytag: member="VARIABLES::KeyMapping::DecreaseX" ref="af50c7d65dc824f589718703b80a195eb" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>DecreaseX</b> = QtCore.Qt.Key_S</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf3b66bf0589bfc357327c58e03ad8a9"></a><!-- doxytag: member="VARIABLES::KeyMapping::IncreaseY" ref="aaf3b66bf0589bfc357327c58e03ad8a9" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>IncreaseY</b> = QtCore.Qt.Key_E</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a085f1a611c7499a0e25cabb6c4aeabcb"></a><!-- doxytag: member="VARIABLES::KeyMapping::DecreaseY" ref="a085f1a611c7499a0e25cabb6c4aeabcb" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>DecreaseY</b> = QtCore.Qt.Key_D</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9955e2b660b12622c5db64c48011847f"></a><!-- doxytag: member="VARIABLES::KeyMapping::Surface" ref="a9955e2b660b12622c5db64c48011847f" args="" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Surface</b> = QtCore.Qt.Key_H</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a88ea4cc7474a0073919d6a31d018a6c6">PitchForward</a> = QtCore.Qt.Key_I</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a016c34b0bacfcd9de4e13517d6bc919b">PitchBackward</a> = QtCore.Qt.Key_K</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#af771a8bc1c1ad498d3cc1449f9adf363">YawLeft</a> = QtCore.Qt.Key_J</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a43267855af781cb768fd446e3a2c44ee">YawRight</a> = QtCore.Qt.Key_L</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#aed2f3272b5a5da32e90878827bc19e1e">IncreaseDepth</a> = QtCore.Qt.Key_R</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a222dc10cb721a13a99bc4e2c569ac3c8">DecreaseDepth</a> = QtCore.Qt.Key_W</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a7d446810669af38163d0703f9fa139e3">IncreaseX</a> = QtCore.Qt.Key_F</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#af50c7d65dc824f589718703b80a195eb">DecreaseX</a> = QtCore.Qt.Key_S</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#aaf3b66bf0589bfc357327c58e03ad8a9">IncreaseY</a> = QtCore.Qt.Key_E</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a085f1a611c7499a0e25cabb6c4aeabcb">DecreaseY</a> = QtCore.Qt.Key_D</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a9955e2b660b12622c5db64c48011847f">Surface</a> = QtCore.Qt.Key_H</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Here we define the keyboard map for our controller. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<<<<<<< HEAD
-<li>/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/VARIABLES.py</li>
-=======
-<li>/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/VARIABLES.py</li>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+</div><hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="a222dc10cb721a13a99bc4e2c569ac3c8"></a><!-- doxytag: member="VARIABLES::KeyMapping::DecreaseDepth" ref="a222dc10cb721a13a99bc4e2c569ac3c8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a222dc10cb721a13a99bc4e2c569ac3c8">VARIABLES.KeyMapping::DecreaseDepth</a> = QtCore.Qt.Key_W<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af50c7d65dc824f589718703b80a195eb"></a><!-- doxytag: member="VARIABLES::KeyMapping::DecreaseX" ref="af50c7d65dc824f589718703b80a195eb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#af50c7d65dc824f589718703b80a195eb">VARIABLES.KeyMapping::DecreaseX</a> = QtCore.Qt.Key_S<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a085f1a611c7499a0e25cabb6c4aeabcb"></a><!-- doxytag: member="VARIABLES::KeyMapping::DecreaseY" ref="a085f1a611c7499a0e25cabb6c4aeabcb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a085f1a611c7499a0e25cabb6c4aeabcb">VARIABLES.KeyMapping::DecreaseY</a> = QtCore.Qt.Key_D<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aed2f3272b5a5da32e90878827bc19e1e"></a><!-- doxytag: member="VARIABLES::KeyMapping::IncreaseDepth" ref="aed2f3272b5a5da32e90878827bc19e1e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#aed2f3272b5a5da32e90878827bc19e1e">VARIABLES.KeyMapping::IncreaseDepth</a> = QtCore.Qt.Key_R<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7d446810669af38163d0703f9fa139e3"></a><!-- doxytag: member="VARIABLES::KeyMapping::IncreaseX" ref="a7d446810669af38163d0703f9fa139e3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a7d446810669af38163d0703f9fa139e3">VARIABLES.KeyMapping::IncreaseX</a> = QtCore.Qt.Key_F<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aaf3b66bf0589bfc357327c58e03ad8a9"></a><!-- doxytag: member="VARIABLES::KeyMapping::IncreaseY" ref="aaf3b66bf0589bfc357327c58e03ad8a9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#aaf3b66bf0589bfc357327c58e03ad8a9">VARIABLES.KeyMapping::IncreaseY</a> = QtCore.Qt.Key_E<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a016c34b0bacfcd9de4e13517d6bc919b"></a><!-- doxytag: member="VARIABLES::KeyMapping::PitchBackward" ref="a016c34b0bacfcd9de4e13517d6bc919b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a016c34b0bacfcd9de4e13517d6bc919b">VARIABLES.KeyMapping::PitchBackward</a> = QtCore.Qt.Key_K<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a88ea4cc7474a0073919d6a31d018a6c6"></a><!-- doxytag: member="VARIABLES::KeyMapping::PitchForward" ref="a88ea4cc7474a0073919d6a31d018a6c6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a88ea4cc7474a0073919d6a31d018a6c6">VARIABLES.KeyMapping::PitchForward</a> = QtCore.Qt.Key_I<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a9955e2b660b12622c5db64c48011847f"></a><!-- doxytag: member="VARIABLES::KeyMapping::Surface" ref="a9955e2b660b12622c5db64c48011847f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a9955e2b660b12622c5db64c48011847f">VARIABLES.KeyMapping::Surface</a> = QtCore.Qt.Key_H<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af771a8bc1c1ad498d3cc1449f9adf363"></a><!-- doxytag: member="VARIABLES::KeyMapping::YawLeft" ref="af771a8bc1c1ad498d3cc1449f9adf363" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#af771a8bc1c1ad498d3cc1449f9adf363">VARIABLES.KeyMapping::YawLeft</a> = QtCore.Qt.Key_J<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a43267855af781cb768fd446e3a2c44ee"></a><!-- doxytag: member="VARIABLES::KeyMapping::YawRight" ref="a43267855af781cb768fd446e3a2c44ee" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classVARIABLES_1_1KeyMapping.html#a43267855af781cb768fd446e3a2c44ee">VARIABLES.KeyMapping::YawRight</a> = QtCore.Qt.Key_L<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/<a class="el" href="VARIABLES_8py.html">VARIABLES.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -152,7 +281,7 @@ Static Public Attributes</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -164,11 +293,7 @@ Static Public Attributes</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

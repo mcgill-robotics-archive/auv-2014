@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   message_generation
+  tf
 )
 
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
@@ -150,9 +151,9 @@ target_link_libraries(CVNode ${catkin_LIBRARIES})
 add_library(CameraNode src/CameraNode.cpp)
 target_link_libraries(CameraNode ${catkin_LIBRARIES})
 
-add_library(Door src/Door.cpp)
-target_link_libraries(Door VisibleObject)
-target_link_libraries(Door ${catkin_LIBRARIES})
+add_library(Gate src/Gate.cpp)
+target_link_libraries(Gate VisibleObject)
+target_link_libraries(Gate ${catkin_LIBRARIES})
 
 add_library(Buoy src/Buoy.cpp)
 target_link_libraries(Buoy VisibleObject)
@@ -162,6 +163,11 @@ rosbuild_add_compile_flags(Buoy -std=c++0x)
 add_library(MarkerTarget src/MarkerTarget.cpp)
 target_link_libraries(MarkerTarget VisibleObject)
 target_link_libraries(MarkerTarget ${catkin_LIBRARIES})
+
+catkin_add_gtest(marker_target_test tests/marker_target_test.cpp)
+if(TARGET marker_target_test)
+   target_link_libraries(marker_target_test MarkerTarget)
+endif()
 
 add_library(LineTarget src/LineTarget.cpp)
 target_link_libraries(LineTarget VisibleObject)
@@ -180,7 +186,7 @@ target_link_libraries(DownCVNode ${catkin_LIBRARIES})
 add_executable(FrontCVNode src/FrontCVNode.cpp)
 target_link_libraries(FrontCVNode CVNode)
 target_link_libraries(FrontCVNode VisibleObject)
-target_link_libraries(FrontCVNode Door)
+target_link_libraries(FrontCVNode Gate)
 target_link_libraries(FrontCVNode Buoy)
 target_link_libraries(FrontCVNode ${catkin_LIBRARIES})
 rosbuild_add_compile_flags(FrontCVNode -std=c++0x)
@@ -203,7 +209,11 @@ target_link_libraries(SoftCameraNode Camera)
 target_link_libraries(SoftCameraNode CameraNode)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
 
+add_executable (distanceCalculator src/distanceCalculator.cpp)
+target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
+
 # This makes sure message headers are generated before being used
 add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
 add_dependencies(CVTestNode computer_vision_gencpp)
+add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})

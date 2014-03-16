@@ -3,11 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<<<<<<< HEAD
-<title>McGill Robotics: RoboSub 2014: /home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h Source File</title>
-=======
-<title>McGill Robotics: RoboSub 2014: /home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h Source File</title>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<title>McGill Robotics: RoboSub 2014: /home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -83,14 +79,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<<<<<<< HEAD
-<div class="title">/home/genevievefried/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h</div>  </div>
-=======
-<div class="title">/home/chiquelo/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h</div>  </div>
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+<div class="title">/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/CVNode.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef CV_NODE_H</span>
+<a href="CVNode_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef CV_NODE_H</span>
 <a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define CV_NODE_H</span>
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
 <a name="l00004"></a>00004 <span class="preprocessor">#include &lt;ros/ros.h&gt;</span>
@@ -103,43 +95,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;list&gt;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &quot;computer_vision/VisibleObjectData.h&quot;</span>
 <a name="l00013"></a>00013 
-<a name="l00014"></a>00014 <span class="preprocessor">#include &quot;VisibleObject.h&quot;</span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &quot;<a class="code" href="VisibleObject_8h.html">VisibleObject.h</a>&quot;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;opencv2/imgproc/imgproc.hpp&gt;</span>
 <a name="l00016"></a>00016 
-<a name="l00017"></a><a class="code" href="classCVNode.html">00017</a> <span class="keyword">class </span><a class="code" href="classCVNode.html">CVNode</a> {
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019         <span class="keyword">private</span>:
-<a name="l00020"></a>00020         
-<a name="l00024"></a>00024         <span class="keywordtype">int</span> receptionRate;
-<a name="l00025"></a>00025         std::list&lt;image_transport::Subscriber&gt; subscribers;
-<a name="l00026"></a>00026 
-<a name="l00027"></a>00027         <span class="keyword">protected</span>:
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029         image_transport::ImageTransport* pImageTransport;
-<a name="l00030"></a>00030         image_transport::Publisher publisher;
-<a name="l00031"></a>00031         std::list&lt;VisibleObject*&gt; visibleObjects;
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033         <span class="keyword">public</span>:
-<a name="l00034"></a>00034         
-<a name="l00035"></a>00035         <a class="code" href="classCVNode.html#af22cdf9ed2ca17f8643eb6435effa4e5" title="Constructor.">CVNode</a>(ros::NodeHandle&amp; nodeHandle, std::list&lt;std::string&gt; topicList, <span class="keywordtype">int</span> receptionRate);
-<a name="l00036"></a>00036         <a class="code" href="classCVNode.html#a03bc29bcbeb07db109e94ee419658c40" title="Destructor.">~CVNode</a>();
-<a name="l00037"></a>00037         <span class="keywordtype">void</span> <a class="code" href="classCVNode.html#a2bda3c09e8307869a6a8e4c62edf5c86" title="Function that dictates the rate at which the node checks if an image is received.">receiveImages</a>();
-<a name="l00038"></a>00038         
-<a name="l00039"></a>00039         <span class="keyword">private</span>:
+<a name="l00017"></a><a class="code" href="CVNode_8h.html#a028c531411557b2dd3e474719a33db22">00017</a> <span class="preprocessor">#define DELAY_BETWEEN_INFOS 5</span>
+<a name="l00018"></a>00018 <span class="preprocessor"></span>
+<a name="l00019"></a><a class="code" href="CVNode_8h.html#af0224ea86dc48178ed87e7a7e56edc6c">00019</a> <span class="keyword">const</span> std::string <a class="code" href="CVNode_8h.html#af0224ea86dc48178ed87e7a7e56edc6c">VIDEO_FEED_TOPIC_NAME</a> = <span class="stringliteral">&quot;camera_feed&quot;</span>;
+<a name="l00020"></a><a class="code" href="CVNode_8h.html#a6070411a75556b2cc9c8a72045569fe8">00020</a> <span class="keyword">const</span> std::string <a class="code" href="CVNode_8h.html#a6070411a75556b2cc9c8a72045569fe8">FORWARD_CAMERAS_TOPIC_NAME</a> = <span class="stringliteral">&quot;forward_cameras_object&quot;</span>;
+<a name="l00021"></a>00021 
+<a name="l00022"></a><a class="code" href="classCVNode.html">00022</a> <span class="keyword">class </span><a class="code" href="classCVNode.html">CVNode</a> {
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024         <span class="keyword">private</span>:
+<a name="l00025"></a>00025         
+<a name="l00029"></a>00029         <span class="keywordtype">int</span> receptionRate;
+<a name="l00030"></a>00030         image_transport::Subscriber cameraNodeSubscriber;
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032         <span class="keyword">protected</span>:
+<a name="l00033"></a>00033 
+<a name="l00034"></a><a class="code" href="classCVNode.html#a301bcad979873b49e3b38a9d0e31fc9c">00034</a>         image_transport::ImageTransport* <a class="code" href="classCVNode.html#a301bcad979873b49e3b38a9d0e31fc9c">pImageTransport</a>;
+<a name="l00035"></a><a class="code" href="classCVNode.html#acba5195170acd1ebaa3cc1b6d0e1ef7b">00035</a>         image_transport::Publisher <a class="code" href="classCVNode.html#acba5195170acd1ebaa3cc1b6d0e1ef7b">frontEndPublisher</a>;
+<a name="l00036"></a><a class="code" href="classCVNode.html#a8862fc4e568495c662b07d1d27567bef">00036</a>         ros::Publisher <a class="code" href="classCVNode.html#a8862fc4e568495c662b07d1d27567bef">frontEndVisibleObjectDataPublisher</a>;
+<a name="l00037"></a><a class="code" href="classCVNode.html#aaf9f7138bae93cfe3bb9d439dad819fe">00037</a>         std::list&lt;VisibleObject*&gt; <a class="code" href="classCVNode.html#aaf9f7138bae93cfe3bb9d439dad819fe">visibleObjectList</a>;
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039         <span class="keyword">public</span>:
 <a name="l00040"></a>00040         
-<a name="l00041"></a>00041         <span class="keyword">virtual</span> <span class="keywordtype">void</span> receiveImage(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; message, <span class="keyword">const</span> std::string &amp;topicName) = 0;
-<a name="l00042"></a>00042 };
-<a name="l00043"></a>00043 
-<a name="l00044"></a>00044 std::string <a class="code" href="CVNode_8cpp.html#a1ca534f9f060bde683a05c59fbceba69" title="Returns the name of the topic a subscriber is subscribed to.">getTopicName</a>(image_transport::Subscriber subscriber);
-<a name="l00045"></a>00045         
-<a name="l00046"></a>00046 <span class="preprocessor">#endif</span>
+<a name="l00041"></a>00041         <a class="code" href="classCVNode.html#ab934d6d6485a93709845d853dbee1a9b" title="Constructor.">CVNode</a>(ros::NodeHandle&amp; nodeHandle, std::string topicName, <span class="keywordtype">int</span> receptionRate, <span class="keywordtype">int</span> bufferSize);
+<a name="l00042"></a>00042         <span class="keyword">virtual</span> <a class="code" href="classCVNode.html#a03bc29bcbeb07db109e94ee419658c40" title="Destructor.">~CVNode</a>();
+<a name="l00043"></a>00043         <span class="keywordtype">void</span> <a class="code" href="classCVNode.html#a2bda3c09e8307869a6a8e4c62edf5c86" title="Function that dictates the rate at which the node checks if an image is received.">receiveImages</a>();
+<a name="l00044"></a>00044         
+<a name="l00045"></a>00045         <span class="keyword">private</span>:
+<a name="l00046"></a>00046         
+<a name="l00047"></a>00047         <span class="keyword">virtual</span> <span class="keywordtype">void</span> receiveImage(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; message) = 0;
+<a name="l00048"></a>00048 };
+<a name="l00049"></a>00049         
+<a name="l00050"></a>00050 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -151,11 +147,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-<<<<<<< HEAD
-Generated on Sat Jan 25 2014 15:01:33 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
-=======
-Generated on Sat Jan 25 2014 14:48:58 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
->>>>>>> 52c5bd029ee9d7406d07e7ec2f4298b926b04245
+Generated on Sun Feb 23 2014 14:27:30 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

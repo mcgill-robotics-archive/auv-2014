@@ -42,8 +42,7 @@ from tf.transformations import quaternion_matrix, quaternion_about_axis
 
 from OpenGL.GL import glBegin, glColor3f, glEnd, glLineWidth, glMultMatrixf, glTranslatef, glVertex3f, GL_LINES, GL_QUADS
 from gl_widget import GLWidget
-from VARIABLES import ROS_Topics
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 
 # main class inherits from the ui window class
 class PoseViewWidget(QWidget):
@@ -104,8 +103,8 @@ class PoseViewWidget(QWidget):
         self._gl_view.translate((0, -3, -15))
 
     def message_callback(self, message):
-        self._position = (message.position.x, message.position.y, message.position.z)
-        self._orientation = (message.orientation.x, message.orientation.y, message.orientation.z, message.orientation.w)
+        self._position = (message.pose.position.x, message.pose.position.y, message.pose.position.z)
+        self._orientation = (message.pose.orientation.x, message.pose.orientation.y, message.pose.orientation.z, message.pose.orientation.w)
 
     def update_timeout(self):
         self._gl_view.makeCurrent()
@@ -251,7 +250,7 @@ class PoseViewWidget(QWidget):
 
     def subscribe_topic(self, topic_name):
         #msg_class, self._topic_name, _ = get_topic_class(topic_name)
-        self._subscriber = rospy.Subscriber(ROS_Topics.imu_filtered, Pose, self.message_callback)
+        self._subscriber = rospy.Subscriber(topic_name, PoseStamped, self.message_callback)
 
     def shutdown_plugin(self):
         self.unregister_topic()
