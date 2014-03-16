@@ -173,14 +173,26 @@ class ukf:
         self.recoverCorrection(sigmas, gammas, np.matrix(acc).transpose())
 
 
+    def prettyPrint(self, matrix):
+        rows = matrix.tolist()
+        for row in rows:
+            for x in row:
+                print "%e," % (x,),
+            print
+        print
+
 
     def update(self, acc, gyro):
         #Update stuff
-
+        self.prettyPrint(self.augmentedCovariance)
         self.predict(numpy.matrix(gyro).transpose())
+        self.prettyPrint(self.augmentedCovariance)
         self.correct(acc)
+        self.prettyPrint(self.augmentedCovariance)
 
         return QuaternionUtils.quaternionFromRotationVector(self.augmentedPose[0:3])
+
+
 
 if __name__ == '__main__':
     estimator = ukf()
