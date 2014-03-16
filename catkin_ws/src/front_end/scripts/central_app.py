@@ -30,6 +30,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Float64
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
+from geometry_msgs.msg import PoseStamped
 
 
 ## Popup for low battery
@@ -376,13 +377,14 @@ class CentralUi(QtGui.QMainWindow):
         #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
-        rospy.Subscriber(ROS_Topics.left_pre_topic, Image, self.pre_left_callback)
-        rospy.Subscriber(ROS_Topics.right_pre_topic, Image, self.pre_right_callback)
-        rospy.Subscriber(ROS_Topics.bottom_pre_topic, Image, self.pre_bottom_callback)
-        rospy.Subscriber(ROS_Topics.left_post_topic, Image, self.post_left_callback)
-        rospy.Subscriber(ROS_Topics.right_post_topic, Image, self.post_right_callback)
-        rospy.Subscriber(ROS_Topics.bottom_post_topic, Image, self.post_bottom_callback)
-        rospy.Subscriber(ROS_Topics.cv_data, VisibleObjectData, self.cv_data_callback)
+        rospy.Subscriber(ROS_Topics.front_left_pre_topic, Image, self.front_left_pre_callback)
+        rospy.Subscriber(ROS_Topics.front_right_pre_topic, Image, self.front_right_pre_callback)
+        rospy.Subscriber(ROS_Topics.down_pre_topic, Image, self.down_pre_callback)
+        rospy.Subscriber(ROS_Topics.front_left_post_topic, Image, self.front_post_left_callback)
+        rospy.Subscriber(ROS_Topics.front_right_post_topic, Image, self.front_post_right_callback)
+        rospy.Subscriber(ROS_Topics.down_post_topic, Image, self.down_post_callback)
+        rospy.Subscriber(ROS_Topics.front_cv_data, VisibleObjectData, self.front_cv_data_callback)
+        rospy.Subscriber(ROS_Topics.down_cv_data, VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber(ROS_Topics.planner_task, String, self.planner_callback)
 
         #subscriber and callback for the 3d viz of pose data
@@ -391,12 +393,19 @@ class CentralUi(QtGui.QMainWindow):
     def planner_callback(self, string_data):
         self.ui.logObject.append(string_data.data)
 
-    def cv_data_callback(self, data):
-        self.ui.cv_rel_pitch.setText(str(data.pitch_angle))
-        self.ui.cv_rel_yaw.setText(str(data.yaw_angle))
-        self.ui.cv_rel_x.setText(str(data.x_distance))
-        self.ui.cv_rel_y.setText(str(data.y_distance))
-        self.ui.cv_rel_z.setText(str(data.z_distance))
+    def front_cv_data_callback(self, data):
+        self.ui.front_pitch.setText(str(data.pitch_angle))
+        self.ui.front_yaw.setText(str(data.yaw_angle))
+        self.ui.front_x.setText(str(data.x_distance))
+        self.ui.front_y.setText(str(data.y_distance))
+        self.ui.front_z.setText(str(data.z_distance))
+
+    def down_cv_data_callback(self, data):
+        self.ui.down_pitch.setText(str(data.pitch_angle))
+        self.ui.down_aw.setText(str(data.yaw_angle))
+        self.ui.down_x.setText(str(data.x_distance))
+        self.ui.down_y.setText(str(data.y_distance))
+        self.ui.down_z.setText(str(data.z_distance))
 
     # VIDEO FRAME CALLBACKS
     ## when a frame is received, all the data is recorded in the appropriate variable
@@ -404,7 +413,7 @@ class CentralUi(QtGui.QMainWindow):
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
-    def pre_left_callback(self, data):
+    def front_left_pre_callback(self, data):
         try:
             self.left_pre_image = data  # Save the ros image for processing by the display thread
         finally:
@@ -415,7 +424,7 @@ class CentralUi(QtGui.QMainWindow):
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
-    def pre_right_callback(self, data):
+    def front_right_pre_callback(self, data):
         try:
             self.right_pre_image = data  # Save the ros image for processing by the display thread
         finally:
@@ -426,7 +435,7 @@ class CentralUi(QtGui.QMainWindow):
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
-    def pre_bottom_callback(self, data):
+    def down_pre_callback(self, data):
         try:
             self.bottom_pre_image = data  # Save the ros image for processing by the display thread
         finally:
@@ -437,7 +446,7 @@ class CentralUi(QtGui.QMainWindow):
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
-    def post_left_callback(self, data):
+    def front_post_left_callback(self, data):
         try:
             self.left_post_image = data  # Save the ros image for processing by the display thread
         finally:
@@ -448,7 +457,7 @@ class CentralUi(QtGui.QMainWindow):
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
-    def post_right_callback(self, data):
+    def front_post_right_callback(self, data):
         try:
             self.right_post_image = data  # Save the ros image for processing by the display thread
         finally:
@@ -459,7 +468,7 @@ class CentralUi(QtGui.QMainWindow):
     #takes the data received on the ros topic and records it to a variable
     #@param self the object pointer
     #@param data the data received by the subscriber
-    def post_bottom_callback(self, data):
+    def down_post_callback(self, data):
         try:
             self.bottom_post_image = data  # Save the ros image for processing by the display thread
         finally:

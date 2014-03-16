@@ -10,7 +10,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <list>
 #include "computer_vision/VisibleObjectData.h"
-
+#include "planner/CurrentCVTask.h"
 #include "VisibleObject.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -18,6 +18,7 @@
 
 const std::string VIDEO_FEED_TOPIC_NAME = "camera_feed";
 const std::string FORWARD_CAMERAS_TOPIC_NAME = "forward_cameras_object";
+const int FRAME_VISIBILITY_THRESHOLD = 10;
 
 class CVNode {
 
@@ -34,8 +35,10 @@ class CVNode {
 	image_transport::ImageTransport* pImageTransport;
 	image_transport::Publisher frontEndPublisher;
 	ros::Publisher frontEndVisibleObjectDataPublisher;
+	ros::Subscriber plannerSubscriber;
 	std::list<VisibleObject*> visibleObjectList;
-
+	int numFramesWithoutObject;
+	
 	public:
 	
 	CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize);
