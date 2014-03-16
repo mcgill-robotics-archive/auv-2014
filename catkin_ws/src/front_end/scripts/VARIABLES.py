@@ -46,7 +46,7 @@ class ROS_Topics(object):
     pressure = "pressure"
     depth = "/state_estimation/depth"
     front_left_pre_topic = "/front_left_camera/image"
-    front_right_pre_topic = "/fornt_right_camera/image"
+    front_right_pre_topic = "/front_right_camera/image"
     down_pre_topic = "/down_right_damera/image"
     front_left_post_topic = "/front_cv/camera1"
     front_right_post_topic = "/front_cv/camera2"
