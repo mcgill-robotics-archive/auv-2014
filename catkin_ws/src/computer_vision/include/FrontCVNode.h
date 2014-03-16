@@ -23,7 +23,7 @@ public:
 	~FrontCVNode();
 
 private:
-
+	int numFramesWithoutObject;
 	Gate gateObjectFilters;
 	Buoy buoyObjectFilters;
 

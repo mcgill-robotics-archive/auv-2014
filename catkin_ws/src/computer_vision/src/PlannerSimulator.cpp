@@ -27,7 +27,7 @@ PlannerSimulator::PlannerSimulator(ros::NodeHandle& nodeHandle, std::string topi
 		msgFront.currentCVTask = 1;
 		plannerPublisherFront.publish(msgFront);
 		sleep(1);
-		msgFront.currentCVTask = 2;
+		/*msgFront.currentCVTask = 2;
 		plannerPublisherFront.publish(msgFront);
 		sleep(1);
 		msgFront.currentCVTask = 0;
@@ -38,6 +38,6 @@ PlannerSimulator::PlannerSimulator(ros::NodeHandle& nodeHandle, std::string topi
 		sleep(1);
 		msgDown.currentCVTask = 0;
 		plannerPublisherDown.publish(msgDown);
-		sleep(1);
+		sleep(1);*/
 	}
 }
