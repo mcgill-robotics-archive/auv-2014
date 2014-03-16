@@ -186,15 +186,58 @@ int main(int argc, char **argv)
 	double cd; // drag coefficient
 	double buoyancy; // %percent buoyancy
 	double dt; //temporary! TODO update this dynamically
-	double kp; //proportional controller
-    double ki; //integral
-    double kd; //derivative
+
+	//Gains for the Proportional, Integral, and Derivative controllers
+	double kp;
+    double ki;
+    double kd;
+
+    double kp_xPos;
+    double ki_xPos;
+    double kd_xPos;
+
+    double kp_yPos;
+    double ki_yPos;
+    double kd_yPos;
+
+    double kp_Depth;
+    double ki_Depth;
+    double kd_Depth;
+
+    double kp_Yaw;
+    double ki_Yaw;
+    double kd_Yaw;
+
+    double kp_Pitch;
+    double ki_Pitch;
+    double kd_Pitch;
+
 
     //ROS Params
 
     n.param<double>("gains/kp", kp, 0.0);
     n.param<double>("gains/ki", ki, 0.0);
     n.param<double>("gains/kd", kd, 0.0);
+
+    n.param<double>("gains/kp_xPos", kp_xPos, 0.0);
+    n.param<double>("gains/ki_xPos", ki_xPos, 0.0);
+    n.param<double>("gains/kd_xPos", kd_xPos, 0.0);
+
+    n.param<double>("gains/kp_yPos", kp_yPos, 0.0);
+    n.param<double>("gains/ki_yPos", ki_yPos, 0.0);
+    n.param<double>("gains/kd_yPos", kd_yPos, 0.0);
+    
+    n.param<double>("gains/kp_Depth", kp_Depth, 0.0);
+    n.param<double>("gains/ki_Depth", ki_Depth, 0.0);
+    n.param<double>("gains/kd_Depth", kd_Depth, 0.0);
+
+    n.param<double>("gains/kp_Pitch", kp_Pitch, 0.0);
+    n.param<double>("gains/ki_Pitch", ki_Pitch, 0.0);
+    n.param<double>("gains/kd_Pitch", kd_Pitch, 0.0);
+
+    n.param<double>("gains/kp_Yaw", kp_Yaw, 0.0);
+    n.param<double>("gains/ki_Yaw", ki_Yaw, 0.0);
+    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
 
    
     n.param<double>("coefs/mass", m, 30.0);
@@ -304,7 +347,7 @@ int main(int argc, char **argv)
 				ep_XPos=saturate(ep_XPos, EP_XPOS_MAX, "X Position Error term");
 				ei_XPos += ep_XPos*dt;
 				ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
-				Fx = kp*ep_XPos + ki*ei_XPos + kd*ed_XPos;
+				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
 				Fx *= -1; //flip direction to account for relative coordinate system
 				//ROS_INFO("controlling xpos");
 				//ROS_INFO("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
@@ -333,7 +376,7 @@ int main(int argc, char **argv)
 				ep_YPos=saturate(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
 				ei_YPos += ep_YPos*dt;
 				ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
-				Fy = kp*ep_YPos + ki*ei_YPos + kd*ed_YPos;
+				Fy = kp_yPos*ep_YPos + ki_yPos*ei_YPos + kd_yPos*ed_YPos;
 				Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV }
 			}
 			else
@@ -359,7 +402,7 @@ int main(int argc, char **argv)
 				ep_Depth = setPoint_Depth - depth;
 				ei_Depth += ep_Depth*dt;
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
-				Fz = kp*ep_Depth + ki*ei_Depth + kd*ed_Depth;
+				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
 				//Fz *= -1; //flip direction to account for relative coordinate system - don't have to do this because depth isnt relative like the others
 				//Fz = 0; // workaround temp
 				//Fz += buoyancy*m*g; //Account for positive buoyancy bias
@@ -377,7 +420,7 @@ int main(int argc, char **argv)
 			ep_Pitch = setPoint_Pitch - estimated_Pitch;
 			ei_Pitch += ep_Pitch*dt;
 			ed_Pitch = (ep_Pitch - ep_Pitch_prev)/dt;
-			Ty = kp*ep_Pitch + ki*ei_Pitch + kd*ed_Pitch;
+			Ty = kp_Pitch*ep_Pitch + ki_Pitch*ei_Pitch + kd_Pitch*ed_Pitch;
 		}
 
 		//Yaw
@@ -387,7 +430,7 @@ int main(int argc, char **argv)
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
-			Tz = kp*ep_Yaw + ki*ei_Yaw + kd*ed_Yaw;
+			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
 		}
 
 		if (isActive_YawSpeed)
@@ -438,23 +481,23 @@ int main(int argc, char **argv)
 			debugMsg.xGain.derivative = kd;
 
 			/*
-			debugMsg.xGain.proportional = kpX;
-			debugMsg.yGain.proportional = kpY;
-			debugMsg.depthGain.proportional = kpDepth;
-			debugMsg.pitchGain.proportional = kpPitch;
-			debugMsg.yawGain.proportional = kpYaw;
+			debugMsg.xGain.proportional = kp_xPos;
+			debugMsg.yGain.proportional = kp_yPos;
+			debugMsg.depthGain.proportional = kp_Depth;
+			debugMsg.pitchGain.proportional = kp_Pitch;
+			debugMsg.yawGain.proportional = kp_Yaw;
 
-			debugMsg.xGain.integral = kiX;
-			debugMsg.yGain.integral = kiY;
-			debugMsg.depthGain.integral = kiDepth;
-			debugMsg.pitchGain.integral = kiPitch;
-			debugMsg.yawGain.integral = kiYaw;
+			debugMsg.xGain.integral = ki_xPos;
+			debugMsg.yGain.integral = ki_yPos;
+			debugMsg.depthGain.integral = ki_Depth;
+			debugMsg.pitchGain.integral = ki_Pitch;
+			debugMsg.yawGain.integral = ki_Yaw;
 
-			debugMsg.xGain.derivative = kdX;
-			debugMsg.yGain.derivative = kdY;
-			debugMsg.depthGain.derivative = kdDepth;
-			debugMsg.pitchGain.derivative = kdPitch;
-			debugMsg.yawGain.derivative = kdYaw;
+			debugMsg.xGain.derivative = kd_xPos;
+			debugMsg.yGain.derivative = kd_yPos;
+			debugMsg.depthGain.derivative = kd_Depth;
+			debugMsg.pitchGain.derivative = kd_Pitch;
+			debugMsg.yawGain.derivative = kd_Yaw;
 			*/
 
 			// Forces
