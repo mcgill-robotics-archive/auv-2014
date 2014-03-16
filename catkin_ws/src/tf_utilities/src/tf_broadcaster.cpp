@@ -1,12 +1,34 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 
+// Make broadcaster global
+tf::TransformBroadcaster broadcaster;
+
+void callBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
+	broadcaster.sendTransform(
+		// Transform data, quaternion for rotations and vector3 for translational vectors
+		tf::StampedTransform(
+			tf::Transform(
+				tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w), 
+				tf::Vector3(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z)
+			),
+			// Give it a time stamp
+			ros::Time::now(),
+			// refrence frame does not have a name now
+			"reference_frame",
+			// to
+			"/sensor/forward_camera_center"
+		)
+	);
+}
+
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "tf_publisher");
 	ros::NodeHandle n;
 	
 	ros::Rate r(100);
-	tf::TransformBroadcaster broadcaster;
+
+	ros::Subscriber sub = n.subscribe("/sample_topic", 1000, callBack);
 	
 	while(n.ok()) {
 		broadcaster.sendTransform(
@@ -18,7 +40,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"IMU"
+				"/sensors/IMU"
 			)
 		);
 		
@@ -31,7 +53,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"camera_right"
+				"/sensors/forward_camera_right"
 			)
 		);
 		
@@ -44,7 +66,20 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"camera_left"
+				"/sensors/forward_camera_left"
+			)
+		);
+
+		broadcaster.sendTransform(
+			// Transform data, quaternion for rotations and vector3 for translational vectors
+			tf::StampedTransform(
+				tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(2.0, 0.5, 1.0)),
+				// Give it a time stamp
+				ros::Time::now(),
+				// from
+				"base_link",
+				// to
+				"/sensors/forward_camera_center"
 			)
 		);
 		
@@ -57,7 +92,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"camera_down"
+				"/sensors/downward_camera"
 			)
 		);
 		
@@ -70,7 +105,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"grabber"
+				"/extremeties/grabber"
 			)
 		);
 		
@@ -83,7 +118,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"marker_left"
+				"/extremeties/marker_left"
 			)
 		);
 		
@@ -96,7 +131,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"marker_right"
+				"/extremeties/marker_right"
 			)
 		);
 			
@@ -109,7 +144,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"torpedo_left"
+				"/exteremeties/torpedo_left"
 			)
 		);
 		
@@ -122,7 +157,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"torpedo_right"
+				"/extremeties/torpedo_right"
 			)
 		);
 		
@@ -135,20 +170,7 @@ int main(int argc, char** argv) {
 				// from
 				"base_link",
 				// to
-				"contact_bouy"
-			)
-		);
-		
-		broadcaster.sendTransform(
-			// Transform data, quaternion for rotations and vector3 for translational vectors
-			tf::StampedTransform(
-				tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(2.0, 0.5, 0.5)),
-				// Give it a time stamp
-				ros::Time::now(),
-				// from
-				"base_link",
-				// to
-				"contact_bouy"
+				"/extremeties/contact_bouy"
 			)
 		);		
 		
