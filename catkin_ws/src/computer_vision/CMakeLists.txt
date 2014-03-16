@@ -176,6 +176,9 @@ target_link_libraries(LineTarget ${catkin_LIBRARIES})
 add_library(Camera src/Camera.cpp)
 target_link_libraries(Camera ${catkin_LIBRARIES})
 
+add_executable(PlannerSimulator src/PlannerSimulator.cpp)
+target_link_libraries(PlannerSimulator ${catkin_LIBRARIES})
+
 add_executable(DownCVNode src/DownCVNode.cpp)
 target_link_libraries(DownCVNode CVNode)
 target_link_libraries(DownCVNode VisibleObject)

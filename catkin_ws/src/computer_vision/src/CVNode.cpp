@@ -66,4 +66,3 @@ void CVNode::receiveImages() {
 		loop_rate.sleep();
 	}
 }
-
