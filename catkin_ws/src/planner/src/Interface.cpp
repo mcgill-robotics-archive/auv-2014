@@ -104,8 +104,8 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 }
 
 void setVisionObj (int objIndex) {
-  planner::currentCVTask msgFront;
-   planner::currentCVTask msgDown;
+  planner::CurrentCVTask msgFront;
+   planner::CurrentCVTask msgDown;
 
   msgFront.currentCVTask = msgFront.NOTHING;
   msgDown.currentCVTask = msgDown.NOTHING;
@@ -189,8 +189,8 @@ int main (int argc, char **argv) {
   ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
   ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
-  taskPubFront = n.advertise<planner::currentCVTask>("current_cv_task_front", 1000); 
-  taskPubDown = n.advertise<planner::currentCVTask>("current_cv_task_down", 1000); 
+  taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000); 
+  taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000); 
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
