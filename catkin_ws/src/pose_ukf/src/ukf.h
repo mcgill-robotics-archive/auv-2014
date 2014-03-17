@@ -1,6 +1,7 @@
 #ifndef UKF_H_
 #define UKF_H_
 
+void h(double *sigma, double *gamma);
 
 class ukf
 {
@@ -24,7 +25,7 @@ class ukf
     	void propogateSigmas(double *rotation);
     	void recoverPrediction();
     	void recoverCorrection(double acc[3]);
-    	void h(double *sigma, double *gamma);
+
     	double *sigma(int index);
     	double *gamma(int index);
 

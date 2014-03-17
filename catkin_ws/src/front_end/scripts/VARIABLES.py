@@ -17,7 +17,7 @@ class vel_vars(object):
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
-    z_position = 0
+    z_position = 9
     z_position_step = 0.2
 
     MAX_YAW_VEL = 5
@@ -44,17 +44,18 @@ class KeyMapping(object):
 class ROS_Topics(object):
     battery_voltage = "battery_voltage"
     pressure = "pressure"
-    depth = "depth"
-    left_pre_topic = "/simulator/camera1/image_raw"
-    right_pre_topic = "/simulator/camera2/image_raw"
-    bottom_pre_topic = "/simulator/camera3/image_raw"
-    left_post_topic = "/front_cv_camera1"
-    right_post_topic = "/right_camera/camera/image_color"
-    bottom_post_topic = "/down_camera/camera/image_color"
+    depth = "/state_estimation/depth"
+    front_left_pre_topic = "/front_left_camera/image"
+    front_right_pre_topic = "/front_right_camera/image"
+    down_pre_topic = "/down_right_damera/image"
+    front_left_post_topic = "/front_cv/camera1"
+    front_right_post_topic = "/front_cv/camera2"
+    down_post_topic = "/down_cv/camera1"
     simulator_pose = "/gazebo/model_states"
-    imu_filtered = 'pose'
-    vel_topic = '/setPoints'
-    cv_data = 'front_cv_data'
+    imu_filtered = '/state_estimation/pose'
+    vel_topic = '/planner/setPoints'
+    front_cv_data = 'front_cv/data'
+    down_cv_data = 'down_cv/data'
     planner_task = 'planner/task'
 
 

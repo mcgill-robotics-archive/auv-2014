@@ -30,11 +30,12 @@ class dead_reck():
             self.y = self.y*math.cos(headingChange) - self.x*math.sin(headingChange)
         self.heading = newHeading
 
-    def updateCV(self, hasTarget, targetID, x, y, yawOfTarget):
+    def updateCV(self, hasTarget, targetID, x, y, z, yawOfTarget):
         if hasTarget:
             self.targetID = targetID
             self.x = x
             self.y = y
+            self.z = z
             self.yawOfTarget = yawOfTarget
         self.hasTarget = hasTarget
 
@@ -53,8 +54,8 @@ class dead_reck():
                 'hasTarget':self.hasTarget
                 ,'x':self.x
                 ,'y':self.y
+                ,'z':self.z
                 ,'targetID':self.targetID
                 ,'time':self.time
                 ,'yawOfTarget':self.yawOfTarget
-                ,'heading':self.heading
                 }

@@ -1,7 +1,5 @@
 #include "Interface.h"
-#include "planner/currentCVTask.h"
-#include <vector>
-#include <cmath>
+
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
@@ -14,79 +12,100 @@ ros::Publisher checkpoints_pub;
 ros::Publisher taskPubFront;
 ros::Publisher taskPubDown;
 
+geometry_msgs::PoseStamped myPose;
+geometry_msgs::PoseStamped relativePose;
 /**
  * Our current orientation from state estimation
  */
-double Self_XDistance;
-double Self_YDistance;
-double Self_Depth;
-double Self_Yaw;
-double Self_Pitch;
+double visible_XPos;
+double visible_YPos;
+double visible_Depth;
+double visible_Yaw;
+double visible_Pitch;
 
 /**
  * Object the we currently want CV to look for
  */
 std::string visionObj;
 
+void spinThread()
+{
+  ros::spin();
+}
+
+void estimatedState_callback(const computer_vision::VisibleObjectData data) {
+  visible_XPos = data.x_distance;
+  visible_YPos = data.y_distance;
+  visible_Pitch = data.pitch_angle; 
+  visible_Yaw = data.yaw_angle; 
+}
+
+void estimatedDepth_callback(const std_msgs::Float64 msg) {
+  visible_Depth = msg.data;
+}
+
 /**
- * Orientation of the object currently in view of CV
- */
-double VO_XDistance;
-double VO_YDistance;
-double VO_ZDistance;
-double VO_Yaw;
-double VO_Pitch;
-
-void setVisibleObjectOrientation (computer_vision::VisibleObjectData msg) {
-  VO_XDistance = msg.x_distance;
-  VO_YDistance = msg.y_distance;
-  VO_ZDistance = msg.z_distance;
-  VO_Yaw = msg.yaw_angle;
-  VO_Pitch = msg.pitch_angle;
+* gets the position/heading of robot relative to chosen object
+*/
+void setTransform (std::string referenceFrame) {
+  tf::TransformListener listener;
+  listener.transformPose(referenceFrame, myPose, relativePose);
 }
 
-//BEWARE: RETURNS ADDRESS OF ARRAY
-double* getVisibleObjectOrientation () {
-  double returnArray[5];
-  returnArray[0] = VO_XDistance;
-  returnArray[1] = VO_YDistance;
-  returnArray[2] = VO_ZDistance;
-  returnArray[3] = VO_Yaw;
-  returnArray[4] = VO_Pitch;
-  return returnArray;
+/**
+* determines the position and heading of our robot
+*/
+void setPose() {
+  tf::TransformListener listener;
+  geometry_msgs::PoseStamped emptyPose;
+  emptyPose.header.frame_id = "dummy";
+  emptyPose.pose.position.x = 0.0;
+  emptyPose.pose.position.y = 0.0;
+  emptyPose.pose.position.z = 0.0;
+  emptyPose.pose.orientation.x = 0.0;
+  emptyPose.pose.orientation.y = 0.0;
+  emptyPose.pose.orientation.z = 0.0;
+  emptyPose.pose.orientation.w = 0.0;
+  listener.transformPose("/origin", emptyPose, myPose);
 }
 
-void setOurOrientation(gazebo_msgs::ModelStates msg) {
-  Self_XDistance = msg.pose[0].position.x;
-  Self_YDistance = msg.pose[0].position.y;
-  Self_Depth = msg.pose[0].position.z;
-  Self_Yaw = 0;
-  Self_Pitch = 0;
+bool areWeThereYet(std::vector<double> desired) {
+  double xError = visible_XPos - desired.at(0);
+  double yError = visible_YPos - desired.at(1);
+  double pitchError = visible_Pitch - desired.at(2);
+  double yawError = visible_Yaw - desired.at(3);
+  double depthError = visible_Depth - desired.at(4);
+
+  /******below will show the errors in case of issues (comment out if needed)
+  std::cout<<"xError: " << xError <<std::endl;
+  std::cout<<"yError: " << yError <<std::endl;
+  std::cout<< "pitchError: " << pitchError <<std::endl;
+  std::cout<<"yawError: " << yawError <<std::endl;
+  std::cout<<"depthError: " << depthError << "\n---------------------------------------\n\n"; */
+
+  return (xError < .1 && yError < .1 && pitchError < .1 &&
+          yawError < .1 && depthError < .1);
 }
 
-//BEWARE: RETURNS ADDRESS OF ARRAY
-double* getOurOrientation () {
-  double returnArray[5];
-  returnArray[0] = Self_XDistance;
-  returnArray[1] = Self_YDistance;
-  returnArray[2] = Self_Depth;
-  returnArray[3] = Self_Yaw;
-  returnArray[4] = Self_Pitch;
-  return returnArray;
-}
 
-void setDepth(std_msgs::Float32 msg) {
-  Self_Depth = msg.data;
-}
-
-bool isCorrectDepth(double desiredDepth) {
-  double error = abs(Self_Depth - desiredDepth);
-  return (error < maxDepthError);
+bool areWeThereYet_tf(std::string referenceFrame) {
+  setTransform(referenceFrame);
+  //positional bounds
+  bool pxBounded = relativePose.pose.position.x < .1;
+  bool pyBounded = relativePose.pose.position.y < .1;
+  bool pzBounded = relativePose.pose.position.z < .1;
+  //rotational bounds
+  bool txBounded = relativePose.pose.orientation.x < .1;
+  bool tyBounded = relativePose.pose.orientation.y < .1;
+  bool tzBounded = relativePose.pose.orientation.z < .1;
+  bool twBounded = relativePose.pose.orientation.w < .1;
+  return (pxBounded && pyBounded && pzBounded && txBounded &&
+      tyBounded && tzBounded && twBounded);
 }
 
 void setVisionObj (int objIndex) {
-  planner::currentCVTask msgFront;
-   planner::currentCVTask msgDown;
+  planner::CurrentCVTask msgFront;
+   planner::CurrentCVTask msgDown;
 
   msgFront.currentCVTask = msgFront.NOTHING;
   msgDown.currentCVTask = msgDown.NOTHING;
@@ -151,9 +170,9 @@ void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth
   setPoints(pointControl);
 }
 
-void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth) {
-  double pointControl[16] = {1, x_pos, 1, y_pos, 0, pitch_angle, 
-    0, yaw_angle, 0, 0, 0, 0, 0, 0, 1, depth};
+void setPosition (std::vector<double> desired) {
+  double pointControl[16] = {1, desired.at(0), 1, desired.at(1), 0, desired.at(2), 
+    0, desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4)};
   setPoints(pointControl);
 }
 
@@ -167,14 +186,17 @@ int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  ros::Subscriber CV_sub = n.subscribe("visible_data", 1000, setVisibleObjectOrientation);
-  ros::Subscriber Pose_sub = n.subscribe("gazebo/model_states", 1000, setOurOrientation);
-  ros::Subscriber Depth_sub = n.subscribe("depth", 1000, setDepth);
+  ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
+  ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
-  taskPubFront = n.advertise<planner::currentCVTask>("currentCVTask_Front", 1000); 
-  taskPubDown = n.advertise<planner::currentCVTask>("currentCVTask_Down", 1000); 
+  taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000); 
+  taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000); 
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
+
+  ros::Rate loop_rate(10);
+  /****This is ros::spin() on a seperate thread*****/
+  boost::thread spin_thread(&spinThread);
 
   std::cout<<"Starting Loader"<< std::endl; 
   Loader* loader = new Loader();
@@ -182,9 +204,8 @@ int main (int argc, char **argv) {
   invoker->StartRun();
   std::cout<<"Done Loader"<< std::endl;  
 
-  ros::Rate loop_rate(10);
-  while ( ros::ok() ) {}
-  ros::spin();
+
+
   return 0;
 }
 

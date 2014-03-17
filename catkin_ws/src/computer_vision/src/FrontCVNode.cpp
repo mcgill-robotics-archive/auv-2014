@@ -32,6 +32,15 @@ int main(int argc, char **argv) {
 	ros::shutdown();
 }
 
+void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
+	this->visibleObjectList.clear();
+	if (msg.currentCVTask == 1) {
+		this->visibleObjectList.push_back(new Gate());
+	} else if (msg.currentCVTask == 2) {
+		this->visibleObjectList.push_back(new Buoy());
+	}
+}
+
 /**
  * @brief Constructor.
  *
@@ -39,18 +48,19 @@ int main(int argc, char **argv) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) : CVNode(nodeHandle, topicName, receptionRate, bufferSize) {
-	pLastImageLeftCamera = NULL;
-	pLastImageRightCamera = NULL;
-
 	// Create topics with front end
 	frontEndPublisher = pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 
+	// Start listening to the planner. This will update the list of visible objects as they change.
+	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this); 
+	ros::spin();
 	// Construct the list of VisibleObjects
-	this->visibleObjectList.push_back(new Gate());
+	//this->visibleObjectList.push_back(new Gate());
 	//this->visibleObjectList.push_back(new Buoy());
 	// Create a window to display the images received
 	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
+	numFramesWithoutObject = 0;
 }
 
 /**
@@ -61,10 +71,10 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
  */
 FrontCVNode::~FrontCVNode() {
 	cv::destroyWindow(FRONT_CAMERA_NODE_TOPIC);
+}
 
-	// Releases the memory used by the cv::Mat object for the image.
-	delete pLastImageLeftCamera;
-	delete pLastImageRightCamera;
+void FrontCVNode::instanciateAllVisibleObjects() {
+
 }
 
 
@@ -97,6 +107,14 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 
+		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
+		if (messagesToPublish.size() == 0) {
+			numFramesWithoutObject++;
+			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
+		} else {
+			numFramesWithoutObject = 0;
+		}
+
 		// Publish the VisibleObjectData messages.
 		for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it != messagesToPublish.end(); ++it) {
 			computer_vision::VisibleObjectData messageToSend;
@@ -125,23 +143,3 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 	}
 }
 
-///**
-// * Converts a sensor_msgs::ImageConstPtr to a cv::Mat object that OpenCV can use to run the filters.
-// *
-// * @param message The sensor_msgs::ImageConstPtr to be converted.
-// * @return The cv:Mat object that can be used by OpenCV.
-// */
-//cv::Mat convertFromSensorToOpenCV(const sensor_msgs::ImageConstPtr& message) {
-//	cv_bridge::CvImagePtr pCurrentFrame;
-//
-//	try {
-//		// Convert sensor_msgs to an opencv image
-//		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
-//		return (pCurrentFrame->image);
-//	} catch (cv_bridge::Exception& e) {
-//		ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
-//		ROS_ERROR("cv_bridge exception: %s", e.what());
-//		// Returns an empty cv::Mat object.
-//		return (cv::Mat());
-//	}
-//}
