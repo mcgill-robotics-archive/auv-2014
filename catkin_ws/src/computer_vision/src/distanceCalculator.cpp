@@ -8,25 +8,25 @@
 #include "distanceCalculator.h"
 
 int CV_PUBLISHING_RATE = 100; //publish at 2 Hz, just like CV - but 100 hz to match controls and simulate IMU smoothing.
-planner::currentCVTask currentCVTask_Front;
+planner::CurrentCVTask currentCVTask_Front;
 
 /* Generic current task callback
 
     There's gotta be a way to only use one callback for both the front and bottom current CV tasks. But I can't figure it out, so I'll leave it here for later.
 
-    void currentCVTask_callback(const ros::MessageEvent<planner::currentCVTask const>& event)
+    void currentCVTask_callback(const ros::MessageEvent<planner::CurrentCVTask const>& event)
     {
       const ros::M_string& header = event.getConnectionHeader();
       std::string topic = header.at("topic");
       //ROS_INFO("Current topic is: %s", topic);
 
-      //const planner::currentCVTask& temp = event.getMessage(); //store in global variable
+      //const planner::CurrentCVTask& temp = event.getMessage(); //store in global variable
       //ROS_INFO("Current task is %i", currentCVTask_Front.currentCVTask);
     } 
     */
 
 
-void currentCVTask_Front_callback(planner::currentCVTask msg)
+void currentCVTask_Front_callback(planner::CurrentCVTask msg)
 {
   currentCVTask_Front = msg;
 }

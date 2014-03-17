@@ -54,6 +54,11 @@ def connect():
         except serial.serialutil.SerialException:
             print 'connection failed'
             time.sleep(1)
+        except OSError:
+            print 'teensy not connected'
+            print 'goodbye!'
+            time.sleep(1)
+            exit(0) 
 
     print 'connected!'
 
