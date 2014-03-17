@@ -8,7 +8,8 @@
 
 // These variables need to be accessible from the main method in FrontCVNode.cpp.
 const std::string FRONT_CV_NODE_NAME = "front_cv";
-const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
+const std::string CAMERA1_CV_TOPIC_NAME = "front_cv/camera1";
+const std::string CAMERA2_CV_TOPIC_NAME = "front_cv/camera2";
 const std::string OUTPUT_DATA_TOPIC_NAME = "front_cv/data";
 const int FRONT_CV_NODE_RECEPTION_RATE = 10;
 const int FRONT_CV_NODE_BUFFER_SIZE = 1;
