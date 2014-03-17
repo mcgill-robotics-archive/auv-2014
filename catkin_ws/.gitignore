@@ -2,3 +2,4 @@
 ./install
 ./devel
 *.gch
+logger.txt

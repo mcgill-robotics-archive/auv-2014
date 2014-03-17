@@ -1,5 +1,6 @@
 #include "matrix_utils.h"
 #include "rotation_vector_utils.h"
+#include "ukf.h"
 #include "gtest/gtest.h"
 
 
@@ -273,6 +274,65 @@ TEST(matrix_utils_composeRotations, simple_composition)
 	for (int i = 0; i< 3; i++)
 	{
 		EXPECT_NEAR(expectedC[i], C[i], 1e-8);
+	}
+}
+
+TEST(pose_ukf_h, zero_state)
+{
+	double state[] = {0,0,0,0,0,0,0,0,0};
+	double result[3];
+	double expected[] = {0,0,9.8};
+
+	h(state,result);
+
+	for (int i = 0; i < 3; i++)
+	{
+		EXPECT_NEAR(expected[i], result[i], 1e-10);
+	}
+}
+
+TEST(pose_ukf_h, z_rotation)
+{
+	double state[] = {0,0,1.139847,0,0,0,0,0,0};
+	double result[3];
+	double expected[] = {0,0,9.8};
+
+	h(state,result);
+
+	for (int i = 0; i < 3; i++)
+	{
+		EXPECT_NEAR(expected[i], result[i], 1e-10);
+	}
+}
+
+TEST(pose_ukf_h, x_rotation)
+{
+	double pi2 = 3.14159265359/2.0;
+	double state[] = {pi2,0,0,0,0,0,0,0,0};
+	double result[3];
+	double expected[] = {0,9.8,0};
+
+	h(state,result);
+
+	for (int i = 0; i < 3; i++)
+	{
+		EXPECT_NEAR(expected[i], result[i], 1e-10);
+	}
+}
+
+TEST(pose_ukf_h, y_rotation)
+{
+	double pi4 = 3.14159265359/4.0;
+	double sqrt2 = 1.41421356237;
+	double state[] = {0,pi4,0,0,0,0,0,0,0};
+	double result[3];
+	double expected[] = {-9.8/sqrt2, 0, 9.8/sqrt2};
+
+	h(state,result);
+
+	for (int i = 0; i < 3; i++)
+	{
+		EXPECT_NEAR(expected[i], result[i], 1e-10);
 	}
 }
 

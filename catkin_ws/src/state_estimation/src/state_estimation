@@ -2,4 +2,4 @@
 import ros_node
 
 print 'Starting State Estimation node'
-init()
+ros_node.init()

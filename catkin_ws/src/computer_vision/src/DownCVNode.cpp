@@ -28,6 +28,13 @@ int main(int argc, char **argv) {
 	ros::shutdown();
 }
 
+void DownCVNode::listenToPlanner(planner::CurrentCVTask msg) {
+	this->visibleObjectList.clear();
+	if (msg.currentCVTask == 3) {
+		this->visibleObjectList.push_back(new LineTarget());
+	}
+}
+
 /**
  * @brief Constructor.
  *
@@ -41,10 +48,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	this->frontEndPublisher = this->pImageTransport->advertise(CAMERA3_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 	
-	this->visibleObjectList.push_back(new MarkerTarget());
-
-	// FIXME: There is a problem with LineTarget::retrieveObjectData()
-	this->visibleObjectList.push_back(new LineTarget());
+	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_DOWN_TOPIC_NAME, 1000, &DownCVNode::listenToPlanner, this);
 
 	cv::namedWindow(DOWN_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 }
@@ -81,17 +85,26 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		// the received image to each visible object
 		for (it = visibleObjectList.begin(); it != visibleObjectList.end(); it++) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
-			for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it !=
-			    messagesToPublish.end(); ++it) {
-				computer_vision::VisibleObjectData messageToSend;
-				messageToSend.object_type = (*it)->object_type;
-				messageToSend.pitch_angle = (*it)->pitch_angle;
-				messageToSend.yaw_angle = (*it)->yaw_angle;
-				messageToSend.x_distance = (*it)->x_distance;
-				messageToSend.y_distance = (*it)->y_distance;
-				messageToSend.z_distance = (*it)->z_distance;
-				frontEndVisibleObjectDataPublisher.publish(messageToSend);
-			}
+		}
+
+		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
+		if (messagesToPublish.size() == 0) {
+			numFramesWithoutObject++;
+			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
+		} else {
+			numFramesWithoutObject = 0;
+		}
+
+		for(std::vector<computer_vision::VisibleObjectData*>::iterator it = messagesToPublish.begin(); it !=
+		    messagesToPublish.end(); ++it) {
+			computer_vision::VisibleObjectData messageToSend;
+			messageToSend.object_type = (*it)->object_type;
+			messageToSend.pitch_angle = (*it)->pitch_angle;
+			messageToSend.yaw_angle = (*it)->yaw_angle;
+			messageToSend.x_distance = (*it)->x_distance;
+			messageToSend.y_distance = (*it)->y_distance;
+			messageToSend.z_distance = (*it)->z_distance;
+			frontEndVisibleObjectDataPublisher.publish(messageToSend);
 		}
 
 

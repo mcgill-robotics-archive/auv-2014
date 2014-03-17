@@ -11,6 +11,7 @@ bool compareImage(cv::Mat& correctImage, cv::Mat& testImage) {
 			if (correctImage.at<int>(i, j) != testImage.at<int>(i, j)) valid = false;
 		}
 	}
+	valid = false;
 	return valid;
 }
 

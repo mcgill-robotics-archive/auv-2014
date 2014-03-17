@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/String.h"
@@ -14,12 +15,25 @@
 #include "Invoker.h"
 #include "computer_vision/VisibleObjectData.h"
 #include "gazebo_msgs/ModelStates.h"
+#include <tf/transform_listener.h>
+#include "planner/CurrentCVTask.h"
+#include <vector>
+#include <cmath>
+#include <boost/thread.hpp>
+
+void spinThread();
 
 void estimatedState_callback(const computer_vision::VisibleObjectData data);
 
 void estimatedDepth_callback(const std_msgs::Float64 data);
 
+void setTransform (std::string referenceFrame);
+
+void setPose();
+
 bool areWeThereYet(std::vector<double> desired);
+
+bool areWeThereYet_tf(std::string referenceFrame);
 
 void setVisionObj (int objIndex);
 
