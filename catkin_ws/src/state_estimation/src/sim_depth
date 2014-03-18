@@ -1,29 +1,28 @@
 #!/usr/bin/env python2.7
 
 import rospy
+from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped
 from gazebo_msgs.msg import ModelStates
 
 
 def callback(modelStates):
     index = modelStates.name.index('robot')
-    poseStamped = PoseStamped()
-    poseStamped.pose = modelStates.pose[index]
-    pub.publish(poseStamped)
+    pub.publish(10.0 - modelStates.pose[index].position.z)
 
 # Init the ros node, subscribers and publishers
 # And run the node
 def init():
     global pub
-    rospy.init_node('mock_imu')
+    rospy.init_node('sim_depth')
 
     # Subscribe to different inputing topics
     rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
 
     # Publish the filtered data to a topic
-    pub = rospy.Publisher('pose', PoseStamped)
+    pub = rospy.Publisher('depth', Float64)
     rospy.spin()
-    
+
 if __name__ == '__main__':
     try:
         init()

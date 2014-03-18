@@ -6,8 +6,9 @@ computer_vision/VisibleObjectData visibleObjectData
 #Does the CV have an object in sight?
 bool hasTarget
 
-#TODO:
 float64 depth
+
+#TODO:
 float64 pitch
 float64 pitch_rate
 float64 yaw
