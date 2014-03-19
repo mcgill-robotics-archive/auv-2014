@@ -63,6 +63,19 @@ int main(int argc, char** argv) {
 		broadcaster.sendTransform(
 			// Transform data, quaternion for rotations and vector3 for translational vectors
 			tf::StampedTransform(
+				tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.5, 0.5, 0.5)),
+				// Give it a time stamp
+				ros::Time::now(),
+				// from
+				"base_link",
+				// to
+				"/robot/rotation_center"
+			)
+		);
+
+		broadcaster.sendTransform(
+			// Transform data, quaternion for rotations and vector3 for translational vectors
+			tf::StampedTransform(
 				tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(1.0, 0.5, 0.5)),
 				// Give it a time stamp
 				ros::Time::now(),
