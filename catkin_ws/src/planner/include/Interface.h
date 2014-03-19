@@ -16,9 +16,12 @@
 #include "computer_vision/VisibleObjectData.h"
 #include "gazebo_msgs/ModelStates.h"
 #include <tf/transform_listener.h>
-#include "planner/currentCVTask.h"
+#include "planner/CurrentCVTask.h"
 #include <vector>
 #include <cmath>
+#include <boost/thread.hpp>
+
+void spinThread();
 
 void estimatedState_callback(const computer_vision::VisibleObjectData data);
 

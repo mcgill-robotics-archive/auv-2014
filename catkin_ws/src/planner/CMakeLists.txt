@@ -64,6 +64,8 @@ project(planner)
  add_executable (CurrentCVTaskPublisher src/CurrentCVTaskPublisher.cpp)
  target_link_libraries(CurrentCVTaskPublisher ${catkin_LIBRARIES})
  add_dependencies(CurrentCVTaskPublisher ${catkin_EXPORTED_TARGETS})
+
+
  
 
  include_directories(include ${catkin_INCLUDE_DIRS})
