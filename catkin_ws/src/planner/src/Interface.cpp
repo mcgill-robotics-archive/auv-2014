@@ -1,9 +1,11 @@
 #include "Interface.h"
 
-
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
 double maxHeadingError = 0.5;
+
+ros::Subscriber estimatedState_subscriber;
+ros::Subscriber estimatedDepth_subscriber;
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
@@ -70,6 +72,8 @@ void setPose() {
 }
 
 bool areWeThereYet(std::vector<double> desired) {
+  //if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
+  //if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
   double xError = visible_XPos - desired.at(0);
   double yError = visible_YPos - desired.at(1);
   double pitchError = visible_Pitch - desired.at(2);
@@ -89,6 +93,8 @@ bool areWeThereYet(std::vector<double> desired) {
 
 
 bool areWeThereYet_tf(std::string referenceFrame) {
+  //if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
+  //if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
   setTransform(referenceFrame);
   //positional bounds
   bool pxBounded = relativePose.pose.position.x < .1;
@@ -186,13 +192,24 @@ int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
-  ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
+  estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
+  estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
   taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000); 
   taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000); 
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
+
+  bool ready = 0;
+  while (ready == 0)
+  {
+    ROS_DEBUG_THROTTLE(2,"Waiting...");
+    ready = 1;     
+    if (estimatedDepth_subscriber.getNumPublishers() == 0) {ready = 0;}
+    else {ROS_DEBUG_THROTTLE(2,"Here ye Heare ye");}
+    if (estimatedState_subscriber.getNumPublishers() == 0) {ready = 0;}
+    else {ROS_DEBUG_THROTTLE(2,"got estimated State");}
+  }
 
   ros::Rate loop_rate(10);
   /****This is ros::spin() on a seperate thread*****/

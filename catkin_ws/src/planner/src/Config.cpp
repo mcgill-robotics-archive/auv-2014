@@ -19,7 +19,10 @@ vector<string> mapList;
 /**
 * Constructor for Config object
 */
+
+
 const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
+
 
 const char* mapFN = "map.xml";
 
