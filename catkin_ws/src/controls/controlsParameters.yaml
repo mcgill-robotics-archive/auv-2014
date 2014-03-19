@@ -18,9 +18,9 @@ gains/kp_Pitch: 1.5
 gains/ki_Pitch: 0
 gains/kd_Pitch: 150
 
-gains/kp_Yaw: 1.5
+gains/kp_Yaw: 3
 gains/ki_Yaw: 0
-gains/kd_Yaw: 150
+gains/kd_Yaw: 0
 
 
 
@@ -32,7 +32,7 @@ setPoints/YSpeed/value: 0
 
 setPoints/Depth/value: 10
 
-setPoints/Yaw/value: 0
+setPoints/Yaw/value: 3.14
 setPoints/YawSpeed/value: 0
 
 setPoints/Pitch/value: 0
