@@ -1,0 +1,11 @@
+<launch>
+
+	<node pkg="viso2_ros" type="mono_odometer" name="mono_odometer" output="screen">
+		<remap from="image" to="/camera_down/camera/image_color"/>
+
+		<!-- Mono params -->
+		<param name="camera_height" value="0.7366" />
+		<param name="camera_pitch" value="0.0" />
+	</node>
+
+</launch>
