@@ -1,30 +1,59 @@
+#include <string>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
+#include <std_msgs/String.h>
 
-// Make broadcaster global
-tf::TransformBroadcaster broadcaster;
+// Custom messages
+#include <state_estimation/AUVState.h>
+#include <computer_vision/VisibleObjectData.h>
 
-void callBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
+// Object IDs
+std::string objectID[] = {
+    "door",
+    "buoy",
+    "ground_target_1",
+    "ground_target_2",
+    "ground_target_3",
+    "ground_target_4",
+    "ground_target_unkown",
+    "lane",
+    "unknown"
+};
+
+void callBack(const state_estimation::AUVState::ConstPtr& msg) {
+	// Create a transform listener in every callback	
+	tf::TransformBroadcaster broadcaster;
+	
+	// Visible Object Data
+	computer_vision::VisibleObjectData object = msg->visibleObjectData;
+	
+	tf::Quaternion quat = tf::createQuaternionFromRPY(0.0, object.pitch_angle, object.yaw_angle);
+	tf::Vector3 vect(object.x_distance, object.y_distance, object.z_distance);
+	
+	std::string refFrame = "/target/" + objectID[object.object_type];
+	
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
 			tf::Transform(
-				tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w), 
-				tf::Vector3(msg->pose.position.x, msg->pose.position.y, msg->pose.position.z)
+				quat, 
+				vect
 			),
 			// Give it a time stamp
 			ros::Time::now(),
 			// refrence frame does not have a name now
-			"reference_frame",
+			"/sensor/forward_camera_center",
 			// to
-			"/sensor/forward_camera_center"
+			refFrame
 		)
 	);
 }
 
 int main(int argc, char** argv) {
-	ros::init(argc, argv, "tf_publisher");
+	ros::init(argc, argv, "tf_broadcaster");
+
 	ros::NodeHandle n;
+	tf::TransformBroadcaster broadcaster;
 	
 	ros::Rate r(100);
 
