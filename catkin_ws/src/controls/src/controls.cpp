@@ -103,6 +103,9 @@ double EP_YPOS_MAX;
 double XSPEED_MAX;
 double YSPEED_MAX;
 
+double YAW_MAX;
+double PITCH_MAX;
+
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	ROS_DEBUG("Subscriber received set points");
@@ -160,7 +163,7 @@ void estimatedDepth_callback(const std_msgs::Float64 data)
 	estimated_Depth = data.data;
 }
 
-float output_limit_check(float value, float min, float max, char* value_name ){
+float output_limit_check(float value, float min, float max, char* value_name ){ //can this be deleted?
 	//returns zero and warns if out of range
 	if (value > max | value < min) { //out of range
 		ROS_WARN("%s: value has been exceeded. Value is %f. Setting to 0.", value_name, value);
@@ -230,6 +233,9 @@ int main(int argc, char **argv)
 	n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
 	n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
 	n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
+
+	n.param<double>("Pitch/max", PITCH_MAX, 0.0);
+	n.param<double>("Yaw/max", YAW_MAX, 0.0);
 
 
 	//initializations
@@ -376,6 +382,7 @@ int main(int argc, char **argv)
 		//Yaw
 		if (isActive_Yaw)
 		{
+	       	setPoint_Yaw=saturate(setPoint_Yaw, YAW_MAX, "Yaw"); //saturate yaw
 			ep_Yaw_prev = ep_Yaw;
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			ei_Yaw += ep_Yaw*dt;

@@ -21,13 +21,11 @@ double VOLTAGE_MAX;
 double VOLTAGE_MIN;
 int32_t MOTOR_CMD_MAX;
 int32_t MOTOR_CMD_MIN;
-double F_MIN;
 double F_MAX;
-double T_MIN;
 double T_MAX;
 
-float limit_check(float value, float min, float max, char* value_type, char* value_id ){
-	if (value > max | value < min) {
+float limit_check(float value, float max, char* value_type, char* value_id ){
+	if (value > max | value < -1*max) {
 
 		ROS_WARN("%s: %s value has been exceeded. Value is %f", value_type, value_id, value);
 
@@ -51,11 +49,11 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	controls::motorCommands motorCommands;
 
 	//Limit check for input wrench values
-	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MIN, F_MAX, "Net Force", "X");
-	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MIN, F_MAX, "Net Force", "Y");
-	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MIN, F_MAX, "Net Force", "Z");
-	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MIN, T_MAX, "Net Torque", "Y");
-	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MIN, T_MAX, "Net Torque", "Z");
+	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MAX, "Net Force", "X");
+	wrenchMsg.force.y=limit_check(wrenchMsg.force.y, F_MAX, "Net Force", "Y");
+	wrenchMsg.force.z=limit_check(wrenchMsg.force.z, F_MAX, "Net Force", "Z");
+	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MAX, "Net Torque", "Y");
+	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MAX, "Net Torque", "Z");
 
 
 
@@ -136,11 +134,8 @@ int main(int argc, char **argv)
 	n.param<double>("voltage/min", VOLTAGE_MIN, 0.0);
 	n.param<int32_t>("motorCommands/min", MOTOR_CMD_MIN, 0.0);
 	n.param<int32_t>("motorCommands/max", MOTOR_CMD_MAX, 0.0);
-	n.param<double>("force/min", F_MIN, 0.0);
 	n.param<double>("force/max", F_MAX, 0.0);
-	n.param<double>("torque/min", T_MIN, 0.0);
 	n.param<double>("torque/max", T_MAX, 0.0);
-	ROS_INFO("Fmin is %f", F_MIN);
 
 	//TODO raise warning if any of these variables == their default of 0. This means bad parameter file.
 

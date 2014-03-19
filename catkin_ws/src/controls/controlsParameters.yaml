@@ -51,3 +51,6 @@ force/min: -30 # removed from controls node, not sure about thrust_mapper
 force/max: 30
 torque/min: -100 # removed from controls node, not sure about thrust_mapper
 torque/max: 100
+
+Yaw/max: 1.5708 # pi/2
+Pitch/max: 0.7853 # pi/4
