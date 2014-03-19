@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/String.h"
@@ -14,20 +15,25 @@
 #include "Invoker.h"
 #include "computer_vision/VisibleObjectData.h"
 #include "gazebo_msgs/ModelStates.h"
+#include <tf/transform_listener.h>
+#include "planner/CurrentCVTask.h"
+#include <vector>
+#include <cmath>
+#include <boost/thread.hpp>
 
-void setVisibleObjectOrientation (computer_vision::VisibleObjectData msg);
+void spinThread();
 
-//BEWARE: RETURNS ADDRESS OF ARRAY
-double* getVisibleObjectOrientation ();
+void estimatedState_callback(const computer_vision::VisibleObjectData data);
 
-void setOurOrientation (gazebo_msgs::ModelStates msg);
+void estimatedDepth_callback(const std_msgs::Float64 data);
 
-//BEWARE: RETURNS ADDRESS OF ARRAY
-double* getOurOrientation ();
+void setTransform (std::string referenceFrame);
 
-void setDepth(std_msgs::Float32 msg);
+void setPose();
 
-bool isCorrectDepth(double desiredDepth);
+bool areWeThereYet(std::vector<double> desired);
+
+bool areWeThereYet_tf(std::string referenceFrame);
 
 void setVisionObj (int objIndex);
 
@@ -37,7 +43,8 @@ void setPoints (double pointControl[]);
 
 void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth);
 
-void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
+//void setPosition (double x_pos, double y_pos, double pitch_angle, double yaw_angle, double depth);
+void setPosition (std::vector<double> desired);
 
 void rosSleep(int length);
 

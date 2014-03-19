@@ -5,6 +5,7 @@
 #include "Task.hpp"
 #include "Interface.h"
 #include <iostream>
+#include <vector>
 
 class Task_Gate: public Task{
 public:

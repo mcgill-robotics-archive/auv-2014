@@ -162,6 +162,7 @@ include_directories(src)
 catkin_add_gtest(${PROJECT_NAME}-test 
   test/test_ukf.cpp
   src/matrix_utils.cpp
+  src/ukf.cpp
   src/rotation_vector_utils.cpp
 )
 # if(TARGET ${PROJECT_NAME}-test)

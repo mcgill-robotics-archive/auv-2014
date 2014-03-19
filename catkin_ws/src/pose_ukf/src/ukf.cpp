@@ -2,12 +2,29 @@
 #include "matrix_utils.h"
 #include "rotation_vector_utils.h"
 #include <math.h>
+#include <stdio.h>
 
 //Length of the state vector
 const double INITIAL_COVARIANCE = 0.01;
 const double PROCESS_VARIANCE = 0.01;
 const double MEASUREMENT_VARIANCE = 0.1;
 
+
+void prettyPrint(double* augCovar, int dim1, int dim2)
+{
+	printf("[");
+	for(int i = 0; i < dim1; i++)
+	{
+		for(int j = 0; j < dim2; j++)
+		{
+			printf("%e,", augCovar[i*dim2+j]);
+		}
+		printf(";");
+		printf("\n");
+	}
+	printf("]");
+	printf("\n");
+}
 
 ukf::ukf(int dim)
 {
@@ -90,7 +107,7 @@ void ukf::predict(double rotation[3])
 	recoverPrediction();
 }
 
-void ukf::h(double *sigma, double *gamma)
+void h(double *sigma, double *gamma)
 {
 	double gravity[] = {0, 0, 9.8};
 	double inverted[3] = {};
@@ -114,6 +131,11 @@ void ukf::correct(double acc[3])
 void ukf::recoverCorrection(double *acc)
 {
 
+	printf("sigmas = ");
+	prettyPrint(sigmas, 2*AUGDIM, AUGDIM);
+	printf("gammas = ");
+	prettyPrint(gammas, 2*AUGDIM, DIM);
+
 	averageVectors(gammas, predMsmt, 2*AUGDIM, DIM);
 
 	subtractMultipleVectors(sigmas, augState, 2*AUGDIM, AUGDIM);
@@ -122,8 +144,12 @@ void ukf::recoverCorrection(double *acc)
 	averageOuterProduct(gammas, gammas, measCovar, 2*AUGDIM, DIM, DIM);
 	averageOuterProduct(sigmas, gammas, crossCovar, 2*AUGDIM, AUGDIM, DIM);
 
+
 	//Include measurement variance
 	addDiagonal(measCovar, MEASUREMENT_VARIANCE, DIM);
+
+	printf("crossCovar = ");
+	prettyPrint(crossCovar, AUGDIM, DIM);
 
 	// gain = crosscovar * meascovar^-1
 	double *gain = new double[AUGDIM*DIM]();
@@ -136,14 +162,18 @@ void ukf::recoverCorrection(double *acc)
     //augCovar -= crossCovar * gain.transpose()
     scaleVector(-1.0, crossCovar, DIM*DIM);
     transposedMultiplyAdd(crossCovar, gain, augCovar, AUGDIM, DIM, AUGDIM);
+
+    if(augCovar[0] < 0)
+    	printf("Done\n");
     //addDiagonal(augCovar, 0.000001, AUGDIM);
     delete gain;
 }
 
+
+
 void ukf::update(double* acc, double* rotation, double *quaternion)
 {
     predict(rotation);
-
     correct(acc);
 
     quaternionFromRotationVector(quaternion, augState);
