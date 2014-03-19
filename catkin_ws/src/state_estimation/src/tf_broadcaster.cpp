@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 	
 	ros::Rate r(100);
 
-	ros::Subscriber sub = n.subscribe("/sample_topic", 1000, callBack);
+	ros::Subscriber sub = n.subscribe("state_estimate", 1000, callBack);
 	
 	while(n.ok()) {
 		broadcaster.sendTransform(
