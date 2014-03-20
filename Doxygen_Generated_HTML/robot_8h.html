@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>McGill Robotics: RoboSub 2014: /home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/simulator/include/robot.h File Reference</title>
+<title>McGill Robotics: RoboSub 2014: /home/david/repo/robosub14/catkin_ws/src/simulator/include/robot.h File Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -79,9 +79,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Defines</a>  </div>
   <div class="headertitle">
-<div class="title">/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/simulator/include/robot.h File Reference</div>  </div>
+<div class="title">/home/david/repo/robosub14/catkin_ws/src/simulator/include/robot.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;boost/bind.hpp&gt;</code><br/>
@@ -98,20 +100,51 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &quot;geometry_msgs/Vector3.h&quot;</code><br/>
 <code>#include &quot;geometry_msgs/Wrench.h&quot;</code><br/>
 <code>#include &lt;unistd.h&gt;</code><br/>
+<code>#include &quot;std_msgs/Bool.h&quot;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for robot.h:</div>
 <div class="dyncontent">
-<div class="center"><img src="robot_8h__incl.png" border="0" usemap="#_2home_2hddData_2Git__Repositories_2McGill__RoboSub__2014_2catkin__ws_2src_2simulator_2include_2robot_8h" alt=""/></div>
-<map name="_2home_2hddData_2Git__Repositories_2McGill__RoboSub__2014_2catkin__ws_2src_2simulator_2include_2robot_8h" id="_2home_2hddData_2Git__Repositories_2McGill__RoboSub__2014_2catkin__ws_2src_2simulator_2include_2robot_8h">
-</map>
+<div class="center"><img src="robot_8h__incl.png" border="0" usemap="#_2home_2david_2repo_2robosub14_2catkin__ws_2src_2simulator_2include_2robot_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="robot_8h__dep__incl.png" border="0" usemap="#_2home_2david_2repo_2robosub14_2catkin__ws_2src_2simulator_2include_2robot_8hdep" alt=""/></div>
+<map name="_2home_2david_2repo_2robosub14_2catkin__ws_2src_2simulator_2include_2robot_8hdep" id="_2home_2david_2repo_2robosub14_2catkin__ws_2src_2simulator_2include_2robot_8hdep">
+<area shape="rect" id="node3" href="test__robot_8cc.html" title="/home/david/repo/robosub14/catkin_ws/src/simulator/test/test_robot.cc" alt="" coords="5,83,440,112"/></map>
 </div>
 </div>
 <p><a href="robot_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRobot.html">Robot</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgazebo_1_1Robot.html">gazebo::Robot</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">class to manipulate robot behaviour  <a href="classgazebo_1_1Robot.html#details">More...</a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegazebo.html">gazebo</a></td></tr>
+<tr><td colspan="2"><h2><a name="define-members"></a>
+Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="robot_8h.html#a7cddf2d048933e82acff894d45c227b9">ABS_FLOAT</a>(x)&#160;&#160;&#160;((x &lt; 0) ? -x : x)</td></tr>
 </table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a7cddf2d048933e82acff894d45c227b9"></a><!-- doxytag: member="robot.h::ABS_FLOAT" ref="a7cddf2d048933e82acff894d45c227b9" args="(x)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define <a class="el" href="robot_8cc.html#a7cddf2d048933e82acff894d45c227b9">ABS_FLOAT</a></td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;((x &lt; 0) ? -x : x)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -130,7 +163,7 @@ Classes</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:30 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

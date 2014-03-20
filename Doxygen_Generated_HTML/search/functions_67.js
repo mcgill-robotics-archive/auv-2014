@@ -1,6 +1,7 @@
 var searchData=
 [
   ['gap',['gap',['../structgap.html#a4ae36e370647da0df57eb30d3bbcd32b',1,'gap']]],
+  ['gate',['Gate',['../classGate.html#a4fc24ecebc0ca8252bf7ab96a705e58a',1,'Gate']]],
   ['gen_5fnan',['gen_nan',['../pugixml_8cpp.html#a2d2fd408a346e00cc39c418d81f4341c',1,'pugixml.cpp']]],
   ['get_5fallocator',['get_allocator',['../pugixml_8cpp.html#ab194763af6dca2d07ad5139dc2a75f60',1,'pugixml.cpp']]],
   ['get_5fbuffer_5fencoding',['get_buffer_encoding',['../pugixml_8cpp.html#ae841fafba520d2341dc8386a6f825ac6',1,'pugixml.cpp']]],
@@ -24,13 +25,15 @@ var searchData=
   ['get_5fwrite_5fnative_5fencoding',['get_write_native_encoding',['../pugixml_8cpp.html#a12b9d6cff4d37c68755263d0687c62b1',1,'pugixml.cpp']]],
   ['getbattandtherm',['getBattAndTherm',['../classXimuReceiver.html#a992dd4799d7024635bc027673f1d6c74',1,'XimuReceiver']]],
   ['getcapturetime',['getCaptureTime',['../classCamera.html#a7c0ce49f1d055cbcde5368b48e2e8932',1,'Camera']]],
+  ['getcontourmap',['getContourMap',['../classMarkerTarget.html#a645d3dedb016beb24a50b2ef63b645fd',1,'MarkerTarget']]],
+  ['getendtask',['getEndTask',['../classTaskFactory.html#a3daf6cb6d2fbd471f21a35a6da302a9e',1,'TaskFactory']]],
+  ['getgatetask',['getGateTask',['../classTaskFactory.html#a3a138636c01cbe85eac6b223a14714e7',1,'TaskFactory']]],
   ['getinertialandmag',['getInertialAndMag',['../classXimuReceiver.html#aa75d3f6dcd84303c95628abf1c6bb9f5',1,'XimuReceiver']]],
   ['getinvoker',['getInvoker',['../classLoader.html#a8fe395058f621a0677883461b60d8a46',1,'Loader']]],
   ['getlastframe',['getLastFrame',['../classCamera.html#a4c29a8a0df59252836feacd4a1bec220',1,'Camera']]],
   ['getmap',['GetMap',['../classConfig.html#a6f6b404997f88275f64107a1ffe64c0d',1,'Config::GetMap()'],['../classLoader.html#a2e2e9c1b42f80e961b71f01290a712c0',1,'Loader::GetMap()']]],
-  ['getourorientation',['getOurOrientation',['../Interface_8h.html#ad803572aef82f3515c9e754e0e02e959',1,'getOurOrientation():&#160;Interface.cpp'],['../Interface_8cpp.html#ad803572aef82f3515c9e754e0e02e959',1,'getOurOrientation():&#160;Interface.cpp']]],
+  ['getpreliminarycorners',['getPreliminaryCorners',['../classMarkerTarget.html#acfbbfc52d2bac85d59222632b51467ad',1,'MarkerTarget']]],
   ['getquaternion',['getQuaternion',['../classXimuReceiver.html#ad550b44c35cdd2aebf1d9a9bdd760b2e',1,'XimuReceiver']]],
   ['gettasks',['GetTasks',['../classConfig.html#aa5c33a5b6fed8c81cc73523c6b7d7e3a',1,'Config::GetTasks()'],['../classLoader.html#a48cc46a01e66d50c133c03922b53c346',1,'Loader::GetTasks()']]],
-  ['getvisibleobjectorientation',['getVisibleObjectOrientation',['../Interface_8h.html#a77ec72f869c6121b43d256dda8008f1d',1,'getVisibleObjectOrientation():&#160;Interface.cpp'],['../Interface_8cpp.html#a77ec72f869c6121b43d256dda8008f1d',1,'getVisibleObjectOrientation():&#160;Interface.cpp']]],
   ['guess_5fbuffer_5fencoding',['guess_buffer_encoding',['../pugixml_8cpp.html#ac4aca43b7a1cc8918a214f00c7c9af47',1,'pugixml.cpp']]]
 ];

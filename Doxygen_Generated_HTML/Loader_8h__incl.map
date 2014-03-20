@@ -1,12 +1,13 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$Invoker_8h.html" title="Invoker.h" alt="" coords="1208,160,1282,189"/>
-<area shape="rect" id="node9" href="$Task_8hpp.html" title="Task.hpp" alt="" coords="958,237,1033,267"/>
-<area shape="rect" id="node14" href="$Interface_8h.html" title="Interface.h" alt="" coords="1290,237,1373,267"/>
-<area shape="rect" id="node37" href="$Config_8h.html" title="Config.h" alt="" coords="324,83,393,112"/>
-<area shape="rect" id="node57" href="$TaskFactory_8hpp.html" title="TaskFactory.hpp" alt="" coords="786,83,906,112"/>
-<area shape="rect" id="node43" href="$pugixml_8hpp.html" title="./pugixml/src/pugixml.hpp" alt="" coords="273,160,444,189"/>
-<area shape="rect" id="node45" href="$pugiconfig_8hpp.html" title="pugiconfig.hpp" alt="" coords="305,237,412,267"/>
-<area shape="rect" id="node63" href="$TaskConcrete_8hpp.html" title="TaskConcrete.hpp" alt="" coords="954,160,1082,189"/>
-<area shape="rect" id="node70" href="$Task__Gate_8h.html" title="Task_Gate.h" alt="" coords="746,160,842,189"/>
-<area shape="rect" id="node76" href="$Task__Lane_8h.html" title="Task_Lane.h" alt="" coords="626,160,722,189"/>
+<area shape="rect" id="node3" href="$Invoker_8h.html" title="Invoker.h" alt="" coords="1432,160,1507,189"/>
+<area shape="rect" id="node9" href="$Task_8hpp.html" title="Task.hpp" alt="" coords="1019,237,1093,267"/>
+<area shape="rect" id="node14" href="$Interface_8h.html" title="Interface.h" alt="" coords="1428,237,1511,267"/>
+<area shape="rect" id="node50" href="$Config_8h.html" title="Config.h" alt="" coords="389,83,459,112"/>
+<area shape="rect" id="node70" href="$TaskFactory_8hpp.html" title="TaskFactory.hpp" alt="" coords="996,83,1116,112"/>
+<area shape="rect" id="node56" href="$pugixml_8hpp.html" title="./pugixml/src/pugixml.hpp" alt="" coords="339,160,509,189"/>
+<area shape="rect" id="node58" href="$pugiconfig_8hpp.html" title="pugiconfig.hpp" alt="" coords="315,237,421,267"/>
+<area shape="rect" id="node76" href="$TaskConcrete_8hpp.html" title="TaskConcrete.hpp" alt="" coords="861,160,989,189"/>
+<area shape="rect" id="node83" href="$Task__Gate_8h.html" title="Task_Gate.h" alt="" coords="1173,160,1269,189"/>
+<area shape="rect" id="node90" href="$Task__Lane_8h.html" title="Task_Lane.h" alt="" coords="741,160,837,189"/>
+<area shape="rect" id="node96" href="$Task__Kill_8h.html" title="Task_Kill.h" alt="" coords="1013,160,1099,189"/>
 </map>

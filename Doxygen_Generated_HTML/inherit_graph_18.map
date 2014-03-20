@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structDetectedBuoy.html" title="A struct for the information regarding detected buoys (center position and radius)" alt="" coords="7,5,111,35"/>
+<area shape="rect" id="node1" href="$classCVNode.html" title="CVNode" alt="" coords="5,32,77,61"/>
+<area shape="rect" id="node3" href="$classDownCVNode.html" title="DownCVNode" alt="" coords="125,5,232,35"/>
+<area shape="rect" id="node5" href="$classFrontCVNode.html" title="FrontCVNode" alt="" coords="128,59,229,88"/>
 </map>

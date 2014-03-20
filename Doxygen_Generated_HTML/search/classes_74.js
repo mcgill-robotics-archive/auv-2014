@@ -7,7 +7,9 @@ var searchData=
   ['task_5fbuoy',['Task_Buoy',['../classTask__Buoy.html',1,'']]],
   ['task_5fgate',['Task_Gate',['../classTask__Gate.html',1,'']]],
   ['task_5fguide',['Task_Guide',['../classTask__Guide.html',1,'']]],
+  ['task_5fkill',['Task_Kill',['../classTask__Kill.html',1,'']]],
   ['task_5flane',['Task_Lane',['../classTask__Lane.html',1,'']]],
   ['taskfactory',['TaskFactory',['../classTaskFactory.html',1,'']]],
+  ['thrusterforces_5f',['ThrusterForces_',['../structsimulator_1_1ThrusterForces__.html',1,'simulator']]],
   ['torpedotask',['TorpedoTask',['../classTorpedoTask.html',1,'']]]
 ];

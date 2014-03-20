@@ -1,13 +1,12 @@
 var searchData=
 [
-  ['id',['Id',['../classrosTest.html#ae3696343abfaccf374e70016e4afa2f3',1,'rosTest::Id()'],['../classTask.html#a883535f7a13c85d46f19c240cf5e3026',1,'Task::id()']]],
-  ['imu_5fcallback',['imu_callback',['../classcentral__app_1_1CentralUi.html#ad7f3ca6013e5f297781c644c5b888e9e',1,'central_app::CentralUi']]],
+  ['id',['id',['../classTask.html#a883535f7a13c85d46f19c240cf5e3026',1,'Task::id()'],['../classrosTest.html#ae3696343abfaccf374e70016e4afa2f3',1,'rosTest::Id()']]],
+  ['imu_5fcallback',['imu_callback',['../classcentral__app__old_1_1CentralUi.html#ae44a3c1991e0308af0632f70116ea564',1,'central_app_old::CentralUi']]],
   ['imu_5ffiltered',['imu_filtered',['../classVARIABLES_1_1ROS__Topics.html#a84fc35188cd55c7ae3f75bdc3607d609',1,'VARIABLES::ROS_Topics']]],
-  ['imu_5fgraph_5fupdater',['imu_graph_updater',['../classcentral__app_1_1CentralUi.html#a90eed73ca61c03e5680618283c2fb176',1,'central_app::CentralUi']]],
+  ['imu_5fgraph_5fupdater',['imu_graph_updater',['../classcentral__app__old_1_1CentralUi.html#ae8b6154ad62c939da7100ed12f373729',1,'central_app_old::CentralUi']]],
   ['imu_5fpublisher',['imu_publisher',['../namespaceimu__publisher.html',1,'']]],
   ['imu_5fpublisher_2epy',['imu_publisher.py',['../imu__publisher_8py.html',1,'']]],
-  ['imu_5fraw',['imu_raw',['../classVARIABLES_1_1ROS__Topics.html#a744951bfe17962822778ceb341db85d6',1,'VARIABLES::ROS_Topics']]],
-  ['imugraphics',['imugraphics',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#acf97a9eb57982e7a9b4f1ec4a8447ab1',1,'CompleteUI_declaration::Ui_RoboticsMain.imugraphics()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#abd0a57f418a47abeb6439cdabf3ae3d8',1,'resizableUI1::Ui_RoboticsMain.imugraphics()']]],
+  ['imugraphics',['imugraphics',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#acf97a9eb57982e7a9b4f1ec4a8447ab1',1,'CompleteUI_declaration::Ui_RoboticsMain.imugraphics()'],['../classresizableUI1_1_1Ui__RoboticsMain.html#abd0a57f418a47abeb6439cdabf3ae3d8',1,'resizableUI1::Ui_RoboticsMain.imugraphics()'],['../classresizableUI2_1_1Ui__RoboticsMain.html#aa9c72313f05b411b3c0fc073c43b8647',1,'resizableUI2::Ui_RoboticsMain.imugraphics()'],['../classno__imu_1_1Ui__RoboticsMain.html#abd5246094bf3b6b0e460f11805b0925b',1,'no_imu::Ui_RoboticsMain.imugraphics()']]],
   ['imuposeview',['IMUPoseView',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a55f796d332b110dedefbbd7e0f1fd277',1,'CompleteUI_declaration::Ui_RoboticsMain']]],
   ['imuraws',['IMUraws',['../classCompleteUI__declaration_1_1Ui__RoboticsMain.html#a14d6e546b9cfd4b48ee1aeb8c124c03f',1,'CompleteUI_declaration::Ui_RoboticsMain']]],
   ['include_2ecpp',['include.cpp',['../include_8cpp.html',1,'']]],
@@ -24,7 +23,7 @@ var searchData=
   ['input_5fxdot',['input_xdot',['../depthController_8cpp.html#a74a358482085ea20019f72ba962c40dd',1,'depthController.cpp']]],
   ['input_5fydot',['input_ydot',['../depthController_8cpp.html#ae13fe4ed2c4b9087d511777c2d16bf84',1,'depthController.cpp']]],
   ['input_5fzdot',['input_zdot',['../depthController_8cpp.html#a91e51d4caba8d89cba451935b21dc5de',1,'depthController.cpp']]],
-  ['inrangeforce',['inRangeForce',['../classgazebo_1_1Robot.html#aa98567a6cbe4ea8c3e9c603e12b2d355',1,'gazebo::Robot']]],
+  ['inrangeforce',['inRangeForce',['../classgazebo_1_1Robot.html#aa98567a6cbe4ea8c3e9c603e12b2d355',1,'gazebo::Robot::inRangeForce(float x)'],['../classgazebo_1_1Robot.html#aa98567a6cbe4ea8c3e9c603e12b2d355',1,'gazebo::Robot::inRangeForce(float x)']]],
   ['insertion_5fsort',['insertion_sort',['../pugixml_8cpp.html#a54bf2719c7797e72531b07a644adb3d1',1,'pugixml.cpp']]],
   ['interface_2ecpp',['Interface.cpp',['../Interface_8cpp.html',1,'']]],
   ['interface_2eh',['Interface.h',['../Interface_8h.html',1,'']]],
@@ -45,7 +44,11 @@ var searchData=
   ['isactive_5fypos',['isActive_YPos',['../controls_8cpp.html#ad029d2a54e3c5d2b77999c9b37c44e72',1,'controls.cpp']]],
   ['isactive_5fyspeed',['isActive_YSpeed',['../controls_8cpp.html#a0f27302eef20f89ee011f78f72f876c6',1,'controls.cpp']]],
   ['isbattandthermgetready',['isBattAndThermGetReady',['../classXimuReceiver.html#abf461d32e97796bd05bf1f17b1db8df5',1,'XimuReceiver']]],
+  ['isfixedsize_3c_20_3a_3asimulator_3a_3athrusterforces_5f_3c_20containerallocator_20_3e_20_3e',['IsFixedSize< ::simulator::ThrusterForces_< ContainerAllocator > >',['../structros_1_1message__traits_1_1IsFixedSize_3_01_1_1simulator_1_1ThrusterForces___3_01ContainerAllocator_01_4_01_4.html',1,'ros::message_traits']]],
+  ['isfixedsize_3c_20_3a_3asimulator_3a_3athrusterforces_5f_3c_20containerallocator_20_3e_20const_20_20_3e',['IsFixedSize< ::simulator::ThrusterForces_< ContainerAllocator > const  >',['../structros_1_1message__traits_1_1IsFixedSize_3_01_1_1simulator_1_1ThrusterForces___3_01ContainerAllocator_01_4_01const_01_01_4.html',1,'ros::message_traits']]],
   ['isinertialandmaggetready',['isInertialAndMagGetReady',['../classXimuReceiver.html#a6a7a3a23f27ca3f5e36a90cf07c540a4',1,'XimuReceiver']]],
+  ['ismessage_3c_20_3a_3asimulator_3a_3athrusterforces_5f_3c_20containerallocator_20_3e_20_3e',['IsMessage< ::simulator::ThrusterForces_< ContainerAllocator > >',['../structros_1_1message__traits_1_1IsMessage_3_01_1_1simulator_1_1ThrusterForces___3_01ContainerAllocator_01_4_01_4.html',1,'ros::message_traits']]],
+  ['ismessage_3c_20_3a_3asimulator_3a_3athrusterforces_5f_3c_20containerallocator_20_3e_20const_20_20_3e',['IsMessage< ::simulator::ThrusterForces_< ContainerAllocator > const  >',['../structros_1_1message__traits_1_1IsMessage_3_01_1_1simulator_1_1ThrusterForces___3_01ContainerAllocator_01_4_01const_01_01_4.html',1,'ros::message_traits']]],
   ['isquaterniongetready',['isQuaternionGetReady',['../classXimuReceiver.html#a28876414c36b0778846f734d2b59bab4',1,'XimuReceiver']]],
   ['isvisible',['isVisible',['../classLineTarget.html#ab6e6a2f3e377d03166800688fa2249b0',1,'LineTarget']]]
 ];
