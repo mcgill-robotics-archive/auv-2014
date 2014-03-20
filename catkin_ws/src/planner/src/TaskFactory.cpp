@@ -42,6 +42,10 @@ Task* TaskFactory::getEndTask(){
 	return new Task_Kill();	
 }
 
+Task* TaskFactory::getGateTask(){
+	return new Task_Gate();	
+}
+
 Task* TaskFactory::makeTask(std::string id){
 
 	//parses the string into the id task number and id version number 

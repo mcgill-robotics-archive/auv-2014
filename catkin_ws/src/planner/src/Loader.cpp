@@ -58,6 +58,7 @@ void Loader::loadInvoker(){
 		//main_Invoker->AddTask(main_Taskfactory->makeTask("1v1")); // works now!!!
 	}
 
+main_Invoker->AddTask(main_Taskfactory->getGateTask());
 	//adds the end task after all other tasks have been loaded
 	main_Invoker->AddTask(main_Taskfactory->getEndTask());
 

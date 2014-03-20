@@ -28,6 +28,8 @@ class TaskFactory{
 
 	Task* makeTask(std::string id);
 
+	Task* getGateTask();
+
 	Task* getEndTask();
 
 };
