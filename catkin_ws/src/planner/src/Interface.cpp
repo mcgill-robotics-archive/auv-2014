@@ -46,18 +46,11 @@ void estimatedDepth_callback(const std_msgs::Float64 msg) {
   visible_Depth = msg.data;
 }
 
-/**
-* gets the position/heading of robot relative to chosen object
-*/
-void setTransform (std::string referenceFrame) {
-  tf::TransformListener listener;
-  listener.transformPose(referenceFrame, myPose, relativePose);
-}
 
 /**
 * determines the position and heading of our robot
 */
-void setPose() {
+void setOurPose() {
   tf::TransformListener listener;
   geometry_msgs::PoseStamped emptyPose;
   emptyPose.header.frame_id = "dummy";
@@ -68,7 +61,16 @@ void setPose() {
   emptyPose.pose.orientation.y = 0.0;
   emptyPose.pose.orientation.z = 0.0;
   emptyPose.pose.orientation.w = 0.0;
-  listener.transformPose("/origin", emptyPose, myPose);
+  listener.transformPose("/base_link", emptyPose, myPose);
+}
+
+/**
+* gets the position/heading of robot relative to chosen object
+*/
+void setTransform (std::string referenceFrame) {
+  tf::TransformListener listener;
+  setOurPose();
+  listener.transformPose(referenceFrame, myPose, relativePose);
 }
 
 bool areWeThereYet(std::vector<double> desired) {
