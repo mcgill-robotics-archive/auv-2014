@@ -29,6 +29,12 @@ unsigned long batteryVoltageSchedule;
 unsigned long batteryCurrentSchedule;
 boolean killSwitchEngaged = false;
 
+// Moving Average filter for depth data
+const static int WINDOW_WIDTH = 3;
+int depthReadings[WINDOW_WIDTH] = {0, 0, 0};
+int depthIndex = 0;
+int depthAverage = 0;
+
 int boundCheck(int x){
   if(x> 500 || x< -500){
     char msg[70];
@@ -103,8 +109,13 @@ void loop(){
   }
   
   if(depthSensorSchedule < currentTime){
-    int depth_msg = analogRead(depthPin );
+    int depthReading = analogRead(depthPin );
+    depth_msg.data = depthAverage + (depthReading - depthReadings[depthIndex]) / WINDOW_WIDTH;
     depth.publish(&depth_msg);
+
+    // Update list of depth readings
+    depthReadings[depthIndex] = depthReading;
+    depthIndex = (depthIndex + 1) % WINDOW_WIDTH;
 
     depthSensorSchedule += 200;        //Update at 5Hz  
   }
