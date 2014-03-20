@@ -65,7 +65,8 @@ class ukf:
         #We first find the matrix square root
         #of the augmentedCovariance via cholesky decomposition
 
-        sqrtm = self._matrixRoot(self.augmentedCovariance)
+        sqrtm = self._matrixRoot(self.augmentedCovariance).transpose()
+        self.prettyPrint(sqrtm)
 
         sigmas = [self.augmentedPose.copy()]
         L = len(self.augmentedPose)
@@ -107,7 +108,7 @@ class ukf:
         self.augmentedCovariance = w0 * (sigmas[0] - self.augmentedPose) * (sigmas[0] - self.augmentedPose).transpose()
         for sigma in sigmas[1:]:
             self.augmentedCovariance += w * (sigma - self.augmentedPose) * (sigma - self.augmentedPose).transpose()
-        self.augmentedCovariance += self.processCovariance
+        #self.augmentedCovariance += self.processCovariance
 
 
     def predict(self, gyro):
@@ -115,11 +116,16 @@ class ukf:
 
         #Generate sigma points
         sigmas = self._generateSigmas()
+        self.prettyPrintVectors(sigmas)
+
         #Propagate sigma points
         self._propagateStates(sigmas, gyro*self.DELTA_T)
+        self.prettyPrintVectors(sigmas)
 
         #recover estimate and covariance
+        self.prettyPrint(self.augmentedCovariance)
         self.recoverPrediction(sigmas)
+        self.prettyPrint(self.augmentedCovariance)
 
 
     def accFromPose(self, pose):
@@ -164,14 +170,31 @@ class ukf:
         self.augmentedPose += gain * (acc - predictedMeasurement)
         self.augmentedCovariance -= gain * measurementCovariance * gain.transpose()
 
+        self.prettyPrint(measurementCovariance)
+        self.prettyPrint(crossCovariance)
+        self.prettyPrint(gain)
+        self.prettyPrint(self.augmentedCovariance)
 
 
     def correct(self, acc):
         sigmas = self._generateSigmas()
+        self.prettyPrintVectors(sigmas)
         gammas = [self.accFromPose(sigma) for sigma in sigmas]
+        self.prettyPrintVectors(gammas)
 
         self.recoverCorrection(sigmas, gammas, np.matrix(acc).transpose())
 
+
+    def prettyPrintVectors(self, vectors):
+        first_one = True
+        for v in vectors:
+            if first_one:
+                first_one = False
+            else:
+                for x in v:
+                    print "%e," % (float(x),),
+                print
+        print
 
     def prettyPrint(self, matrix):
         rows = matrix.tolist()
@@ -181,14 +204,10 @@ class ukf:
             print
         print
 
-
     def update(self, acc, gyro):
         #Update stuff
-        self.prettyPrint(self.augmentedCovariance)
         self.predict(numpy.matrix(gyro).transpose())
-        self.prettyPrint(self.augmentedCovariance)
         self.correct(acc)
-        self.prettyPrint(self.augmentedCovariance)
 
         return QuaternionUtils.quaternionFromRotationVector(self.augmentedPose[0:3])
 

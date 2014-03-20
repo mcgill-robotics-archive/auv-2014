@@ -18,16 +18,21 @@ def listToQuaternion(l):
     q.z = l[3]
     return q
 
+first_time = True
 def dataCallback(imu_msg):
-    acc = vectorToList(imu_msg.linear_acceleration)
-    gyro = vectorToList(imu_msg.angular_velocity)
-    q = estimator.update(acc,gyro)
+    global first_time
+    if first_time:
+        first_time = False
+    else:
+        acc = vectorToList(imu_msg.linear_acceleration)
+        gyro = vectorToList(imu_msg.angular_velocity)
+        q = estimator.update(acc,gyro)
 
-    pose_msg = PoseStamped()
-    pose_msg.header = imu_msg.header
-    pose_msg.header.frame_id = 'base_footprint'
-    pose_msg.pose.orientation = listToQuaternion(q)
-    pub.publish(pose_msg)
+        pose_msg = PoseStamped()
+        pose_msg.header = imu_msg.header
+        pose_msg.header.frame_id = 'base_footprint'
+        pose_msg.pose.orientation = listToQuaternion(q)
+        pub.publish(pose_msg)
 
 
 def init():
