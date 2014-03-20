@@ -196,22 +196,7 @@ target_link_libraries(front_cv_node Buoy)
 target_link_libraries(front_cv_node ${catkin_LIBRARIES})
 rosbuild_add_compile_flags(front_cv_node -std=c++0x)
 
-add_executable(FrontCameraNode src/FrontCameraNode.cpp)
-target_link_libraries(FrontCameraNode Camera)
-target_link_libraries(FrontCameraNode CameraNode)
-target_link_libraries(FrontCameraNode ${catkin_LIBRARIES})
-
-add_executable(DownCameraNode src/DownCameraNode.cpp)
-target_link_libraries(DownCameraNode Camera)
-target_link_libraries(DownCameraNode CameraNode)
-target_link_libraries(DownCameraNode ${catkin_LIBRARIES})
-
 add_executable(CVTestNode src/CVTestNode.cpp)
-target_link_libraries(CVTestNode ${catkin_LIBRARIES})
-
-add_executable(SoftCameraNode src/SoftCameraNode.cpp)
-target_link_libraries(SoftCameraNode Camera)
-target_link_libraries(SoftCameraNode CameraNode)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
 
 add_executable (distanceCalculator src/distanceCalculator.cpp)

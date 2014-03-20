@@ -1,6 +1,4 @@
 #include "FrontCVNode.h"
-#include "FrontCameraNode.h"
-
 
 ros::Publisher visibleObjectDataPublisher;
 ros::Publisher frontCVCamera1Publisher;
@@ -20,7 +18,7 @@ int main(int argc, char **argv) {
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
 	// Creates a new CVNode object.
-	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, FRONT_CAMERA_NODE_TOPIC, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
+	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, CAMERA1_CV_TOPIC_NAME, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
 
 	// Start receiving images from the camera node (publisher)
 	pFrontCVNode->receiveImages();
@@ -59,7 +57,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	//this->visibleObjectList.push_back(new Gate());
 	//this->visibleObjectList.push_back(new Buoy());
 	// Create a window to display the images received
-	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
+	cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	numFramesWithoutObject = 0;
 }
 
@@ -70,7 +68,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
  *
  */
 FrontCVNode::~FrontCVNode() {
-	cv::destroyWindow(FRONT_CAMERA_NODE_TOPIC);
+	cv::destroyWindow(CAMERA1_CV_TOPIC_NAME);
 }
 
 void FrontCVNode::instanciateAllVisibleObjects() {
@@ -135,7 +133,7 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
 		// Display the filtered image
-		cv::imshow(FRONT_CAMERA_NODE_TOPIC, currentFrame);
+		cv::imshow(CAMERA1_CV_TOPIC_NAME, currentFrame);
 		cv::waitKey(5);
 	} catch (cv::Exception& e) {
 		ROS_ERROR("cv::imgshow exception: %s", e.what());
