@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   message_generation
   tf
+  planner
 )
 
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
@@ -61,7 +62,7 @@ catkin_package(
   LIBRARIES computer_vision
 #  CATKIN_DEPENDS cpp ros rospy std_msgs
 #  DEPENDS system_lib
-  CATKIN_DEPENDS roscpp std_msgs message_runtime
+  CATKIN_DEPENDS roscpp std_msgs message_runtime planner
 )
 
 ###########
