@@ -30,8 +30,6 @@ project(planner)
  generate_messages (
    DEPENDENCIES
    std_msgs
-   planner
-   simulator
  )
 
 ###################################
@@ -47,6 +45,7 @@ project(planner)
 ###########
 
  include_directories (
+   include/
    ${catkin_INCLUDE_DIRS}
  )
  
@@ -54,18 +53,19 @@ project(planner)
  add_executable(TestNodePleaseIgnore src/rosTest.cpp)
  target_link_libraries(TestNodePleaseIgnore ${catkin_LIBRARIES})
  add_dependencies(TestNodePleaseIgnore ${catkin_EXPORTED_TARGETS})
+add_dependencies(TestNodePleaseIgnore ${PROJECT_NAME}_gencpp)
+
 
 
  add_executable(Planner src/Interface.cpp src/Loader.cpp src/Invoker.cpp src/TaskFactory.cpp src/Config.cpp include/pugixml/src/pugixml.cpp src/TaskConcrete.cpp src/Task.cpp src/Task_Gate.cpp src/Task_Lane.cpp src/Task_Kill.cpp)
  target_link_libraries(Planner ${catkin_LIBRARIES})
  add_dependencies(Planner ${catkin_EXPORTED_TARGETS})
+add_dependencies(Planner ${PROJECT_NAME}_gencpp)
 
 
  add_executable (CurrentCVTaskPublisher src/CurrentCVTaskPublisher.cpp)
  target_link_libraries(CurrentCVTaskPublisher ${catkin_LIBRARIES})
  add_dependencies(CurrentCVTaskPublisher ${catkin_EXPORTED_TARGETS})
+add_dependencies(CurrentCVTaskPublisher ${PROJECT_NAME}_gencpp)
 
 
- 
-
- include_directories(include ${catkin_INCLUDE_DIRS})
