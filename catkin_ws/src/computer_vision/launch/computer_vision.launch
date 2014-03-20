@@ -1,0 +1,8 @@
+<launch>
+	<!-- Starts the two computer vision nodes (front and down) -->
+
+	<node name="cv_front" pkg="computer_vision" type="front_cv_node" respawn="false" output="screen" args="/simulator/camera1/image_raw" />
+
+	<node name="cv_down" pkg="computer_vision" type="down_cv_node" respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+
+</launch>

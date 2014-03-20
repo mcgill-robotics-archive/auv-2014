@@ -9,7 +9,6 @@
       <param name="white_balance_RV" value="500" />
       <param name="bayer_pattern" value="gbrg" />
       <param name="format7_color_coding" value="raw8"/>
-	  <param name="camera_info_url" value="./../src/computer_vision/camera_info/camera_front_right.yaml"/>
     </node>
     <node ns="camera" pkg="image_proc" type="image_proc"
           name="image_proc" />

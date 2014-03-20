@@ -11,7 +11,7 @@
       <param name="bayer_pattern" value="gbrg" />
       <param name="format7_color_coding" value="raw8"/>
 	  <!--<param name="camera_info_url" value="file:$(find computer_vision)/camera_info/calibration_camera_down.yaml" />-->
-	  <rosparam file="$(find computer_vision)/camera_info/calibration_camera_down.yaml" />
+	  <rosparam file="$(find computer_vision)/camera_calibration/camera_calibration_nopv_cimlab.yaml" />
     </node>
     <node ns="camera" pkg="image_proc" type="image_proc"
           name="image_proc" />
