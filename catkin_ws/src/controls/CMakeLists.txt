@@ -188,3 +188,5 @@ add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
 add_dependencies(controls ${catkin_EXPORTED_TARGETS})
 add_dependencies(testControls ${catkin_EXPORTED_TARGETS})
 add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})
+
+add_dependencies(controls ${PROJECT_NAME}_gencpp)
