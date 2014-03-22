@@ -14,8 +14,12 @@ int main(int argc, char **argv) {
 
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
+	std::string imageFeedDown;
+
+	nodeHandle.param<std::string>("image_feed/left", imageFeedDown, "/simulator/camera3/image_raw");
+
 	// Creates a new CVNode object.
-	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, argv[1], DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
+	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, imageFeedDown, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
 
 	// Start receiving images from the camera node (publisher)
 	pDownCVNode->receiveImages();
