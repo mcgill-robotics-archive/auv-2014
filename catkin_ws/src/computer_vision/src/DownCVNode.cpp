@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
 	// Creates a new CVNode object.
-	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, CAMERA3_CV_TOPIC_NAME, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
+	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, argv[1], DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
 
 	// Start receiving images from the camera node (publisher)
 	pDownCVNode->receiveImages();
@@ -57,7 +57,6 @@ DownCVNode::~DownCVNode() {
 
 	delete pLastImage;
 }
-
 
 /**
  * @brief Function that is called when an image is received.

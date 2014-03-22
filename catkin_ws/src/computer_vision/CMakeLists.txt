@@ -150,9 +150,6 @@ add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS})
 add_library(CVNode src/CVNode.cpp)
 target_link_libraries(CVNode ${catkin_LIBRARIES})
 
-add_library(CameraNode src/CameraNode.cpp)
-target_link_libraries(CameraNode ${catkin_LIBRARIES})
-
 add_library(Gate src/Gate.cpp)
 target_link_libraries(Gate VisibleObject)
 target_link_libraries(Gate ${catkin_LIBRARIES})
@@ -174,9 +171,6 @@ endif()
 add_library(LineTarget src/LineTarget.cpp)
 target_link_libraries(LineTarget VisibleObject)
 target_link_libraries(LineTarget ${catkin_LIBRARIES})
-
-add_library(Camera src/Camera.cpp)
-target_link_libraries(Camera ${catkin_LIBRARIES})
 
 add_executable(PlannerSimulator src/PlannerSimulator.cpp)
 target_link_libraries(PlannerSimulator ${catkin_LIBRARIES})
@@ -203,7 +197,6 @@ add_executable (distanceCalculator src/distanceCalculator.cpp)
 target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
 
 # This makes sure message headers are generated before being used
-add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
 add_dependencies(CVTestNode computer_vision_gencpp)
 add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})

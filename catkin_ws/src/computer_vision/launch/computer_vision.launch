@@ -1,8 +1,13 @@
 <launch>
 	<!-- Starts the two computer vision nodes (front and down) -->
 
-	<node name="cv_front" pkg="computer_vision" type="front_cv_node" respawn="false" output="screen" args="/simulator/camera1/image_raw" />
+	<node name="cv_front" pkg="computer_vision" type="front_cv_node" respawn="false" output="screen" args="/simulator/camera1/image_raw">
+		<param name="image_feed/left" type="str" value="/simulator/camera1/image_raw" />
+		<param name="image_feed/right" type="str" value="/simulator/camera2/image_raw" />
+	</node>
 
-	<node name="cv_down" pkg="computer_vision" type="down_cv_node" respawn="false" output="screen" args="/simulator/camera1/image_raw"/>
+	<node name="cv_down" pkg="computer_vision" type="down_cv_node" respawn="false" output="screen" args="/simulator/camera3/image_raw">
+		<param name="image_feed/left" type="str" value="/simulator/camera3/image_raw" />
+	</node>
 
 </launch>

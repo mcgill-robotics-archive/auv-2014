@@ -17,8 +17,13 @@ int main(int argc, char **argv) {
 
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
+	std::string imageFeedLeft, imageFeedRight;
+
+	nodeHandle.param<std::string>("image_feed/left", imageFeedLeft, "/simulator/camera1/image_raw");
+	nodeHandle.param<std::string>("image_feed/right", imageFeedRight, "/simulator/camera2/image_raw");
+
 	// Creates a new CVNode object.
-	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, CAMERA1_CV_TOPIC_NAME, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
+	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, imageFeedLeft, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
 
 	// Start receiving images from the camera node (publisher)
 	pFrontCVNode->receiveImages();
@@ -46,16 +51,18 @@ void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) : CVNode(nodeHandle, topicName, receptionRate, bufferSize) {
-	// Create topics with front end
+	// Topics on which the node will be publishing.
 	frontEndPublisher = pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 
-	// Start listening to the planner. This will update the list of visible objects as they change.
+	// Topics on which the node will be subscribing.
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this); 
+
+	this->visibleObjectList.push_back(new Gate());
+
+	// Will execute callbacks functions when an event occurs.
 	ros::spin();
-	// Construct the list of VisibleObjects
-	//this->visibleObjectList.push_back(new Gate());
-	//this->visibleObjectList.push_back(new Buoy());
+
 	// Create a window to display the images received
 	cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	numFramesWithoutObject = 0;
@@ -74,7 +81,6 @@ FrontCVNode::~FrontCVNode() {
 void FrontCVNode::instanciateAllVisibleObjects() {
 
 }
-
 
 /**
  * @brief Function that is called when an image is received.
