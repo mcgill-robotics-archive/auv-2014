@@ -57,12 +57,12 @@ def init():
     rospy.init_node('state_estimation')
 
     # Subscribe to different inputing topics
-    rospy.Subscriber('front_cv_data', VisibleObjectData, cvCallback)
+    rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('pose', PoseStamped, imuCallback)
     rospy.Subscriber('depth', Float64, depthCallback)
 
     # Publish the filtered data to a topic
-    pub = rospy.Publisher('state_estimate', AUVState)
+    pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     rospy.spin()
     
 if __name__ == '__main__':
