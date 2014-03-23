@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -81,7 +81,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">VisibleObject Class Reference</div>  </div>
 </div><!--header-->
@@ -93,7 +94,7 @@ Inheritance diagram for VisibleObject:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVisibleObject__inherit__graph.png" border="0" usemap="#VisibleObject_inherit__map" alt="Inheritance graph"/></div>
 <map name="VisibleObject_inherit__map" id="VisibleObject_inherit__map">
-<area shape="rect" id="node3" href="classBuoy.html" title="Buoy class." alt="" coords="5,83,56,112"/><area shape="rect" id="node5" href="classDoor.html" title="Door" alt="" coords="80,83,131,112"/><area shape="rect" id="node7" href="classLineTarget.html" title="LineTarget" alt="" coords="155,83,237,112"/><area shape="rect" id="node9" href="classMarkerTarget.html" title="MarkerTarget" alt="" coords="261,83,360,112"/></map>
+<area shape="rect" id="node3" href="classBuoy.html" title="Buoy class." alt="" coords="5,83,56,112"/><area shape="rect" id="node5" href="classGate.html" title="The Gate class that defines the feature detection filters that will be applied to detect the gate obj..." alt="" coords="80,83,131,112"/><area shape="rect" id="node7" href="classLineTarget.html" title="LineTarget" alt="" coords="155,83,237,112"/><area shape="rect" id="node9" href="classMarkerTarget.html" title="MarkerTarget" alt="" coords="261,83,360,112"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classVisibleObject-members.html">List of all members.</a></p>
@@ -104,19 +105,22 @@ Public Member Functions</h2></td></tr>
 &lt; computer_vision::VisibleObjectData * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisibleObject.html#a0a74714bb131337fb8b9a9a3b50532f2">retrieveObjectData</a> (cv::Mat &amp;currentFrame)=0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisibleObject.html#a942674dd96c9b176bebe13247c8db1a0">convertFromBGRXToHSV</a> (const cv::Mat &amp;currentFrame)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the cv::Mat object passed in parameter and converts it from BGRX to HSV color space.  <a href="#a942674dd96c9b176bebe13247c8db1a0"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisibleObject.html#a011f27293148a7bf33ee15e188fbf673">~VisibleObject</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a011f27293148a7bf33ee15e188fbf673"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisibleObject.html#a4bec739f6ba9f625856d881ea52c67ca">~VisibleObject</a> ()=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a4bec739f6ba9f625856d881ea52c67ca"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVisibleObject.html#a32db704cb8b64d470bcf4e48b367ca10">applyFilter</a> (cv::Mat &amp;currentFrame)=0</td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a011f27293148a7bf33ee15e188fbf673"></a><!-- doxytag: member="VisibleObject::~VisibleObject" ref="a011f27293148a7bf33ee15e188fbf673" args="()" -->
+<a class="anchor" id="a4bec739f6ba9f625856d881ea52c67ca"></a><!-- doxytag: member="VisibleObject::~VisibleObject" ref="a4bec739f6ba9f625856d881ea52c67ca" args="()=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classVisibleObject.html#a011f27293148a7bf33ee15e188fbf673">VisibleObject::~VisibleObject</a> </td>
+          <td class="memname"><a class="el" href="classVisibleObject.html#a4bec739f6ba9f625856d881ea52c67ca">VisibleObject::~VisibleObject</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td><code> [virtual]</code></td>
+          <td><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -127,6 +131,25 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a32db704cb8b64d470bcf4e48b367ca10"></a><!-- doxytag: member="VisibleObject::applyFilter" ref="a32db704cb8b64d470bcf4e48b367ca10" args="(cv::Mat &amp;currentFrame)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classVisibleObject.html#a32db704cb8b64d470bcf4e48b367ca10">VisibleObject::applyFilter</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>currentFrame</em></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Implemented in <a class="el" href="classGate.html#a991648c4f2797cb1abec107dbbfc664b">Gate</a>, <a class="el" href="classLineTarget.html#a44e557a9068920281f21af593246e77f">LineTarget</a>, and <a class="el" href="classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234">MarkerTarget</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a942674dd96c9b176bebe13247c8db1a0"></a><!-- doxytag: member="VisibleObject::convertFromBGRXToHSV" ref="a942674dd96c9b176bebe13247c8db1a0" args="(const cv::Mat &amp;currentFrame)" -->
 <div class="memitem">
 <div class="memproto">
@@ -168,13 +191,13 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Implemented in <a class="el" href="classDoor.html#a13540f7d0f7267fa055f6dcd13302e60">Door</a>, <a class="el" href="classBuoy.html#a9d8a08f2d8fbc55a8690acc98f7ad420">Buoy</a>, <a class="el" href="classLineTarget.html#acd9a9fe3187ec925a3d3053242fcd25b">LineTarget</a>, and <a class="el" href="classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a">MarkerTarget</a>.</p>
+<p>Implemented in <a class="el" href="classGate.html#a6a9465606f6f78080c992095f193de88">Gate</a>, <a class="el" href="classBuoy.html#a9d8a08f2d8fbc55a8690acc98f7ad420">Buoy</a>, <a class="el" href="classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a">MarkerTarget</a>, and <a class="el" href="classLineTarget.html#acd9a9fe3187ec925a3d3053242fcd25b">LineTarget</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="VisibleObject_8h_source.html">VisibleObject.h</a></li>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="VisibleObject_8cpp.html">VisibleObject.cpp</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/computer_vision/include/<a class="el" href="VisibleObject_8h_source.html">VisibleObject.h</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/computer_vision/src/<a class="el" href="VisibleObject_8cpp.html">VisibleObject.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -194,7 +217,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -42,6 +42,7 @@ Gate::Gate() {
 Gate::~Gate() {
 #ifdef USE_CV_WINDOWS
 	cv::destroyWindow(COLOR_THRESH_WINDOW);
+	cv::destroyWindow(TRACKBARS_WINDOW);
 #endif
 }
 
@@ -57,9 +58,11 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 	m_isVisible = false;
 
+	ROS_INFO("%s", "About to process the image in order to detect the gate object.");
+
 	applyFilter(currentFrame);
 
-	//ROS_INFO("%s", "The processing for the Gate object is completed. Now creating the ROS message.");
+	ROS_INFO("%s", "The processing for the Gate object is completed. Now creating the ROS message.");
 
 	if (m_isVisible) {
 		computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();		

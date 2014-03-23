@@ -1,9 +1,11 @@
 #include "Interface.h"
 
-
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
 double maxHeadingError = 0.5;
+
+ros::Subscriber estimatedState_subscriber;
+ros::Subscriber estimatedDepth_subscriber;
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
@@ -22,6 +24,11 @@ double visible_YPos;
 double visible_Depth;
 double visible_Yaw;
 double visible_Pitch;
+
+/**
+ * Defines in which folder are stored the XML files.
+*/
+std::string xmlFilesPath;
 
 /**
  * Object the we currently want CV to look for
@@ -44,32 +51,36 @@ void estimatedDepth_callback(const std_msgs::Float64 msg) {
   visible_Depth = msg.data;
 }
 
-/**
-* gets the position/heading of robot relative to chosen object
-*/
-void setTransform (std::string referenceFrame) {
-  tf::TransformListener listener;
-  listener.transformPose(referenceFrame, myPose, relativePose);
-}
 
 /**
 * determines the position and heading of our robot
 */
-void setPose() {
+void setOurPose() {
   tf::TransformListener listener;
   geometry_msgs::PoseStamped emptyPose;
-  emptyPose.header.frame_id = "dummy";
+  emptyPose.header.frame_id = "/robot/rotation_center";
   emptyPose.pose.position.x = 0.0;
   emptyPose.pose.position.y = 0.0;
   emptyPose.pose.position.z = 0.0;
   emptyPose.pose.orientation.x = 0.0;
   emptyPose.pose.orientation.y = 0.0;
   emptyPose.pose.orientation.z = 0.0;
-  emptyPose.pose.orientation.w = 0.0;
-  listener.transformPose("/origin", emptyPose, myPose);
+  emptyPose.pose.orientation.w = 1.0;
+  listener.transformPose("/robot/rotation_center", emptyPose, myPose);
+}
+
+/**
+* gets the position/heading of robot relative to chosen object
+*/
+void setTransform (std::string referenceFrame) {
+  tf::TransformListener listener;
+  setOurPose();
+  listener.transformPose(referenceFrame, myPose, relativePose);
 }
 
 bool areWeThereYet(std::vector<double> desired) {
+  //if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
+  //if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
   double xError = visible_XPos - desired.at(0);
   double yError = visible_YPos - desired.at(1);
   double pitchError = visible_Pitch - desired.at(2);
@@ -89,6 +100,8 @@ bool areWeThereYet(std::vector<double> desired) {
 
 
 bool areWeThereYet_tf(std::string referenceFrame) {
+  //if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
+  //if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
   setTransform(referenceFrame);
   //positional bounds
   bool pxBounded = relativePose.pose.position.x < .1;
@@ -105,7 +118,7 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 
 void setVisionObj (int objIndex) {
   planner::CurrentCVTask msgFront;
-   planner::CurrentCVTask msgDown;
+  planner::CurrentCVTask msgDown;
 
   msgFront.currentCVTask = msgFront.NOTHING;
   msgDown.currentCVTask = msgDown.NOTHING;
@@ -186,20 +199,33 @@ int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
-  ros::Subscriber estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
+  estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
+  estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
   taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000); 
   taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000); 
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
+  n.param<std::string>("planner/xml_files_path", xmlFilesPath, "");
+
+  bool ready = 0;
+  while (ready == 0)
+  {
+    ROS_DEBUG_THROTTLE(2,"Waiting...");
+    ready = 1;     
+    if (estimatedDepth_subscriber.getNumPublishers() == 0) {ready = 0;}
+    else {ROS_DEBUG_THROTTLE(2,"Here ye Heare ye");}
+    if (estimatedState_subscriber.getNumPublishers() == 0) {ready = 0;}
+    else {ROS_DEBUG_THROTTLE(2,"got estimated State");}
+  }
+
   ros::Rate loop_rate(10);
   /****This is ros::spin() on a seperate thread*****/
   boost::thread spin_thread(&spinThread);
 
   std::cout<<"Starting Loader"<< std::endl; 
-  Loader* loader = new Loader();
+  Loader* loader = new Loader(xmlFilesPath);
   Invoker* invoker = loader->getInvoker();
   invoker->StartRun();
   std::cout<<"Done Loader"<< std::endl;  

@@ -1,7 +1,9 @@
 var searchData=
 [
+  ['add',['add',['../classMarkerTarget.html#a7ee645a3d8cf193a18e74a0bfb624753',1,'MarkerTarget']]],
   ['addtask',['AddTask',['../classInvoker.html#a63abecfb701e07557ced3ceda718080c',1,'Invoker']]],
-  ['adjustmodelyaw',['adjustModelYaw',['../classgazebo_1_1Robot.html#aecfdbca97d599c44c1a3923709c81e65',1,'gazebo::Robot']]],
+  ['adjustmodelyaw',['adjustModelYaw',['../classgazebo_1_1Robot.html#aecfdbca97d599c44c1a3923709c81e65',1,'gazebo::Robot::adjustModelYaw()'],['../classgazebo_1_1Robot.html#aecfdbca97d599c44c1a3923709c81e65',1,'gazebo::Robot::adjustModelYaw()']]],
+  ['allinone',['allInOne',['../structros_1_1serialization_1_1Serializer_3_01_1_1simulator_1_1ThrusterForces___3_01ContainerAllocator_01_4_01_4.html#a5841ebb0cb38798bf5269421d1ad55e1',1,'ros::serialization::Serializer&lt; ::simulator::ThrusterForces_&lt; ContainerAllocator &gt; &gt;']]],
   ['alloc_5fnode',['alloc_node',['../structxpath__parser.html#ae33adcc8eb125124967d95297daff351',1,'xpath_parser']]],
   ['alloc_5fstring',['alloc_string',['../structxpath__parser.html#a109e4c472bb76911a2b49ee741d400af',1,'xpath_parser']]],
   ['allocate',['allocate',['../classxpath__allocator.html#aad95aa445f2fdc7c3d1c19b1f3d67cb1',1,'xpath_allocator']]],
@@ -17,8 +19,10 @@ var searchData=
   ['append',['append',['../classxpath__string.html#aab0d867c56d390213cf0fbe7334e1cc0',1,'xpath_string::append()'],['../classxpath__node__set__raw.html#a0c02728de3d895a2d12df9666d60e414',1,'xpath_node_set_raw::append()']]],
   ['append_5fattribute_5fll',['append_attribute_ll',['../pugixml_8cpp.html#aad3b67164b1e0fe8b1e9c57fe55dc8bc',1,'pugixml.cpp']]],
   ['append_5fnode',['append_node',['../pugixml_8cpp.html#add30251379f717a3ebd53171dbb12f3c',1,'pugixml.cpp']]],
-  ['applydrag',['applyDrag',['../classRobot.html#a8b856b3b0ebe4881c711ed129975dbb0',1,'Robot::applyDrag()'],['../classgazebo_1_1Robot.html#a43b1cfc25b9777c7ff5254555c29bcca',1,'gazebo::Robot::applyDrag()']]],
-  ['applyfilter',['applyFilter',['../classLineTarget.html#a44e557a9068920281f21af593246e77f',1,'LineTarget::applyFilter()'],['../classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234',1,'MarkerTarget::applyFilter()']]],
+  ['applydrag',['applyDrag',['../classgazebo_1_1Robot.html#a43b1cfc25b9777c7ff5254555c29bcca',1,'gazebo::Robot::applyDrag()'],['../classgazebo_1_1Robot.html#a43b1cfc25b9777c7ff5254555c29bcca',1,'gazebo::Robot::applyDrag()']]],
+  ['applyfilter',['applyFilter',['../classGate.html#a991648c4f2797cb1abec107dbbfc664b',1,'Gate::applyFilter()'],['../classLineTarget.html#a44e557a9068920281f21af593246e77f',1,'LineTarget::applyFilter()'],['../classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234',1,'MarkerTarget::applyFilter()'],['../classVisibleObject.html#a32db704cb8b64d470bcf4e48b367ca10',1,'VisibleObject::applyFilter()']]],
+  ['arewethereyet',['areWeThereYet',['../Interface_8h.html#aadbdbdbab27f28e58962fbb51583a5dc',1,'areWeThereYet(std::vector&lt; double &gt; desired):&#160;Interface.cpp'],['../Interface_8cpp.html#aadbdbdbab27f28e58962fbb51583a5dc',1,'areWeThereYet(std::vector&lt; double &gt; desired):&#160;Interface.cpp']]],
+  ['arewethereyet_5ftf',['areWeThereYet_tf',['../Interface_8h.html#abcc8093dd921c1afa0f7b027f9dba16e',1,'areWeThereYet_tf(std::string referenceFrame):&#160;Interface.cpp'],['../Interface_8cpp.html#abcc8093dd921c1afa0f7b027f9dba16e',1,'areWeThereYet_tf(std::string referenceFrame):&#160;Interface.cpp']]],
   ['as_5futf8',['as_utf8',['../namespacepugi.html#a390bb44f7ba92b1a8a4f9157799d2ca8',1,'pugi::as_utf8(const wchar_t *str)'],['../namespacepugi.html#ab4be9ab3dc86b13599b9f2fd2f778dfb',1,'pugi::as_utf8(const std::basic_string&lt; wchar_t &gt; &amp;str)']]],
   ['as_5futf8_5fbegin',['as_utf8_begin',['../pugixml_8cpp.html#acf5b48bb1e377e9583eec8ba0e607898',1,'pugixml.cpp']]],
   ['as_5futf8_5fend',['as_utf8_end',['../pugixml_8cpp.html#a1bc09bbcdecde39207659ed351487999',1,'pugixml.cpp']]],

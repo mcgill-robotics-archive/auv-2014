@@ -26,6 +26,7 @@ class LineTarget : public VisibleObject {
 	void thresh_callback(int, void* );
 	double relativeYaw(cv::RotatedRect line);
 	bool isVisible(cv::RotatedRect line);
+	int add(int x, int y);
 
 };
 

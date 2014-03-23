@@ -21,12 +21,15 @@ class TaskFactory{
  public:
 
  	TaskFactory();
+ 	~TaskFactory();
 
  	int parseTask(std::string id);
 		
 	int parseVersion(std::string id);
 
 	Task* makeTask(std::string id);
+
+	Task* getGateTask();
 
 	Task* getEndTask();
 

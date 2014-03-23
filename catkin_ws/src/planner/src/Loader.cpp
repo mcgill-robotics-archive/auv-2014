@@ -9,13 +9,16 @@
 
 void ps3Control(); 
 
-Loader::Loader(){
+/**
+ * Constructor.
+*/
+Loader::Loader(std::string xmlFilesPath){
 /**
 * Initialize the objects
 */
 	std::cout<<"In Loader Constructor"<< std::endl;
 	main_Invoker = new Invoker();
-	main_Config = new Config();
+	main_Config = new Config(xmlFilesPath);
 	main_Taskfactory = new TaskFactory();
 
 /**
@@ -58,6 +61,7 @@ void Loader::loadInvoker(){
 		//main_Invoker->AddTask(main_Taskfactory->makeTask("1v1")); // works now!!!
 	}
 
+main_Invoker->AddTask(main_Taskfactory->getGateTask());
 	//adds the end task after all other tasks have been loaded
 	main_Invoker->AddTask(main_Taskfactory->getEndTask());
 

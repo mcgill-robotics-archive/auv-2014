@@ -250,3 +250,7 @@ double LineTarget::relativeYaw(cv::RotatedRect line){
 	return angle;
 }
 
+int LineTarget::add(int x, int y) {
+	return x+y;
+}
+

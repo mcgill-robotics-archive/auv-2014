@@ -15,7 +15,8 @@ class Config{
 
 	public:
 
-		Config();
+		Config(std::string xmlFilesPath);
+		~Config();
 
 	    void Loader();
 

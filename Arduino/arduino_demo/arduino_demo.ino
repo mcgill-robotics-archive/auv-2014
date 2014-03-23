@@ -31,7 +31,7 @@ boolean killSwitchEngaged = false;
 
 // Moving Average filter for depth data
 const static int WINDOW_WIDTH = 3;
-int depthReadings[WINDOW_WIDTH] = {0, 0, 0, 0, 0};
+int depthReadings[WINDOW_WIDTH] = {0, 0, 0};
 int depthIndex = 0;
 int depthAverage = 0;
 

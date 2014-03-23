@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>McGill Robotics: RoboSub 2014: /home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/FrontCVNode.h Source File</title>
+<title>McGill Robotics: RoboSub 2014: /home/david/repo/robosub14/catkin_ws/src/computer_vision/include/FrontCVNode.h Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -79,7 +79,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/FrontCVNode.h</div>  </div>
+<div class="title">/home/david/repo/robosub14/catkin_ws/src/computer_vision/include/FrontCVNode.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="FrontCVNode_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef FRONT_CV_NODE_H</span>
@@ -87,35 +87,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00003"></a>00003 <span class="preprocessor"></span>
 <a name="l00004"></a>00004 <span class="preprocessor">#include &quot;<a class="code" href="CVNode_8h.html">CVNode.h</a>&quot;</span>
 <a name="l00005"></a>00005 <span class="preprocessor">#include &quot;<a class="code" href="Buoy_8h.html">Buoy.h</a>&quot;</span>
-<a name="l00006"></a>00006 <span class="preprocessor">#include &quot;<a class="code" href="Door_8h.html">Door.h</a>&quot;</span>
-<a name="l00007"></a>00007 
+<a name="l00006"></a>00006 <span class="preprocessor">#include &quot;<a class="code" href="Gate_8h.html">Gate.h</a>&quot;</span>
+<a name="l00007"></a>00007 <span class="preprocessor">#include &quot;<a class="code" href="LineTarget_8h.html">LineTarget.h</a>&quot;</span>
 <a name="l00008"></a>00008 
-<a name="l00009"></a>00009 <span class="comment">//#include &quot;computer_vision/StereoCameraImages.h&quot;</span>
-<a name="l00010"></a>00010 
-<a name="l00011"></a><a class="code" href="FrontCVNode_8h.html#ac058b7d0dde936c7be3aeafafa67ae5c">00011</a> <span class="keyword">const</span> std::string <a class="code" href="FrontCVNode_8h.html#ac058b7d0dde936c7be3aeafafa67ae5c">FRONT_CV_NODE_NAME</a> = <span class="stringliteral">&quot;front_cv_node&quot;</span>;
-<a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="FrontCVNode_8h.html#a801f89f16d0f0cb387a28675a10cce77">00013</a> <span class="keyword">const</span> std::string <a class="code" href="FrontCVNode_8h.html#a801f89f16d0f0cb387a28675a10cce77">CAMERA1_CV_TOPIC_NAME</a> = <span class="stringliteral">&quot;front_cv_camera1&quot;</span>;
-<a name="l00014"></a><a class="code" href="FrontCVNode_8h.html#ac8cff7e155f988b87babe1c720eca07e">00014</a> <span class="keyword">const</span> std::string <a class="code" href="DownCVNode_8h.html#ac8cff7e155f988b87babe1c720eca07e">DATA_TOPIC_NAME</a> = <span class="stringliteral">&quot;front_cv_data&quot;</span>;
-<a name="l00015"></a>00015 
+<a name="l00009"></a>00009 <span class="comment">// These variables need to be accessible from the main method in FrontCVNode.cpp.</span>
+<a name="l00010"></a><a class="code" href="FrontCVNode_8h.html#ac058b7d0dde936c7be3aeafafa67ae5c">00010</a> <span class="keyword">const</span> std::string <a class="code" href="FrontCVNode_8h.html#ac058b7d0dde936c7be3aeafafa67ae5c">FRONT_CV_NODE_NAME</a> = <span class="stringliteral">&quot;front_cv&quot;</span>;
+<a name="l00011"></a><a class="code" href="FrontCVNode_8h.html#a801f89f16d0f0cb387a28675a10cce77">00011</a> <span class="keyword">const</span> std::string <a class="code" href="FrontCVNode_8h.html#a801f89f16d0f0cb387a28675a10cce77">CAMERA1_CV_TOPIC_NAME</a> = <span class="stringliteral">&quot;front_cv/camera1&quot;</span>;
+<a name="l00012"></a><a class="code" href="FrontCVNode_8h.html#a1b3c2261a66fdf8332f5d44ca4197d4b">00012</a> <span class="keyword">const</span> std::string <a class="code" href="FrontCVNode_8h.html#a1b3c2261a66fdf8332f5d44ca4197d4b">CAMERA2_CV_TOPIC_NAME</a> = <span class="stringliteral">&quot;front_cv/camera2&quot;</span>;
+<a name="l00013"></a><a class="code" href="FrontCVNode_8h.html#aa209ac0b822ca9ad88b731f1651d5a25">00013</a> <span class="keyword">const</span> std::string <a class="code" href="DownCVNode_8h.html#aa209ac0b822ca9ad88b731f1651d5a25">OUTPUT_DATA_TOPIC_NAME</a> = <span class="stringliteral">&quot;front_cv/data&quot;</span>;
+<a name="l00014"></a>00014 <span class="comment">// TODO: Figure out name of topic the planner publishes to.</span>
+<a name="l00015"></a><a class="code" href="FrontCVNode_8h.html#ad9f9482dd4429d391f15038cfd5ddf3f">00015</a> <span class="keyword">const</span> std::string <a class="code" href="FrontCVNode_8h.html#ad9f9482dd4429d391f15038cfd5ddf3f">PLANNER_DATA_FRONT_TOPIC_NAME</a> = <span class="stringliteral">&quot;currentCVTask_Front&quot;</span>;
 <a name="l00016"></a><a class="code" href="FrontCVNode_8h.html#aae776cc01a628dbeed6a575ece026c8a">00016</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="FrontCVNode_8h.html#aae776cc01a628dbeed6a575ece026c8a">FRONT_CV_NODE_RECEPTION_RATE</a> = 10;
 <a name="l00017"></a><a class="code" href="FrontCVNode_8h.html#af7986a823acbe9afc08363cb42e96723">00017</a> <span class="keyword">const</span> <span class="keywordtype">int</span> <a class="code" href="FrontCVNode_8h.html#af7986a823acbe9afc08363cb42e96723">FRONT_CV_NODE_BUFFER_SIZE</a> = 1;
 <a name="l00018"></a>00018 
 <a name="l00019"></a><a class="code" href="classFrontCVNode.html">00019</a> <span class="keyword">class </span><a class="code" href="classFrontCVNode.html">FrontCVNode</a> : <span class="keyword">public</span> <a class="code" href="classCVNode.html">CVNode</a> {
 <a name="l00020"></a>00020 
-<a name="l00021"></a>00021         <span class="keyword">public</span>:
+<a name="l00021"></a>00021 <span class="keyword">public</span>:
 <a name="l00022"></a>00022 
 <a name="l00023"></a>00023         <a class="code" href="classFrontCVNode.html#aa1a9998febc50680afae7836c0a77eea" title="Constructor.">FrontCVNode</a>(ros::NodeHandle&amp; nodeHandle, std::string topicName, <span class="keywordtype">int</span> receptionRate, <span class="keywordtype">int</span> bufferSize);
-<a name="l00024"></a>00024         <a class="code" href="classFrontCVNode.html#afc18df682418ee0778e00ba82f847872">~FrontCVNode</a>();
+<a name="l00024"></a>00024         <a class="code" href="classFrontCVNode.html#afc18df682418ee0778e00ba82f847872" title="Destructor.">~FrontCVNode</a>();
 <a name="l00025"></a>00025 
-<a name="l00026"></a>00026         <span class="keyword">private</span>:
-<a name="l00027"></a>00027 
-<a name="l00028"></a>00028         cv::Mat* pLastImageLeftCamera;
-<a name="l00029"></a>00029         cv::Mat* pLastImageRightCamera;
+<a name="l00026"></a>00026 <span class="keyword">private</span>:
+<a name="l00027"></a>00027         <span class="keywordtype">int</span> numFramesWithoutObject;
+<a name="l00028"></a>00028         <a class="code" href="classGate.html" title="The Gate class that defines the feature detection filters that will be applied to detect the gate obj...">Gate</a> gateObjectFilters;
+<a name="l00029"></a>00029         <a class="code" href="classBuoy.html" title="Buoy class.">Buoy</a> buoyObjectFilters;
 <a name="l00030"></a>00030 
-<a name="l00031"></a>00031         <span class="keywordtype">void</span> receiveImage(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; message);
-<a name="l00032"></a>00032 };
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 <span class="preprocessor">#endif</span>
+<a name="l00031"></a>00031         <span class="keywordtype">void</span> instanciateAllVisibleObjects();
+<a name="l00032"></a>00032         <span class="keywordtype">void</span> receiveImage(<span class="keyword">const</span> sensor_msgs::ImageConstPtr&amp; message);
+<a name="l00033"></a>00033         <span class="keywordtype">void</span> listenToPlanner(planner::CurrentCVTask msg);
+<a name="l00034"></a>00034 };
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -134,7 +136,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:30 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

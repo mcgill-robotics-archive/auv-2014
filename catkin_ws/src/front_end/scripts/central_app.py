@@ -4,12 +4,11 @@
 ## @package central_app
 #
 #  Main file for McGill Robotics AUV Design Team testing User Interface
-
+#
 #  @author David Lavoie-Boutin
 
 #bunch of import statements
 #Ui declarations and GUI libraries
-
 from pose_view_widget import PoseViewWidget
 from no_imu import *
 from low_battery_warning import*
@@ -59,13 +58,13 @@ class BatteryWarningUi(QtGui.QDialog):
 
 ## Main window class linking ROS with the UI and controllers
 class CentralUi(QtGui.QMainWindow):
-
+    ##Qt signal for battery empty alarm
     empty_battery_signal = QtCore.pyqtSignal()
 
     ## constructor of the main window for the ui
     #
-    #  it integrates the actual window as well as variables for the graphing areas and the video monitoring array
-    #  @param self The object pointer
+    # it integrates the actual window as well as variables for the graphing areas and the video monitoring array
+    # @param self The object pointer
     # build parent user interface
     # create the ui object
     # create the ps3 controller object
@@ -79,7 +78,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.setupUi(self)
         self.resizeSliders()
         self.ui.label_13.setText("Depth")
-        ## dummy variable to enable or disable the keyboard monitoring
+        ## variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
 
         ## Holds the left preprocessed image received from the sub and later processed by the GUI
@@ -106,9 +105,9 @@ class CentralUi(QtGui.QMainWindow):
         for i in range(0, misc_vars.length_plot, 1):
             self.depth_data.append(0)
 
-        #add the DEPTH GRAPH to the ui
+        ##add the DEPTH GRAPH to the ui
         self.depth_graph = self.ui.imugraphics.addPlot(title="Depth")
-        self.depth_curve = self.depth_graph.plot(pen="y")
+        self.depth_curve = self.depth_graph.plot(pen="w")
         self.depth_graph.setXRange(0, misc_vars.length_plot)
         self.depth_graph.setYRange(0, misc_vars.depth_max)
         
@@ -137,7 +136,7 @@ class CentralUi(QtGui.QMainWindow):
         self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
 
         # buttons connects
-        #QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
+        # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
         QtCore.QObject.connect(self.ui.resSelect, QtCore.SIGNAL("currentIndexChanged(int)"), self.setVideoRes)
 
@@ -157,7 +156,7 @@ class CentralUi(QtGui.QMainWindow):
     #
     #the selected resolution sets the maximal size to not over size the window
     #@param self the object pointer
-    #@param data the data passed by the connect of the resolution combo box
+    #@param data the data passed by the connect of the resolution combo box, is the index of the selected option
     def setVideoRes(self, data):
         #xga display
         if data == 0:
@@ -188,13 +187,12 @@ class CentralUi(QtGui.QMainWindow):
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
         self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)
-        self.ui.angularVertical.setRange(-1000*vel_vars.MAX_PITCH_ANGLE, 1000*vel_vars.MAX_PITCH_ANGLE)
         self.ui.linearVertical.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
         self.ui.linearHorizantal.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
 
     ## customisation of the key press class of the QWidget
-    #
-    #  Increments the variables contained in VARIABLES.py
+    #  on key press,
+    #  increments the variables contained in VARIABLES.py
     #  @param self The object pointer
     #  @param event the data return by the Qt keyboard keypress signal
     def keyPressEvent(self, event):
@@ -211,11 +209,6 @@ class CentralUi(QtGui.QMainWindow):
                     vel_vars.yaw_velocity += vel_vars.MAX_YAW_VEL
                 elif key == KeyMapping.YawRight:
                     vel_vars.yaw_velocity += -vel_vars.MAX_YAW_VEL
-
-                elif key == KeyMapping.PitchForward:
-                    vel_vars.pitch_velocity += vel_vars.MAX_PITCH_ANGLE
-                elif key == KeyMapping.PitchBackward:
-                    vel_vars.pitch_velocity += -vel_vars.MAX_PITCH_ANGLE
 
                 elif key == KeyMapping.IncreaseDepth:
                     vel_vars.z_position += vel_vars.z_position_step
@@ -248,11 +241,6 @@ class CentralUi(QtGui.QMainWindow):
                 vel_vars.yaw_velocity -= vel_vars.MAX_YAW_VEL
             elif key == KeyMapping.YawRight:
                 vel_vars.yaw_velocity -= -vel_vars.MAX_YAW_VEL
-
-            elif key == KeyMapping.PitchForward:
-                vel_vars.pitch_velocity -= vel_vars.MAX_PITCH_ANGLE
-            elif key == KeyMapping.PitchBackward:
-                vel_vars.pitch_velocity -= -vel_vars.MAX_PITCH_ANGLE
 
             elif key == KeyMapping.IncreaseX:
                 vel_vars.x_velocity -= vel_vars.MAX_LINEAR_VEL
@@ -296,7 +284,7 @@ class CentralUi(QtGui.QMainWindow):
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
-            velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 0)
+            velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 0)
             #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
     ##  Method for the keyboard controller
@@ -309,18 +297,16 @@ class CentralUi(QtGui.QMainWindow):
         # set ui
         self.ui.linearVertical.setValue(1000*vel_vars.x_velocity)
         self.ui.linearHorizantal.setValue(1000*vel_vars.y_velocity)
-        self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
         self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
         self.ui.linearZ.setText(str(vel_vars.z_position))
         self.ui.angularX.setText(str(0))
-        self.ui.angularY.setText(str(vel_vars.pitch_velocity))
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic,1)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, ROS_Topics.vel_topic,1)
 
     ## Method for the ps3 control
     #
@@ -339,18 +325,16 @@ class CentralUi(QtGui.QMainWindow):
         # set ui
         self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
         self.ui.linearHorizantal.setValue(1000*vel_vars.x_velocity)
-        self.ui.angularVertical.setValue(1000*vel_vars.pitch_velocity)
         self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
 
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
         self.ui.linearZ.setText(str(vel_vars.z_position))
         self.ui.angularX.setText(str(0))
-        self.ui.angularY.setText(str(vel_vars.pitch_velocity))
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.pitch_velocity, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 1)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, ROS_Topics.vel_topic, 1)
 
     ## updates the data displayed by the depth graph
     #
@@ -373,8 +357,6 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End_UI', anonymous=True)
-        #rospy.Subscriber(ROS_Topics.imu_raw, Pose, self.imu_callback)
-        #rospy.Subscriber(ROS_Topics.simulator_pose, ModelStates, self.sim_pose_callback)
         rospy.Subscriber(ROS_Topics.depth, Float32, self.depth_callback)
         rospy.Subscriber(ROS_Topics.battery_voltage, Float64, self.battery_voltage_check)
         rospy.Subscriber(ROS_Topics.front_left_pre_topic, Image, self.front_left_pre_callback)
@@ -390,6 +372,10 @@ class CentralUi(QtGui.QMainWindow):
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic(ROS_Topics.imu_filtered)
 
+    ##
+    #appends the last message recieved from planner to a textbox in screen
+    #@param self the object pointer
+    #@param string_data data passed by the ros callback
     def planner_callback(self, string_data):
         self.ui.logObject.append(string_data.data)
 
@@ -476,7 +462,7 @@ class CentralUi(QtGui.QMainWindow):
 
     ##updates the video frames displayed
     #
-    # simply converts the image data from the ros message received
+    # converts the image data from the ros message received
     #
     # converts it to a QPixmap and resets the displayed image
     #

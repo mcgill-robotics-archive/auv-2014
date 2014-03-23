@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -81,9 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">LaunchTorpedo Class Reference</div>  </div>
 </div><!--header-->
@@ -93,45 +91,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><a href="classLaunchTorpedo-members.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLaunchTorpedo.html#a1831cb41fc3120572b4dba70c9c8ca16">FSM</a> { <a class="el" href="classLaunchTorpedo.html#a1831cb41fc3120572b4dba70c9c8ca16a3eeb92549054e250bcd7d2e0af91485e">FSM_MOVE_FORWARD</a>, 
-<a class="el" href="classLaunchTorpedo.html#a1831cb41fc3120572b4dba70c9c8ca16a6fa6a4618f84b9d7346253397f83f184">FSM_ROTATE</a>, 
-<a class="el" href="classLaunchTorpedo.html#a1831cb41fc3120572b4dba70c9c8ca16a0ee3e4c436741ee5a4bf12b40ca1370f">FSM_STOP</a>
- }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLaunchTorpedo.html#a889178af55751b5db4c9c84c1749ab30">Load</a> (physics::ModelPtr _parent, sdf::ElementPtr)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLaunchTorpedo.html#a6ea238ea6011aadcbb0b1916948b77fa">OnUpdate</a> (const common::UpdateInfo &amp;)</td></tr>
-<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLaunchTorpedo.html#a5d857d09967c2eb94237193c25be7703">SPEED</a> = 0.1</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLaunchTorpedo.html#a28e4bc3abdf5d7ef7ac947d4dff60c9b">PI</a> = 3.14159265359</td></tr>
 </table>
-<hr/><h2>Member Enumeration Documentation</h2>
-<a class="anchor" id="a1831cb41fc3120572b4dba70c9c8ca16"></a><!-- doxytag: member="LaunchTorpedo::FSM" ref="a1831cb41fc3120572b4dba70c9c8ca16" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classLaunchTorpedo.html#a1831cb41fc3120572b4dba70c9c8ca16">LaunchTorpedo::FSM</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a1831cb41fc3120572b4dba70c9c8ca16a3eeb92549054e250bcd7d2e0af91485e"></a><!-- doxytag: member="FSM_MOVE_FORWARD" ref="a1831cb41fc3120572b4dba70c9c8ca16a3eeb92549054e250bcd7d2e0af91485e" args="" -->FSM_MOVE_FORWARD</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1831cb41fc3120572b4dba70c9c8ca16a6fa6a4618f84b9d7346253397f83f184"></a><!-- doxytag: member="FSM_ROTATE" ref="a1831cb41fc3120572b4dba70c9c8ca16a6fa6a4618f84b9d7346253397f83f184" args="" -->FSM_ROTATE</em>&nbsp;</td><td>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1831cb41fc3120572b4dba70c9c8ca16a0ee3e4c436741ee5a4bf12b40ca1370f"></a><!-- doxytag: member="FSM_STOP" ref="a1831cb41fc3120572b4dba70c9c8ca16a0ee3e4c436741ee5a4bf12b40ca1370f" args="" -->FSM_STOP</em>&nbsp;</td><td>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a889178af55751b5db4c9c84c1749ab30"></a><!-- doxytag: member="LaunchTorpedo::Load" ref="a889178af55751b5db4c9c84c1749ab30" args="(physics::ModelPtr _parent, sdf::ElementPtr)" -->
 <div class="memitem">
@@ -177,35 +141,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a28e4bc3abdf5d7ef7ac947d4dff60c9b"></a><!-- doxytag: member="LaunchTorpedo::PI" ref="a28e4bc3abdf5d7ef7ac947d4dff60c9b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const double <a class="el" href="classLaunchTorpedo.html#a28e4bc3abdf5d7ef7ac947d4dff60c9b">LaunchTorpedo::PI</a> = 3.14159265359<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a5d857d09967c2eb94237193c25be7703"></a><!-- doxytag: member="LaunchTorpedo::SPEED" ref="a5d857d09967c2eb94237193c25be7703" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const double <a class="el" href="classLaunchTorpedo.html#a5d857d09967c2eb94237193c25be7703">LaunchTorpedo::SPEED</a> = 0.1<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/simulator/include/<a class="el" href="launch__torpedo_8h_source.html">launch_torpedo.h</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/simulator/include/<a class="el" href="launch__torpedo_8h_source.html">launch_torpedo.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -225,7 +162,7 @@ Static Public Attributes</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

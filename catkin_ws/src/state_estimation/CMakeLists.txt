@@ -8,6 +8,7 @@ find_package(catkin REQUIRED
   message_generation
   std_msgs
   geometry_msgs
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -103,7 +104,8 @@ catkin_package(
 # )
 
 ## Declare a cpp executable
-# add_executable(state_estimation_node src/state_estimation_node.cpp)
+add_executable(tf_broadcaster src/tf_broadcaster.cpp)
+target_link_libraries(tf_broadcaster ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes

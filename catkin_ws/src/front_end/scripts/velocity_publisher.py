@@ -5,7 +5,7 @@ import rospy
 from planner.msg import setPoints
 
 
-def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set_null):
+def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
     vel_pub = rospy.Publisher(ros_topic, setPoints)
 
     msg = setPoints()
@@ -19,7 +19,6 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set
         msg.YSpeed.data = y_vel
         msg.Depth.data = z_depth
 
-        msg.Pitch.data = pitch_vel
         msg.YawSpeed.data = yaw_vel
 
 
@@ -27,7 +26,7 @@ def velocity_publisher(x_vel, y_vel, z_depth, pitch_vel, yaw_vel, ros_topic, set
         msg.YPos.isActive = 0
         msg.Depth.isActive = 1
         msg.Yaw.isActive = 0
-        msg.Pitch.isActive = 1
+        msg.Pitch.isActive = 0
         msg.XSpeed.isActive = 1
         msg.YSpeed.isActive = 1
         msg.YawSpeed.isActive = 1

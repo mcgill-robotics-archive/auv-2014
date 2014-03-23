@@ -7,8 +7,10 @@
   <!-- control systems -->
   <include file="$(find controls)/launch/controls4planner.launch" />
 
-  <!-- Planner
-          <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen"/>
-  -->
+  <!-- Planner -->
+  <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen">
+  	<param name="planner/xml_files_path" value="$(find planner)/xml"/>
+  </node>
+ 
 
 </launch>
