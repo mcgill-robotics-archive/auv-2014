@@ -60,7 +60,11 @@ computer_vision::VisibleObjectData tf2CV(const std::string& targetFrame,const st
 
   double roll; //unused, but needs to be sent to getRPY method
   
-  m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
+  //m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
+  m.getEulerYPR(msg.yaw_angle, msg.pitch_angle, roll);
+  //tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
+
+  ROS_INFO("ROLL:  %f PITCH: %f     YAW: %f", roll*180.0/3.14, msg.pitch_angle*180.0/3.14, msg.yaw_angle*180.0/3.14);
   //ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output
 
   return msg;
