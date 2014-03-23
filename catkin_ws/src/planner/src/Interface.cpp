@@ -243,8 +243,7 @@ int main (int argc, char **argv) {
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
   n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
-  
-  ROS_INFO("%s", ("Value of xmlFilesPath=" + xmlFilesPath).c_str());
+
 
   bool ready = 0;
   while (ready == 0)

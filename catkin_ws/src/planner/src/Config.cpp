@@ -42,14 +42,21 @@ Config::Config(std::string xmlFilesPath)
 */
 	xml_file_path = xmlFilesPath;
 	taskFN = xml_file_path + taskFN;
-	ROS_INFO("%s", ("Value of xmlFilesPath2=" + xmlFilesPath).c_str());
+	
 	//sleep(1000);
 	const char * c_file = taskFN.c_str();
 	loadFile(c_file, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
-	//delete c_file;
+
 	//loadFile(mapFN, roboSub_map_doc); /*Used to load map if ever needed */
 	parse(roboSub_task_doc, roboSub_map_doc);
 	std::cout<<"Done Loading Task File"<< std::endl;
+	
+	/*{
+	public:
+		Config();
+		~Config();
+			
+	};*/
 
 }
 
