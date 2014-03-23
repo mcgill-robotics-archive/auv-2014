@@ -72,7 +72,7 @@ int main(int argc, char** argv){
   ros::NodeHandle node;
   ros::Subscriber currentCVTask_Front_sub = node.subscribe("currentCVTask_Front", 1000, currentCVTask_Front_callback);
 
-  ros::Publisher cv_mock_pub_Front = node.advertise<computer_vision::VisibleObjectData>("/front_cv_data", 1000);
+  ros::Publisher cv_mock_pub_Front = node.advertise<computer_vision::VisibleObjectData>("/front_cv/data", 1000);
 
   computer_vision::VisibleObjectData msgCV;
   

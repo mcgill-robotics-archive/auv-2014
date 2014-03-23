@@ -21,8 +21,10 @@ class Invoker{
  	~Invoker();
  	void AddTask(Task * t);
  	void StartRun();
+ 	void StartAt(int n);
  private:
  	std::vector<Task *> TaskList;
+
 
 };
 
