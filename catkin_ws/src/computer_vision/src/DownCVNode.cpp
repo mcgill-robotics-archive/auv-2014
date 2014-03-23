@@ -90,7 +90,7 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		}
 
 		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
-		if (messagesToPublish.size() == 0) {
+		if (messagesToPublish[0]->object_type == messagesToPublish[0]->CANNOT_DETERMINE_OBJECT) {
 			numFramesWithoutObject++;
 			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
 		} else {
