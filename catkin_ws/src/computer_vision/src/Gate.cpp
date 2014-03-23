@@ -76,7 +76,9 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 		visibleObjectData->z_distance = m_zDistance;
 
 		messagesToReturn.push_back(visibleObjectData);	
-	} 
+	}
+
+	ROS_INFO("%s", "About to return the ROS message to the cv node.");
 
 	return (messagesToReturn);
 }
