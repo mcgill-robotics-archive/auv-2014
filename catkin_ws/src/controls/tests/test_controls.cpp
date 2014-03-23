@@ -3,8 +3,6 @@
 #include <../include/thrust_mapper.h>
 #include <../include/controls.h>
 
-
-
 TEST(Practice,equals)
 {
 	EXPECT_EQ(2,2);
@@ -20,12 +18,12 @@ TEST(Practice,equals)
 
 TEST(LimitCheck,saturation)
 {
-	//char *c1="one";
-	float check=saturate(8,5,"one");
-	EXPECT_EQ(5,check);
-	/*EXPECT_EQ(-5,saturate(-8,5,c1));
+	char *c1="one";
+
+	EXPECT_EQ(5,saturate(8,5,c1));
+	EXPECT_EQ(-5,saturate(-8,5,c1));
 	EXPECT_EQ(2,saturate(2,5,c1));
-	EXPECT_EQ(-2,saturate(-2,5,c1));*/
+	EXPECT_EQ(-2,saturate(-2,5,c1));
 }/*
 
 TEST(LimitCheck,thrustlimit)

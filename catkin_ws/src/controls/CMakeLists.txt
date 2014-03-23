@@ -200,6 +200,6 @@ add_library(controls_lib src/controls.cpp)
 
 catkin_add_gtest(test_controls tests/test_controls.cpp)
 if(TARGET test_controls)
-  target_link_libraries(test_controls controls_lib)
+ target_link_libraries(test_controls controls_lib)
   #target_link_libraries(test_controls thrust_mapper_lib)
 endif()

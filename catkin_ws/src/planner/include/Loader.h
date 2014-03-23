@@ -19,7 +19,7 @@ class Loader {
 
     Loader(std::string xmlFilesPath);
 
-    ~Loader();
+    //~Loader();
 
     void loadInvoker();
 

@@ -1,5 +1,7 @@
 #include "Interface.h"
 #include <math.h>
+#include <gazebo_msgs/ModelState.h>
+#include <gazebo_msgs/SetModelState.h>
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
@@ -135,9 +137,9 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = relativePose.pose.position.x < .1;
-	bool yBounded = relativePose.pose.position.y < .1;
-	bool zBounded = relativePose.pose.position.z < .1;
+	bool xBounded = relativePose.pose.position.x < 1;
+	bool yBounded = relativePose.pose.position.y < 1;
+	bool zBounded = relativePose.pose.position.z < 1;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
@@ -155,7 +157,7 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 	bool pitchBounded = pitch < 5;
 	bool yawBounded = yaw < 5;
 
-	return (xBounded && yBounded && zBounded && pitchBounded && yawBounded);
+	return (xBounded && yBounded && zBounded);
 }
 
 void setVisionObj(int objIndex) {
@@ -242,7 +244,51 @@ void rosSleep(int length) {
 	d.sleep();
 }
 
+void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
+
+  ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
+  gazebo_msgs::SetModelState setmodelstate;
+  gazebo_msgs::ModelState modelstate;
+
+  geometry_msgs::Pose start_pose;
+  start_pose.position.x = x;
+  start_pose.position.y = y;
+  start_pose.position.z = z;
+  start_pose.orientation.x = 0.0;
+  start_pose.orientation.y = 0.0;
+  start_pose.orientation.z = 1.0;
+  start_pose.orientation.w = 0.0;
+
+  geometry_msgs::Twist start_twist;
+  start_twist.linear.x = 0.0;
+  start_twist.linear.y = 0.0;
+  start_twist.linear.z = 0.0;
+  start_twist.angular.x = 0.0;
+  start_twist.angular.y = 0.0;
+  start_twist.angular.z = 0.0;
+
+ 
+  modelstate.model_name = (std::string) "robot";
+  modelstate.reference_frame = (std::string) "world";
+  modelstate.pose = start_pose;
+  modelstate.twist = start_twist;
+
+  setmodelstate.request.model_state = modelstate;
+  //client.call(setmodelstate);
+
+  ros::service::waitForService("/gazebo/set_model_state", -1);
+  if(client.call(setmodelstate))
+    { 
+      ROS_INFO("Set robot's position: Success");
+    }
+    else
+    {
+      ROS_ERROR("Failed to call service ");
+  }
+}
+
 int main(int argc, char **argv) {
+  std::string starting_task;
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
 
@@ -255,7 +301,9 @@ int main(int argc, char **argv) {
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
 	n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
+  n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
 
+std::cout<<starting_task<<std::endl;
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
 	while (ready == 0) {
@@ -295,13 +343,17 @@ int main(int argc, char **argv) {
 	/****This is ros::spin() on a seperate thread*****/
 	boost::thread spin_thread(&spinThread);
 
+	  //Set robot's initial position
+	  //TODO: take a starting task number/name as rosparam in launch file and set to different starting positions based on that
+	  setRobotInitialPosition(n, 2.7, -3.5, 1);
+
 	std::cout << "Starting Loader" << std::endl;
 	Loader* loader = new Loader(xmlFilesPath);
 	Invoker* invoker = loader->getInvoker();
 	invoker->StartRun();
 	std::cout << "Done Loader" << std::endl;
 
-	delete loader; //delete invoker;
+	//delete loader; //delete invoker;
 
 	return 0;
 }
