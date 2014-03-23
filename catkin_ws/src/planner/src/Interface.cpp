@@ -1,5 +1,7 @@
 #include "Interface.h"
 #include <math.h>
+#include <gazebo_msgs/ModelState.h>
+#include <gazebo_msgs/SetModelState.h>
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
@@ -230,10 +232,12 @@ void rosSleep(int length) {
   d.sleep();
 }
 
+
+
 int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
-
+  
   estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
   estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
@@ -255,9 +259,57 @@ int main (int argc, char **argv) {
     else {ROS_DEBUG_THROTTLE(2,"got estimated State");}
   }
 
+
+
+  //ros::ServiceServer service = n.advertiseService("",ready);
+  //ROS_INFO("Ready to start the competition.");
+  
+
   ros::Rate loop_rate(10);
+
   /****This is ros::spin() on a seperate thread*****/
   boost::thread spin_thread(&spinThread);
+
+  ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_states");
+  gazebo_msgs::SetModelState setmodelstate;
+  gazebo_msgs::ModelState modelstate;
+
+  geometry_msgs::Pose start_pose;
+  start_pose.position.x = 0.0;
+  start_pose.position.y = 0.0;
+  start_pose.position.z = 0.1;
+  start_pose.orientation.x = 0.0;
+  start_pose.orientation.y = 0.0;
+  start_pose.orientation.z = 0.0;
+  start_pose.orientation.w = 1.0;
+
+  geometry_msgs::Twist start_twist;
+  start_twist.linear.x = 0.0;
+  start_twist.linear.y = 0.0;
+  start_twist.linear.z = 0.0;
+  start_twist.angular.x = 0.0;
+  start_twist.angular.y = 0.0;
+  start_twist.angular.z = 0.0;
+
+ 
+  modelstate.model_name = (std::string) "robot";
+  modelstate.reference_frame = (std::string) "world";
+  modelstate.pose = start_pose;
+  modelstate.twist = start_twist;
+
+  setmodelstate.request.model_state = modelstate;
+  //client.call(setmodelstate);
+
+  if(client.call(setmodelstate))
+    { 
+      ROS_INFO("yay!");
+      ROS_INFO("%f",modelstate.pose.position.x);
+    }
+    else
+    {
+      ROS_ERROR("Failed to call service ");
+      return 1;
+  }
 
   std::cout<<"Starting Loader"<< std::endl; 
   Loader* loader = new Loader(xmlFilesPath);
