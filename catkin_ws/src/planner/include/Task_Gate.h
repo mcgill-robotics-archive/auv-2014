@@ -10,6 +10,7 @@
 class Task_Gate: public Task{
 public:
 	Task_Gate();
+	~Task_Gate();
 	int Execute();
 };
 
