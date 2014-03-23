@@ -9,10 +9,10 @@
 	</include>       
 
 	<!-- front-end -->
-	<node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>         
+	<!--<node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>-->     
 
 	<!-- Controls systems -->
-	<node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>   
+	<!--<node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/> -->
 	
 	<!-- CVNode front-->
 	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">

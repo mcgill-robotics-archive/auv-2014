@@ -29,7 +29,6 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Float64
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
-from geometry_msgs.msg import PoseStamped
 
 
 ## Popup for low battery
@@ -130,10 +129,9 @@ class CentralUi(QtGui.QMainWindow):
         pygame.init()
         pygame.mixer.init()
 
-
         #TODO: change path to a machine specific path, I can't get this thing to work with a relative path
         ## path to alarm sound
-        self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/Ticktac.wav"
+        self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/resource/Ticktac.wav"
 
         # buttons connects
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
@@ -184,6 +182,7 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
         else:
             pass
+
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
         self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)

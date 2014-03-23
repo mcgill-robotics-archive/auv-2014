@@ -98,7 +98,7 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
 		currentFrame = pCurrentFrame->image;
 	} catch (cv_bridge::Exception& e) {
-		ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
+		ROS_ERROR("%s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
 	}
@@ -111,8 +111,11 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 
+		ROS_INFO("%s", "The front_cv/node received all the ROS messages from the filters.");
+
 		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
 		if (messagesToPublish.size() == 0) {
+			ROS_INFO("%s", "The current message contains no useful information, it will not be sent to the state estimation.");
 			numFramesWithoutObject++;
 			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
 		} else {

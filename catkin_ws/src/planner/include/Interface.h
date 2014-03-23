@@ -29,7 +29,7 @@ void estimatedDepth_callback(const std_msgs::Float64 data);
 
 void setTransform (std::string referenceFrame);
 
-void setPose();
+std::vector<double> getTransform();
 
 bool areWeThereYet(std::vector<double> desired);
 
