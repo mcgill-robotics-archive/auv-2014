@@ -312,6 +312,7 @@ int main(int argc, char **argv)
 	
 	bool setPointsIsPublished = 0;
 	bool estimatedStateIsPublished = 0;
+	bool depthIsPublished = 0;
 
 	ROS_INFO("controls node waiting for setPoints to be published...");
 	while (setPointsIsPublished == 0)
@@ -437,7 +438,7 @@ int main(int argc, char **argv)
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
-			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
+			Ty = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
 		}
 
 		if (isActive_YawSpeed)

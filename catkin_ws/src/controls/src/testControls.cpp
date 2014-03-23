@@ -92,10 +92,10 @@ int main(int argc, char **argv)
 		msg.Pitch.data = setPoint_Pitch;
 
 		//isactive parameters doesnt work yet so these are the parameters 1/28
-		msg.XPos.isActive = 1;
+		msg.XPos.isActive = 0;
 		msg.YPos.isActive = 0;
 		msg.Depth.isActive = 0;
-		msg.Yaw.isActive = 0;
+		msg.Yaw.isActive = 1;
 		msg.Pitch.isActive = 0;
 		msg.XSpeed.isActive = 0;
 		msg.YSpeed.isActive = 0;
