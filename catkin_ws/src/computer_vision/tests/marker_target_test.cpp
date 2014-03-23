@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../include/MarkerTarget.h"
+#include "../include/LineTarget.h"
 #include <ros/package.h>
 
 bool compareImage(cv::Mat& correctImage, cv::Mat& testImage) {
@@ -11,7 +12,7 @@ bool compareImage(cv::Mat& correctImage, cv::Mat& testImage) {
 			if (correctImage.at<int>(i, j) != testImage.at<int>(i, j)) valid = false;
 		}
 	}
-	valid = false;
+	//valid = false;
 	return valid;
 }
 

@@ -7,11 +7,11 @@ bool compareImage(cv::Mat& correctImage, cv::Mat& testImage) {
 	// Iterate through each image, comparing each pixels.
 	for (int i = 0; i < correctImage.rows; i++) {
 		for (int j = 0; j < correctImage.cols; j++) {
-			std::cout << correctImage.at<int>(i, j) << " " << testImage.at<int>(i, j) << std::endl;
+			//std::cout << correctImage.at<int>(i, j) << " " << testImage.at<int>(i, j) << std::endl;
 			if (correctImage.at<int>(i, j) != testImage.at<int>(i, j)) valid = false;
 		}
 	}
-	valid = false;
+	//valid = false;
 	return valid;
 }
 
@@ -25,18 +25,31 @@ TEST(LineTarget, adding) {
 //TEST(LineTarget, applyFilter) {
 //	LineTarget* mt = new LineTarget();
 //	// Load the raw image in which to apply the filter to.
-//	std::string rawPath = ros::package::getPath("computer_vision") + "/tests/raw_image.png";
+//	std::string rawPath = ros::package::getPath("computer_vision") + "/tests/line.png";
 //	cv::Mat raw = cv::imread(rawPath, CV_LOAD_IMAGE_COLOR);
 //	// Apply the filter.
 //	mt->applyFilter(raw);
 //	// Load the correct version of the filtered image and compare it with the result.
-//	std::string filteredPath = ros::package::getPath("computer_vision") + "/tests/filtered_image.png";
-//	cv::Mat correct = cv::imread("~/filtered_image.png");
+//	std::string filteredPath = ros::package::getPath("computer_vision") + "/tests/filtered_line.png";
+//	//cv::Mat correct = cv::imread("~/filtered_line.png");
+//	cv::Mat correct = cv::imread(filteredPath);
 //	EXPECT_TRUE(compareImage(correct, raw));
 //}
 
 
+//TEST(LineTarget, isVisible) {
+//	LineTarget* target = new LineTarget();
+//	std::string rawPath = ros::package::getPath("computer_vision") + "/tests/line.png";
+//	cv::Mat raw = cv::imread(rawPath, CV_LOAD_IMAGE_COLOR);
+//	target->applyFilter(raw);
+//	EXPECT_TRUE();
+//}
 
+TEST(LineTarget, convertFromPixelsToMetres) {
+	LineTarget* target = new LineTarget();
+	EXPECT_EQ(30, (int)target->convertFromPixelsToMetres(100, 4));
+
+}
 
 int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);

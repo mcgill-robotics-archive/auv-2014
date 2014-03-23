@@ -6,6 +6,9 @@
 Invoker::Invoker(){
 }
 
+Invoker::~Invoker(){
+	
+}
 
 void Invoker::AddTask(Task * t){
 	TaskList.push_back(t);
