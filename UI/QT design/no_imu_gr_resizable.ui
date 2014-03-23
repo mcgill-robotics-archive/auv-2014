@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1125</width>
-    <height>822</height>
+    <height>845</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,16 +39,7 @@
          <number>0</number>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>0</number>
          </property>
          <property name="spacing">
@@ -961,21 +952,15 @@
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <widget class="QWidget" name="verticalLayoutWidget">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>511</width>
-               <height>271</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="poseVizFrame">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetDefaultConstraint</enum>
-              </property>
-             </layout>
-            </widget>
+            <layout class="QGridLayout" name="gridLayout_8">
+             <item row="0" column="0">
+              <layout class="QVBoxLayout" name="poseVizFrame">
+               <property name="sizeConstraint">
+                <enum>QLayout::SetDefaultConstraint</enum>
+               </property>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -986,13 +971,6 @@
     </item>
    </layout>
    <zorder></zorder>
-   <zorder>label_5</zorder>
-   <zorder>resSelect</zorder>
-   <zorder>layoutWidget</zorder>
-   <zorder>label_30</zorder>
-   <zorder>line_2</zorder>
-   <zorder>frame_2</zorder>
-   <zorder>frame_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1000,7 +978,7 @@
      <x>0</x>
      <y>0</y>
      <width>1125</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
