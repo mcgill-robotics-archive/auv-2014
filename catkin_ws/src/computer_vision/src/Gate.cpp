@@ -22,10 +22,8 @@ cv::Point centerOfCurrentFrame;
  * Constructor.
  */
 Gate::Gate() {
-	ROS_INFO("%s", "The Gate object has been created.");
 
 #ifdef USE_CV_WINDOWS
-	ROS_INFO("%s", "Creating the window that will be displaying the frame after the HSV threshold is applied.");
 	cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 	cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
@@ -56,7 +54,6 @@ Gate::~Gate() {
  *  not present in the current frame, it returns the zero pointer (NULL).
  */
 std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Mat& currentFrame) {
-
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 	m_isVisible = false;
 
@@ -234,38 +231,36 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 		const float GATE_SQR = GATE_WIDTH * GATE_WIDTH;
 		float cosFar = (FARTHEST_SQR + GATE_SQR - CLOSEST_SQR) / (2.0 * farthest.dist * GATE_WIDTH);
 
-		float angleRad = (3.141592654 / 2.0) - acos(cosFar) - farthest.objectAngleRad;
+		// 90 - angleFar- farthest.objectAngle
+		 m_yawAngle = (3.141592654 / 2.0) - acos(cosFar) - farthest.objectAngleRad;
 
-		m_yawAngle = angleRad * 180.0 / 3.141592654;
 		if(closest.center.x < farthest.center.x)
 			m_yawAngle = -m_yawAngle;
 
 		//Get the x,y coordinates of the gate in the world
-		float mPerPxAtClosestPole = DOOR_REAL_HEIGHT / closest.h;
-		int pxCenterGateX = std::min(p1.center.x, p2.center.x) + (std::abs(p1.center.x - p2.center.x) / 2);
-		m_yDistance = (pxCenterGateX - centerOfCurrentFrame.x) * mPerPxAtClosestPole;
- 
+		float x1 = cos(p1.objectAngleRad) * p1.dist, x2 = cos(p2.objectAngleRad) * p2.dist;
+		float y1 = sin(p1.objectAngleRad) * p1.dist, y2 = sin(p2.objectAngleRad) * p2.dist;
 
-		//TODO Correct calculation of x-distance (relying on angle)
-		float smallestDistance = (p1.dist < p2.dist) ? p1.dist : p2.dist;
-		m_xDistance = smallestDistance;
+		if(p1.center.x - centerOfCurrentFrame.x < 0)
+			y1 = -y1;
 
-		cv::Point centerPoint;
-		centerPoint.x = (p1.center.x + p2.center.x)/2;
-		centerPoint.y = (p1.center.y + p2.center.y)/2;
+		if(p2.center.x - centerOfCurrentFrame.x < 0)
+			y2 = -y2;
 
-		float mPerPxAtFarthestPole = DOOR_REAL_HEIGHT / farthest.h;
-		float estimatedMPerPxAtCenter = mPerPxAtClosestPole + 
-				((mPerPxAtClosestPole - mPerPxAtFarthestPole) / 2.0);
-		m_zDistance = (centerPoint.y - centerOfCurrentFrame.y) * estimatedMPerPxAtCenter;
+		m_xDistance = (x1 + x2) / 2.0;
+		m_yDistance = (y1 + y2) / 2.0;
 
+		int centerY = (p1.center.y + p2.center.y) / 2;
+		float avgMPerPx = ((DOOR_REAL_HEIGHT / p1.h) + (DOOR_REAL_HEIGHT / p2.h)) / 2.0;
+		m_zDistance = (centerY - centerOfCurrentFrame.y) * avgMPerPx;
 
+		cv::Point centerPoint((p1.center.x + p2.center.x) / 2, centerY);
 		//Draw the point on-screen
 		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
 		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA); 
 
 		std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " << 
-				m_yawAngle << std::endl;
+				m_yawAngle * 180.0 / 3.141592654 << std::endl;
 	}
 }
 
@@ -276,6 +271,7 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
  * @return The std::vector of std::vector of points containing the clouds of all contours in the image.
  */
 std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV) {
+
 	// Creates the Mat object that will contain the filtered image (inRange HSV).
 	cv::Mat inRangeHSVFrame;
 	// Generates a new Mat object that only contains a certain range of HSV values.

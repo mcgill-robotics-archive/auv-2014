@@ -33,10 +33,13 @@ int main(int argc, char **argv) {
 }
 
 void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
+	ROS_INFO("%s", "FrontCVNode::listenToPlanner() has been called.");
 	this->visibleObjectList.clear();
 	if (msg.currentCVTask == 1) {
+		ROS_INFO("%s", "The FrontCVNode will now be looking for the gate.");
 		this->visibleObjectList.push_back(new Gate());
 	} else if (msg.currentCVTask == 2) {
+		ROS_INFO("%s", "The FrontCVNode will now be looking for the buoy.");
 		this->visibleObjectList.push_back(new Buoy());
 	}
 }
@@ -48,18 +51,21 @@ void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) : CVNode(nodeHandle, topicName, receptionRate, bufferSize) {
+	ROS_INFO("%s", "FrontCVNode::constructor() has been called.");
+
+	//Testing
+	this->visibleObjectList.push_back(new Gate());
+
 	// Create topics with front end
 	frontEndPublisher = pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 
 	// Start listening to the planner. This will update the list of visible objects as they change.
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this); 
-	ros::spin();
-	// Construct the list of VisibleObjects
-	//this->visibleObjectList.push_back(new Gate());
+	// Construct the list of VisibleObject
 	//this->visibleObjectList.push_back(new Buoy());
 	// Create a window to display the images received
-	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
+	//cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
 	numFramesWithoutObject = 0;
 }
 
