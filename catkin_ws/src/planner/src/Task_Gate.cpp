@@ -20,7 +20,7 @@ int Task_Gate::Execute() {
 	double myPoints[5] = {-1.0, 0.0, 0.0, 0.0, 8.8};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 
-	while (!areWeThereYet(desired)) {
+	while (!areWeThereYet_tf("/target/door")) {
 		setPosition(desired);	loop_rate.sleep();
 	}
 	
