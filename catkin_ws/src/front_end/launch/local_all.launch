@@ -11,8 +11,12 @@
 	<!-- front-end -->
 	<include file="$(find front_end)/launch/front_end.launch"/>
 
-	<!-- CVNode front -->
-	<node name="CV_Front" pkg="computer_vision" type="FrontCVNode"  respawn="false"/>
+<!-- CVNode front-->
+	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
+		<param name="image_feed/left" type="str" value="/simulator/camera1/image_raw" />
+		<param name="image_feed/right" type="str" value="/simulator/camera2/image_raw" />
+	</node>
+
 	<!-- CVNode down -->
-	<node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false"/>
+	<!-- <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/> -->
 </launch>

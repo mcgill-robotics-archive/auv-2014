@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -85,11 +85,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classMarkerTarget.html">MarkerTarget</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a7ee645a3d8cf193a18e74a0bfb624753">add</a>(int, int)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234">applyFilter</a>(cv::Mat &amp;currentFrame)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a9b8a19de3d0ecc7847dc6acc8e4cd7fd">checkRectangleRatio</a>(const cv::RotatedRect &amp;rectangle)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a0242e8b64da3af2b2c023d207cec5035">compareImages</a>(const std::vector&lt; cv::Point2f &gt; &amp;sourceCoords, const cv::Mat &amp;cap, const cv::Mat &amp;ref)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classVisibleObject.html#a942674dd96c9b176bebe13247c8db1a0">convertFromBGRXToHSV</a>(const cv::Mat &amp;currentFrame)</td><td><a class="el" href="classVisibleObject.html">VisibleObject</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a30f9d57b05f707ee91e520f699dc165d">estimatePose</a>(MarkerDescriptor &amp;inOutMarker)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#aa01e816eb607b3c7d4ef3a493fb9bc51">findBins</a>(cv::Mat &amp;frame)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a8f0fa5f9f0bf2b2f2c027a233f761eb2">findMarkers</a>(const cv::Mat &amp;frame, const Point2DVec &amp;bins)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a645d3dedb016beb24a50b2ef63b645fd">getContourMap</a>(cv::Mat &amp;frame, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;outContoursPoly)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#acfbbfc52d2bac85d59222632b51467ad">getPreliminaryCorners</a>(const cv::Mat &amp;contourMap, const std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;contoursPoly)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a517a3f4e811d61945e22f6345045b0b1">MarkerTarget</a>()</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a74f5a4ed21ea5f22df49d8b295901f03">refineCorners</a>(Point2DVec &amp;corners)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a">retrieveObjectData</a>(cv::Mat &amp;currentFrame)</td><td><a class="el" href="classMarkerTarget.html">MarkerTarget</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classVisibleObject.html#a011f27293148a7bf33ee15e188fbf673">~VisibleObject</a>()</td><td><a class="el" href="classVisibleObject.html">VisibleObject</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVisibleObject.html#a4bec739f6ba9f625856d881ea52c67ca">~VisibleObject</a>()=0</td><td><a class="el" href="classVisibleObject.html">VisibleObject</a></td><td><code> [pure virtual]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -108,7 +117,7 @@ This is the complete list of members for <a class="el" href="classMarkerTarget.h
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

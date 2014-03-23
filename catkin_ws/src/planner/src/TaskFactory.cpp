@@ -5,6 +5,9 @@
 TaskFactory::TaskFactory(){
 
 }
+TaskFactory::~TaskFactory(){
+	
+}
 
 //Parses the task number from the tasks.xml file 
 int TaskFactory::parseTask(std::string id){
@@ -40,6 +43,10 @@ int TaskFactory::parseVersion(std::string id){
 
 Task* TaskFactory::getEndTask(){
 	return new Task_Kill();	
+}
+
+Task* TaskFactory::getGateTask(){
+	return new Task_Gate();	
 }
 
 Task* TaskFactory::makeTask(std::string id){

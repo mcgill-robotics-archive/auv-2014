@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -114,15 +114,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#abdb9f26c5003818a307b8a31e146db44">pitch_velocity</a> = 0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a0be1e7dae3e4558950b8a34e810c621b">yaw_velocity</a> = 0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a05513adc23b8b1cfddeb574da022fdd3">x_velocity</a> = 0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#ad4cf438d46d6ade3524edcf1ef5774f7">y_velocity</a> = 0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a60d8416dd4303b4ece0b329fb650878f">z_position</a> = 0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a88b87ca2d9059cd40c58ada5c6db0d76">z_position_step</a> = 0.5</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#afcfb65df636ecc6ba978c7493af2edd3">MAX_YAW_VEL</a> = 10</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a7ffe11dd78c66a25244e8626b529027e">MAX_PITCH_ANGLE</a> = 4</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a8c4b69878b87af959e9ae5facf024d2a">MAX_LINEAR_VEL</a> = 1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a60d8416dd4303b4ece0b329fb650878f">z_position</a> = 9</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a88b87ca2d9059cd40c58ada5c6db0d76">z_position_step</a> = 0.2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#afcfb65df636ecc6ba978c7493af2edd3">MAX_YAW_VEL</a> = 5</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVARIABLES_1_1vel__vars.html#a8c4b69878b87af959e9ae5facf024d2a">MAX_LINEAR_VEL</a> = 5</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>variables shared by all controller for the cmd_vel and z_position </p>
@@ -132,20 +130,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#a8c4b69878b87af959e9ae5facf024d2a">VARIABLES.vel_vars::MAX_LINEAR_VEL</a> = 1<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a7ffe11dd78c66a25244e8626b529027e"></a><!-- doxytag: member="VARIABLES::vel_vars::MAX_PITCH_ANGLE" ref="a7ffe11dd78c66a25244e8626b529027e" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#a7ffe11dd78c66a25244e8626b529027e">VARIABLES.vel_vars::MAX_PITCH_ANGLE</a> = 4<code> [static]</code></td>
+          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#a8c4b69878b87af959e9ae5facf024d2a">VARIABLES.vel_vars::MAX_LINEAR_VEL</a> = 5<code> [static]</code></td>
         </tr>
       </table>
 </div>
@@ -158,20 +143,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#afcfb65df636ecc6ba978c7493af2edd3">VARIABLES.vel_vars::MAX_YAW_VEL</a> = 10<code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abdb9f26c5003818a307b8a31e146db44"></a><!-- doxytag: member="VARIABLES::vel_vars::pitch_velocity" ref="abdb9f26c5003818a307b8a31e146db44" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#abdb9f26c5003818a307b8a31e146db44">VARIABLES.vel_vars::pitch_velocity</a> = 0<code> [static]</code></td>
+          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#afcfb65df636ecc6ba978c7493af2edd3">VARIABLES.vel_vars::MAX_YAW_VEL</a> = 5<code> [static]</code></td>
         </tr>
       </table>
 </div>
@@ -223,7 +195,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#a60d8416dd4303b4ece0b329fb650878f">VARIABLES.vel_vars::z_position</a> = 0<code> [static]</code></td>
+          <td class="memname">int <a class="el" href="classVARIABLES_1_1vel__vars.html#a60d8416dd4303b4ece0b329fb650878f">VARIABLES.vel_vars::z_position</a> = 9<code> [static]</code></td>
         </tr>
       </table>
 </div>
@@ -236,7 +208,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float <a class="el" href="classVARIABLES_1_1vel__vars.html#a88b87ca2d9059cd40c58ada5c6db0d76">VARIABLES.vel_vars::z_position_step</a> = 0.5<code> [static]</code></td>
+          <td class="memname">float <a class="el" href="classVARIABLES_1_1vel__vars.html#a88b87ca2d9059cd40c58ada5c6db0d76">VARIABLES.vel_vars::z_position_step</a> = 0.2<code> [static]</code></td>
         </tr>
       </table>
 </div>
@@ -245,7 +217,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/<a class="el" href="VARIABLES_8py.html">VARIABLES.py</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/front_end/scripts/<a class="el" href="VARIABLES_8py.html">VARIABLES.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -265,7 +237,7 @@ Static Public Attributes</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

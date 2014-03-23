@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -108,24 +108,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="PS3Controller::PS3Controller" -->
+<p>Class containing all relevant commands to fetch data from a ps3 controller.  
+ <a href="classPS3Controller_1_1PS3Controller.html#details">More...</a></p>
+
 <p><a href="classPS3Controller_1_1PS3Controller-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a5e83b477576943c7f5f1de327ec9374f">__init__</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the ps3Controller.  <a href="#a5e83b477576943c7f5f1de327ec9374f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#ac4225af4b86c1530eefaf291d1cf32a7">initialize_controller</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">This part will set all the Global variables used in <a class="el" href="classPS3Controller_1_1PS3Controller.html" title="Class containing all relevant commands to fetch data from a ps3 controller.">PS3Controller</a>.  <a href="#ac4225af4b86c1530eefaf291d1cf32a7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a8bed484a6a90d650a3f3936a296988fa">z_lower</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">increments the z position (robot lowers) in <a class="el" href="namespaceVARIABLES.html" title="file grouping similar variables in classes since python does not have enums,">VARIABLES</a> by a step defined in the same file  <a href="#a8bed484a6a90d650a3f3936a296988fa"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#aa71e0614ad4d151170f693f4c9f6c610">z_rise</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">decrements the z position (robot rises) in <a class="el" href="namespaceVARIABLES.html" title="file grouping similar variables in classes since python does not have enums,">VARIABLES</a> by a step defined in the same file  <a href="#aa71e0614ad4d151170f693f4c9f6c610"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a9b044d1461aa50b0af016e2d0d28a360">z_surface</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets z position in <a class="el" href="namespaceVARIABLES.html" title="file grouping similar variables in classes since python does not have enums,">VARIABLES</a> to 0, robot surfaces.  <a href="#a9b044d1461aa50b0af016e2d0d28a360"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#ad483689f724fc5db48f9e65e01094f1a">updateController</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">It reads the data from the controller (the queue of event more precisely) and updates the Global data of the instance.  <a href="#ad483689f724fc5db48f9e65e01094f1a"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a4eb5547921adc05141f06d5d32f6eb75">className</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a11546cebae973dc5f1ebc439de6ad74e">controller_isPresent</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default config as ps3 controller not existant will be changed to true if the controller is initialized.  <a href="#a11546cebae973dc5f1ebc439de6ad74e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a5daacfadf19b6e12c463caa2c08249ba">controller</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPS3Controller_1_1PS3Controller.html#aa24fc4c89d69ab187dd9d65e2db478bc">controller_name</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The initialized controller.  <a href="#a5daacfadf19b6e12c463caa2c08249ba"></a><br/></td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Class containing all relevant commands to fetch data from a ps3 controller. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a5e83b477576943c7f5f1de327ec9374f"></a><!-- doxytag: member="PS3Controller::PS3Controller::__init__" ref="a5e83b477576943c7f5f1de327ec9374f" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -140,9 +151,10 @@ Public Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<div class="fragment"><pre class="fragment">
-Constructor of the ps3Controller. It basically initialize the joystick so we can fetch data form it.
-</pre></div> 
+
+<p>Constructor of the ps3Controller. </p>
+<p>It basically initialize the joystick so we can fetch data form it. </p>
+
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
@@ -160,10 +172,16 @@ Constructor of the ps3Controller. It basically initialize the joystick so we can
       </table>
 </div>
 <div class="memdoc">
-<div class="fragment"><pre class="fragment">
-This part will set all the Global variables used in PS3Controller.
-It is only called if the constructor finds only 1 joystick
-</pre></div> 
+
+<p>This part will set all the Global variables used in <a class="el" href="classPS3Controller_1_1PS3Controller.html" title="Class containing all relevant commands to fetch data from a ps3 controller.">PS3Controller</a>. </p>
+<p>It is only called if the constructor finds only 1 joystick </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>the object pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ad483689f724fc5db48f9e65e01094f1a"></a><!-- doxytag: member="PS3Controller::PS3Controller::updateController" ref="ad483689f724fc5db48f9e65e01094f1a" args="" -->
@@ -180,9 +198,15 @@ It is only called if the constructor finds only 1 joystick
       </table>
 </div>
 <div class="memdoc">
-<div class="fragment"><pre class="fragment">
-It reads the data from the controller (the queue of event more precisely) and updates the Global data of the instance.
-</pre></div> 
+
+<p>It reads the data from the controller (the queue of event more precisely) and updates the Global data of the instance. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>the object pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="a8bed484a6a90d650a3f3936a296988fa"></a><!-- doxytag: member="PS3Controller::PS3Controller::z_lower" ref="a8bed484a6a90d650a3f3936a296988fa" args="" -->
@@ -199,6 +223,14 @@ It reads the data from the controller (the queue of event more precisely) and up
       </table>
 </div>
 <div class="memdoc">
+
+<p>increments the z position (robot lowers) in <a class="el" href="namespaceVARIABLES.html" title="file grouping similar variables in classes since python does not have enums,">VARIABLES</a> by a step defined in the same file </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>th eobject pointer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -217,6 +249,14 @@ It reads the data from the controller (the queue of event more precisely) and up
 </div>
 <div class="memdoc">
 
+<p>decrements the z position (robot rises) in <a class="el" href="namespaceVARIABLES.html" title="file grouping similar variables in classes since python does not have enums,">VARIABLES</a> by a step defined in the same file </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>th eobject pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="a9b044d1461aa50b0af016e2d0d28a360"></a><!-- doxytag: member="PS3Controller::PS3Controller::z_surface" ref="a9b044d1461aa50b0af016e2d0d28a360" args="" -->
@@ -234,22 +274,17 @@ It reads the data from the controller (the queue of event more precisely) and up
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<hr/><h2>Member Data Documentation</h2>
-<a class="anchor" id="a4eb5547921adc05141f06d5d32f6eb75"></a><!-- doxytag: member="PS3Controller::PS3Controller::className" ref="a4eb5547921adc05141f06d5d32f6eb75" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classPS3Controller_1_1PS3Controller.html#a4eb5547921adc05141f06d5d32f6eb75">PS3Controller.PS3Controller::className</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Sets z position in <a class="el" href="namespaceVARIABLES.html" title="file grouping similar variables in classes since python does not have enums,">VARIABLES</a> to 0, robot surfaces. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>th eobject pointer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
+<hr/><h2>Member Data Documentation</h2>
 <a class="anchor" id="a5daacfadf19b6e12c463caa2c08249ba"></a><!-- doxytag: member="PS3Controller::PS3Controller::controller" ref="a5daacfadf19b6e12c463caa2c08249ba" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -260,6 +295,8 @@ It reads the data from the controller (the queue of event more precisely) and up
       </table>
 </div>
 <div class="memdoc">
+
+<p>The initialized controller. </p>
 
 </div>
 </div>
@@ -274,23 +311,12 @@ It reads the data from the controller (the queue of event more precisely) and up
 </div>
 <div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="aa24fc4c89d69ab187dd9d65e2db478bc"></a><!-- doxytag: member="PS3Controller::PS3Controller::controller_name" ref="aa24fc4c89d69ab187dd9d65e2db478bc" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classPS3Controller_1_1PS3Controller.html#aa24fc4c89d69ab187dd9d65e2db478bc">PS3Controller.PS3Controller::controller_name</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<p>Default config as ps3 controller not existant will be changed to true if the controller is initialized. </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/<a class="el" href="PS3Controller_8py.html">PS3Controller.py</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/front_end/scripts/<a class="el" href="PS3Controller_8py.html">PS3Controller.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -310,7 +336,7 @@ It reads the data from the controller (the queue of event more precisely) and up
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

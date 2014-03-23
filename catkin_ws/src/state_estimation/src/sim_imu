@@ -4,15 +4,22 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from gazebo_msgs.msg import ModelStates
 
+time = None
 
 def callback(modelStates):
-    index = modelStates.name.index('robot')
-    poseStamped = PoseStamped()
-    poseStamped.pose = modelStates.pose[index]
-    poseStamped.pose.position.x = 0
-    poseStamped.pose.position.y = 0
-    poseStamped.pose.position.z = 0
-    pub.publish(poseStamped)
+    global time
+    if time:
+        if (rospy.get_time() - time) > 0.03:
+            index = modelStates.name.index('robot')
+            poseStamped = PoseStamped()
+            poseStamped.pose = modelStates.pose[index]
+            poseStamped.pose.position.x = 0
+            poseStamped.pose.position.y = 0
+            poseStamped.pose.position.z = 0
+            pub.publish(poseStamped)
+            time = rospy.get_time()
+    else:
+        time = rospy.get_time()
 
 # Init the ros node, subscribers and publishers
 # And run the node

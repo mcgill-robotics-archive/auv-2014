@@ -7,8 +7,16 @@
   <!-- control systems -->
   <include file="$(find controls)/launch/controls4planner.launch" />
 
-  <!-- Planner
-          <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen"/>
-  -->
+  <!-- computer vision -->
+  <include file="$(find computer_vision)/launch/computer_vision.launch" />
+
+  <!-- state estimation -->
+  <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
+
+  <!-- Planner -->
+  <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen">
+  	<param name="xml_files_path" value="$(find planner)/xml"/>
+  </node>
+ 
 
 </launch>

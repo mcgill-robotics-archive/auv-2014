@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>McGill Robotics: RoboSub 2014: /home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/simulator/src/tf_broadcaster_simulator.cpp File Reference</title>
+<title>McGill Robotics: RoboSub 2014: /home/david/repo/robosub14/catkin_ws/src/simulator/src/tf_broadcaster_simulator.cpp File Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -79,30 +79,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/simulator/src/tf_broadcaster_simulator.cpp File Reference</div>  </div>
+<div class="title">/home/david/repo/robosub14/catkin_ws/src/simulator/src/tf_broadcaster_simulator.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;ros/ros.h&gt;</code><br/>
 <code>#include &lt;tf/transform_broadcaster.h&gt;</code><br/>
 <code>#include &quot;gazebo_msgs/ModelStates.h&quot;</code><br/>
 <code>#include &quot;gazebo_msgs/LinkStates.h&quot;</code><br/>
+<code>#include &quot;boost/bind.hpp&quot;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for tf_broadcaster_simulator.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="tf__broadcaster__simulator_8cpp__incl.png" border="0" usemap="#_2home_2hddData_2Git__Repositories_2McGill__RoboSub__2014_2catkin__ws_2src_2simulator_2src_2tf__broadcaster__simulator_8cpp" alt=""/></div>
-<map name="_2home_2hddData_2Git__Repositories_2McGill__RoboSub__2014_2catkin__ws_2src_2simulator_2src_2tf__broadcaster__simulator_8cpp" id="_2home_2hddData_2Git__Repositories_2McGill__RoboSub__2014_2catkin__ws_2src_2simulator_2src_2tf__broadcaster__simulator_8cpp">
-</map>
+<div class="center"><img src="tf__broadcaster__simulator_8cpp__incl.png" border="0" usemap="#_2home_2david_2repo_2robosub14_2catkin__ws_2src_2simulator_2src_2tf__broadcaster__simulator_8cpp" alt=""/></div>
 </div>
 </div><table class="memberdecls">
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#ab1e838a87c774adb3ef771e6355bf482">poseCallback</a> (const gazebo_msgs::ModelStates msg)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#aceccff044256b29b6487b8d51201414a">poseCallback0</a> (const gazebo_msgs::ModelStates msg)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#a982fa998f35398714ee3f75a29f50f05">poseCallback1</a> (const gazebo_msgs::LinkStates msg)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#ab3c586f648eea262fbc72c30342edf7d">poseCallback2</a> (const gazebo_msgs::LinkStates msg)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#a07240c56065b605f69952ffe9221cf53">poseCallback3</a> (const gazebo_msgs::ModelStates msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classGate.html" title="The Gate class that defines the feature detection filters that will be applied to detect the gate obj...">Gate</a> Subscriber.  <a href="#a07240c56065b605f69952ffe9221cf53"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#ab096eb83090aeb92989e7184906e74d1">poseCallback4</a> (const gazebo_msgs::ModelStates msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Line1 Subscriber.  <a href="#ab096eb83090aeb92989e7184906e74d1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#a4cc92dcbdac547a4e8f3a003e21a78ef">poseCallback5</a> (const gazebo_msgs::LinkStates msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCamera.html">Camera</a> 1 Subscriber.  <a href="#a4cc92dcbdac547a4e8f3a003e21a78ef"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#ab968490b7b8922b2e83a91454641c76c">poseCallback6</a> (const gazebo_msgs::LinkStates msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCamera.html">Camera</a> 2 Subscriber.  <a href="#ab968490b7b8922b2e83a91454641c76c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#a56f78eb8f43c790710c83c3c8b6dfadd">poseCallback7</a> (const gazebo_msgs::LinkStates msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCamera.html">Camera</a> 3 Subscriber.  <a href="#a56f78eb8f43c790710c83c3c8b6dfadd"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main method used by ROS when the node is launched.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tf__broadcaster__simulator_8cpp.html#a4c43e2b8db2027e48251350d972a39c2">PI</a> = 3.1415926535897932384626</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribes to pose of each important object in the simulator and broadcasts a transform between it and the simulator world frame.  <a href="#a4c43e2b8db2027e48251350d972a39c2"></a><br/></td></tr>
 </table>
 <hr/><h2>Function Documentation</h2>
 <a class="anchor" id="a3c04138a5bfe5d72780bb7e82a18e627"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::main" ref="a3c04138a5bfe5d72780bb7e82a18e627" args="(int argc, char **argv)" -->
@@ -110,7 +123,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="tf__broadcaster__simulator_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> </td>
+          <td class="memname">int <a class="el" href="test__robot_8cc.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>argc</em>, </td>
@@ -143,12 +156,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab1e838a87c774adb3ef771e6355bf482"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback" ref="ab1e838a87c774adb3ef771e6355bf482" args="(const gazebo_msgs::ModelStates msg)" -->
+<a class="anchor" id="aceccff044256b29b6487b8d51201414a"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback0" ref="aceccff044256b29b6487b8d51201414a" args="(const gazebo_msgs::ModelStates msg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#ab1e838a87c774adb3ef771e6355bf482">poseCallback</a> </td>
+          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#aceccff044256b29b6487b8d51201414a">poseCallback0</a> </td>
           <td>(</td>
           <td class="paramtype">const gazebo_msgs::ModelStates&#160;</td>
           <td class="paramname"><em>msg</em></td><td>)</td>
@@ -177,12 +190,50 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab3c586f648eea262fbc72c30342edf7d"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback2" ref="ab3c586f648eea262fbc72c30342edf7d" args="(const gazebo_msgs::LinkStates msg)" -->
+<a class="anchor" id="a07240c56065b605f69952ffe9221cf53"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback3" ref="a07240c56065b605f69952ffe9221cf53" args="(const gazebo_msgs::ModelStates msg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#ab3c586f648eea262fbc72c30342edf7d">poseCallback2</a> </td>
+          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#a07240c56065b605f69952ffe9221cf53">poseCallback3</a> </td>
+          <td>(</td>
+          <td class="paramtype">const gazebo_msgs::ModelStates&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><a class="el" href="classGate.html" title="The Gate class that defines the feature detection filters that will be applied to detect the gate obj...">Gate</a> Subscriber. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab096eb83090aeb92989e7184906e74d1"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback4" ref="ab096eb83090aeb92989e7184906e74d1" args="(const gazebo_msgs::ModelStates msg)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#ab096eb83090aeb92989e7184906e74d1">poseCallback4</a> </td>
+          <td>(</td>
+          <td class="paramtype">const gazebo_msgs::ModelStates&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Line1 Subscriber. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4cc92dcbdac547a4e8f3a003e21a78ef"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback5" ref="a4cc92dcbdac547a4e8f3a003e21a78ef" args="(const gazebo_msgs::LinkStates msg)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#a4cc92dcbdac547a4e8f3a003e21a78ef">poseCallback5</a> </td>
           <td>(</td>
           <td class="paramtype">const gazebo_msgs::LinkStates&#160;</td>
           <td class="paramname"><em>msg</em></td><td>)</td>
@@ -191,6 +242,65 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p><a class="el" href="classCamera.html">Camera</a> 1 Subscriber. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab968490b7b8922b2e83a91454641c76c"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback6" ref="ab968490b7b8922b2e83a91454641c76c" args="(const gazebo_msgs::LinkStates msg)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#ab968490b7b8922b2e83a91454641c76c">poseCallback6</a> </td>
+          <td>(</td>
+          <td class="paramtype">const gazebo_msgs::LinkStates&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><a class="el" href="classCamera.html">Camera</a> 2 Subscriber. </p>
+
+</div>
+</div>
+<a class="anchor" id="a56f78eb8f43c790710c83c3c8b6dfadd"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::poseCallback7" ref="a56f78eb8f43c790710c83c3c8b6dfadd" args="(const gazebo_msgs::LinkStates msg)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="tf__broadcaster__simulator_8cpp.html#a56f78eb8f43c790710c83c3c8b6dfadd">poseCallback7</a> </td>
+          <td>(</td>
+          <td class="paramtype">const gazebo_msgs::LinkStates&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><a class="el" href="classCamera.html">Camera</a> 3 Subscriber. </p>
+
+</div>
+</div>
+<hr/><h2>Variable Documentation</h2>
+<a class="anchor" id="a4c43e2b8db2027e48251350d972a39c2"></a><!-- doxytag: member="tf_broadcaster_simulator.cpp::PI" ref="a4c43e2b8db2027e48251350d972a39c2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="tf__broadcaster__simulator_8cpp.html#a4c43e2b8db2027e48251350d972a39c2">PI</a> = 3.1415926535897932384626</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Subscribes to pose of each important object in the simulator and broadcasts a transform between it and the simulator world frame. </p>
+<dl class="author"><dt><b>Author:</b></dt><dd>Nick Speal </dd>
+<dd>
+Dwijesh Bhageerutty </dd></dl>
 
 </div>
 </div>
@@ -212,7 +322,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:30 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

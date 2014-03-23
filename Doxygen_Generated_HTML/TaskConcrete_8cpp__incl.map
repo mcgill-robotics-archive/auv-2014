@@ -1,13 +1,14 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$TaskConcrete_8hpp.html" title="TaskConcrete.hpp" alt="" coords="1981,83,2109,112"/>
-<area shape="rect" id="node7" href="$Task_8hpp.html" title="Task.hpp" alt="" coords="1503,469,1578,499"/>
-<area shape="rect" id="node13" href="$Interface_8h.html" title="Interface.h" alt="" coords="1095,160,1178,189"/>
-<area shape="rect" id="node30" href="$Loader_8h.html" title="loader.h initializes some functions" alt="" coords="1101,237,1173,267"/>
-<area shape="rect" id="node32" href="$Invoker_8h.html" title="Invoker.h" alt="" coords="1014,315,1089,344"/>
-<area shape="rect" id="node39" href="$Config_8h.html" title="Config.h" alt="" coords="1186,315,1255,344"/>
-<area shape="rect" id="node58" href="$TaskFactory_8hpp.html" title="TaskFactory.hpp" alt="" coords="1681,315,1801,344"/>
-<area shape="rect" id="node45" href="$pugixml_8hpp.html" title="./pugixml/src/pugixml.hpp" alt="" coords="1135,392,1306,421"/>
-<area shape="rect" id="node47" href="$pugiconfig_8hpp.html" title="pugiconfig.hpp" alt="" coords="1210,469,1317,499"/>
-<area shape="rect" id="node66" href="$Task__Gate_8h.html" title="Task_Gate.h" alt="" coords="1831,392,1927,421"/>
-<area shape="rect" id="node72" href="$Task__Lane_8h.html" title="Task_Lane.h" alt="" coords="1573,392,1669,421"/>
+<area shape="rect" id="node3" href="$TaskConcrete_8hpp.html" title="TaskConcrete.hpp" alt="" coords="2997,83,3125,112"/>
+<area shape="rect" id="node7" href="$Task_8hpp.html" title="Task.hpp" alt="" coords="2893,469,2968,499"/>
+<area shape="rect" id="node13" href="$Interface_8h.html" title="Interface.h" alt="" coords="1945,160,2028,189"/>
+<area shape="rect" id="node34" href="$Loader_8h.html" title="loader.h initializes some functions" alt="" coords="2195,237,2267,267"/>
+<area shape="rect" id="node36" href="$Invoker_8h.html" title="Invoker.h" alt="" coords="2015,315,2089,344"/>
+<area shape="rect" id="node43" href="$Config_8h.html" title="Config.h" alt="" coords="2113,315,2183,344"/>
+<area shape="rect" id="node62" href="$TaskFactory_8hpp.html" title="TaskFactory.hpp" alt="" coords="2703,315,2823,344"/>
+<area shape="rect" id="node49" href="$pugixml_8hpp.html" title="./pugixml/src/pugixml.hpp" alt="" coords="2021,392,2192,421"/>
+<area shape="rect" id="node51" href="$pugiconfig_8hpp.html" title="pugiconfig.hpp" alt="" coords="1797,469,1904,499"/>
+<area shape="rect" id="node70" href="$Task__Gate_8h.html" title="Task_Gate.h" alt="" coords="2357,392,2453,421"/>
+<area shape="rect" id="node77" href="$Task__Lane_8h.html" title="Task_Lane.h" alt="" coords="2629,392,2725,421"/>
+<area shape="rect" id="node83" href="$Task__Kill_8h.html" title="Task_Kill.h" alt="" coords="2888,392,2973,421"/>
 </map>

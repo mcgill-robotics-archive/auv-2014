@@ -1,0 +1,10 @@
+<launch>
+
+	<!-- Launches the node that will be publishing data from the downward camera. -->
+	<include file="$(find computer_vision)/launch/camera_down.launch">
+	</include>
+
+	<!-- Launches rosbag -->
+	<node pkg="rosbag" type="record" name="record" args="-a"/>
+
+</launch>

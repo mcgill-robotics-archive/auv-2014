@@ -1,5 +1,4 @@
 #include "DownCVNode.h"
-#include "DownCameraNode.h"
 
 /**
  * @brief Main method used by ROS when the node is launched.
@@ -15,8 +14,12 @@ int main(int argc, char **argv) {
 
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
+	std::string imageFeedDown;
+
+	nodeHandle.param<std::string>("image_feed/left", imageFeedDown, "/simulator/camera3/image_raw");
+
 	// Creates a new CVNode object.
-	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, DOWN_CAMERA_NODE_TOPIC, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
+	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, imageFeedDown, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
 
 	// Start receiving images from the camera node (publisher)
 	pDownCVNode->receiveImages();
@@ -50,15 +53,14 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_DOWN_TOPIC_NAME, 1000, &DownCVNode::listenToPlanner, this);
 
-	cv::namedWindow(DOWN_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
+	cv::namedWindow(CAMERA3_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 }
 
 DownCVNode::~DownCVNode() {
-	cv::destroyWindow(DOWN_CAMERA_NODE_TOPIC);
+	cv::destroyWindow(CAMERA3_CV_TOPIC_NAME);
 
 	delete pLastImage;
 }
-
 
 /**
  * @brief Function that is called when an image is received.
@@ -116,7 +118,7 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
 		// Display the filtered image
-		cv::imshow(DOWN_CAMERA_NODE_TOPIC, currentFrame);
+		cv::imshow(CAMERA3_CV_TOPIC_NAME, currentFrame);
 		cv::waitKey(5);
 	} catch (cv::Exception& e) {
 		ROS_ERROR("cv::imgshow exception: %s", e.what());

@@ -23,6 +23,9 @@ def publish():
     state_msg.visibleObjectData = vis_msg
     state_msg.hasTarget = state['hasTarget']
     state_msg.depth = state['depth']
+    state_msg.velocity.x = state['vx']
+    state_msg.velocity.y = state['vy']
+    state_msg.velocity.z = state['vz']
 
     #Todo: velocity, pitch, yaw
 
@@ -35,7 +38,6 @@ def cvCallback(visObject):
     estimator.updateCV(hasTarget, visObject.object_type,
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
                        visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
-    publish()
 
 def imuCallback(poseStamped):
     q = poseStamped.pose.orientation
@@ -49,22 +51,21 @@ def imuCallback(poseStamped):
 
 def depthCallback(depth):
     estimator.updateDepth(depth.data)
-    publish()
 
 # Init the ros node, subscribers and publishers
 # And run the node
 def init():
     global estimator, pub
-    estimator = dead_reck.dead_reck()
-    rospy.init_node('state_estimation')
 
+    rospy.init_node('state_estimation')
+    estimator = dead_reck.dead_reck(rospy)
     # Subscribe to different inputing topics
-    rospy.Subscriber('front_cv_data', VisibleObjectData, cvCallback)
+    rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('pose', PoseStamped, imuCallback)
     rospy.Subscriber('depth', Float64, depthCallback)
 
     # Publish the filtered data to a topic
-    pub = rospy.Publisher('state_estimate', AUVState)
+    pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     rospy.spin()
     
 if __name__ == '__main__':

@@ -1,6 +1,4 @@
 #include "FrontCVNode.h"
-#include "FrontCameraNode.h"
-
 
 ros::Publisher visibleObjectDataPublisher;
 ros::Publisher frontCVCamera1Publisher;
@@ -19,8 +17,13 @@ int main(int argc, char **argv) {
 
 	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
 
+	std::string imageFeedLeft, imageFeedRight;
+
+	nodeHandle.param<std::string>("image_feed/left", imageFeedLeft, "/simulator/camera1/image_raw");
+	nodeHandle.param<std::string>("image_feed/right", imageFeedRight, "/simulator/camera2/image_raw");
+
 	// Creates a new CVNode object.
-	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, FRONT_CAMERA_NODE_TOPIC, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
+	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, imageFeedLeft, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
 
 	// Start receiving images from the camera node (publisher)
 	pFrontCVNode->receiveImages();
@@ -48,18 +51,20 @@ void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) : CVNode(nodeHandle, topicName, receptionRate, bufferSize) {
-	// Create topics with front end
+	// Topics on which the node will be publishing.
 	frontEndPublisher = pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 
-	// Start listening to the planner. This will update the list of visible objects as they change.
+	// Topics on which the node will be subscribing.
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this); 
+
+	this->visibleObjectList.push_back(new Gate());
+
+	// Will execute callbacks functions when an event occurs.
 	ros::spin();
-	// Construct the list of VisibleObjects
-	//this->visibleObjectList.push_back(new Gate());
-	//this->visibleObjectList.push_back(new Buoy());
+
 	// Create a window to display the images received
-	cv::namedWindow(FRONT_CAMERA_NODE_TOPIC, CV_WINDOW_KEEPRATIO);
+	cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	numFramesWithoutObject = 0;
 }
 
@@ -70,13 +75,12 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
  *
  */
 FrontCVNode::~FrontCVNode() {
-	cv::destroyWindow(FRONT_CAMERA_NODE_TOPIC);
+	cv::destroyWindow(CAMERA1_CV_TOPIC_NAME);
 }
 
 void FrontCVNode::instanciateAllVisibleObjects() {
 
 }
-
 
 /**
  * @brief Function that is called when an image is received.
@@ -94,7 +98,7 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
 		currentFrame = pCurrentFrame->image;
 	} catch (cv_bridge::Exception& e) {
-		ROS_ERROR("$s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
+		ROS_ERROR("%s", "A problem occured while trying to convert the image from sensor_msgs::ImageConstPtr to cv:Mat.");
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
 	}
@@ -107,8 +111,11 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 
+		ROS_INFO("%s", ("The front cv node received the list of ROS messages that will be sent to the state estimation, which contains " + boost::lexical_cast<std::string>(messagesToPublish.size()) + " element(s).").c_str());
+
 		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
-		if (messagesToPublish.size() == 0) {
+		if (messagesToPublish.size() == 0 || (messagesToPublish.size() != 0 && messagesToPublish[0]->object_type == messagesToPublish[0]->CANNOT_DETERMINE_OBJECT)) {
+			ROS_INFO("%s", "The current message contains no useful information, it will not be sent to the state estimation.");
 			numFramesWithoutObject++;
 			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
 		} else {
@@ -135,7 +142,7 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
 		// Display the filtered image
-		cv::imshow(FRONT_CAMERA_NODE_TOPIC, currentFrame);
+		cv::imshow(CAMERA1_CV_TOPIC_NAME, currentFrame);
 		cv::waitKey(5);
 	} catch (cv::Exception& e) {
 		ROS_ERROR("cv::imgshow exception: %s", e.what());
