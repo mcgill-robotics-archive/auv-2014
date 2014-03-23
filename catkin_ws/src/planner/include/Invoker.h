@@ -18,6 +18,7 @@ class Invoker{
 */
  public:
  	Invoker();
+ 	~Invoker();
  	void AddTask(Task * t);
  	void StartRun();
  private:
