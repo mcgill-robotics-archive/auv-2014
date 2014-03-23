@@ -290,7 +290,7 @@ int main(int argc, char **argv)
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
+	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv/data", 1000, estimatedState_callback);
 	ros::Subscriber depth_subscriber = n.subscribe("/stateEstimation/depth", 1000, depth_callback);
 	//TO DO: add clock subscription
 
