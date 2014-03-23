@@ -360,7 +360,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				ROS_WARN("X-Position Control is active, but estimated state is not published")
+				ROS_WARN("X-Position Control is active, but estimated state is not published");
 			}
 		}
         
@@ -387,7 +387,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				ROS_WARN("Y-Position Control is active, but estimated state is not published")
+				ROS_WARN("Y-Position Control is active, but estimated state is not published");
 			}
         }
         if (isActive_YSpeed)
@@ -415,7 +415,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				ROS_WARN("Depth position Control is active, but /depth is not published")
+				ROS_WARN("Depth position Control is active, but /depth is not published");
 			}
 		}
 

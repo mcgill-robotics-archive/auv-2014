@@ -18,11 +18,12 @@ Maps voltage to motor command
 //global vars
 ros::Publisher voltage_publisher;
 double VOLTAGE_MAX;
-double VOLTAGE_MIN;
 int32_t MOTOR_CMD_MAX;
 int32_t MOTOR_CMD_MIN;
 double F_MAX;
 double T_MAX;
+double motor__cmd_slope
+double motor_cmd_intersect
 
 float limit_check(float value, float max, char* value_type, char* value_id ){
 	if (value > max | value < -1*max) {
@@ -90,7 +91,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
  	for (int i=0; i<6; i++)
 	{
-		voltage[i] = limit_check(voltage[i], VOLTAGE_MIN, VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
+		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
 
 	}	
 
@@ -102,7 +103,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
 	{	
-		motor_cmd[i] = (voltage[i]-VOLTAGE_MIN)/(VOLTAGE_MAX-VOLTAGE_MIN)*(MOTOR_CMD_MAX-MOTOR_CMD_MIN) + MOTOR_CMD_MIN;
 		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
 
