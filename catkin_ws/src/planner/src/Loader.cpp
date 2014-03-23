@@ -9,13 +9,16 @@
 
 void ps3Control(); 
 
-Loader::Loader(){
+/**
+ * Constructor.
+*/
+Loader::Loader(std::string xmlFilesPath){
 /**
 * Initialize the objects
 */
 	std::cout<<"In Loader Constructor"<< std::endl;
 	main_Invoker = new Invoker();
-	main_Config = new Config();
+	main_Config = new Config(xmlFilesPath);
 	main_Taskfactory = new TaskFactory();
 
 /**

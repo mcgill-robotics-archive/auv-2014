@@ -31,7 +31,7 @@ const char* mapFN = "map.xml";
 * Values are accesible when requested from loader through getter methods 
 */
 
-Config::Config()
+Config::Config(std::string xmlFilesPath)
 
 {
 	std::cout<<"Loading Task File"<< std::endl;

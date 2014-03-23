@@ -26,6 +26,11 @@ double visible_Yaw;
 double visible_Pitch;
 
 /**
+ * Defines in which folder are stored the XML files.
+*/
+std::string xmlFilesPath;
+
+/**
  * Object the we currently want CV to look for
  */
 std::string visionObj;
@@ -113,7 +118,7 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 
 void setVisionObj (int objIndex) {
   planner::CurrentCVTask msgFront;
-   planner::CurrentCVTask msgDown;
+  planner::CurrentCVTask msgDown;
 
   msgFront.currentCVTask = msgFront.NOTHING;
   msgDown.currentCVTask = msgDown.NOTHING;
@@ -202,6 +207,8 @@ int main (int argc, char **argv) {
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
+  n.param<std::string>("planner/xml_files_path", xmlFilesPath, "");
+
   bool ready = 0;
   while (ready == 0)
   {
@@ -218,7 +225,7 @@ int main (int argc, char **argv) {
   boost::thread spin_thread(&spinThread);
 
   std::cout<<"Starting Loader"<< std::endl; 
-  Loader* loader = new Loader();
+  Loader* loader = new Loader(xmlFilesPath);
   Invoker* invoker = loader->getInvoker();
   invoker->StartRun();
   std::cout<<"Done Loader"<< std::endl;  
