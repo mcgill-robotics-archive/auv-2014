@@ -13,7 +13,6 @@ from PyQt4 import QtCore
 
 ##    variables shared by all controller for the cmd_vel and z_position
 class vel_vars(object):
-    pitch_velocity = 0
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
@@ -21,14 +20,11 @@ class vel_vars(object):
     z_position_step = 0.2
 
     MAX_YAW_VEL = 5
-    MAX_PITCH_ANGLE = PI/4
     MAX_LINEAR_VEL = 5
 
 
 ##    Here we define the keyboard map for our controller
 class KeyMapping(object):
-    PitchForward = QtCore.Qt.Key_I
-    PitchBackward = QtCore.Qt.Key_K
     YawLeft = QtCore.Qt.Key_J
     YawRight = QtCore.Qt.Key_L
     IncreaseDepth = QtCore.Qt.Key_R
@@ -43,19 +39,18 @@ class KeyMapping(object):
 ##   variables for the ros topic names
 class ROS_Topics(object):
     battery_voltage = "battery_voltage"
-    pressure = "pressure"
-    depth = "/depth"
-    front_left_pre_topic = "/simulator/camera1/image_raw"
-    front_right_pre_topic = "/simulator/camera2/image_raw"
-    down_pre_topic = "/simulator/camera3/image_raw"
+    depth = "/state_estimation/depth"
+    front_left_pre_topic = "/front_left_camera/image"
+    front_right_pre_topic = "/front_right_camera/image"
+    down_pre_topic = "/down_right_camera/image"
     front_left_post_topic = "/front_cv/camera1"
     front_right_post_topic = "/front_cv/camera2"
     down_post_topic = "/down_cv/camera1"
     simulator_pose = "/gazebo/model_states"
-    imu_filtered = 'pose'
+    imu_filtered = '/state_estimation/pose'
     vel_topic = '/planner/setPoints'
-    front_cv_data = 'front_cv_data'
-    down_cv_data = "down_cv_data"
+    front_cv_data = 'front_cv/data'
+    down_cv_data = 'down_cv/data'
     planner_task = 'planner/task'
 
 
