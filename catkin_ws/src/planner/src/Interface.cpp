@@ -1,5 +1,7 @@
 #include "Interface.h"
 #include <math.h>
+#include <gazebo_msgs/ModelState.h>
+#include <gazebo_msgs/SetModelState.h>
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
@@ -242,6 +244,49 @@ void rosSleep(int length) {
 	d.sleep();
 }
 
+void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
+
+  ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
+  gazebo_msgs::SetModelState setmodelstate;
+  gazebo_msgs::ModelState modelstate;
+
+  geometry_msgs::Pose start_pose;
+  start_pose.position.x = x;
+  start_pose.position.y = y;
+  start_pose.position.z = z;
+  start_pose.orientation.x = 0.0;
+  start_pose.orientation.y = 0.0;
+  start_pose.orientation.z = 0.0;
+  start_pose.orientation.w = 1.0;
+
+  geometry_msgs::Twist start_twist;
+  start_twist.linear.x = 0.0;
+  start_twist.linear.y = 0.0;
+  start_twist.linear.z = 0.0;
+  start_twist.angular.x = 0.0;
+  start_twist.angular.y = 0.0;
+  start_twist.angular.z = 0.0;
+
+ 
+  modelstate.model_name = (std::string) "robot";
+  modelstate.reference_frame = (std::string) "world";
+  modelstate.pose = start_pose;
+  modelstate.twist = start_twist;
+
+  setmodelstate.request.model_state = modelstate;
+  //client.call(setmodelstate);
+
+  ros::service::waitForService("/gazebo/set_model_state", -1);
+  if(client.call(setmodelstate))
+    { 
+      ROS_INFO("Set robot's position: Success");
+    }
+    else
+    {
+      ROS_ERROR("Failed to call service ");
+  }
+}
+
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
@@ -294,6 +339,10 @@ int main(int argc, char **argv) {
 	ros::Rate loop_rate(10);
 	/****This is ros::spin() on a seperate thread*****/
 	boost::thread spin_thread(&spinThread);
+
+	  //Set robot's initial position
+	  //TODO: take a starting task number/name as rosparam in launch file and set to different starting positions based on that
+	  setRobotInitialPosition(n, 2.7, -3.5, 1);
 
 	std::cout << "Starting Loader" << std::endl;
 	Loader* loader = new Loader(xmlFilesPath);
