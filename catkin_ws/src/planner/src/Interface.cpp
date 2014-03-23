@@ -98,9 +98,9 @@ std::vector<double> getTransform() {
   std::vector<double> relativeDistance;
   relativeDistance.push_back(relativePose.pose.position.x);
   relativeDistance.push_back(relativePose.pose.position.y);
-  relativeDistance.push_back(relativePose.pose.position.z);
   relativeDistance.push_back(0.0);
   relativeDistance.push_back(0.0);
+  relativeDistance.push_back(8.8);
   //relativeDistance.push_back();
   //relativeDistance.push_back();
   return relativeDistance;
@@ -234,8 +234,8 @@ int main (int argc, char **argv) {
   ros::init(argc, argv, "Planner");
   ros::NodeHandle n;
 
-  estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
-  estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
+  //estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
+  //estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
   taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000); 
   taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000); 
@@ -254,6 +254,7 @@ int main (int argc, char **argv) {
     else {ROS_DEBUG_THROTTLE(2,"Here ye Heare ye");}
     if (estimatedState_subscriber.getNumPublishers() == 0) {ready = 0;}
     else {ROS_DEBUG_THROTTLE(2,"got estimated State");}
+    sleep(1000);
   }
 
   ros::Rate loop_rate(10);
