@@ -104,7 +104,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
 	{	
-		motor_cmd[1]=21.93*voltage[1]-33.729; //TODO Take out of loop, use data from all motor controller characterization tests
+		motor_cmd[i]=21.93*voltage[i]-33.729; //TODO Take out of loop, use data from all motor controller characterization tests
 		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
 
