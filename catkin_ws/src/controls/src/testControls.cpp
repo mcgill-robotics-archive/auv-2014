@@ -10,6 +10,7 @@
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "testControls");
+	ROS_INFO("Initialized testControls Node");
 	ros::NodeHandle n;
 
 	ros::Publisher setPointsPublisher = n.advertise<planner::setPoints>("setPoints", 1000);
@@ -35,7 +36,6 @@ int main(int argc, char **argv)
 	int8_t isActive_YawSpeed;
 
 	const int8_t zero = 0;
-
 	while (ros::ok())
 	{
 		// process!
@@ -92,8 +92,8 @@ int main(int argc, char **argv)
 		msg.Pitch.data = setPoint_Pitch;
 
 		//isactive parameters doesnt work yet so these are the parameters 1/28
-		msg.XPos.isActive = 0;
-		msg.YPos.isActive = 1;
+		msg.XPos.isActive = 1;
+		msg.YPos.isActive = 0;
 		msg.Depth.isActive = 0;
 		msg.Yaw.isActive = 0;
 		msg.Pitch.isActive = 0; // Pitch control not working 3/23
@@ -106,7 +106,6 @@ int main(int argc, char **argv)
 
 		//n.param<std::float>("testParam", test_param, 99);
 		//ROS_INFO("printing...");
-
 		setPointsPublisher.publish(msg);
 		ros::spinOnce();
 		loop_rate.sleep();
