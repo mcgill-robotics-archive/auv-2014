@@ -63,7 +63,7 @@ void Loader::loadInvoker(){
 
 main_Invoker->AddTask(main_Taskfactory->getGateTask());
 	//adds the end task after all other tasks have been loaded
-	main_Invoker->AddTask(main_Taskfactory->getEndTask());
+	//main_Invoker->AddTask(main_Taskfactory->getEndTask());
 
 	//To make sure the invoker doesn't get loaded agian unless needed
 	isInvokerLoaded = true;
