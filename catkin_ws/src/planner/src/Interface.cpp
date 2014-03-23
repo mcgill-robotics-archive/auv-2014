@@ -207,7 +207,9 @@ int main (int argc, char **argv) {
   checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
   control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
-  n.param<std::string>("planner/xml_files_path", xmlFilesPath, "");
+  n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
+  
+  ROS_INFO("%s", ("Value of xmlFilesPath=" + xmlFilesPath).c_str());
 
   bool ready = 0;
   while (ready == 0)
@@ -224,12 +226,13 @@ int main (int argc, char **argv) {
   /****This is ros::spin() on a seperate thread*****/
   boost::thread spin_thread(&spinThread);
 
-  std::cout<<"Starting Loader"<< std::endl; 
+  std::cout<< "Starting Loader" << std::endl; 
   Loader* loader = new Loader(xmlFilesPath);
   Invoker* invoker = loader->getInvoker();
   invoker->StartRun();
   std::cout<<"Done Loader"<< std::endl;  
 
+  delete loader; delete invoker;
 
 
   return 0;

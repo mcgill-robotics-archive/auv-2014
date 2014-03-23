@@ -6,7 +6,7 @@
 #include "./pugixml/src/pugixml.hpp"
 
 /**
-* @author Nick Margie
+* @author Faraz Oman
 */
 
 using namespace std;

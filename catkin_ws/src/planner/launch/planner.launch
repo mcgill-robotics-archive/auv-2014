@@ -9,7 +9,7 @@
 
   <!-- Planner -->
   <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen">
-  	<param name="planner/xml_files_path" value="$(find planner)/xml"/>
+  	<param name="xml_files_path" value="$(find planner)/xml"/>
   </node>
  
 

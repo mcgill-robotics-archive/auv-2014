@@ -5,6 +5,9 @@
 TaskFactory::TaskFactory(){
 
 }
+TaskFactory::~TaskFactory(){
+	
+}
 
 //Parses the task number from the tasks.xml file 
 int TaskFactory::parseTask(std::string id){
