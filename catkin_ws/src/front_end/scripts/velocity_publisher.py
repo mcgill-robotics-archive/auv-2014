@@ -1,10 +1,22 @@
 #!/usr/bin/env python
 #__author__ = 'david lavoie-boutin'
 
+##
+#@package velocity_publisher
+#contains a method publishing a set of data to the setPoints topic in ros
+#@author David Lavoie-Boutin
+
 import rospy
 from planner.msg import setPoints
 
-
+##
+#publishes the passed data to ros
+#@param x_vel velocity in the x axis float 64-bits
+#@param y_vel velocity in y axis float 64-bits
+#@param z_depth desired depth, positive pointing down float 64-bits
+#@param yaw_vel angular velocity for yaw float 64-bits
+#@param ros_topic the topic name to which you publish float 64-bits
+#@param set_null if set to 0, sends all controls NOT active
 def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
     vel_pub = rospy.Publisher(ros_topic, setPoints)
 

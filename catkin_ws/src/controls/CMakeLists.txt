@@ -168,6 +168,9 @@ include_directories(
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
+
+
+
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
@@ -189,4 +192,14 @@ add_dependencies(controls ${catkin_EXPORTED_TARGETS})
 add_dependencies(testControls ${catkin_EXPORTED_TARGETS})
 add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})
 
-add_dependencies(controls ${PROJECT_NAME}_gencpp)
+
+#add_dependencies(controls ${PROJECT_NAME}_gencpp)
+
+#add_library(thrust_mapper_lib src/thrust_mapper.cpp)
+add_library(controls_lib src/controls.cpp)
+
+catkin_add_gtest(test_controls tests/test_controls.cpp)
+if(TARGET test_controls)
+  target_link_libraries(test_controls controls_lib)
+  #target_link_libraries(test_controls thrust_mapper_lib)
+endif()
