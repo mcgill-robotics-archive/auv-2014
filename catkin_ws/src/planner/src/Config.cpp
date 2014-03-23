@@ -6,7 +6,7 @@
 *
 */
 #include "Config.h"
-
+#include "Interface.h"
 using namespace std;
 
 
@@ -14,17 +14,17 @@ pugi::xml_document roboSub_task_doc;
 pugi::xml_document roboSub_map_doc;
 vector<string> taskList;
 vector<string> mapList;
-
+std::string xml_file_path;
 
 /**
 * Constructor for Config object
 */
 
 
-const char* taskFN = "tasks.xml"; //TODO change file name as neeeded
+std::string taskFN = "/tasks.xml"; //TODO change file name as neeeded
 
 
-const char* mapFN = "map.xml";
+std::string mapFN = "/map.xml";
 
 /**
 * Constructor for the Config object invokes the load file and parse methods (pugi) to parse the xml data needed.
@@ -40,10 +40,28 @@ Config::Config(std::string xmlFilesPath)
 * @param taskFN task ID and versionob
 * @roboSub_task_doc llkj
 */
-	loadFile(taskFN, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
+	xml_file_path = xmlFilesPath;
+	taskFN = xml_file_path + taskFN;
+	
+	//sleep(1000);
+	const char * c_file = taskFN.c_str();
+	loadFile(c_file, roboSub_task_doc); //TODO deal with errors that arise if this returns false?
+
 	//loadFile(mapFN, roboSub_map_doc); /*Used to load map if ever needed */
 	parse(roboSub_task_doc, roboSub_map_doc);
 	std::cout<<"Done Loading Task File"<< std::endl;
+	
+	/*{
+	public:
+		Config();
+		~Config();
+			
+	};*/
+
+}
+
+Config::~Config(){
+
 }
 
 /**

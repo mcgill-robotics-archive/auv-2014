@@ -24,8 +24,6 @@ public:
 
 private:
 	int numFramesWithoutObject;
-	Gate gateObjectFilters;
-	Buoy buoyObjectFilters;
 
 	void instanciateAllVisibleObjects();
 	void receiveImage(const sensor_msgs::ImageConstPtr& message);

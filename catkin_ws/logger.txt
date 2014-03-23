@@ -144,3 +144,15 @@ XML [tasks.xml] loaded with errors
 Error description: File was not found
 Error offset: 0 (error at [...tasks.xml]
 
+XML [tasks.xml] loaded with errors
+Error description: File was not found
+Error offset: 0 (error at [...tasks.xml]
+
+XML [tasks.xml] loaded with errors
+Error description: File was not found
+Error offset: 0 (error at [...tasks.xml]
+
+XML [/tasks.xml] loaded with errors
+Error description: File was not found
+Error offset: 0 (error at [.../tasks.xml]
+

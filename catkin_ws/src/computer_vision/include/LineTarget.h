@@ -14,6 +14,7 @@ using namespace cv;
 using namespace std;
 
 class LineTarget : public VisibleObject {
+
 	double xDistance;
 	double yDistance;
 	double yaw;
@@ -21,7 +22,7 @@ class LineTarget : public VisibleObject {
 	LineTarget();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
-
+	double convertFromPixelsToMetres(int distance, double longSize);
 	void applyFilter(cv::Mat& image);
 	void thresh_callback(int, void* );
 	double relativeYaw(cv::RotatedRect line);

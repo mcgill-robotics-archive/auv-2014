@@ -1,0 +1,19 @@
+<launch>
+	<!-- launches 3 nodes: front-end, controls, simulator -->
+	<!-- Written by David Lavoie-Boutin, Jan 16, McGill Robotics -->
+
+	<!-- Launch Simulator -->
+	<include file="$(find simulator)/launch/simulator.launch" />
+
+	<!-- controls -->
+	<include file="$(find controls)/launch/controls.launch" />
+
+<!-- CVNode front-->
+	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
+		<param name="image_feed/left" type="str" value="/simulator/camera1/image_raw" />
+		<param name="image_feed/right" type="str" value="/simulator/camera2/image_raw" />
+	</node>
+
+	<!-- CVNode down -->
+	<!-- <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/> -->
+</launch>
