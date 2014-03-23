@@ -75,10 +75,12 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 		visibleObjectData->y_distance = m_yDistance;
 		visibleObjectData->z_distance = m_zDistance;
 
-		messagesToReturn.push_back(visibleObjectData);	
+		messagesToReturn.push_back(visibleObjectData);
+
+		ROS_INFO("%s", "Added a ROS message in the list of messages to return to the cv node.");
 	}
 
-	ROS_INFO("%s", "About to return the ROS message to the cv node.");
+	ROS_INFO("%s", ("About to return the ROS message list to the cv node that contains " + boost::lexical_cast<std::string>(messagesToReturn.size()) + " element(s).").c_str());
 
 	return (messagesToReturn);
 }
