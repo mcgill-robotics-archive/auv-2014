@@ -1,11 +1,7 @@
-##@package VARIABLES
+##@package VARIABLES_conventions
 #
-# file grouping similar variables in classes
-#since python does not have enums,
-#
-# also, these variables will be accessed by different python files therefore the need for a separate file
-#file containing all variables shared between one or more files also contains parameters and constants
-# used in the UI and the key mapping for the keyboard controller
+# same as VARIABLES but following the naming conventions we set. Not the primary file yet since we still use the simulator
+#and not all nodes have been changes.
 #@author David Lavoie-Boutin
 PI = 3.141592653
 from PyQt4 import QtCore
