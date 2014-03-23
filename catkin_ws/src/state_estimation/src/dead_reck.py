@@ -66,8 +66,8 @@ class dead_reck():
 
     def getState(self):
         t_change = 0
-        if self.last_time:
-            t_change = self.ros.get_time() - self.last_time
+        #if self.last_time:
+        #    t_change = self.ros.get_time() - self.last_time
 
         return {
                 'hasTarget':self.hasTarget
