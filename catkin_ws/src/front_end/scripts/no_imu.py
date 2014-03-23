@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'no_imu_gr_resizable.ui'
+# Form implementation generated from reading ui file 'UI/QT design/no_imu_gr_resizable.ui'
 #
-# Created: Fri Mar 14 10:15:15 2014
+# Created: Sun Mar 23 16:34:46 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_RoboticsMain(object):
     def setupUi(self, RoboticsMain):
         RoboticsMain.setObjectName(_fromUtf8("RoboticsMain"))
-        RoboticsMain.resize(1125, 822)
+        RoboticsMain.resize(1125, 845)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/Images/Only-Logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         RoboticsMain.setWindowIcon(icon)
@@ -34,8 +34,8 @@ class Ui_RoboticsMain(object):
         self.frame_2.setLineWidth(0)
         self.frame_2.setObjectName(_fromUtf8("frame_2"))
         self.gridLayout_3 = QtGui.QGridLayout(self.frame_2)
-        self.gridLayout_3.setSpacing(0)
         self.gridLayout_3.setMargin(0)
+        self.gridLayout_3.setSpacing(0)
         self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout()
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
@@ -392,20 +392,19 @@ class Ui_RoboticsMain(object):
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
         self.frame.setObjectName(_fromUtf8("frame"))
-        self.verticalLayoutWidget = QtGui.QWidget(self.frame)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 511, 271))
-        self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
-        self.poseVizFrame = QtGui.QVBoxLayout(self.verticalLayoutWidget)
+        self.gridLayout_8 = QtGui.QGridLayout(self.frame)
+        self.gridLayout_8.setObjectName(_fromUtf8("gridLayout_8"))
+        self.poseVizFrame = QtGui.QVBoxLayout()
         self.poseVizFrame.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
-        self.poseVizFrame.setMargin(0)
         self.poseVizFrame.setObjectName(_fromUtf8("poseVizFrame"))
+        self.gridLayout_8.addLayout(self.poseVizFrame, 0, 0, 1, 1)
         self.verticalLayout_2.addWidget(self.frame)
         self.horizontalLayout_4.addLayout(self.verticalLayout_2)
         self.gridLayout_4.addLayout(self.horizontalLayout_4, 1, 0, 1, 1)
         self.gridLayout_7.addLayout(self.gridLayout_4, 0, 0, 1, 1)
         RoboticsMain.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(RoboticsMain)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1125, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1125, 22))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         RoboticsMain.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(RoboticsMain)
