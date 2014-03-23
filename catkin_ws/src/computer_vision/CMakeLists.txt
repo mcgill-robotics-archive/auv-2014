@@ -172,6 +172,11 @@ add_library(LineTarget src/LineTarget.cpp)
 target_link_libraries(LineTarget VisibleObject)
 target_link_libraries(LineTarget ${catkin_LIBRARIES})
 
+catkin_add_gtest(line_target_test tests/line_target_test.cpp)
+if(TARGET line_target_test)
+   target_link_libraries(line_target_test LineTarget)
+endif()
+
 add_executable(PlannerSimulator src/PlannerSimulator.cpp)
 target_link_libraries(PlannerSimulator ${catkin_LIBRARIES})
 
