@@ -1,4 +1,5 @@
 #include "Interface.h"
+#include <math.h>
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
@@ -74,9 +75,37 @@ void setOurPose() {
 */
 void setTransform (std::string referenceFrame) {
   tf::TransformListener listener;
-  setOurPose();
-  listener.transformPose(referenceFrame, myPose, relativePose);
+ //setOurPose();
+    geometry_msgs::PoseStamped emptyPose;
+  emptyPose.header.frame_id = "/robot/rotation_center";
+  emptyPose.pose.position.x = 0.0;
+  emptyPose.pose.position.y = 0.0;
+  emptyPose.pose.position.z = 0.0;
+  emptyPose.pose.orientation.x = 0.0;
+  emptyPose.pose.orientation.y = 0.0;
+  emptyPose.pose.orientation.z = 0.0;
+  emptyPose.pose.orientation.w = 1.0;
+  try{
+    listener.waitForTransform(referenceFrame, emptyPose.header.frame_id, ros::Time(0), ros::Duration(0.4));
+    listener.transformPose(referenceFrame, emptyPose, relativePose);
+  }
+  catch (tf::TransformException ex){
+    ROS_ERROR("%s",ex.what());
+  }
 }
+
+std::vector<double> getTransform() {
+  std::vector<double> relativeDistance;
+  relativeDistance.push_back(relativePose.pose.position.x);
+  relativeDistance.push_back(relativePose.pose.position.y);
+  relativeDistance.push_back(relativePose.pose.position.z);
+  relativeDistance.push_back(0.0);
+  relativeDistance.push_back(0.0);
+  //relativeDistance.push_back();
+  //relativeDistance.push_back();
+  return relativeDistance;
+}
+
 
 bool areWeThereYet(std::vector<double> desired) {
   //if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
@@ -99,22 +128,28 @@ bool areWeThereYet(std::vector<double> desired) {
 }
 
 
+//blame alan
 bool areWeThereYet_tf(std::string referenceFrame) {
   //if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
   //if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
   setTransform(referenceFrame);
   //positional bounds
-  bool pxBounded = relativePose.pose.position.x < .1;
-  bool pyBounded = relativePose.pose.position.y < .1;
-  bool pzBounded = relativePose.pose.position.z < .1;
+  bool xBounded = relativePose.pose.position.x < .1;
+  bool yBounded = relativePose.pose.position.y < .1;
+  bool zBounded = relativePose.pose.position.z < .1;
   //rotational bounds
-  bool txBounded = relativePose.pose.orientation.x < .1;
-  bool tyBounded = relativePose.pose.orientation.y < .1;
-  bool tzBounded = relativePose.pose.orientation.z < .1;
-  bool twBounded = relativePose.pose.orientation.w < .1;
-  return (pxBounded && pyBounded && pzBounded && txBounded &&
-      tyBounded && tzBounded && twBounded);
-}
+  double x = relativePose.pose.orientation.x;
+  double y = relativePose.pose.orientation.y;
+  double z = relativePose.pose.orientation.z;
+  double w = relativePose.pose.orientation.w;
+  double pitch = 57.2957795130823f * -atan((2.0f * (x * z + w * y)) / sqrt(1.0f - pow((2.0f * x * z + 2.0f * w * y), 2.0f)));
+  double yaw = 57.2957795130823f * atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
+  bool pitchBounded =  pitch < 5;
+  bool yawBounded = yaw < 5;
+
+  return (xBounded && yBounded && zBounded && pitchBounded &&
+      yawBounded);
+  }
 
 void setVisionObj (int objIndex) {
   planner::CurrentCVTask msgFront;
