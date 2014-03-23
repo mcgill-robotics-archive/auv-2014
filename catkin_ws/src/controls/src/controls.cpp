@@ -1,3 +1,4 @@
+#include "controls.h"
 
 /*
 
@@ -54,16 +55,7 @@ Roadmap
 
 
 */
-#include "ros/ros.h"
-#include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
 
-#include "geometry_msgs/Twist.h"
-#include "geometry_msgs/Pose.h"
-#include "geometry_msgs/Wrench.h"
-#include "std_msgs/Float64.h"
-#include "planner/setPoints.h"	
-#include "computer_vision/VisibleObjectData.h"
-#include "controls/DebugControls.h"	
 
 //global vars
 double z_des = 0;

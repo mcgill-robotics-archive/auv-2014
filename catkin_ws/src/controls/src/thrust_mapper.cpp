@@ -7,23 +7,15 @@ Maps voltage to motor command
 
 
 
-#include "ros/ros.h"
-#include "geometry_msgs/Wrench.h"
-#include "geometry_msgs/Pose.h"
-#include "std_msgs/Float64.h"
-#include "gazebo_msgs/ModelStates.h"
-#include "controls/motorCommands.h"
-#include <string>
+
+#include "thrust_mapper.h"
 
 //global vars
 ros::Publisher voltage_publisher;
 double VOLTAGE_MAX;
 int32_t MOTOR_CMD_MAX;
-int32_t MOTOR_CMD_MIN;
 double F_MAX;
 double T_MAX;
-double motor__cmd_slope
-double motor_cmd_intersect
 
 float limit_check(float value, float max, char* value_type, char* value_id ){
 	if (value > max | value < -1*max) {
@@ -39,6 +31,26 @@ float limit_check(float value, float max, char* value_type, char* value_id ){
 	}
 }
 
+float thrust_voltage(float thrust){
+	float voltage;	
+	    if (thrust<0.4641 & thrust>-0.01095 ) {
+	        voltage = 0;
+	    }
+	    else if (thrust>0.4641 & thrust<0.79423) {
+	        voltage = (-0.1419 + sqrt(0.1419*0.1419-4*0.0676*(-0.3668-thrust)))/(2*0.0676);
+	    }
+	    else if (thrust>0.79423) {
+	    	voltage=(thrust+3.2786)/1.047;
+	    }
+	    else if (thrust<-0.01095 & thrust>-1.179701){
+	        voltage = -0.0314 + sqrt(0.0314*0.0314-4*-0.0851*(0.0042-thrust));
+	    }
+	    else if (thrust<-1.179701) {
+	    	voltage = (thrust-2.5582)/0.9609;
+	    }
+	    	return voltage;
+
+}
 
 void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 {	
@@ -70,27 +82,14 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	
 	//for each thrust, map to a voltage
 	for (int i=0; i<6; i++) {
-	    if (thrust[i]<0.4641 & thrust[i]>-0.01095 ) {
-	        voltage[i] = 0;
-	    }
-	    else if (thrust[i]>0.4641 & thrust[i]<0.79423) {
-	        voltage[i] = (-0.1419 + sqrt(0.1419*0.1419-4*0.0676*(-0.3668-thrust[i])))/(2*0.0676);
-	    }
-	    else if (thrust[i]>0.79423) {
-	    	voltage[i]=(thrust[i]+3.2786)/1.047;
-	    }
-	    else if (thrust[i]<-0.01095 & thrust[i]>-1.179701){
-	        voltage[i] = -0.0314 + sqrt(0.0314*0.0314-4*-0.0851*(0.0042-thrust[i]));
-	    }
-	    else if (thrust[i]<-1.179701) {
-	    	voltage[i] = (thrust[i]-2.5582)/0.9609;
-	    }
 	}
 	
 	//Saturation of voltage values
 	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
  	for (int i=0; i<6; i++)
 	{
+		
+		voltage[i] = thrust_voltage(thrust[i]);
 		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
 
 	}	
@@ -100,10 +99,13 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	//map voltages to motor commands
 	//Conversion to integer between -500 and +500
 	//linear for now TODO change mapping according to test
+		motor_cmd[1]=21.93*voltage[1]-33.729;
+
+
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
 	{	
-		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MIN, MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
+		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
 
 
@@ -131,11 +133,10 @@ int main(int argc, char **argv)
 
 	//Parameters
 	n.param<double>("voltage/max", VOLTAGE_MAX, 0.0);
-	n.param<double>("voltage/min", VOLTAGE_MIN, 0.0);
-	n.param<int32_t>("motorCommands/min", MOTOR_CMD_MIN, 0.0);
 	n.param<int32_t>("motorCommands/max", MOTOR_CMD_MAX, 0.0);
 	n.param<double>("force/max", F_MAX, 0.0);
 	n.param<double>("torque/max", T_MAX, 0.0);
+
 
 	//TODO raise warning if any of these variables == their default of 0. This means bad parameter file.
 
