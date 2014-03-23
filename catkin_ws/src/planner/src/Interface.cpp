@@ -235,7 +235,7 @@ int main (int argc, char **argv) {
   ros::NodeHandle n;
 
   //estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
-  //estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
+  estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
 
   taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000); 
   taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000); 
@@ -252,9 +252,24 @@ int main (int argc, char **argv) {
     ready = 1;     
     if (estimatedDepth_subscriber.getNumPublishers() == 0) {ready = 0;}
     else {ROS_DEBUG_THROTTLE(2,"Here ye Heare ye");}
-    if (estimatedState_subscriber.getNumPublishers() == 0) {ready = 0;}
-    else {ROS_DEBUG_THROTTLE(2,"got estimated State");}
-    sleep(1000);
+
+    tf::TransformListener listener;
+    geometry_msgs::PoseStamped emptyPose;
+    emptyPose.header.frame_id = "/robot/rotation_center";
+    emptyPose.pose.position.x = 0.0;
+    emptyPose.pose.position.y = 0.0;
+    emptyPose.pose.position.z = 0.0;
+    emptyPose.pose.orientation.x = 0.0;
+    emptyPose.pose.orientation.y = 0.0;
+    emptyPose.pose.orientation.z = 0.0;
+    emptyPose.pose.orientation.w = 1.0;
+    try{
+      listener.waitForTransform("/target/door", emptyPose.header.frame_id, ros::Time(0), ros::Duration(30));
+      listener.transformPose("/target/door", emptyPose, relativePose);
+    }
+    catch (tf::TransformException ex){
+     ROS_ERROR("%s",ex.what());
+    }
   }
 
   ros::Rate loop_rate(10);
@@ -267,7 +282,7 @@ int main (int argc, char **argv) {
   invoker->StartRun();
   std::cout<<"Done Loader"<< std::endl;  
 
-  delete loader; delete invoker;
+  delete loader; //delete invoker;
 
 
   return 0;
