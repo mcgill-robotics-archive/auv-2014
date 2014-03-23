@@ -21,6 +21,7 @@ class TaskFactory{
  public:
 
  	TaskFactory();
+ 	~TaskFactory();
 
  	int parseTask(std::string id);
 		
