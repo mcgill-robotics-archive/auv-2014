@@ -53,15 +53,15 @@ void estimatedDepth_callback(const std_msgs::Float64 msg) {
 void setOurPose() {
   tf::TransformListener listener;
   geometry_msgs::PoseStamped emptyPose;
-  emptyPose.header.frame_id = "dummy";
+  emptyPose.header.frame_id = "/robot/rotation_center";
   emptyPose.pose.position.x = 0.0;
   emptyPose.pose.position.y = 0.0;
   emptyPose.pose.position.z = 0.0;
   emptyPose.pose.orientation.x = 0.0;
   emptyPose.pose.orientation.y = 0.0;
   emptyPose.pose.orientation.z = 0.0;
-  emptyPose.pose.orientation.w = 0.0;
-  listener.transformPose("/base_link", emptyPose, myPose);
+  emptyPose.pose.orientation.w = 1.0;
+  listener.transformPose("/robot/rotation_center", emptyPose, myPose);
 }
 
 /**
