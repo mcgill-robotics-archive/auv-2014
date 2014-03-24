@@ -23,8 +23,8 @@ def send_colorList(colors, blinkyID):
 		if res.success != 0:
 			print "BlinkyDisplay request unsuccessful: %s"%res
 
-	except rospy.ServiceException, e:
-		print "Service call failed: %s"%e
+	except Exception as e:
+		print "Exception: %s"%e
 
 def Planner_sendColors(colors):
 	send_colorList(colors,1)

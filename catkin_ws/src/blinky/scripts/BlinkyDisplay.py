@@ -34,7 +34,7 @@ def initialize_blinkies():
 	colors = []
 	
 	for i in range(ledCount):
-		colors.append(RGB(0,0,0))
+		colors.append(RGB(139,69,19))
 
 	# store the initial states
 	blinky1_colorList = colors
