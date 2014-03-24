@@ -35,7 +35,7 @@ def connect():
             print 'teensy not connected'
             print 'goodbye!'
             time.sleep(1)
-            exit(0)            
+            exit(0)
 
     print 'connected!'
 
@@ -65,8 +65,10 @@ def fourier():
     freq[3] = fft.rfft(mics[3])
 
     test = (absolute(freq[0])).astype(int)
+    index = np.argmax(test[1:]) + 1
 
-    print '\t'.join([str(x) for x in test[95:106]])
+    print str(index) + "\t" + str(test[index])
+    # print '\t'.join([str(x) for x in test[95:106]])
 
 # MAIN
 try:
@@ -91,7 +93,7 @@ try:
                 counter = 0
                 for i in xrange(NUMBER_OF_MICS):
                     mics[i] = []
-        
+
         # PEACE OUT IF CONNECTION DROPS
         except serial.serialutil.SerialException:
             print 'connection dropped'
