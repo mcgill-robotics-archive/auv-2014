@@ -55,12 +55,12 @@ void motorCb( const controls::motorCommands& msg){
 }
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
-  digitalWrite(14,msg.torpedo0.data);
-  digitalWrite(15,msg.torpedo1.data);
-  digitalWrite(16,msg.grabber0.data);
-  digitalWrite(17,msg.grabber1.data);
-  digitalWrite(18,msg.dropper0.data);
-  digitalWrite(19,msg.dropper1.data);
+  digitalWrite(14,msg.torpedo1.data);
+  digitalWrite(15,msg.torpedo2.data);
+  digitalWrite(16,msg.grabber1.data);
+  digitalWrite(17,msg.grabber2.data);
+  digitalWrite(18,msg.dropper1.data);
+  digitalWrite(19,msg.dropper2.data);
 }
 
 void killSwitchCb( const std_msgs::Empty& msg){

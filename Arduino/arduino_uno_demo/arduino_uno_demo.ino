@@ -9,9 +9,12 @@
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
-std_msgs::Int16 batteryCurrent;
-std_msgs::Int16 batteryVoltage0;
-std_msgs::Int16 batteryVoltage1;
+std_msgs::Int16 batteryCurrent_msg;
+std_msgs::Int16 batteryVoltage0_msg;
+std_msgs::Int16 batteryVoltage1_msg;
+std_msgs::Int16 temperature_msg;
+std_msgs::Int32 pressure_msg;
+
 //PINOUT:
 //Motor control   : 2 - 7
 //Solenoid valve  : 14 - 19 
@@ -26,7 +29,8 @@ const static int battPin = A3;
 
 unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
-unsigned long batteryCurrentSchedule;
+//unsigned long batteryCurrentSchedule;
+unsigned long temperaturePressureSechedule;
 boolean killSwitchEngaged = false;
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -48,30 +52,22 @@ void motorCb( const controls::motorCommands& msg){
 }
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
-  digitalWrite(14,msg.torpedo0.data);
-  digitalWrite(15,msg.torpedo1.data);
-  digitalWrite(16,msg.grabber0.data);
-  digitalWrite(17,msg.grabber1.data);
-  digitalWrite(18,msg.dropper0.data);
-  digitalWrite(19,msg.dropper1.data);
+  digitalWrite(14,msg.torpedo1.data);
+  digitalWrite(15,msg.torpedo2.data);
+  digitalWrite(16,msg.grabber1.data);
+  digitalWrite(17,msg.grabber2.data);
+  digitalWrite(18,msg.dropper1.data);
+  digitalWrite(19,msg.dropper2.data);
 }
 
-void killSwitchCb( const std_msgs::Empty& msg){
-  if(!killSwitchEngaged){
-    nh.logwarn("Kill switch engaged! Initiating self-destruction!");
-    killSwitchEngaged = true;
-    digitalWrite(0,HIGH);
-  }
-}
 
-ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
-ros::Publisher battVoltPub0("/arduino/batteryVoltage0", &batteryVoltage0);
-ros::Publisher battVoltPub1("/arduino/batteryVoltage1", &batteryVoltage1);
-ros::Publisher battCurrPub("/arduino/batteryCurrent", &batteryCurrent);
-ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
-ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
-ros::Subscriber<std_msgs::Empty> killSwitch_sub("/arduino/KillSwitch", &killSwitchCb);
-
+ros::Publisher depth("/depth", &depth_msg);  // Publish the depth topic
+ros::Publisher battVoltPub0("/batteryVoltage0", &batteryVoltage0_msg);
+ros::Publisher battVoltPub1("/batteryVoltage1", &batteryVoltage1_msg);
+ros::Publisher temperaturePub("/temperature", &temperature_msg);
+ros::Publisher pressurePub("/pressure", &pressure_msg);
+ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/solenoid", &solenoidCb );
+ros::Subscriber<controls::motorCommands> motor_sub("/motor", &motorCb );
 void setup(){
   for(int i = 0; i<6; i++){
     //MotorControl setup
@@ -80,27 +76,40 @@ void setup(){
     pinMode(14+i,OUTPUT);
    }
   //ros node initializtion
+  bmp085Calibration();
   nh.initNode();
   nh.advertise(depth);        //depth sensor
   
   nh.advertise(battVoltPub0);     //battery level
   nh.advertise(battVoltPub1);
-  nh.advertise(battCurrPub);
-  
-  nh.subscribe(killSwitch_sub);// kill switch
+  nh.advertise(temperaturePub);
+  nh.advertise(pressurePub);
   nh.subscribe(motor_sub);    //motor 
   nh.subscribe(solenoid_sub); // solenoid
 }
 
 void loop(){
   long currentTime = millis();
+ 
+  if(temperaturePressureSechedule < currentTime){
+    
+   pressure_msg.data= bmp085GetPressure(bmp085ReadUP());
+   temperature_msg.data = bmp085GetTemperature(bmp085ReadUT());
+   
+   temperaturePub.publish(&temperature_msg);
+   pressurePub.publish(&pressure_msg);
+   
+   temperaturePressureSechedule += 1000;
+  }
   
+  /*
   if(batteryCurrentSchedule < currentTime){
     batteryCurrent.data = analogRead(battPin + 2);
     battCurrPub.publish(&batteryCurrent);    
     batteryCurrentSchedule += 100;     //Update at 10 Hz
   }
-  
+  */
+
   if(depthSensorSchedule < currentTime){
     depth_msg.data = analogRead(depthPin );
     depth.publish(&depth_msg);
@@ -108,14 +117,13 @@ void loop(){
   }
 
   if(batteryVoltageSchedule < currentTime){
-    batteryVoltage0.data = analogRead(battPin + 0);
-    batteryVoltage1.data = analogRead(battPin + 1);
+    batteryVoltage0_msg.data = analogRead(battPin + 0);
+    batteryVoltage1_msg.data = analogRead(battPin + 1);
     
-    battVoltPub0.publish(&batteryVoltage0);
-    battVoltPub1.publish(&batteryVoltage1);
+    battVoltPub0.publish(&batteryVoltage0_msg);
+    battVoltPub1.publish(&batteryVoltage1_msg);
     
     batteryVoltageSchedule += 1000;     //Update at 1 Hz
   }  
   nh.spinOnce();
-  delay(1);
 }
