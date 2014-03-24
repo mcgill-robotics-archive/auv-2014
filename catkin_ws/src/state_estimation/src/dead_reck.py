@@ -46,9 +46,9 @@ class dead_reck():
 
             if self.last_time:
                 t_change = self.ros.get_time() - self.last_time
-                self.vx = (x - self.x)/t_change
-                self.vy = (y - self.y)/t_change
-                self.vz = (z - self.z)/t_change
+                #self.vx = (x - self.x)/t_change
+                #self.vy = (y - self.y)/t_change
+                #self.vz = (z - self.z)/t_change
 
             self.last_time = self.ros.get_time()
 
