@@ -350,7 +350,7 @@ int main(int argc, char **argv) {
 	invoker->StartRun();
 	std::cout << "Done Loader" << std::endl;
 
-	delete loader; //delete invoker;
+	//delete loader; //delete invoker;
 
 	return 0;
 }
