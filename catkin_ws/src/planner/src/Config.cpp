@@ -50,9 +50,9 @@ Config::Config(std::string xmlFilesPath){
 	std::cout<<"Done Loading Task File"<< std::endl;
 }
 
-Config::~Config(){
-
-}
+//Config::~Config(){
+//
+//}
 
 /**
 * @param filename file name

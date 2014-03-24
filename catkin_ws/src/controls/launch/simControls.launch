@@ -6,32 +6,49 @@
 
   <!--setPointPublisher -->
   <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
-  
+ 
+  <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
+    <include file="$(find computer_vision)/launch/computer_vision.launch" />
+
+
+  <!-- DEPRECATED MARCH 25
   <!-- state estimation stuff -->
     <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
     <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
+-->
+
 
   <!-- RQT PLOT -->
     <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
     args=
     "
-    /controls/wrench/torque/z
-    /setPoints/Yaw/data
-    /front_cv_data/yaw_angle
+    /controls/wrench/force/y
+    /setPoints/YPos/data
+    /front_cv/data/y_distance
     "
     />
 
 </launch>
 
-      <!--
+      <!-- X
       /controls/wrench/force/x
       /setPoints/YPos/data
-      /front_cv_data/x_distance
+      /front_cv/data/x_distance
       -->
 
-      <!--
+      <!--DEPTH
       /controls/debug/xGain/proportional
       /controls/wrench/force/z
       /setPoints/Depth/data
       /depthCalculated/data
       -->
+
+      <!-- PITCH
+      /controls/wrench/torque/y
+      /setPoints/Pitch/data
+      /front_cv/data/pitch_angle
+
+      /controls/wrench/force/y
+    /setPoints/YPos/data
+    /front_cv/data/y_distance
+    -->

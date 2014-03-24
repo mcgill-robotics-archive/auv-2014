@@ -6,7 +6,7 @@ from blinky.srv import *
 import BlinkyTape as bt
 
 ledCount = 30
-blt = bt.BlinkyTape("/dev/ttyACM2", 2 * ledCount)
+blt = bt.BlinkyTape("/dev/ttyACM0", 2 * ledCount)
 
 #The two blinky tape segments
 blinky1_colorList = []

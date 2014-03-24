@@ -62,6 +62,7 @@ computer_vision::VisibleObjectData tf2CV(const std::string& targetFrame,const st
   
   //m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
   m.getEulerYPR(msg.yaw_angle, msg.pitch_angle, roll);
+  msg.pitch_angle *= -1;
   //tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 
   ROS_INFO("ROLL:  %f PITCH: %f     YAW: %f", roll*180.0/3.14, msg.pitch_angle*180.0/3.14, msg.yaw_angle*180.0/3.14);
@@ -83,7 +84,8 @@ int main(int argc, char** argv){
   ros::Rate loop_rate(CV_PUBLISHING_RATE);
   while (node.ok()){
     ros::spinOnce();
-    msgCV = tf2CV("camera1_reoriented", "gate_center_sim");
+    //msgCV = tf2CV("camera1_reoriented", "gate_center_sim");
+    msgCV = tf2CV("robot_reoriented", "gate_center_sim");
     cv_mock_pub_Front.publish(msgCV);
     loop_rate.sleep();
     //ROS_INFO("Current Time: %f", ros::Time::now().toSec());

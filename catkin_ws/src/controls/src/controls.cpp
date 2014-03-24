@@ -79,6 +79,9 @@ int8_t isActive_XSpeed = 0;
 int8_t isActive_YSpeed = 0;
 int8_t isActive_YawSpeed = 0;
 
+std::string frame = "/target/gate"; //default
+//std_msgs::String frame = "target/gate"; 
+
 double estimated_XPos = 0;
 double estimated_YPos = 0;
 double depth = 0;
@@ -117,17 +120,8 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	isActive_YSpeed = setPointsMsg.YSpeed.isActive;
 	isActive_YawSpeed = setPointsMsg.YawSpeed.isActive;
 
-}
+	frame = setPointsMsg.Frame;
 
-void estimatedState_callback(const computer_vision::VisibleObjectData data)
-
-{
-	ROS_DEBUG("Subscriber received estimated data");
-    
-    estimated_XPos = data.x_distance;
-    estimated_YPos = data.y_distance;
-    estimated_Pitch = data.pitch_angle; 
-	estimated_Yaw = data.yaw_angle; 
 }
 
 void depth_callback(const std_msgs::Float64 data)
@@ -162,6 +156,42 @@ float saturate(float value, float max, char* value_name) {
 	return value;
 }
 
+void getStateFromTF()
+{
+	/*
+	* Looks up the TF and saves local variables.
+	*/
+
+	tf::StampedTransform transform;
+	tf::TransformListener tf_listener; //THIS LINE MAKES IT NOT COMPILE
+
+	const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	const std::string originalFrame = frame; //gate_center_sim
+	
+	try
+	{
+	tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
+	tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
+	}
+	catch (tf::TransformException ex){
+	ROS_ERROR("%s",ex.what());
+	}
+
+	estimated_XPos = transform.getOrigin().x();
+	estimated_YPos = transform.getOrigin().y();
+	//ignore depth. it comes in on a topic
+
+	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
+	tf::Matrix3x3 m(q); //convert quaternion to matrix
+
+	double roll; //unused, but needs to be sent to getRPY method
+
+	//m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
+	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
+	estimated_Pitch *= -1;
+	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
+	//ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output}
+}
 int main(int argc, char **argv)
 {
 	//Create ROS Node
@@ -176,122 +206,121 @@ int main(int argc, char **argv)
 	//}
 
 	//Parameters
-	double m; //mass in kg
-	double g;
-	double cd; // drag coefficient
-	double buoyancy; // %percent buoyancy
-	double dt; //temporary! TODO update this dynamically
+		double m; //mass in kg
+		double g;
+		double cd; // drag coefficient
+		double buoyancy; // %percent buoyancy
+		double dt; //temporary! TODO update this dynamically
 
-	//Gains for the Proportional, Integral, and Derivative controllers
-	double kp;
-    double ki;
-    double kd;
+		//Gains for the Proportional, Integral, and Derivative controllers
+		double kp;
+	    double ki;
+	    double kd;
 
-    double kp_xPos;
-    double ki_xPos;
-    double kd_xPos;
+	    double kp_xPos;
+	    double ki_xPos;
+	    double kd_xPos;
 
-    double kp_yPos;
-    double ki_yPos;
-    double kd_yPos;
+	    double kp_yPos;
+	    double ki_yPos;
+	    double kd_yPos;
 
-    double kp_Depth;
-    double ki_Depth;
-    double kd_Depth;
+	    double kp_Depth;
+	    double ki_Depth;
+	    double kd_Depth;
 
-    double kp_Yaw;
-    double ki_Yaw;
-    double kd_Yaw;
+	    double kp_Yaw;
+	    double ki_Yaw;
+	    double kd_Yaw;
 
-    double kp_Pitch;
-    double ki_Pitch;
-    double kd_Pitch;
+	    double kp_Pitch;
+	    double ki_Pitch;
+	    double kd_Pitch;
 
 
     //ROS Params
 
-    n.param<double>("gains/kp", kp, 0.0);
-    n.param<double>("gains/ki", ki, 0.0);
-    n.param<double>("gains/kd", kd, 0.0);
+	    n.param<double>("gains/kp", kp, 0.0);
+	    n.param<double>("gains/ki", ki, 0.0);
+	    n.param<double>("gains/kd", kd, 0.0);
 
-    n.param<double>("gains/kp_xPos", kp_xPos, 0.0);
-    n.param<double>("gains/ki_xPos", ki_xPos, 0.0);
-    n.param<double>("gains/kd_xPos", kd_xPos, 0.0);
+	    n.param<double>("gains/kp_xPos", kp_xPos, 0.0);
+	    n.param<double>("gains/ki_xPos", ki_xPos, 0.0);
+	    n.param<double>("gains/kd_xPos", kd_xPos, 0.0);
 
-    n.param<double>("gains/kp_yPos", kp_yPos, 0.0);
-    n.param<double>("gains/ki_yPos", ki_yPos, 0.0);
-    n.param<double>("gains/kd_yPos", kd_yPos, 0.0);
-    
-    n.param<double>("gains/kp_Depth", kp_Depth, 0.0);
-    n.param<double>("gains/ki_Depth", ki_Depth, 0.0);
-    n.param<double>("gains/kd_Depth", kd_Depth, 0.0);
+	    n.param<double>("gains/kp_yPos", kp_yPos, 0.0);
+	    n.param<double>("gains/ki_yPos", ki_yPos, 0.0);
+	    n.param<double>("gains/kd_yPos", kd_yPos, 0.0);
+	    
+	    n.param<double>("gains/kp_Depth", kp_Depth, 0.0);
+	    n.param<double>("gains/ki_Depth", ki_Depth, 0.0);
+	    n.param<double>("gains/kd_Depth", kd_Depth, 0.0);
 
-    n.param<double>("gains/kp_Pitch", kp_Pitch, 0.0);
-    n.param<double>("gains/ki_Pitch", ki_Pitch, 0.0);
-    n.param<double>("gains/kd_Pitch", kd_Pitch, 0.0);
+	    n.param<double>("gains/kp_Pitch", kp_Pitch, 0.0);
+	    n.param<double>("gains/ki_Pitch", ki_Pitch, 0.0);
+	    n.param<double>("gains/kd_Pitch", kd_Pitch, 0.0);
 
-    n.param<double>("gains/kp_Yaw", kp_Yaw, 0.0);
-    n.param<double>("gains/ki_Yaw", ki_Yaw, 0.0);
-    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
+	    n.param<double>("gains/kp_Yaw", kp_Yaw, 0.0);
+	    n.param<double>("gains/ki_Yaw", ki_Yaw, 0.0);
+	    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
 
-   
-    n.param<double>("coefs/mass", m, 30.0);
-    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
-    n.param<double>("coefs/drag", cd, 0.0);
-    n.param<double>("coefs/gravity", g, 9.81);
-    n.param<double>("coefs/dt", dt, 0.01);
+	   
+	    n.param<double>("coefs/mass", m, 30.0);
+	    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
+	    n.param<double>("coefs/drag", cd, 0.0);
+	    n.param<double>("coefs/gravity", g, 9.81);
+	    n.param<double>("coefs/dt", dt, 0.01);
 
-	n.param<double>("force/max", F_MAX, 0.0);
-	n.param<double>("torque/max", T_MAX, 0.0);
+		n.param<double>("force/max", F_MAX, 0.0);
+		n.param<double>("torque/max", T_MAX, 0.0);
 
-	n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
-	n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
-	n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
-	n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
+		n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
+		n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
+		n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
+		n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
 
-	n.param<double>("Pitch/max", PITCH_MAX, 0.0);
-	n.param<double>("Yaw/max", YAW_MAX, 0.0);
+		n.param<double>("Pitch/max", PITCH_MAX, 0.0);
+		n.param<double>("Yaw/max", YAW_MAX, 0.0);
 
 
 	//initializations
 	
 
-    double ep_XPos = 0; //error
-    double ei_XPos = 0; //integral error
-    double ed_XPos = 0; //derivative error
-    double ep_XPos_prev = 0; //proportional error at last timestep
-    double ep_YPos = 0;
-    double ei_YPos = 0;
-    double ed_YPos = 0;
-    double ep_YPos_prev = 0;
-    double ep_Depth = 0;
-    double ei_Depth = 0;
-    double ed_Depth = 0;
-    double ep_Depth_prev = 0;
-    double ep_Pitch = 0;
-    double ei_Pitch = 0;
-    double ed_Pitch = 0;
-    double ep_Pitch_prev = 0;
-    double ep_Yaw = 0;
-    double ei_Yaw = 0;
-    double ed_Yaw = 0;
-    double ep_Yaw_prev = 0;
+	    double ep_XPos = 0; //error
+	    double ei_XPos = 0; //integral error
+	    double ed_XPos = 0; //derivative error
+	    double ep_XPos_prev = 0; //proportional error at last timestep
+	    double ep_YPos = 0;
+	    double ei_YPos = 0;
+	    double ed_YPos = 0;
+	    double ep_YPos_prev = 0;
+	    double ep_Depth = 0;
+	    double ei_Depth = 0;
+	    double ed_Depth = 0;
+	    double ep_Depth_prev = 0;
+	    double ep_Pitch = 0;
+	    double ei_Pitch = 0;
+	    double ed_Pitch = 0;
+	    double ep_Pitch_prev = 0;
+	    double ep_Yaw = 0;
+	    double ei_Yaw = 0;
+	    double ed_Yaw = 0;
+	    double ep_Yaw_prev = 0;
 
 
-    double Fx = 0;
-    double Fy = 0;
-    double Fz = 0;
-    double Ty = 0;
-    double Tz = 0;
+	    double Fx = 0;
+	    double Fy = 0;
+	    double Fz = 0;
+	    double Ty = 0;
+	    double Tz = 0;
 
-    double OL_coef_x;	//set later in the controller
-    double OL_coef_y;
-    double OL_coef_yaw;
+	    double OL_coef_x;	//set later in the controller
+	    double OL_coef_y;
+	    double OL_coef_yaw;
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv/data", 1000, estimatedState_callback);
-	ros::Subscriber depth_subscriber = n.subscribe("/stateEstimation/depth", 1000, depth_callback);
+	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
 	//TO DO: add clock subscription
 
 	//ROS Publisher setup
@@ -303,7 +332,7 @@ int main(int argc, char **argv)
 	ros::Rate loop_rate(1/dt); 
 	
 	bool setPointsIsPublished = 0;
-	bool estimatedStateIsPublished = 0;
+	bool estimatedStateIsPublished = 1; //Hardcoded cuz I'm lazy
 	bool depthIsPublished = 0;
 
 	ROS_INFO("controls node waiting for setPoints to be published...");
@@ -317,7 +346,9 @@ int main(int argc, char **argv)
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
-		ros::spinOnce();	//Updates all variables 
+		ros::spinOnce();	//Updates all variables
+		getStateFromTF();
+
 		
 		// Decoupled Controllers
 
@@ -328,9 +359,6 @@ int main(int argc, char **argv)
     	Ty = 0;
     	Tz = 0;
 
-    	//Check if estimated state is being published
-    	if (estimatedState_subscriber.getNumPublishers() == 0) {estimatedStateIsPublished = 0;}
-		else {estimatedStateIsPublished = 1;}
 		//Check if depth is being published
 		if (depth_subscriber.getNumPublishers() == 0) {depthIsPublished = 0;}
 		else {depthIsPublished = 1;}
@@ -408,7 +436,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				ROS_WARN("Depth position Control is active, but /depth is not published");
+				ROS_WARN("Depth position Control is active, but /state_estimation/depth is not published");
 			}
 		}
 
@@ -431,6 +459,7 @@ int main(int argc, char **argv)
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
 			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
+			Tz *= -1; //yaw sign convenction
 		}
 
 		if (isActive_YawSpeed)

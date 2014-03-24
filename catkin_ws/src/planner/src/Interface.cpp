@@ -29,9 +29,9 @@ double visible_Yaw;
 double visible_Pitch;
 
 /**
- * The duration of time the planner will wait for the TF broadcaster to setup before timing out.
+ * The duration of time the planner will wait for the TF broadcaster to setup before timing out. (in seconds I think)
  */
-int const TF_BROADCASTER_TIMOUT_PERIOD = 30;
+int const TF_BROADCASTER_TIMOUT_PERIOD = 10;
 
 /**
  * Defines in which folder are stored the XML files.
@@ -82,7 +82,7 @@ void setTransform(std::string referenceFrame) {
 	tf::TransformListener listener;
 	//setOurPose();
 	geometry_msgs::PoseStamped emptyPose;
-	emptyPose.header.frame_id = "/robot/rotation_center";
+	emptyPose.header.frame_id = referenceFrame;
 	emptyPose.pose.position.x = 0.0;
 	emptyPose.pose.position.y = 0.0;
 	emptyPose.pose.position.z = 0.0;
@@ -91,9 +91,9 @@ void setTransform(std::string referenceFrame) {
 	emptyPose.pose.orientation.z = 0.0;
 	emptyPose.pose.orientation.w = 1.0;
 	try {
-		listener.waitForTransform(referenceFrame, emptyPose.header.frame_id,
+		listener.waitForTransform("/robot/rotation_center", emptyPose.header.frame_id,
 				ros::Time(0), ros::Duration(0.4));
-		listener.transformPose(referenceFrame, emptyPose, relativePose);
+		listener.transformPose("/robot/rotation_center", emptyPose, relativePose);
 	} catch (tf::TransformException ex) {
 		ROS_ERROR("%s", ex.what());
 	}
@@ -132,14 +132,16 @@ bool areWeThereYet(std::vector<double> desired) {
 }
 
 //blame alan
-bool areWeThereYet_tf(std::string referenceFrame) {
+bool areWeThereYet_tf(std::string referenceFrame, std::vector<double> desired) {
 	//if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
 	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = relativePose.pose.position.x < .1;
-	bool yBounded = relativePose.pose.position.y < .1;
-	bool zBounded = relativePose.pose.position.z < .1;
+	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < 1;
+	ROS_INFO("Interface::x %f",relativePose.pose.position.x);
+	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < 1;
+	ROS_INFO("Interface::y %f",relativePose.pose.position.y);
+	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < 2;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
@@ -154,10 +156,10 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 													2.0f)));
 	double yaw = 57.2957795130823f
 			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
-	bool pitchBounded = pitch < 5;
-	bool yawBounded = yaw < 5;
+	bool pitchBounded = abs(pitch - desired.at(2)) < 5;
+	bool yawBounded = abs(yaw - desired.at(3)) < 5;
 
-	return (xBounded && yBounded && zBounded && pitchBounded && yawBounded);
+	return (xBounded && yBounded);
 }
 
 void setVisionObj(int objIndex) {
@@ -222,6 +224,8 @@ void setPoints(double pointControl[]) {
 	msgControl.Depth.isActive = pointControl[14];
 	msgControl.Depth.data = pointControl[15];
 
+	msgControl.Frame = "/target/gate";
+
 	control_pub.publish(msgControl);
 }
 
@@ -256,8 +260,8 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
   start_pose.position.z = z;
   start_pose.orientation.x = 0.0;
   start_pose.orientation.y = 0.0;
-  start_pose.orientation.z = 0.0;
-  start_pose.orientation.w = 1.0;
+  start_pose.orientation.z = 1.0;
+  start_pose.orientation.w = 0.0;
 
   geometry_msgs::Twist start_twist;
   start_twist.linear.x = 0.0;
@@ -288,11 +292,12 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
 }
 
 int main(int argc, char **argv) {
+  std::string starting_task;
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
 
 	//estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
-	estimatedDepth_subscriber = n.subscribe("depthCalculated", 1000, estimatedDepth_callback);
+	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000);
 	taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000);
@@ -300,7 +305,9 @@ int main(int argc, char **argv) {
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
 	n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
+  n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
 
+std::cout<<starting_task<<std::endl;
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
 	while (ready == 0) {
@@ -328,12 +335,14 @@ int main(int argc, char **argv) {
 			emptyPose.pose.orientation.w = 1.0;
 
 			// Waits until the TF broadcaster is ready and will timeout after the time specified in 'TF_BROADCASTER_TIMOUT_PERIOD'.
-			listener.waitForTransform("/target/door", emptyPose.header.frame_id,
+			listener.waitForTransform("/target/gate", emptyPose.header.frame_id,
 					ros::Time(0), ros::Duration(TF_BROADCASTER_TIMOUT_PERIOD));
-			listener.transformPose("/target/door", emptyPose, relativePose);
+			listener.transformPose("/target/gate", emptyPose, relativePose);
 		} catch (tf::TransformException ex) {
+			ROS_INFO("Error thrown in planner TF listener.");
 			ROS_ERROR("%s", ex.what());
 		}
+		ROS_INFO("Interface::Stuck in setup loop");
 	}
 
 	ros::Rate loop_rate(10);
@@ -350,7 +359,7 @@ int main(int argc, char **argv) {
 	invoker->StartRun();
 	std::cout << "Done Loader" << std::endl;
 
-	delete loader; //delete invoker;
+	//delete loader; //delete invoker;
 
 	return 0;
 }

@@ -23,9 +23,6 @@ def publish():
     state_msg.visibleObjectData = vis_msg
     state_msg.hasTarget = state['hasTarget']
     state_msg.depth = state['depth']
-    state_msg.velocity.x = state['vx']
-    state_msg.velocity.y = state['vy']
-    state_msg.velocity.z = state['vz']
 
     #Todo: velocity, pitch, yaw
 
@@ -61,6 +58,7 @@ def init():
     estimator = dead_reck.dead_reck(rospy)
     # Subscribe to different inputing topics
     rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
+    rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('pose', PoseStamped, imuCallback)
     rospy.Subscriber('depth', Float64, depthCallback)
 

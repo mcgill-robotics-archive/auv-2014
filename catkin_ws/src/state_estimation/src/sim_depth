@@ -28,7 +28,7 @@ def init():
     rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
 
     # Publish the filtered data to a topic
-    pub = rospy.Publisher('depth', Float64)
+    pub = rospy.Publisher('/state_estimation/depth', Float64)
     rospy.spin()
 
 if __name__ == '__main__':

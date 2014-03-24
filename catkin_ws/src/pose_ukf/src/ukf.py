@@ -10,7 +10,7 @@ class ukf:
     INITIAL_COVARIANCE = 0.01
 
     #TODO: Figure out process and measurement variance
-    PROCESS_VARIANCE = 0.01
+    PROCESS_VARIANCE = 0.0001
     MEASUREMENT_VARIANCE = 0.01
     #TODO: get delta_t from the ros message
     #TODO: Actually make the variance change based on delta_t
@@ -19,7 +19,7 @@ class ukf:
 
     def __init__(self):
         self.L = 3 #Length of pose representation
-        self.aL = 3*self.L #Length of augmented pose representation
+        self.aL = self.L #Length of augmented pose representation
         #Some parameters which should be optimized
         #self.alpha = 0.5
         #self.kappa = 0
@@ -33,20 +33,14 @@ class ukf:
         #I have called these bias instead of noise since I am thinking its supposed to
         #be the mean noise
         #Really REALLY not sure about the lengths of these
-        processBias = np.matrix([[0]]*self.L)
-        measurementBias = np.matrix([[0]]*self.L)
-        self.augmentedPose = np.vstack((pose, processBias, measurementBias))
+        self.augmentedPose = pose
 
         zero = numpy.zeros((3,3))
         covariance = self.INITIAL_COVARIANCE * np.matlib.eye(self.L)
-        self.processCovariance = scipy.linalg.block_diag(zero
-                                                         ,self.PROCESS_VARIANCE * np.matlib.eye(self.L)
-                                                         ,zero)
+        self.processCovariance = self.PROCESS_VARIANCE * np.matlib.eye(self.L)
         self.measurementCovariance = self.MEASUREMENT_VARIANCE * np.lib.eye(self.L)
 
-        self.augmentedCovariance = scipy.linalg.block_diag(covariance, zero, self.measurementCovariance)
-        self.augmentedCovariance += self.processCovariance
-
+        self.augmentedCovariance = covariance
 
     def _matrixRoot(self, matrix):
         tolerance = 10**(-10)
@@ -66,7 +60,6 @@ class ukf:
         #of the augmentedCovariance via cholesky decomposition
 
         sqrtm = self._matrixRoot(self.augmentedCovariance).transpose()
-        self.prettyPrint(sqrtm)
 
         sigmas = [self.augmentedPose.copy()]
         L = len(self.augmentedPose)
@@ -89,7 +82,7 @@ class ukf:
         for state in states:
             # omega is in the body frame
             # we need it in the earth frame
-            omegaEarth = RotationVectorUtils.rotateThisByThat(omega, state[0:3])
+            omegaEarth = RotationVectorUtils.rotateThisByThat(omega, RotationVectorUtils.inverse(state[0:3]))
             state[0:3] = RotationVectorUtils.composeRotations(omegaEarth, state[0:3])
 
 
@@ -108,7 +101,7 @@ class ukf:
         self.augmentedCovariance = w0 * (sigmas[0] - self.augmentedPose) * (sigmas[0] - self.augmentedPose).transpose()
         for sigma in sigmas[1:]:
             self.augmentedCovariance += w * (sigma - self.augmentedPose) * (sigma - self.augmentedPose).transpose()
-        #self.augmentedCovariance += self.processCovariance
+        self.augmentedCovariance += self.processCovariance
 
 
     def predict(self, gyro):
@@ -116,23 +109,19 @@ class ukf:
 
         #Generate sigma points
         sigmas = self._generateSigmas()
-        self.prettyPrintVectors(sigmas)
 
         #Propagate sigma points
         self._propagateStates(sigmas, gyro*self.DELTA_T)
-        self.prettyPrintVectors(sigmas)
 
         #recover estimate and covariance
-        self.prettyPrint(self.augmentedCovariance)
         self.recoverPrediction(sigmas)
-        self.prettyPrint(self.augmentedCovariance)
 
 
     def accFromPose(self, pose):
         #Here we calculate what the acceleration is for a pose
         gravity = numpy.matrix([[0],[0],[9.8]])
 
-        return RotationVectorUtils.rotateThisByThat(gravity, RotationVectorUtils.inverse(pose[0:3]))
+        return RotationVectorUtils.rotateThisByThat(gravity, pose[0:3])
 
 
     def recoverCorrection(self, sigmas, gammas, acc):
@@ -170,10 +159,6 @@ class ukf:
         self.augmentedPose += gain * (acc - predictedMeasurement)
         self.augmentedCovariance -= gain * measurementCovariance * gain.transpose()
 
-        self.prettyPrint(measurementCovariance)
-        self.prettyPrint(crossCovariance)
-        self.prettyPrint(gain)
-        self.prettyPrint(self.augmentedCovariance)
 
 
     def correct(self, acc):
@@ -186,30 +171,32 @@ class ukf:
 
 
     def prettyPrintVectors(self, vectors):
-        first_one = True
-        for v in vectors:
-            if first_one:
-                first_one = False
-            else:
-                for x in v:
-                    print "%e," % (float(x),),
-                print
-        print
+        if False:
+            first_one = True
+            for v in vectors:
+                if first_one:
+                    first_one = False
+                else:
+                    for x in v:
+                        print "%e," % (float(x),),
+                    print
+            print
 
     def prettyPrint(self, matrix):
-        rows = matrix.tolist()
-        for row in rows:
-            for x in row:
-                print "%e," % (x,),
+        if True:
+            rows = matrix.tolist()
+            for row in rows:
+                for x in row:
+                    print "%e," % (x,),
+                print
             print
-        print
 
     def update(self, acc, gyro):
         #Update stuff
         self.predict(numpy.matrix(gyro).transpose())
         self.correct(acc)
-
-        return QuaternionUtils.quaternionFromRotationVector(self.augmentedPose[0:3])
+        self.prettyPrint(self.augmentedCovariance)
+        #return QuaternionUtils.quaternionFromRotationVector(self.augmentedPose[0:3])
 
 
 
@@ -217,11 +204,6 @@ if __name__ == '__main__':
     estimator = ukf()
     #estimate = estimator.update([-0.3828125, -0.229687511921, 7.96250009537]
     #    ,[0.246787205338, -0.00300747156143, 0.010275458917])
-    estimate = estimator.update([0,0,9.8],[0.1,0,0])
-    estimate = estimator.update([0,0,9.8],[3.041592,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
-    estimate = estimator.update([0,0,9.8],[0.01,0,0])
+    for x in range(100):
+        estimator.update([0,0,9.8],[0, 0, 0.01])
     pass
