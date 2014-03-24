@@ -23,9 +23,6 @@ def publish():
     state_msg.visibleObjectData = vis_msg
     state_msg.hasTarget = state['hasTarget']
     state_msg.depth = state['depth']
-    state_msg.velocity.x = state['vx']
-    state_msg.velocity.y = state['vy']
-    state_msg.velocity.z = state['vz']
 
     #Todo: velocity, pitch, yaw
 

@@ -15,7 +15,7 @@ class dead_reck():
     vz = 0
 
     #I'm assuming here that the targets have IDs
-    targetID = -1
+    targetID = 255# A large value that we will never reach.
 
     #These angles are along z = down. AKA measured clockwise
     yawOfTarget = 0
@@ -78,7 +78,4 @@ class dead_reck():
                 ,'yawOfTarget':self.yawOfTarget
                 ,'pitchOfTarget':self.pitchOfTarget
                 ,'depth':self.depth
-                ,'vx':self.vx
-                ,'vy':self.vy
-                ,'vz':self.vz
                 }
