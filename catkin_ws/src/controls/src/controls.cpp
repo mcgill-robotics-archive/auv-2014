@@ -290,7 +290,7 @@ int main(int argc, char **argv)
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
+	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv/data", 1000, estimatedState_callback);
 	ros::Subscriber depth_subscriber = n.subscribe("/stateEstimation/depth", 1000, depth_callback);
 	//TO DO: add clock subscription
 
@@ -430,7 +430,7 @@ int main(int argc, char **argv)
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
-			Ty = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
+			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
 		}
 
 		if (isActive_YawSpeed)
@@ -499,7 +499,7 @@ int main(int argc, char **argv)
 			debugMsg.pitchGain.derivative = kd_Pitch;
 			debugMsg.yawGain.derivative = kd_Yaw;
 			*/
-
+			
 			// Forces
 			debugMsg.xForce.proportional = kp*ep_XPos;
 			debugMsg.yForce.proportional = kp*ep_YPos;
