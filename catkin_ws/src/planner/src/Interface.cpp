@@ -256,8 +256,8 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
   start_pose.position.z = z;
   start_pose.orientation.x = 0.0;
   start_pose.orientation.y = 0.0;
-  start_pose.orientation.z = 0.0;
-  start_pose.orientation.w = 1.0;
+  start_pose.orientation.z = 1.0;
+  start_pose.orientation.w = 0.0;
 
   geometry_msgs::Twist start_twist;
   start_twist.linear.x = 0.0;
