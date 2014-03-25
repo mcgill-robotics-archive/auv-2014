@@ -181,33 +181,34 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 void callBack(const state_estimation::AUVState::ConstPtr& msg) {
 	// Create a transform listener in every callback	
 	tf::TransformBroadcaster broadcaster;
-	
-	// Visible Object Data
-	computer_vision::VisibleObjectData object = msg->visibleObjectData;
-	
-	tf::Quaternion quat = tf::createQuaternionFromRPY(0.0, object.pitch_angle, object.yaw_angle);
-	tf::Vector3 vect(object.x_distance, object.y_distance, object.z_distance);
-	
-	if (object.object_type == 255) {
-		// If objectID is 255 we did not see anything
-		// So we dont publish anything
-		std::string refFrame = "/target/" + objectID[object.object_type];
+	if (msg->hasTarget) {
+		// Visible Object Data
+		computer_vision::VisibleObjectData object = msg->visibleObjectData;
 		
-		broadcaster.sendTransform(
-			// Transform data, quaternion for rotations and vector3 for translational vectors
-			tf::StampedTransform(
-				tf::Transform(
-					quat, 
-					vect
-				),
-				// Give it a time stamp
-				ros::Time::now(),
-				// refrence frame does not have a name now
-				"/sensors/forward_camera_center",
-				// to
-				refFrame
-			)
-		);
+		tf::Quaternion quat = tf::createQuaternionFromRPY(0.0, object.pitch_angle, object.yaw_angle);
+		tf::Vector3 vect(object.x_distance, object.y_distance, object.z_distance);
+		
+		if (object.object_type == 255) {
+			// If objectID is 255 we did not see anything
+			// So we dont publish anything
+			std::string refFrame = "/target/" + objectID[object.object_type];
+			
+			broadcaster.sendTransform(
+				// Transform data, quaternion for rotations and vector3 for translational vectors
+				tf::StampedTransform(
+					tf::Transform(
+						quat, 
+						vect
+					),
+					// Give it a time stamp
+					ros::Time::now(),
+					// refrence frame does not have a name now
+					"/sensors/forward_camera_center",
+					// to
+					refFrame
+				)
+			);
+		}
 	}
 
 	broadcastStaticFrames(broadcaster);
