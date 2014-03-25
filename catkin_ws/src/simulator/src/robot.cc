@@ -172,8 +172,6 @@ public:
 
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
 
-		std::cout << "Applying drag force:";
-		printWrenchMsg(wrench);
 		client.call(applyBodyWrench);
 
 		if (!applyBodyWrench.response.success) {
@@ -243,6 +241,7 @@ public:
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);
 		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
+
 		client.call(applyBodyWrench);
 		
 		if (!applyBodyWrench.response.success) {

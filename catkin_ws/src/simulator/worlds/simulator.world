@@ -31,7 +31,7 @@
     <model name="robot">
       <plugin name="robot" filename="librobot.so"></plugin>
       <static>false</static>
-      <pose>2.7 -3.5 1 0 0 3.14159265359</pose>
+      <pose>0 2 1 0 0 3.14159265359</pose>
 
       <link name='body'>
       	<inertial>

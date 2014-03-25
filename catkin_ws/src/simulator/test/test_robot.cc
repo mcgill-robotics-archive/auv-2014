@@ -1,9 +1,7 @@
-#include "../include/robot.h"
 #include <gtest/gtest.h>
+#include "../include/robot.h"
 #include <ros/package.h>
-#include "gazebo/sensors/SensorTypes.hh"
-
-using namespace gazebo;
+#include <stdlib.h>
 
 /**
  * Test the function calculateDragTorque() from class Robot
@@ -11,8 +9,9 @@ using namespace gazebo;
 TEST(RobotTest, testCalculateDragTorque)
 {
 	// valid test cases
-	/*
-	math::Vector3 inputVector, expectedResult;
+	
+	/*math::Vector3 inputVector;
+	math::Vector3 expectedResult;
 	geometry_msgs::Vector3 result;
 	
 	inputVector.x = 10;
@@ -20,10 +19,10 @@ TEST(RobotTest, testCalculateDragTorque)
 	inputVector.z = 10;
 	
 	expectedResult.x = expectedResult.y = expectedResult.z = -100;
+	*/
+	//gazebo::Robot r;
 	
-	Robot* r = new Robot();
-	
-	//result = r->calculateDragTorque(inputVector);
+	/*result = r->calculateDragTorque(inputVector);
 	
 	result.x = result.y = result.z = 0;
 	
