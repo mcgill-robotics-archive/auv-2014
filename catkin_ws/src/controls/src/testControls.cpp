@@ -95,8 +95,8 @@ int main(int argc, char **argv)
 		msg.XPos.isActive = 0;
 		msg.YPos.isActive = 0;
 		msg.Depth.isActive = 0;
-		msg.Yaw.isActive = 1;
-		msg.Pitch.isActive = 0; // Pitch control not working 3/23
+		msg.Yaw.isActive = 0;
+		msg.Pitch.isActive = 1; // Pitch control not working 3/23
 		msg.XSpeed.isActive = 0;
 		msg.YSpeed.isActive = 0;
 		msg.YawSpeed.isActive = 0;
