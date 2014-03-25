@@ -155,14 +155,14 @@ void getStateFromTF()
 {
 	/*
 	* Looks up the TF and saves local variables.
-
 	*/
+
 	tf::StampedTransform transform;
 	tf::TransformListener tf_listener; //THIS LINE MAKES IT NOT COMPILE
 
 	const std::string targetFrame = "robot_reoriented"; //find the pose of the originalFrame in this frame
 	const std::string originalFrame = "gate_center_sim";
-	/*
+	
 	try
 	{
 	tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
@@ -186,7 +186,7 @@ void getStateFromTF()
 	estimated_Pitch *= -1;
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 	//ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output}
-	*/
+	
 }
 int main(int argc, char **argv)
 {

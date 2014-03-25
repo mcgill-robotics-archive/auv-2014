@@ -15,9 +15,9 @@
     <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
     args=
     "
-    /controls/wrench/force/z
-      /setPoints/Depth/data
-      /state_estimation/depth/data
+    /controls/wrench/force/y
+    /setPoints/YPos/data
+    /front_cv/data/y_distance
     "
     />
 
