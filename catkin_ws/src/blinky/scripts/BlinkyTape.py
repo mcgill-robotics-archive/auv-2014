@@ -144,7 +144,7 @@ if __name__ == "__main__":
     if options.portname is not None:
         port = options.portname
     else:
-        serialPorts = glob.glob("/dev/cu.usbmodem*")
+        serialPorts = glob.glob("/dev/ttyACM0")
         port = serialPorts[0]
 
     bt = BlinkyTape(port)
