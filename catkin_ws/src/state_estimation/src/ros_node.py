@@ -58,6 +58,7 @@ def init():
     estimator = dead_reck.dead_reck(rospy)
     # Subscribe to different inputing topics
     rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
+    rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('pose', PoseStamped, imuCallback)
     rospy.Subscriber('depth', Float64, depthCallback)
 

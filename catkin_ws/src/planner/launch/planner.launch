@@ -6,7 +6,9 @@
 
   <arg name="starting_task" default="gate"/> 
   <!--control systems -->
-  <include file="$(find controls)/launch/controls4planner.launch" />
+  <include file="$(find controls)/launch/controls4planner.launch" >
+    <arg name="useDC" value="0"/>
+  </include>
 
   <!-- computer vision -->
   <include file="$(find computer_vision)/launch/computer_vision.launch" />
