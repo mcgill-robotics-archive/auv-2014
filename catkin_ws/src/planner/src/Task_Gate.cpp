@@ -28,10 +28,10 @@ int Task_Gate::Execute() {
 	setVisionObj(1);
 	loop_rate.sleep();
 	
-	//std::vector<double> desired =  (-1.0, 0.0, 0.0, 0.0, 8.8);
+	//std::vector<double> desired =  (1.0, 0.0, 0.0, 0.0, 8.8);
 	//double myPoints[] = {-1.0, 0.0, 0.0, 0.0, 8.8};
 	//std::vector<double> desired (myPoints, myPoints + sizeof(myPoints) / sizeof(double) );
-	double myPoints[5] = {-1.0, 0.0, 0.0, 0.0, 8.8};
+	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};
 	setTransform("/target/door");
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 	//desired = getTransform();

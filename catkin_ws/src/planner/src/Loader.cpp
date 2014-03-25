@@ -35,11 +35,12 @@ Loader::Loader(std::string xmlFilesPath){
 
 }
 
-Loader::~Loader(){
+//destructor in progress
+/*Loader::~Loader(){
 	delete main_Invoker;
 	delete main_Config;
 	delete main_Taskfactory;
-}
+}*/
 
 /**
 * loadInvoker() goes into config and gets the task list, then pulls the tasks from taskFactory, and feeds task objects to invoker

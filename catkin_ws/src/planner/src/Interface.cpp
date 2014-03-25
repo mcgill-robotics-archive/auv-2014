@@ -137,9 +137,9 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = relativePose.pose.position.x < .1;
-	bool yBounded = relativePose.pose.position.y < .1;
-	bool zBounded = relativePose.pose.position.z < .1;
+	bool xBounded = relativePose.pose.position.x < 1;
+	bool yBounded = relativePose.pose.position.y < 1;
+	bool zBounded = relativePose.pose.position.z < 1;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
@@ -157,7 +157,7 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 	bool pitchBounded = pitch < 5;
 	bool yawBounded = yaw < 5;
 
-	return (xBounded && yBounded && zBounded && pitchBounded && yawBounded);
+	return (xBounded && yBounded && zBounded);
 }
 
 void setVisionObj(int objIndex) {
@@ -256,8 +256,8 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
   start_pose.position.z = z;
   start_pose.orientation.x = 0.0;
   start_pose.orientation.y = 0.0;
-  start_pose.orientation.z = 0.0;
-  start_pose.orientation.w = 1.0;
+  start_pose.orientation.z = 1.0;
+  start_pose.orientation.w = 0.0;
 
   geometry_msgs::Twist start_twist;
   start_twist.linear.x = 0.0;
@@ -288,6 +288,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
 }
 
 int main(int argc, char **argv) {
+  std::string starting_task;
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
 
@@ -300,7 +301,9 @@ int main(int argc, char **argv) {
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
 	n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
+  n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
 
+std::cout<<starting_task<<std::endl;
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
 	while (ready == 0) {
@@ -350,7 +353,7 @@ int main(int argc, char **argv) {
 	invoker->StartRun();
 	std::cout << "Done Loader" << std::endl;
 
-	delete loader; //delete invoker;
+	//delete loader; //delete invoker;
 
 	return 0;
 }
