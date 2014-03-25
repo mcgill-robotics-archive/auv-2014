@@ -8,25 +8,25 @@
 #include "distanceCalculator.h"
 
 int CV_PUBLISHING_RATE = 100; //publish at 2 Hz, just like CV - but 100 hz to match controls and simulate IMU smoothing.
-planner::currentCVTask currentCVTask_Front;
+planner::CurrentCVTask currentCVTask_Front;
 
 /* Generic current task callback
 
     There's gotta be a way to only use one callback for both the front and bottom current CV tasks. But I can't figure it out, so I'll leave it here for later.
 
-    void currentCVTask_callback(const ros::MessageEvent<planner::currentCVTask const>& event)
+    void currentCVTask_callback(const ros::MessageEvent<planner::CurrentCVTask const>& event)
     {
       const ros::M_string& header = event.getConnectionHeader();
       std::string topic = header.at("topic");
       //ROS_INFO("Current topic is: %s", topic);
 
-      //const planner::currentCVTask& temp = event.getMessage(); //store in global variable
+      //const planner::CurrentCVTask& temp = event.getMessage(); //store in global variable
       //ROS_INFO("Current task is %i", currentCVTask_Front.currentCVTask);
     } 
     */
 
 
-void currentCVTask_Front_callback(planner::currentCVTask msg)
+void currentCVTask_Front_callback(planner::CurrentCVTask msg)
 {
   currentCVTask_Front = msg;
 }
@@ -60,7 +60,12 @@ computer_vision::VisibleObjectData tf2CV(const std::string& targetFrame,const st
 
   double roll; //unused, but needs to be sent to getRPY method
   
-  m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
+  //m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
+  m.getEulerYPR(msg.yaw_angle, msg.pitch_angle, roll);
+  msg.pitch_angle *= -1;
+  //tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
+
+  ROS_INFO("ROLL:  %f PITCH: %f     YAW: %f", roll*180.0/3.14, msg.pitch_angle*180.0/3.14, msg.yaw_angle*180.0/3.14);
   //ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output
 
   return msg;
@@ -72,14 +77,15 @@ int main(int argc, char** argv){
   ros::NodeHandle node;
   ros::Subscriber currentCVTask_Front_sub = node.subscribe("currentCVTask_Front", 1000, currentCVTask_Front_callback);
 
-  ros::Publisher cv_mock_pub_Front = node.advertise<computer_vision::VisibleObjectData>("/front_cv_data", 1000);
+  ros::Publisher cv_mock_pub_Front = node.advertise<computer_vision::VisibleObjectData>("/front_cv/data", 1000);
 
   computer_vision::VisibleObjectData msgCV;
   
   ros::Rate loop_rate(CV_PUBLISHING_RATE);
   while (node.ok()){
     ros::spinOnce();
-    msgCV = tf2CV("camera1_reoriented", "gate_center_sim");
+    //msgCV = tf2CV("camera1_reoriented", "gate_center_sim");
+    msgCV = tf2CV("robot_reoriented", "gate_center_sim");
     cv_mock_pub_Front.publish(msgCV);
     loop_rate.sleep();
     //ROS_INFO("Current Time: %f", ros::Time::now().toSec());

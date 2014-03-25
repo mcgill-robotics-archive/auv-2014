@@ -1,15 +1,36 @@
-gains/kp: 15
+gains/kp: 1.5
 gains/ki: 0.00
-gains/kd: 150
+gains/kd: 15.0
+
+gains/kp_xPos: 1.5
+gains/ki_xPos: 0
+gains/kd_xPos: 15
+
+gains/kp_yPos: 1.5
+gains/ki_yPos: 0
+gains/kd_yPos: 15
+
+gains/kp_Depth: 4
+gains/ki_Depth: 0
+gains/kd_Depth: 20
+
+gains/kp_Pitch: .2
+gains/ki_Pitch: 0
+gains/kd_Pitch: 1
+
+gains/kp_Yaw: .2
+gains/ki_Yaw: 0
+gains/kd_Yaw: 1
 
 
-setPoints/XPos/value: 0
+
+setPoints/XPos/value: 0.5
 setPoints/XSpeed/value: 0
 
 setPoints/YPos/value: 0
 setPoints/YSpeed/value: 0
 
-setPoints/Depth/value: 10
+setPoints/Depth/value: 9
 
 setPoints/Yaw/value: 0
 setPoints/YawSpeed/value: 0
@@ -51,3 +72,6 @@ force/min: -30 # removed from controls node, not sure about thrust_mapper
 force/max: 30
 torque/min: -100 # removed from controls node, not sure about thrust_mapper
 torque/max: 100
+
+Yaw/max: 1.5708 # pi/2
+Pitch/max: 0.7853 # pi/4

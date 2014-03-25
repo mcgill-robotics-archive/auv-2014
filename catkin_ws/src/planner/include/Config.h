@@ -6,7 +6,7 @@
 #include "./pugixml/src/pugixml.hpp"
 
 /**
-* @author Nick Margie
+* @author Faraz Oman
 */
 
 using namespace std;
@@ -15,7 +15,8 @@ class Config{
 
 	public:
 
-		Config();
+		Config(std::string xmlFilesPath);
+		//~Config();
 
 	    void Loader();
 

@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -112,7 +112,9 @@ Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">image_transport::ImageTransport *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a301bcad979873b49e3b38a9d0e31fc9c">pImageTransport</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">image_transport::Publisher&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#acba5195170acd1ebaa3cc1b6d0e1ef7b">frontEndPublisher</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ros::Publisher&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a8862fc4e568495c662b07d1d27567bef">frontEndVisibleObjectDataPublisher</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">ros::Subscriber&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a23d3e7b71eb44246c7c4086dde7bf9ae">plannerSubscriber</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::list&lt; <a class="el" href="classVisibleObject.html">VisibleObject</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#aaf9f7138bae93cfe3bb9d439dad819fe">visibleObjectList</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCVNode.html#a97865307d8468f5b60324b5bdba28f1d">numFramesWithoutObject</a></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ab934d6d6485a93709845d853dbee1a9b"></a><!-- doxytag: member="CVNode::CVNode" ref="ab934d6d6485a93709845d853dbee1a9b" args="(ros::NodeHandle &amp;nodeHandle, std::string topicName, int receptionRate, int bufferSize)" -->
@@ -229,12 +231,38 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a97865307d8468f5b60324b5bdba28f1d"></a><!-- doxytag: member="CVNode::numFramesWithoutObject" ref="a97865307d8468f5b60324b5bdba28f1d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classCVNode.html#a97865307d8468f5b60324b5bdba28f1d">CVNode::numFramesWithoutObject</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a301bcad979873b49e3b38a9d0e31fc9c"></a><!-- doxytag: member="CVNode::pImageTransport" ref="a301bcad979873b49e3b38a9d0e31fc9c" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">image_transport::ImageTransport* <a class="el" href="classCVNode.html#a301bcad979873b49e3b38a9d0e31fc9c">CVNode::pImageTransport</a><code> [protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a23d3e7b71eb44246c7c4086dde7bf9ae"></a><!-- doxytag: member="CVNode::plannerSubscriber" ref="a23d3e7b71eb44246c7c4086dde7bf9ae" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ros::Subscriber <a class="el" href="classCVNode.html#a23d3e7b71eb44246c7c4086dde7bf9ae">CVNode::plannerSubscriber</a><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -256,8 +284,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="CVNode_8h_source.html">CVNode.h</a></li>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="CVNode_8cpp.html">CVNode.cpp</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/computer_vision/include/<a class="el" href="CVNode_8h_source.html">CVNode.h</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/computer_vision/src/<a class="el" href="CVNode_8cpp.html">CVNode.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -277,7 +305,7 @@ Protected Attributes</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

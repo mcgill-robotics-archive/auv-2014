@@ -8,8 +8,10 @@
 
 // These variables need to be accessible from the main method in FrontCVNode.cpp.
 const std::string FRONT_CV_NODE_NAME = "front_cv";
-const std::string CAMERA1_CV_TOPIC_NAME = "front_cv_camera1";
+const std::string CAMERA1_CV_TOPIC_NAME = "front_cv/camera1";
+const std::string CAMERA2_CV_TOPIC_NAME = "front_cv/camera2";
 const std::string OUTPUT_DATA_TOPIC_NAME = "front_cv/data";
+const std::string PLANNER_DATA_FRONT_TOPIC_NAME = "currentCVTask_Front";
 const int FRONT_CV_NODE_RECEPTION_RATE = 10;
 const int FRONT_CV_NODE_BUFFER_SIZE = 1;
 
@@ -21,13 +23,11 @@ public:
 	~FrontCVNode();
 
 private:
-
-	Gate gateObjectFilters;
-	Buoy buoyObjectFilters;
-//	LineTarget lineObjectFilters;
+	int numFramesWithoutObject;
 
 	void instanciateAllVisibleObjects();
 	void receiveImage(const sensor_msgs::ImageConstPtr& message);
+	void listenToPlanner(planner::CurrentCVTask msg);
 };
 
 #endif

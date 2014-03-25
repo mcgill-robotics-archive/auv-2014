@@ -19,6 +19,8 @@
  * @param topicName The name of the topic on which the images are published
  */
 CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) {
+	ROS_INFO("%s", "CVNode::constructor() has been called.");
+
 	this->receptionRate = receptionRate;
 	this->pImageTransport = new image_transport::ImageTransport(nodeHandle);
 
@@ -66,4 +68,3 @@ void CVNode::receiveImages() {
 		loop_rate.sleep();
 	}
 }
-

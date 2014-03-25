@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['x',['x',['../classrosTest.html#aef922baefee3d119ca6a00cf3fb2acfa',1,'rosTest::x()'],['../structQuaternionStruct.html#aaad0ecb07f9606903f7eac9cea941f9a',1,'QuaternionStruct::x()'],['../distanceCalculator_8cpp.html#a1059b82f84827fc49ea81b12566b3cdb',1,'X():&#160;distanceCalculator.cpp']]],
-  ['x_5fdist',['x_dist',['../distanceCalculator_8cpp.html#a256fc44c768a61a8667e51856b345a7e',1,'distanceCalculator.cpp']]],
-  ['x_5fdist_5fglobal',['x_dist_global',['../distanceCalculator_8cpp.html#aafbbc570c16d09c50c07a94fbd7a8f7a',1,'distanceCalculator.cpp']]],
+  ['x',['x',['../classrosTest.html#aef922baefee3d119ca6a00cf3fb2acfa',1,'rosTest::x()'],['../structQuaternionStruct.html#aaad0ecb07f9606903f7eac9cea941f9a',1,'QuaternionStruct::x()'],['../distanceCalculator-preTF_8cpp.html#a1059b82f84827fc49ea81b12566b3cdb',1,'X():&#160;distanceCalculator-preTF.cpp'],['../distanceCalculator__backup3-9_8cpp.html#a1059b82f84827fc49ea81b12566b3cdb',1,'X():&#160;distanceCalculator_backup3-9.cpp']]],
+  ['x_5fdist',['x_dist',['../distanceCalculator-preTF_8cpp.html#a256fc44c768a61a8667e51856b345a7e',1,'x_dist():&#160;distanceCalculator-preTF.cpp'],['../distanceCalculator__backup3-9_8cpp.html#a256fc44c768a61a8667e51856b345a7e',1,'x_dist():&#160;distanceCalculator_backup3-9.cpp']]],
+  ['x_5fdist_5fglobal',['x_dist_global',['../distanceCalculator-preTF_8cpp.html#aafbbc570c16d09c50c07a94fbd7a8f7a',1,'x_dist_global():&#160;distanceCalculator-preTF.cpp'],['../distanceCalculator__backup3-9_8cpp.html#aafbbc570c16d09c50c07a94fbd7a8f7a',1,'x_dist_global():&#160;distanceCalculator_backup3-9.cpp']]],
   ['x_5fvelocity',['x_velocity',['../classVARIABLES_1_1vel__vars.html#a05513adc23b8b1cfddeb574da022fdd3',1,'VARIABLES::vel_vars']]],
   ['ximupublisher_2ecpp',['XimuPublisher.cpp',['../XimuPublisher_8cpp.html',1,'']]],
   ['ximureceiver',['XimuReceiver',['../classXimuReceiver.html',1,'XimuReceiver'],['../classXimuReceiver.html#a894e2eea47f8e6554ab3fc594e16c335',1,'XimuReceiver::XimuReceiver()']]],
@@ -46,5 +46,6 @@ var searchData=
   ['xpath_5fvariable_5fnode_5fset',['xpath_variable_node_set',['../structxpath__variable__node__set.html',1,'']]],
   ['xpath_5fvariable_5fnumber',['xpath_variable_number',['../structxpath__variable__number.html',1,'xpath_variable_number'],['../structxpath__variable__number.html#ae139f6cc348a1ccb0d1fe97039a2d077',1,'xpath_variable_number::xpath_variable_number()']]],
   ['xpath_5fvariable_5fstring',['xpath_variable_string',['../structxpath__variable__string.html',1,'xpath_variable_string'],['../structxpath__variable__string.html#a119d348b7f76371928faa5f5f80df815',1,'xpath_variable_string::xpath_variable_string()']]],
-  ['xpath_5fvariables_2ecpp',['xpath_variables.cpp',['../xpath__variables_8cpp.html',1,'']]]
+  ['xpath_5fvariables_2ecpp',['xpath_variables.cpp',['../xpath__variables_8cpp.html',1,'']]],
+  ['xspeed_5fmax',['XSPEED_MAX',['../controls_8cpp.html#a2c74247c319f744ac01140cc5d5d03f7',1,'controls.cpp']]]
 ];

@@ -6,6 +6,9 @@ TaskFactory::TaskFactory(){
 
 }
 
+//Destructor in progress
+//TaskFactory::~TaskFactory(){}
+
 //Parses the task number from the tasks.xml file 
 int TaskFactory::parseTask(std::string id){
 	unsigned int start = 0;
@@ -42,6 +45,10 @@ Task* TaskFactory::getEndTask(){
 	return new Task_Kill();	
 }
 
+Task* TaskFactory::getGateTask(){
+	return new Task_Gate();	
+}
+
 Task* TaskFactory::makeTask(std::string id){
 
 	//parses the string into the id task number and id version number 
@@ -62,10 +69,10 @@ Task* TaskFactory::makeTask(std::string id){
 
 				case 2:
 					return new Task_1v2();
-break;
+					break;
 				case 3: 
 					return new TorpedoTask();
-break;
+					break;
 				default:
 					return new Task();
 					break;
@@ -78,8 +85,7 @@ break;
 			
 				case 1:
 					return new Task_Lane();
-					 //return new Task2v1();
-					 break;
+					break;
 			
 				default:
 					return new Task();

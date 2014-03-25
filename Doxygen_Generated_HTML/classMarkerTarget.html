@@ -30,9 +30,9 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">McGill Robotics: RoboSub 2014
-   
+   &#160;<span id="projectnumber">1.0</span>
    </div>
-   
+   <div id="projectbrief">AUV Design Team 2014</div>
   </td>
   
   
@@ -113,11 +113,28 @@ Classes</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a517a3f4e811d61945e22f6345045b0b1">MarkerTarget</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor loads the reference images which we will use to compare our candidate markers to.  <a href="#a517a3f4e811d61945e22f6345045b0b1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a7ee645a3d8cf193a18e74a0bfb624753">add</a> (int, int)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual std::vector<br class="typebreak"/>
 &lt; computer_vision::VisibleObjectData * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a75e08b5541149c7f5ab5ab2d1ae5518a">retrieveObjectData</a> (cv::Mat &amp;currentFrame)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects if any markers are present and if so returns their position, and the identity of the marker object.  <a href="#a75e08b5541149c7f5ab5ab2d1ae5518a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a9e4652a7ab3a78e8273dd91ce53ea234">applyFilter</a> (cv::Mat &amp;currentFrame)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the image to grayscale since we are only looking for edges amongst a black and white surface.  <a href="#a9e4652a7ab3a78e8273dd91ce53ea234"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Point2DVec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#aa01e816eb607b3c7d4ef3a493fb9bc51">findBins</a> (cv::Mat &amp;frame)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches a given frame for marker bins.  <a href="#aa01e816eb607b3c7d4ef3a493fb9bc51"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">cv::Mat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a645d3dedb016beb24a50b2ef63b645fd">getContourMap</a> (cv::Mat &amp;frame, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;outContoursPoly)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects the edges in the given image and uses them to draw a contour and approximate polygons for each contour.  <a href="#a645d3dedb016beb24a50b2ef63b645fd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">Point2DVec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#acfbbfc52d2bac85d59222632b51467ad">getPreliminaryCorners</a> (const cv::Mat &amp;contourMap, const std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;contoursPoly)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the corners in the given contour and associates each to one of the given contours.  <a href="#acfbbfc52d2bac85d59222632b51467ad"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a74f5a4ed21ea5f22df49d8b295901f03">refineCorners</a> (Point2DVec &amp;corners)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Order the corners so that they are in clockwise order starting with the top-left or bottom-right corner.  <a href="#a74f5a4ed21ea5f22df49d8b295901f03"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a9b8a19de3d0ecc7847dc6acc8e4cd7fd">checkRectangleRatio</a> (const cv::RotatedRect &amp;rectangle)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the ratio of the sides of the marker bin is between 0.4 and 0.6 which defines an accpetable marker bin.  <a href="#a9b8a19de3d0ecc7847dc6acc8e4cd7fd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">std::vector&lt; MarkerDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a8f0fa5f9f0bf2b2f2c027a233f761eb2">findMarkers</a> (const cv::Mat &amp;frame, const Point2DVec &amp;bins)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Given the corners of the marker bins, detects which marker is inside the bin and gather information such as distance and angle about the marker.  <a href="#a8f0fa5f9f0bf2b2f2c027a233f761eb2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a0242e8b64da3af2b2c023d207cec5035">compareImages</a> (const std::vector&lt; cv::Point2f &gt; &amp;sourceCoords, const cv::Mat &amp;cap, const cv::Mat &amp;ref)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares a candidate marker to each reference image by counting the number of different pixels.  <a href="#a0242e8b64da3af2b2c023d207cec5035"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMarkerTarget.html#a30f9d57b05f707ee91e520f699dc165d">estimatePose</a> (MarkerDescriptor &amp;inOutMarker)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the distances and angles of the marker from the robot.  <a href="#a30f9d57b05f707ee91e520f699dc165d"></a><br/></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a517a3f4e811d61945e22f6345045b0b1"></a><!-- doxytag: member="MarkerTarget::MarkerTarget" ref="a517a3f4e811d61945e22f6345045b0b1" args="()" -->
@@ -140,6 +157,33 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a7ee645a3d8cf193a18e74a0bfb624753"></a><!-- doxytag: member="MarkerTarget::add" ref="a7ee645a3d8cf193a18e74a0bfb624753" args="(int, int)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="classMarkerTarget.html#a7ee645a3d8cf193a18e74a0bfb624753">MarkerTarget::add</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a9e4652a7ab3a78e8273dd91ce53ea234"></a><!-- doxytag: member="MarkerTarget::applyFilter" ref="a9e4652a7ab3a78e8273dd91ce53ea234" args="(cv::Mat &amp;currentFrame)" -->
 <div class="memitem">
 <div class="memproto">
@@ -164,7 +208,266 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classVisibleObject.html">VisibleObject</a>.</p>
+<p>Implements <a class="el" href="classVisibleObject.html#a32db704cb8b64d470bcf4e48b367ca10">VisibleObject</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9b8a19de3d0ecc7847dc6acc8e4cd7fd"></a><!-- doxytag: member="MarkerTarget::checkRectangleRatio" ref="a9b8a19de3d0ecc7847dc6acc8e4cd7fd" args="(const cv::RotatedRect &amp;rectangle)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classMarkerTarget.html#a9b8a19de3d0ecc7847dc6acc8e4cd7fd">MarkerTarget::checkRectangleRatio</a> </td>
+          <td>(</td>
+          <td class="paramtype">const cv::RotatedRect &amp;&#160;</td>
+          <td class="paramname"><em>rectangle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Checks if the ratio of the sides of the marker bin is between 0.4 and 0.6 which defines an accpetable marker bin. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">rectangle</td><td>The rectangle which sides will will check to see if it is similar to the marker bins. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a0242e8b64da3af2b2c023d207cec5035"></a><!-- doxytag: member="MarkerTarget::compareImages" ref="a0242e8b64da3af2b2c023d207cec5035" args="(const std::vector&lt; cv::Point2f &gt; &amp;sourceCoords, const cv::Mat &amp;cap, const cv::Mat &amp;ref)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">long <a class="el" href="classMarkerTarget.html#a0242e8b64da3af2b2c023d207cec5035">MarkerTarget::compareImages</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; cv::Point2f &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sourceCoords</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>cap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>ref</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Compares a candidate marker to each reference image by counting the number of different pixels. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourceCoords</td><td>The coordinates of the candidate markers in cap. </td></tr>
+    <tr><td class="paramname">cap</td><td>The camera frame in which the marker image is located. </td></tr>
+    <tr><td class="paramname">ref</td><td>The reference image which we are comparing the similarity of the captured image with. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The number of different pixels between the candidate and reference images. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a30f9d57b05f707ee91e520f699dc165d"></a><!-- doxytag: member="MarkerTarget::estimatePose" ref="a30f9d57b05f707ee91e520f699dc165d" args="(MarkerDescriptor &amp;inOutMarker)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classMarkerTarget.html#a30f9d57b05f707ee91e520f699dc165d">MarkerTarget::estimatePose</a> </td>
+          <td>(</td>
+          <td class="paramtype">MarkerDescriptor &amp;&#160;</td>
+          <td class="paramname"><em>inOutMarker</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Calculate the distances and angles of the marker from the robot. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">inOutMarker</td><td>A MarkerDescriptor object containing the location of the bin within the image and will be populated with distances and angles. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aa01e816eb607b3c7d4ef3a493fb9bc51"></a><!-- doxytag: member="MarkerTarget::findBins" ref="aa01e816eb607b3c7d4ef3a493fb9bc51" args="(cv::Mat &amp;frame)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MarkerTarget::Point2DVec <a class="el" href="classMarkerTarget.html#aa01e816eb607b3c7d4ef3a493fb9bc51">MarkerTarget::findBins</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>frame</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Searches a given frame for marker bins. </p>
+<p>Performs more specific filtering and then finds the corners of any bins.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame</td><td>The processed camera frame in which to find the bins. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A 2-Dimensional vector containing the corners of each marker. For each marker the corners are listed in clockwise order starting with the top-left or bottom-right corner when the bin is oriented vertically. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8f0fa5f9f0bf2b2f2c027a233f761eb2"></a><!-- doxytag: member="MarkerTarget::findMarkers" ref="a8f0fa5f9f0bf2b2f2c027a233f761eb2" args="(const cv::Mat &amp;frame, const Point2DVec &amp;bins)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; MarkerTarget::MarkerDescriptor &gt; <a class="el" href="classMarkerTarget.html#a8f0fa5f9f0bf2b2f2c027a233f761eb2">MarkerTarget::findMarkers</a> </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Point2DVec &amp;&#160;</td>
+          <td class="paramname"><em>bins</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Given the corners of the marker bins, detects which marker is inside the bin and gather information such as distance and angle about the marker. </p>
+<p>To figure out which marker is present, we compare the marker's image to reference images.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame</td><td>The original camera frame in which to extract the marker image. </td></tr>
+    <tr><td class="paramname">bins</td><td>A list of corners belonging to each detected marker bin. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A vector of MarkerDescriptor objects populated with marker type, distances, and angles for each detected marker bin. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a645d3dedb016beb24a50b2ef63b645fd"></a><!-- doxytag: member="MarkerTarget::getContourMap" ref="a645d3dedb016beb24a50b2ef63b645fd" args="(cv::Mat &amp;frame, std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;outContoursPoly)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">cv::Mat <a class="el" href="classMarkerTarget.html#a645d3dedb016beb24a50b2ef63b645fd">MarkerTarget::getContourMap</a> </td>
+          <td>(</td>
+          <td class="paramtype">cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>frame</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>outContoursPoly</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Detects the edges in the given image and uses them to draw a contour and approximate polygons for each contour. </p>
+<p>Any contour with more than 4 edges and not convex is thrown away in order to find just contours matching the marker bins.</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frame</td><td>The current processed camera frame in which to find the contours. </td></tr>
+    <tr><td class="paramname">outContoursPoly</td><td>An empty 2-Dimenional vector which will be populated with the points belonging to each contour. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A Mat image with the contours of the detected marker bins. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="acfbbfc52d2bac85d59222632b51467ad"></a><!-- doxytag: member="MarkerTarget::getPreliminaryCorners" ref="acfbbfc52d2bac85d59222632b51467ad" args="(const cv::Mat &amp;contourMap, const std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;contoursPoly)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MarkerTarget::Point2DVec <a class="el" href="classMarkerTarget.html#acfbbfc52d2bac85d59222632b51467ad">MarkerTarget::getPreliminaryCorners</a> </td>
+          <td>(</td>
+          <td class="paramtype">const cv::Mat &amp;&#160;</td>
+          <td class="paramname"><em>contourMap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; std::vector&lt; cv::Point &gt; &gt; &amp;&#160;</td>
+          <td class="paramname"><em>contoursPoly</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Finds the corners in the given contour and associates each to one of the given contours. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">contourMap</td><td>A Mat image with only the contours of marker bins drawn on. </td></tr>
+    <tr><td class="paramname">contoursPoly</td><td>A 2-D vector containing a list of points belonging to each contour. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A 2-D vector (std::vector&lt; std::vector&lt; cv::Point2f&gt;&gt;) which is a list of the 4 corners belonging to each detected marker. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a74f5a4ed21ea5f22df49d8b295901f03"></a><!-- doxytag: member="MarkerTarget::refineCorners" ref="a74f5a4ed21ea5f22df49d8b295901f03" args="(Point2DVec &amp;corners)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classMarkerTarget.html#a74f5a4ed21ea5f22df49d8b295901f03">MarkerTarget::refineCorners</a> </td>
+          <td>(</td>
+          <td class="paramtype">Point2DVec &amp;&#160;</td>
+          <td class="paramname"><em>corners</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Order the corners so that they are in clockwise order starting with the top-left or bottom-right corner. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">corners</td><td>An unordered list of corners which will be ordered once the function terminates. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -197,8 +500,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/<a class="el" href="MarkerTarget_8h_source.html">MarkerTarget.h</a></li>
-<li>/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/<a class="el" href="MarkerTarget_8cpp.html">MarkerTarget.cpp</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/computer_vision/include/<a class="el" href="MarkerTarget_8h_source.html">MarkerTarget.h</a></li>
+<li>/home/david/repo/robosub14/catkin_ws/src/computer_vision/src/<a class="el" href="MarkerTarget_8cpp.html">MarkerTarget.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -218,7 +521,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 23 2014 14:27:31 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 20 2014 12:01:34 for McGill Robotics: RoboSub 2014 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

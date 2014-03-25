@@ -7,6 +7,8 @@ project(blinky)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -43,18 +45,16 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  RGB.msg
+)
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  BlinkyTapeService.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -64,10 +64,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs  # Or other packages containing msgs
+  blinky
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -79,9 +80,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES blinky
-#  CATKIN_DEPENDS roscpp rospy
+   INCLUDE_DIRS include
+   LIBRARIES BlinkyAPI
+   CATKIN_DEPENDS roscpp rospy message_runtime
 #  DEPENDS system_lib
 )
 
@@ -93,25 +94,33 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+    include/
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
-# add_library(blinky
-#   src/${PROJECT_NAME}/blinky.cpp
-# )
+add_library(BlinkyAPI src/BlinkyAPI.cpp)
 
 ## Declare a cpp executable
-# add_executable(blinky_node src/blinky_node.cpp)
+add_executable(PlannerClientExample src/PlannerClientExample.cpp)
+add_executable(BatteryClientExample src/BatteryClientExample.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(blinky_node blinky_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(blinky_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(
+    BatteryClientExample
+    BlinkyAPI
+    ${catkin_LIBRARIES}
+)
+
+target_link_libraries(
+    PlannerClientExample
+    BlinkyAPI
+    ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   message_generation
   tf
+  planner
 )
 
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
@@ -57,11 +58,11 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES computer_vision
+  INCLUDE_DIRS include
+  LIBRARIES computer_vision
 #  CATKIN_DEPENDS cpp ros rospy std_msgs
 #  DEPENDS system_lib
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS roscpp std_msgs message_runtime planner
 )
 
 ###########
@@ -144,12 +145,10 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(VisibleObject src/VisibleObject.cpp)
 target_link_libraries(VisibleObject ${catkin_LIBRARIES})
+add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS})
 
 add_library(CVNode src/CVNode.cpp)
 target_link_libraries(CVNode ${catkin_LIBRARIES})
-
-add_library(CameraNode src/CameraNode.cpp)
-target_link_libraries(CameraNode ${catkin_LIBRARIES})
 
 add_library(Gate src/Gate.cpp)
 target_link_libraries(Gate VisibleObject)
@@ -173,47 +172,36 @@ add_library(LineTarget src/LineTarget.cpp)
 target_link_libraries(LineTarget VisibleObject)
 target_link_libraries(LineTarget ${catkin_LIBRARIES})
 
-add_library(Camera src/Camera.cpp)
-target_link_libraries(Camera ${catkin_LIBRARIES})
+catkin_add_gtest(line_target_test tests/line_target_test.cpp)
+if(TARGET line_target_test)
+   target_link_libraries(line_target_test LineTarget)
+endif()
 
-add_executable(DownCVNode src/DownCVNode.cpp)
-target_link_libraries(DownCVNode CVNode)
-target_link_libraries(DownCVNode VisibleObject)
-target_link_libraries(DownCVNode MarkerTarget)
-target_link_libraries(DownCVNode LineTarget)
-target_link_libraries(DownCVNode ${catkin_LIBRARIES})
+add_executable(PlannerSimulator src/PlannerSimulator.cpp)
+target_link_libraries(PlannerSimulator ${catkin_LIBRARIES})
 
-add_executable(FrontCVNode src/FrontCVNode.cpp)
-target_link_libraries(FrontCVNode CVNode)
-target_link_libraries(FrontCVNode VisibleObject)
-target_link_libraries(FrontCVNode Gate)
-target_link_libraries(FrontCVNode Buoy)
-target_link_libraries(FrontCVNode ${catkin_LIBRARIES})
-rosbuild_add_compile_flags(FrontCVNode -std=c++0x)
+add_executable(down_cv_node src/DownCVNode.cpp)
+target_link_libraries(down_cv_node CVNode)
+target_link_libraries(down_cv_node VisibleObject)
+target_link_libraries(down_cv_node MarkerTarget)
+target_link_libraries(down_cv_node LineTarget)
+target_link_libraries(down_cv_node ${catkin_LIBRARIES})
 
-add_executable(FrontCameraNode src/FrontCameraNode.cpp)
-target_link_libraries(FrontCameraNode Camera)
-target_link_libraries(FrontCameraNode CameraNode)
-target_link_libraries(FrontCameraNode ${catkin_LIBRARIES})
-
-add_executable(DownCameraNode src/DownCameraNode.cpp)
-target_link_libraries(DownCameraNode Camera)
-target_link_libraries(DownCameraNode CameraNode)
-target_link_libraries(DownCameraNode ${catkin_LIBRARIES})
+add_executable(front_cv_node src/FrontCVNode.cpp)
+target_link_libraries(front_cv_node CVNode)
+target_link_libraries(front_cv_node VisibleObject)
+target_link_libraries(front_cv_node Gate)
+target_link_libraries(front_cv_node Buoy)
+target_link_libraries(front_cv_node ${catkin_LIBRARIES})
+rosbuild_add_compile_flags(front_cv_node -std=c++0x)
 
 add_executable(CVTestNode src/CVTestNode.cpp)
-target_link_libraries(CVTestNode ${catkin_LIBRARIES})
-
-add_executable(SoftCameraNode src/SoftCameraNode.cpp)
-target_link_libraries(SoftCameraNode Camera)
-target_link_libraries(SoftCameraNode CameraNode)
 target_link_libraries(CVTestNode ${catkin_LIBRARIES})
 
 add_executable (distanceCalculator src/distanceCalculator.cpp)
 target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
 
 # This makes sure message headers are generated before being used
-add_dependencies(CameraNode computer_vision_gencpp)
 add_dependencies(CVNode computer_vision_gencpp)
 add_dependencies(CVTestNode computer_vision_gencpp)
 add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})

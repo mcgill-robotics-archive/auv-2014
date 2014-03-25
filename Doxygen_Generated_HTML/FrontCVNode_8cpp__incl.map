@@ -1,10 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$FrontCVNode_8h.html" title="FrontCVNode.h" alt="" coords="849,83,961,112"/>
-<area shape="rect" id="node46" href="$FrontCameraNode_8h.html" title="FrontCameraNode.h" alt="" coords="1159,83,1297,112"/>
-<area shape="rect" id="node5" href="$CVNode_8h.html" title="CVNode.h" alt="" coords="913,160,996,189"/>
-<area shape="rect" id="node40" href="$Buoy_8h.html" title="Buoy.h" alt="" coords="825,160,887,189"/>
-<area shape="rect" id="node43" href="$Door_8h.html" title="Door.h" alt="" coords="735,160,796,189"/>
-<area shape="rect" id="node25" href="$VisibleObject_8h.html" title="VisibleObject.h" alt="" coords="707,237,816,267"/>
-<area shape="rect" id="node48" href="$CameraNode_8h.html" title="CameraNode.h" alt="" coords="1299,160,1408,189"/>
-<area shape="rect" id="node53" href="$Camera_8h.html" title="Camera.h" alt="" coords="1053,237,1131,267"/>
+<area shape="rect" id="node3" href="$FrontCVNode_8h.html" title="FrontCVNode.h" alt="" coords="540,83,652,112"/>
+<area shape="rect" id="node5" href="$CVNode_8h.html" title="CVNode.h" alt="" coords="1109,160,1192,189"/>
+<area shape="rect" id="node44" href="$Buoy_8h.html" title="Buoy.h" alt="" coords="429,160,491,189"/>
+<area shape="rect" id="node47" href="$Gate_8h.html" title="Gate.h" alt="" coords="515,160,576,189"/>
+<area shape="rect" id="node50" href="$LineTarget_8h.html" title="LineTarget.h" alt="" coords="600,160,693,189"/>
+<area shape="rect" id="node27" href="$VisibleObject_8h.html" title="VisibleObject.h" alt="" coords="448,237,557,267"/>
 </map>

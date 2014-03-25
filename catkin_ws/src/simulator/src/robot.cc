@@ -200,8 +200,12 @@ public:
 			translationalDragVector.z = w/magnitude;
 		}
 		
+		//ROS_INFO("vx: %f     vy: %f     vz: %f     ", u,v,w);
+
+
 		//Drag force = -0.5 * Area * density * |speed|^2 * drag coefficient
-		translationalDragMagnitude = -.5 * .118 * 1000 * (u*u + v*v + w*w) * .8;
+		//translationalDragMagnitude = -.5 * .118 * 1000 * (u*u + v*v + w*w) * .8; removing drag nick march 25
+		translationalDragMagnitude = 0;
 
 		translationalDragVector.x = -(translationalDragVector.x * translationalDragMagnitude);
 		translationalDragVector.y = -(translationalDragVector.y * translationalDragMagnitude);
@@ -304,9 +308,9 @@ private:
 	const static float RZ2 = -.3;
 
 	// for drag computation
-	const static float KP = 1;
-	const static float KQ = 1;
-	const static float KR = 1;
+	const static float KP = 0; //these were 1, nick March 25
+	const static float KQ = 0;
+	const static float KR = 0;
 
 	/** Pointer to the model */
 	physics::ModelPtr model;

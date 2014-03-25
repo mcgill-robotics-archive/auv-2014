@@ -22,10 +22,8 @@ cv::Point centerOfCurrentFrame;
  * Constructor.
  */
 Gate::Gate() {
-	ROS_INFO("%s", "The Gate object has been created.");
 
 #ifdef USE_CV_WINDOWS
-	ROS_INFO("%s", "Creating the window that will be displaying the frame after the HSV threshold is applied.");
 	cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 	cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
@@ -44,6 +42,7 @@ Gate::Gate() {
 Gate::~Gate() {
 #ifdef USE_CV_WINDOWS
 	cv::destroyWindow(COLOR_THRESH_WINDOW);
+	cv::destroyWindow(TRACKBARS_WINDOW);
 #endif
 }
 
@@ -56,13 +55,10 @@ Gate::~Gate() {
  *  not present in the current frame, it returns the zero pointer (NULL).
  */
 std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Mat& currentFrame) {
-
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 	m_isVisible = false;
 
 	applyFilter(currentFrame);
-
-	//ROS_INFO("%s", "The processing for the Gate object is completed. Now creating the ROS message.");
 
 	if (m_isVisible) {
 		computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();		
@@ -75,8 +71,12 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 		visibleObjectData->y_distance = m_yDistance;
 		visibleObjectData->z_distance = m_zDistance;
 
-		messagesToReturn.push_back(visibleObjectData);	
-	} 
+		messagesToReturn.push_back(visibleObjectData);
+
+		ROS_INFO("%s", "Added a ROS message in the list of messages to return to the cv node.");
+	}
+
+	ROS_INFO("%s", ("About to return the ROS message list to the cv node that contains " + boost::lexical_cast<std::string>(messagesToReturn.size()) + " element(s).").c_str());
 
 	return (messagesToReturn);
 }
@@ -91,17 +91,8 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 	HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, start_hsv_value_threshold);
 
 	std::vector<PoleCandidate> potentialMatchRectangles;
-
-	// Ok so what I need to do is accept more rectangles and apply logic to filter them
-	// no bounds for the maximum of points, and only filter for a percentage of the heigh relative to the image resolution.
-	// also, the rectangles should be almost vertically aligned.
-
-	//ROS_INFO("%s", "Applying filter to the current frame.");
-
 	centerOfCurrentFrame.x = currentFrame.cols/2;
 	centerOfCurrentFrame.y = currentFrame.rows/2;
-	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
-	//ROS_INFO("%s", ("Width of image=" + boost::lexical_cast<std::string>(currentFrame.cols) + " pixels. Height of image="  + boost::lexical_cast<std::string>(currentFrame.rows) + " pixels.").c_str());
 
 	// Converts the current frame to HSV in order to ease color filtering (with varying brightness).
 	cv::Mat currentFrameInHSV = convertFromBGRXToHSV(currentFrame);
@@ -115,150 +106,157 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 
 	// Goes through all the identified shapes for a first filtering.
 	for (int rectangleID = 0; rectangleID < detectedContours.size(); rectangleID++) {
-		// Gets the contour to analyse in this loop iteration.
-		std::vector<cv::Point> contourToAnalyse = detectedContours.at(rectangleID);
-
-		// Gets the number of points that define this contour.
-		int numberOfPointsInContour = contourToAnalyse.size();
 
 		// Finds a rotated rectangle that defines the contour of the object.
-		cv::RotatedRect foundRectangle = cv::minAreaRect(cv::Mat(contourToAnalyse));
+		std::vector<cv::Point> contour = detectedContours.at(rectangleID);
+		PoleCandidate pole = findRectangleForContour(contour);
 
-		// Determining the Width, Height and Ratio of the rotated rectangle.
-		// Here by convention the height is the longest side of the rectangle.
-		float width = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.width : foundRectangle.size.height;
-		float height = (foundRectangle.size.width < foundRectangle.size.height) ? foundRectangle.size.height : foundRectangle.size.width;
-		float heightWidthRatio = height / width;
+		bool passesFilter = false;
+		// Filter the rectangles based on several parameters (acceptable ratio, angle error, etc.)
+		if ((pole.h / pole.w) > MIN_GATE_RATIO && contour.size() >= 4 &&
+			std::abs(pole.rectangleAngleDeg - DESIRED_ANGLE_OF_RECT) < ANGLE_RECT_ERROR ) {
 
-		/* Calculate the angle of the rectangle. It is in interval [0, 180) and
-		works as expected (i.e. rectangle on its side has angle 0, rectangle upright has
-		angle 90) */
-		cv::Point2f vertices[4];
-		foundRectangle.points(vertices);
-		cv::Point2f p = vertices[0], q = vertices[1];
-		cv::Point2f diff = p - q;
-		float distanceFirstPoints = sqrt(diff.x * diff.x + diff.y * diff.y);
-		//Check whether the two points we have form a width or a height.
-		if(std::abs(distanceFirstPoints - width) < std::abs(distanceFirstPoints - height)) {
-			p = q;
-			q = vertices[2];
-		}
+			passesFilter = true;
+			computePolarCoordinates(pole, centerOfCurrentFrame, currentFrame.size().height);
+			potentialMatchRectangles.push_back(pole);
 
-		float opp = std::abs(p.y - q.y); //Want positive opposite side value
-		//Get signed adjacent value (it's the highest point minus the lowest point)
-		float adj = p.x - q.x;
-		if(q.y < p.y)
-			adj = -adj;
-
-		float rectangleAngle = atan(opp / adj) * 180.0 / 3.141592654;
-		if(rectangleAngle < 0)
-			rectangleAngle = 180 + rectangleAngle;
-
-		float angleError = std::abs(rectangleAngle - DESIRED_ANGLE_OF_RECT);
-
-		// First, make sure that our ratio is acceptably close to what we expect
-		// Also, we need at least 4 points in our contour.
-		if (	heightWidthRatio > MIN_GATE_RATIO && 
-			numberOfPointsInContour >= 4 &&
-			angleError < ANGLE_RECT_ERROR	) {
-
-			float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * currentFrame.size().height) / 
-							(height * CAMERA_SENSOR_HEIGHT);
-
-			// Add the rectangle that is a potential match for the orange cylinders of the gate.
-			PoleCandidate found = {height, width, rectangleAngle, approximateDistanceWithObject, foundRectangle.center};
-			potentialMatchRectangles.push_back(found);
-			drawPointsOfContour(currentFrame, contourToAnalyse, GREEN_BGRX);
-
-			// Draws text containing the dimensions on each rectangles.
-			
-			putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(approximateDistanceWithObject),
-					cv::Point(vertices[0].x, vertices[0].y + 30),
-					cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-					CV_AA);
-			
+			//Draw contour points
+			drawPointsOfContour(currentFrame, contour, GREEN_BGRX);			
 		} else {
-			std::cout << "[DEBUG] Rejected rectangle: Points in contour: " << numberOfPointsInContour << 
-					"  Ratio error: " << heightWidthRatio << "  Angle: " << rectangleAngle << std::endl;
-			drawPointsOfContour(currentFrame, contourToAnalyse, RED_BGRX);
+			drawPointsOfContour(currentFrame, contour, RED_BGRX);
 		}
 
-		// Goes through each vertex and connects them to write the edges of the rectangle.
-		for (int i = 0; i < 4; ++i) {
-			cv::line(currentFrame, vertices[i], vertices[(i + 1) % 4], BLUE_BGRX, 1, CV_AA);
-		}
-
-		putText(currentFrame, "Width=" + boost::lexical_cast<std::string>(width),
-				cv::Point(vertices[0].x, vertices[0].y),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
-		putText(currentFrame, "Height=" + boost::lexical_cast<std::string>(height),
-				cv::Point(vertices[0].x, vertices[0].y + 10),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
-		putText(currentFrame, "Angle=" + boost::lexical_cast<std::string>(rectangleAngle),
-				cv::Point(vertices[0].x, vertices[0].y + 20),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
-
+		writePoleCandidateInfo(pole, passesFilter, currentFrame);
 	}
 
 	int numberOfPotentialMatch = potentialMatchRectangles.size();
 	//  Here I assume that the two rectangles that I have are the orange cylinders of the gate.
 	if (numberOfPotentialMatch == 2) {
 		m_isVisible = true;
-		PoleCandidate p1 = potentialMatchRectangles[0];
-		PoleCandidate p2 = potentialMatchRectangles[1];
 
-		PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
-		PoleCandidate& farthest = (p2.dist < p1.dist) ? p2 : p1;
+		PoleCandidate& p1 = potentialMatchRectangles[0];
+		PoleCandidate& p2 = potentialMatchRectangles[1];
 
-		//Calculate the yaw angle by triangle-solving
-		float distDiff = std::abs(p1.dist - p2.dist);
-		float mPerPxAtClosestPole = DOOR_REAL_HEIGHT / closest.h;
-		float perceivedGateWidth = std::abs(p1.center.x - p2.center.x) * mPerPxAtClosestPole;
-		
-		std::cout << "[DEBUG] m/px closest: " << mPerPxAtClosestPole << " perceived: " << perceivedGateWidth << std::endl;
-
-		//Solve for theta in distDiff² = GATE_SZ² + perceived² - 2 x GATE_SZ x perceived x cos(theta) (law of cosines)
-		const float GATE_WIDTH_SQR = DISTANCE_BETWEEN_ORANGE_CYLINDER * DISTANCE_BETWEEN_ORANGE_CYLINDER;
-		const float PERCEIVED_SQR = perceivedGateWidth * perceivedGateWidth;
-		const float DIST_DIFF_SQR = distDiff * distDiff;
-		float cosTheta = (GATE_WIDTH_SQR + PERCEIVED_SQR - DIST_DIFF_SQR) / 
-			(2.0 * DISTANCE_BETWEEN_ORANGE_CYLINDER * perceivedGateWidth);
-
-		m_yawAngle = acos(cosTheta) * 180.0 / 3.141592654;
-
-		//Get the center point of the gate in the x,y plane
-		float mPerPxAtFarthestPole = DOOR_REAL_HEIGHT / farthest.h;
-		float perceivedFarGateWidth = std::abs(p1.center.x - p2.center.x) * mPerPxAtFarthestPole;
-
-		//TODO Fred: This doesn't actually work 
-		float closePoleOffest = (closest.center.x - centerOfCurrentFrame.x) * mPerPxAtClosestPole;
-		float sign = (farthest.center.x < closest.center.x) ? -1.0 : 1.0;
-		m_yDistance = closePoleOffest + sign * perceivedFarGateWidth / 2.0;
-
-		float smallestDistance = (p1.dist < p2.dist) ? p1.dist : p2.dist;
-		m_xDistance = smallestDistance + (distDiff / 2.0);
+		handleTwoVisiblePoles(p1, p2, centerOfCurrentFrame);
 		
 
-		float estimatedMPerPxAtCenter = mPerPxAtClosestPole + 
-				((mPerPxAtClosestPole - mPerPxAtFarthestPole) / 2.0);
-
-
+		cv::Point centerPoint((p1.center.x + p2.center.x) / 2,
+					(p1.center.y + p2.center.y) / 2);
 		//Draw the point on-screen
-		cv::Point centerPoint;
-		centerPoint.x = (p1.center.x + p2.center.x)/2;
-		centerPoint.y = (p1.center.y + p2.center.y)/2;
-
-		m_zDistance = (centerPoint.y - centerOfCurrentFrame.y) * estimatedMPerPxAtCenter;
-
 		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
 		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA); 
-
-		std::cout << "[DEBUG] Door found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> angle " << 
-				m_yawAngle << std::endl;
 	}
+	
+	//Center of image circle
+	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
+}
+
+void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame) {
+	
+	PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
+	PoleCandidate& farthest = (p1.dist < p2.dist) ? p2 : p1;
+
+	/* Use law of sines to compute far angle */	
+
+	//If both angles are on the same side of the image, the robot angle is the largest minus the smallest
+	float sumAngles = 0.f;
+	if( std::max(p1.center.x, p2.center.x) < centerOfCurrentFrame.x ||
+	    std::min(p1.center.x, p2.center.x) > centerOfCurrentFrame.x )
+		sumAngles = std::max(p1.objectAngleRad, p2.objectAngleRad) -
+				std::min(p1.objectAngleRad, p2.objectAngleRad);
+	else //Otherwise it's the normal sum
+		sumAngles = p1.objectAngleRad + p2.objectAngleRad;
+
+	// 90 - angleFar- farthest.objectAngle
+	float sinFar = sin(sumAngles) * closest.dist / GATE_WIDTH;
+	m_yawAngle = (3.141592654 / 2.0) - asin(sinFar) - farthest.objectAngleRad;
+
+	if(closest.center.x < farthest.center.x)
+		m_yawAngle = -m_yawAngle;
+
+	//Get the x,y coordinates of the gate in the world
+	float x1 = cos(p1.objectAngleRad) * p1.dist, x2 = cos(p2.objectAngleRad) * p2.dist;
+	float y1 = sin(p1.objectAngleRad) * p1.dist, y2 = sin(p2.objectAngleRad) * p2.dist;
+
+	if(p1.center.x - centerOfCurrentFrame.x < 0)
+		y1 = -y1;
+
+	if(p2.center.x - centerOfCurrentFrame.x < 0)
+		y2 = -y2;
+
+	m_xDistance = (x1 + x2) / 2.0;
+	m_yDistance = (y1 + y2) / 2.0;
+
+	int centerY = (p1.center.y + p2.center.y) / 2;
+	float avgMPerPx = ((DOOR_REAL_HEIGHT / p1.h) + (DOOR_REAL_HEIGHT / p2.h)) / 2.0;
+	m_zDistance = (centerY - centerOfCurrentFrame.y) * avgMPerPx;
+
+	std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " << 
+			m_yawAngle * 180.0 / 3.141592654 << std::endl;
+}
+
+/**
+ * Based on a contour, return a partially filled pole candidate structure that contains information about the rectangle
+ * bounding the contour.
+ *
+ * @param contour A contour of points in the image
+ * @return A pole candidate. The objectAngleRad and dist fields are NOT valid.
+ */
+Gate::PoleCandidate Gate::findRectangleForContour(std::vector<cv::Point>& contour) {
+	PoleCandidate ret;	
+
+
+	cv::RotatedRect boundingRect = cv::minAreaRect(cv::Mat(contour));
+	// Determining the Width, Height and Ratio of the rotated rectangle.
+	// Here by convention the height is the longest side of the rectangle.
+	ret.w = (boundingRect.size.width < boundingRect.size.height) ? 
+			boundingRect.size.width : boundingRect.size.height;
+	ret.h = (boundingRect.size.width < boundingRect.size.height) ? 
+			boundingRect.size.height : boundingRect.size.width;
+
+	ret.center = boundingRect.center;
+
+	/* Calculate the angle of the rectangle. It is in interval [0, 180) and
+	works as expected (i.e. rectangle on its side has angle 0, rectangle upright has
+	angle 90) */
+	cv::Point2f vertices[4];
+	boundingRect.points(vertices);
+	cv::Point2f p = vertices[0], q = vertices[1];
+	cv::Point2f diff = p - q;
+	float distanceFirstPoints = sqrt(diff.x * diff.x + diff.y * diff.y);
+	//Check whether the two points we have form a width or a height.
+	if(std::abs(distanceFirstPoints - ret.w) < std::abs(distanceFirstPoints - ret.h)) {
+		p = q;
+		q = vertices[2];
+	}
+
+	float opp = std::abs(p.y - q.y); //Want positive opposite side value
+	//Get signed adjacent value (it's the highest point minus the lowest point)
+	float adj = p.x - q.x;
+	if(q.y < p.y)
+		adj = -adj;
+
+	float rectangleAngle = atan(opp / adj) * 180.0 / 3.141592654;
+	if(rectangleAngle < 0)
+		rectangleAngle = 180 + rectangleAngle;
+
+	ret.rectangleAngleDeg = rectangleAngle;
+	return ret;
+}
+
+/**
+ * Based on a pole candidate, calculate its distance and angle in the world.
+ */
+void Gate::computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight) {
+	/* First approximation using the canonical formula */
+	float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * frameHeight) / 
+							(pole.h * CAMERA_SENSOR_HEIGHT);
+
+	/* We correct this distance, because it is only valid if the object is close to the center of the screen */
+	float mPerPxAtObject = DOOR_REAL_HEIGHT / pole.h;
+	float yMOffset = std::abs(frameCenter.x - pole.center.x) * mPerPxAtObject;
+	pole.objectAngleRad = atan(yMOffset / approximateDistanceWithObject);
+	pole.dist = approximateDistanceWithObject / cos(pole.objectAngleRad);
 }
 
 /**
@@ -268,6 +266,7 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
  * @return The std::vector of std::vector of points containing the clouds of all contours in the image.
  */
 std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV) {
+
 	// Creates the Mat object that will contain the filtered image (inRange HSV).
 	cv::Mat inRangeHSVFrame;
 	// Generates a new Mat object that only contains a certain range of HSV values.
@@ -286,6 +285,38 @@ std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Ma
 			CV_CHAIN_APPROX_SIMPLE);
 
 	return (detectedContours);
+}
+
+/**
+ * Draw information about a pole candidate on the frame.
+ *
+ */
+void Gate::writePoleCandidateInfo(PoleCandidate& pole, bool passedFilter, cv::Mat& currentFrame) {
+
+	if(passedFilter) {
+		putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(pole.dist),
+			cv::Point(pole.center.x, pole.center.y + 30),
+			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+			CV_AA);
+		putText(currentFrame, "ObjectAngle=" + boost::lexical_cast<std::string>(pole.objectAngleRad * 180.0 / 3.141592654),
+			cv::Point(pole.center.x, pole.center.y + 40),
+			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+			CV_AA);
+	}
+
+	putText(currentFrame, "Width=" + boost::lexical_cast<std::string>(pole.w),
+		cv::Point(pole.center.x, pole.center.y),
+		cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+		CV_AA);
+	putText(currentFrame, "Height=" + boost::lexical_cast<std::string>(pole.h),
+		cv::Point(pole.center.x, pole.center.y + 10),
+		cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+		CV_AA);
+	putText(currentFrame, "RectangleAngle=" + boost::lexical_cast<std::string>(pole.rectangleAngleDeg),
+		cv::Point(pole.center.x, pole.center.y + 20),
+		cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+		CV_AA);
+
 }
 
 /**

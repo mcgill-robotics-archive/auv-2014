@@ -17,13 +17,15 @@ class Loader {
 
  public:
 
+    Loader(std::string xmlFilesPath);
+
+    //~Loader();
+
     void loadInvoker();
 
     void reLoadInvoker();
 
     Invoker* getInvoker();
-
-    Loader();
 
     void GetMap();
 

@@ -55,7 +55,7 @@ const float DOOR_REAL_HEIGHT = 1.2;
 /**
  * The distance between the cylinders' centers in meters.
  */
-const float DISTANCE_BETWEEN_ORANGE_CYLINDER = 3.1262;
+const float GATE_WIDTH = 3.1262;
 /**
  * The eight of the sensor of the camera in meters.
  */
@@ -130,15 +130,17 @@ public:
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 private:
+	struct PoleCandidate {
+		float h, w, rectangleAngleDeg, objectAngleRad, dist;
+		cv::Point2f center;
+	};	
 
-	//void applyFilter(cv::Mat& currentFrame);
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
-
-	struct PoleCandidate {
-		float h, w, angle, dist;
-		cv::Point2f center;
-	};
+	PoleCandidate findRectangleForContour(std::vector<cv::Point>& contour);
+	void computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight);
+	void writePoleCandidateInfo(PoleCandidate& pole, bool passedFilter, cv::Mat& frame);
+	void handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame);
 
 	bool m_isVisible;
 	double m_yawAngle;

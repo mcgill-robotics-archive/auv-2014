@@ -17,30 +17,6 @@ nmap <silent> ,sv :so $MYVIMRC<cr>
 filetype off
 
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
-Bundle 'gmarik/vundle'
-Bundle 'flazz/vim-colorschemes'
-Bundle 'sudar/vim-arduino-syntax'
-Bundle 'jwhitley/vim-matchit'
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'garbas/vim-snipmate'
-Bundle "honza/vim-snippets"
-Bundle 'tpope/vim-surround'
-Bundle 'scrooloose/nerdtree'
-Bundle 'jistr/vim-nerdtree-tabs'
-Bundle 'kien/ctrlp.vim'
-Bundle 'vim-scripts/taglist.vim'
-Bundle 'gerw/vim-latex-suite'
-Bundle 'tomasr/molokai'
-Bundle 'Lokaltog/vim-distinguished'
-Bundle 'ervandew/supertab'
-Bundle 'davidhalter/jedi-vim'
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'terryma/vim-multiple-cursors'
-"Bundle 'LaTeX-Box-Team/LaTeX-Box'
-"Bundle 'coot/atp_vim'
 
 filetype plugin indent on
 set omnifunc=syntaxcomplete#Complete
@@ -55,7 +31,7 @@ set wrapscan
 " Command line height
 set ch=1
 " Visual bell
-set vb
+"set vb
 " Allow backspace over indent, eol, and start of insert
 set backspace=2
 " Status Line
@@ -70,8 +46,8 @@ set complete=.,w,b,t
 set incsearch
 
 " Set cursor line
-set cul
-hi CursorLine guibg=#2d2d2sd
+"set cul
+"hi CursorLine guibg=#2d2d2sd
 
 " Turn backup off
 set nobackup
@@ -92,7 +68,7 @@ map k gk
 set t_Co=256
 "set background=dark
 "colorscheme distinguished
-colorscheme molokai
+"colorscheme molokai
 "let g:rehash256 = 1
 "let g:molokai_original = 1
 

@@ -1,5 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$DownCVNode_8h.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/include/DownCVNode.h" alt="" coords="5,83,683,112"/>
-<area shape="rect" id="node7" href="$LineTarget_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/LineTarget.cpp" alt="" coords="707,83,1352,112"/>
-<area shape="rect" id="node5" href="$DownCVNode_8cpp.html" title="/home/hddData/Git_Repositories/McGill_RoboSub_2014/catkin_ws/src/computer_vision/src/DownCVNode.cpp" alt="" coords="11,160,677,189"/>
+<area shape="rect" id="node3" href="$DownCVNode_8h.html" title="/home/david/repo/robosub14/catkin_ws/src/computer_vision/include/DownCVNode.h" alt="" coords="5,83,520,112"/>
+<area shape="rect" id="node7" href="$FrontCVNode_8h.html" title="/home/david/repo/robosub14/catkin_ws/src/computer_vision/include/FrontCVNode.h" alt="" coords="544,83,1053,112"/>
+<area shape="rect" id="node11" href="$LineTarget_8cpp.html" title="/home/david/repo/robosub14/catkin_ws/src/computer_vision/src/LineTarget.cpp" alt="" coords="1077,83,1560,112"/>
+<area shape="rect" id="node5" href="$DownCVNode_8cpp.html" title="/home/david/repo/robosub14/catkin_ws/src/computer_vision/src/DownCVNode.cpp" alt="" coords="11,160,515,189"/>
+<area shape="rect" id="node9" href="$FrontCVNode_8cpp.html" title="/home/david/repo/robosub14/catkin_ws/src/computer_vision/src/FrontCVNode.cpp" alt="" coords="548,160,1049,189"/>
 </map>

@@ -22,7 +22,7 @@ RNG rng(12345);
 //}
 
 double calculateSize (double x1, double x2, double y1, double y2);
-double convertFromPixelsToMetres(int distance, double longSize);
+//double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
 
 LineTarget::LineTarget() {
@@ -38,7 +38,7 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
         //double yDistance = 3;
         double zDistance = 0;
         std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
-        std::cout << "TEST" << std::endl;
+        //std::cout << "TEST" << std::endl;
         // Creates a pointer that will point to a computer_vision::VisibleObjectData object.
         computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();
 
@@ -50,7 +50,7 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
         if (visibility) {
                 // Get object data
                 // [...]
-				std::cout << "VISIBLE" << std::endl;
+				//std::cout << "VISIBLE" << std::endl;
                 // Return gathered data to caller
                 visibleObjectData->object_type = visibleObjectData->LANE;
                 visibleObjectData->pitch_angle = 0.0;
@@ -215,7 +215,7 @@ double calculateSize (double x1, double x2, double y1, double y2){
 	return std::sqrt(std::pow ((x1 - x2), 2) + std::pow ((y1 - y2), 2));
 }
 
-double convertFromPixelsToMetres(int distance, double longSize) {
+double LineTarget::convertFromPixelsToMetres(int distance, double longSize) {
 	//double distanceMetres;
 	//distanceMetres = (distance * 1.2)/ longSize;
 	//return distanceMetres;
@@ -248,5 +248,9 @@ double LineTarget::relativeYaw(cv::RotatedRect line){
 	//cout << "Relative Yaw Is " << angle << endl;
 	//cout<< " -----------------------------------------------" << endl;
 	return angle;
+}
+
+int LineTarget::add(int x, int y) {
+	return x+y;
 }
 
