@@ -33,7 +33,7 @@ std::vector<double> getTransform();
 
 bool areWeThereYet(std::vector<double> desired);
 
-bool areWeThereYet_tf(std::string referenceFrame);
+bool areWeThereYet_tf(std::string referenceFrame, std::vector<double> desired);
 
 void setVisionObj (int objIndex);
 
