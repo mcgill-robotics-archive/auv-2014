@@ -188,7 +188,7 @@ void callBack(const state_estimation::AUVState::ConstPtr& msg) {
 		tf::Quaternion quat = tf::createQuaternionFromRPY(0.0, object.pitch_angle, object.yaw_angle);
 		tf::Vector3 vect(object.x_distance, object.y_distance, object.z_distance);
 		
-		if (object.object_type == 255) {
+		if (object.object_type != 255) {
 			// If objectID is 255 we did not see anything
 			// So we dont publish anything
 			std::string refFrame = "/target/" + objectID[object.object_type];
