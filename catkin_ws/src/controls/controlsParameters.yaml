@@ -10,9 +10,9 @@ gains/kp_yPos: 1.5
 gains/ki_yPos: 0
 gains/kd_yPos: 15
 
-gains/kp_Depth: 1.5
-gains/ki_Depth: 1
-gains/kd_Depth: 15
+gains/kp_Depth: 4
+gains/ki_Depth: 0
+gains/kd_Depth: 20
 
 gains/kp_Pitch: .2
 gains/ki_Pitch: 0

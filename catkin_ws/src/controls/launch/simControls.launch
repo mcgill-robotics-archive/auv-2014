@@ -15,9 +15,10 @@
     <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
     args=
     "
-    /controls/wrench/torque/y
-    /setPoints/Pitch/data
-    /front_cv/data/pitch_angle
+    /controls/wrench/force/z
+      /setPoints/Depth/data
+      /state_estimation/depth
+      /state_estimation/depth/data
     "
     />
 

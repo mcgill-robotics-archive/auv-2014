@@ -291,7 +291,7 @@ int main(int argc, char **argv)
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
 	ros::Subscriber estimatedState_subscriber = n.subscribe("/front_cv/data", 1000, estimatedState_callback);
-	ros::Subscriber depth_subscriber = n.subscribe("/stateEstimation/depth", 1000, depth_callback);
+	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
 	//TO DO: add clock subscription
 
 	//ROS Publisher setup
@@ -408,7 +408,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				ROS_WARN("Depth position Control is active, but /depth is not published");
+				ROS_WARN("Depth position Control is active, but /state_estimation/depth is not published");
 			}
 		}
 
