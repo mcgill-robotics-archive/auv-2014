@@ -17,7 +17,6 @@
     "
     /controls/wrench/force/z
       /setPoints/Depth/data
-      /state_estimation/depth
       /state_estimation/depth/data
     "
     />
