@@ -290,6 +290,25 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
       ROS_ERROR("Failed to call service ");
   }
 }
+void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
+	switch (task_id) {
+		case (0) :
+			setRobotInitialPosition(n, 2.7, -3.5, 1);
+			break;
+		case (1) : //TODO: find starting position for lane task
+			setRobotInitialPosition(n, 2.7, -3.5, 1);
+			break;
+		case (2) : //TODO: find starting position for buoy task
+			setRobotInitialPosition(n, 2.7, -3.5, 1);
+			break;	
+	}
+}
+
+int get_task_id(std::string name) {
+	if (name == "gate") return 0;
+	if (name == "lane") return 1;
+	if (name == "buoy") return 2;
+}
 
 int main(int argc, char **argv) {
   std::string starting_task;
@@ -349,14 +368,12 @@ std::cout<<starting_task<<std::endl;
 	/****This is ros::spin() on a seperate thread*****/
 	boost::thread spin_thread(&spinThread);
 
-	  //Set robot's initial position
-	  //TODO: take a starting task number/name as rosparam in launch file and set to different starting positions based on that
-	  setRobotInitialPosition(n, 2.7, -3.5, 1);
+	setRobotInitialPosition(n, get_task_id(starting_task));
 
 	std::cout << "Starting Loader" << std::endl;
 	Loader* loader = new Loader(xmlFilesPath);
 	Invoker* invoker = loader->getInvoker();
-	invoker->StartRun();
+	invoker->StartAt(get_task_id(starting_task));
 	std::cout << "Done Loader" << std::endl;
 
 	//delete loader; //delete invoker;
