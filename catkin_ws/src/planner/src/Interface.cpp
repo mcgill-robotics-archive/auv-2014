@@ -137,9 +137,9 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = relativePose.pose.position.x < .1;
-	bool yBounded = relativePose.pose.position.y < .1;
-	bool zBounded = relativePose.pose.position.z < .1;
+	bool xBounded = relativePose.pose.position.x < 1;
+	bool yBounded = relativePose.pose.position.y < 1;
+	bool zBounded = relativePose.pose.position.z < 1;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
@@ -157,7 +157,7 @@ bool areWeThereYet_tf(std::string referenceFrame) {
 	bool pitchBounded = pitch < 5;
 	bool yawBounded = yaw < 5;
 
-	return (xBounded && yBounded && zBounded && pitchBounded && yawBounded);
+	return (xBounded && yBounded && zBounded);
 }
 
 void setVisionObj(int objIndex) {
