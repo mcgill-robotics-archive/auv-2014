@@ -23,15 +23,25 @@
 
 </launch>
 
-      <!--
+      <!-- X
       /controls/wrench/force/x
       /setPoints/YPos/data
-      /front_cv_data/x_distance
+      /front_cv/data/x_distance
       -->
 
-      <!--
+      <!--DEPTH
       /controls/debug/xGain/proportional
       /controls/wrench/force/z
       /setPoints/Depth/data
       /depthCalculated/data
       -->
+
+      <!-- PITCH
+      /controls/wrench/torque/y
+      /setPoints/Pitch/data
+      /front_cv/data/pitch_angle
+
+      /controls/wrench/force/y
+    /setPoints/YPos/data
+    /front_cv/data/y_distance
+    -->

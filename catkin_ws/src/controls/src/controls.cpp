@@ -431,6 +431,7 @@ int main(int argc, char **argv)
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
 			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
+			Tz *= -1; //yaw sign convenction
 		}
 
 		if (isActive_YawSpeed)

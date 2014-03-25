@@ -16,11 +16,30 @@
 float PI = 3.1415926535897932384626;
 
 void poseCallback0(const gazebo_msgs::ModelStates msg){
+  /*
+  * Creates the transform between the robot and the world
+  */
+
   static tf::TransformBroadcaster br;
   tf::Transform transform;
   transform.setOrigin( tf::Vector3(msg.pose[0].position.x, msg.pose[0].position.y, msg.pose[0].position.z) );
   transform.setRotation(tf::Quaternion(msg.pose[0].orientation.x, msg.pose[0].orientation.y, msg.pose[0].orientation.z, msg.pose[0].orientation.w));
   br.sendTransform(tf::StampedTransform(transform, ros::Time(0), "world", "robot_SO"));
+
+
+  //rotate frame of robot to agree with McGill Robotics Convention (x forward)
+  static tf::TransformBroadcaster br2;
+  static tf::Transform transform2;
+
+  static tfScalar pitch = 0; //-rotate about the camera y?
+  static tfScalar roll = PI;  //pi //rotate about camera x? 
+  static tfScalar yaw = PI/2; //rotate about camera z? but I dont really understand this....
+  static tf::Quaternion quatInstance;
+  quatInstance.tf::Quaternion::setEuler(pitch, roll, yaw);
+
+  //transform2.setOrigin( tf::Vector3(px,py,pz) );
+  transform2.setRotation(quatInstance);
+  br2.sendTransform(tf::StampedTransform(transform2, ros::Time(0), "robot_SO", "robot_reoriented"));
 }
 
 void poseCallback1(const gazebo_msgs::LinkStates msg){
@@ -162,6 +181,8 @@ void poseCallback7(const gazebo_msgs::LinkStates msg){
 
 
 }
+
+
 
 int main(int argc, char** argv){
   ROS_INFO("tf_broadcaster_simulator initialized");
