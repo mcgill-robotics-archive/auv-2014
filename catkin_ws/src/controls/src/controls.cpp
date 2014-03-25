@@ -158,7 +158,7 @@ void getStateFromTF()
 
 	*/
 	tf::StampedTransform transform;
-	tf::TransformListener tf_listener;
+	tf::TransformListener tf_listener; //THIS LINE MAKES IT NOT COMPILE
 
 	const std::string targetFrame = "robot_reoriented"; //find the pose of the originalFrame in this frame
 	const std::string originalFrame = "gate_center_sim";
