@@ -100,7 +100,8 @@ int main(int argc, char **argv)
 		msg.XSpeed.isActive = 0;
 		msg.YSpeed.isActive = 0;
 		msg.YawSpeed.isActive = 0;
-		//skip depth
+
+		msg.Frame.data = "/target/gate"
 
 		//parameters
 
