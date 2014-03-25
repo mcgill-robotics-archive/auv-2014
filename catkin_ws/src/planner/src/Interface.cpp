@@ -297,7 +297,7 @@ int main(int argc, char **argv) {
 	ros::NodeHandle n;
 
 	//estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
-	estimatedDepth_subscriber = n.subscribe("depth", 1000, estimatedDepth_callback);
+	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000);
 	taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000);
@@ -342,6 +342,7 @@ std::cout<<starting_task<<std::endl;
 			ROS_INFO("Error thrown in planner TF listener.");
 			ROS_ERROR("%s", ex.what());
 		}
+		ROS_INFO("Interface::Stuck in setup loop");
 	}
 
 	ros::Rate loop_rate(10);
