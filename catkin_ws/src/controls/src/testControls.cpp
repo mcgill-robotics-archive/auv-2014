@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 		msg.YSpeed.isActive = 0;
 		msg.YawSpeed.isActive = 0;
 
-		msg.Frame.data = "/target/gate"
+		msg.Frame = "/target/gate";
 
 		//parameters
 

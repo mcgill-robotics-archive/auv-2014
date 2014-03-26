@@ -6,10 +6,17 @@
 
   <!--setPointPublisher -->
   <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
-  
+ 
+  <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
+    <include file="$(find computer_vision)/launch/computer_vision.launch" />
+
+
+  <!-- DEPRECATED MARCH 25
   <!-- state estimation stuff -->
     <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
     <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
+-->
+
 
   <!-- RQT PLOT -->
     <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"

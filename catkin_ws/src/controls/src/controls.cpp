@@ -79,7 +79,8 @@ int8_t isActive_XSpeed = 0;
 int8_t isActive_YSpeed = 0;
 int8_t isActive_YawSpeed = 0;
 
-std::string frame = "target/gate"; //default
+std::string frame = "/target/gate"; //default
+//std_msgs::String frame = "target/gate"; 
 
 double estimated_XPos = 0;
 double estimated_YPos = 0;
@@ -119,7 +120,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	isActive_YSpeed = setPointsMsg.YSpeed.isActive;
 	isActive_YawSpeed = setPointsMsg.YawSpeed.isActive;
 
-	frame = setPointsMsg.Frame.data;
+	frame = setPointsMsg.Frame;
 
 }
 
@@ -190,7 +191,6 @@ void getStateFromTF()
 	estimated_Pitch *= -1;
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 	//ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output}
-	
 }
 int main(int argc, char **argv)
 {
