@@ -32,12 +32,12 @@ int Task_Gate::Execute() {
 	//double myPoints[] = {-1.0, 0.0, 0.0, 0.0, 8.8};
 	//std::vector<double> desired (myPoints, myPoints + sizeof(myPoints) / sizeof(double) );
 	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};
-	setTransform("/target/door");
+	setTransform("/target/gate");
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 	//desired = getTransform();
 
 	ROS_INFO("Task_Gate::reached task");
-	while (!areWeThereYet_tf("/target/door", desired)) {
+	while (!areWeThereYet_tf("/target/gate", desired)) {
 	ROS_INFO("Task_Gate::setPoints published");		
 		setPosition(desired);
 
@@ -45,7 +45,7 @@ int Task_Gate::Execute() {
 	}
 	ROS_INFO("Task_Gate::reached the front of the gate");
 	double motorBoat[4] = {5.0, 0.0, 0.0, 8.8};
-	//setTransform("/target/door");
+	//setTransform("/target/gate");
 	std::vector<double> motor(motorBoat, motorBoat + sizeof(motorBoat) / sizeof(motorBoat[0]));
 	setVelocity(5,0,0,8.8);
 	setVisionObj(2);

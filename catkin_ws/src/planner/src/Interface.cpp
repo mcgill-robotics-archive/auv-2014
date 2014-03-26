@@ -29,9 +29,9 @@ double visible_Yaw;
 double visible_Pitch;
 
 /**
- * The duration of time the planner will wait for the TF broadcaster to setup before timing out.
+ * The duration of time the planner will wait for the TF broadcaster to setup before timing out. (in seconds I think)
  */
-int const TF_BROADCASTER_TIMOUT_PERIOD = 30;
+int const TF_BROADCASTER_TIMOUT_PERIOD = 10;
 
 /**
  * Defines in which folder are stored the XML files.
@@ -224,6 +224,8 @@ void setPoints(double pointControl[]) {
 	msgControl.Depth.isActive = pointControl[14];
 	msgControl.Depth.data = pointControl[15];
 
+	msgControl.Frame = "/target/gate";
+
 	control_pub.publish(msgControl);
 }
 
@@ -333,10 +335,11 @@ std::cout<<starting_task<<std::endl;
 			emptyPose.pose.orientation.w = 1.0;
 
 			// Waits until the TF broadcaster is ready and will timeout after the time specified in 'TF_BROADCASTER_TIMOUT_PERIOD'.
-			listener.waitForTransform("/target/door", emptyPose.header.frame_id,
+			listener.waitForTransform("/target/gate", emptyPose.header.frame_id,
 					ros::Time(0), ros::Duration(TF_BROADCASTER_TIMOUT_PERIOD));
-			listener.transformPose("/target/door", emptyPose, relativePose);
+			listener.transformPose("/target/gate", emptyPose, relativePose);
 		} catch (tf::TransformException ex) {
+			ROS_INFO("Error thrown in planner TF listener.");
 			ROS_ERROR("%s", ex.what());
 		}
 	}
