@@ -79,6 +79,9 @@ int8_t isActive_XSpeed = 0;
 int8_t isActive_YSpeed = 0;
 int8_t isActive_YawSpeed = 0;
 
+std::string frame = "/target/gate"; //default
+//std_msgs::String frame = "target/gate"; 
+
 double estimated_XPos = 0;
 double estimated_YPos = 0;
 double depth = 0;
@@ -116,6 +119,8 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	isActive_XSpeed = setPointsMsg.XSpeed.isActive;
 	isActive_YSpeed = setPointsMsg.YSpeed.isActive;
 	isActive_YawSpeed = setPointsMsg.YawSpeed.isActive;
+
+	frame = setPointsMsg.Frame;
 
 }
 
@@ -160,8 +165,8 @@ void getStateFromTF()
 	tf::StampedTransform transform;
 	tf::TransformListener tf_listener; //THIS LINE MAKES IT NOT COMPILE
 
-	const std::string targetFrame = "robot_reoriented"; //find the pose of the originalFrame in this frame
-	const std::string originalFrame = "gate_center_sim";
+	const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	const std::string originalFrame = frame; //gate_center_sim
 	
 	try
 	{
@@ -186,7 +191,6 @@ void getStateFromTF()
 	estimated_Pitch *= -1;
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 	//ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output}
-	
 }
 int main(int argc, char **argv)
 {
