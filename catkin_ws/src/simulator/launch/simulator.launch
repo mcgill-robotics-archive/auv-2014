@@ -8,7 +8,9 @@
   </include>
 
   <!-- Depth Publisher -->
-  <node name="gazeboDepthEstimator" pkg="simulator" type="gazeboDepthEstimator"/>
+  <!-- Deprecated node by Nick <node name="gazeboDepthEstimator" pkg="simulator" type="gazeboDepthEstimator"/> -->
+  <!-- don't need this as it is run in the state_estimation launch file, Nick March 25 -->
+  <!-- <node name="sim_depth" pkg = "state_estimation" type="sim_depth"/> -->
 
   <!-- OPTIONALY run tf broadcaster -->
   <arg name="dontBroadcastTF" default="0" />

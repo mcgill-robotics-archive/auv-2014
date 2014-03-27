@@ -1,7 +1,17 @@
 #include "Task_Gate.h"
 
+/**
+ * Constructor.
+ */
 Task_Gate::Task_Gate() {
 	id = "Gate Task";
+}
+
+/**
+ * Destructor.
+ */
+Task_Gate::~Task_Gate() {
+
 }
 
 int Task_Gate::Execute() {
@@ -18,20 +28,31 @@ int Task_Gate::Execute() {
 	setVisionObj(1);
 	loop_rate.sleep();
 	
-	//std::vector<double> desired =  (-1.0, 0.0, 0.0, 0.0, 8.8);
+	//std::vector<double> desired =  (1.0, 0.0, 0.0, 0.0, 8.8);
 	//double myPoints[] = {-1.0, 0.0, 0.0, 0.0, 8.8};
 	//std::vector<double> desired (myPoints, myPoints + sizeof(myPoints) / sizeof(double) );
-	double myPoints[5] = {-1.0, 0.0, 0.0, 0.0, 8.8};
-	setTransform("/target/door");
+	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};
+	setTransform("/target/gate");
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 	//desired = getTransform();
 
-	while (!areWeThereYet_tf("/target/door")) {
-		setPosition(desired);	loop_rate.sleep();
+	ROS_INFO("Task_Gate::reached task");
+	while (!areWeThereYet_tf("/target/gate", desired)) {
+	ROS_INFO("Task_Gate::setPoints published");		
+		setPosition(desired);
+
+		loop_rate.sleep();
 	}
-	
-	std::cout<<"Gate Task completed"<<std::endl;
-	weAreHere("Finishing GATE task");	loop_rate.sleep();
+	ROS_INFO("Task_Gate::reached the front of the gate");
+	double motorBoat[4] = {5.0, 0.0, 0.0, 8.8};
+	//setTransform("/target/gate");
+	std::vector<double> motor(motorBoat, motorBoat + sizeof(motorBoat) / sizeof(motorBoat[0]));
+	setVelocity(5,0,0,8.8);
+	setVisionObj(2);
+	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
+
+	weAreHere("Finishing GATE task");
+	loop_rate.sleep();
 
 	return 0;
 }

@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$classBuoy.html" title="Buoy class." alt="" coords="5,83,56,112"/>
-<area shape="rect" id="node5" href="$classGate.html" title="The Gate class that defines the feature detection filters that will be applied to detect the gate obj..." alt="" coords="80,83,131,112"/>
-<area shape="rect" id="node7" href="$classLineTarget.html" title="LineTarget" alt="" coords="155,83,237,112"/>
-<area shape="rect" id="node9" href="$classMarkerTarget.html" title="MarkerTarget" alt="" coords="261,83,360,112"/>
-</map>
