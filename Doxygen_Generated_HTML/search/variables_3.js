@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['camera1_5fcv_5ftopic_5fname',['CAMERA1_CV_TOPIC_NAME',['../FrontCVNode_8h.html#a801f89f16d0f0cb387a28675a10cce77',1,'FrontCVNode.h']]],
+  ['camera2_5fcv_5ftopic_5fname',['CAMERA2_CV_TOPIC_NAME',['../FrontCVNode_8h.html#a1b3c2261a66fdf8332f5d44ca4197d4b',1,'FrontCVNode.h']]],
+  ['camera3_5fcv_5ftopic_5fname',['CAMERA3_CV_TOPIC_NAME',['../DownCVNode_8h.html#a0a316fdae88fc5968d2c5b21a0307559',1,'DownCVNode.h']]],
+  ['camera_5fsensor_5fheight',['CAMERA_SENSOR_HEIGHT',['../Gate_8h.html#a39d77b8132c5a0a4545716a389298274',1,'Gate.h']]],
+  ['canny_5flow_5fthreshold',['CANNY_LOW_THRESHOLD',['../Gate_8h.html#ac1679e771947821e43881f50971c52ec',1,'Gate.h']]],
+  ['canny_5fratio',['CANNY_RATIO',['../Gate_8h.html#ae6c25bfaaf8cfdfae862aea2158c67e6',1,'Gate.h']]],
+  ['capacity',['capacity',['../structxml__memory__writer.html#aa389b21600101759566147b5ccb84d86',1,'xml_memory_writer']]],
+  ['center',['center',['../structDetectedBuoy.html#a4bb39520886bb0256ec70f4c13c41dcd',1,'DetectedBuoy']]],
+  ['centerofcurrentframe',['centerOfCurrentFrame',['../Gate_8cpp.html#a56a048dae8a6ebff2cbbf8a0686721fd',1,'Gate.cpp']]],
+  ['centimetersperpixel',['centimetersPerPixel',['../Gate_8cpp.html#aa307fcbe3f6b4682f1b2552b52b1da34',1,'Gate.cpp']]],
+  ['centralwidget',['centralwidget',['../classno__imu_1_1Ui__RoboticsMain.html#aa9932a03eb91952ef1eee8aed18f1766',1,'no_imu::Ui_RoboticsMain']]],
+  ['checkpoints_5fpub',['checkpoints_pub',['../Interface_8cpp.html#a31a391e85577e7453162458f60f3ceb7',1,'Interface.cpp']]],
+  ['color_5fthresh_5fwindow',['COLOR_THRESH_WINDOW',['../Gate_8cpp.html#ae57a660421c08133f151967b8d0a1d7f',1,'Gate.cpp']]],
+  ['control_5fpub',['control_pub',['../Interface_8cpp.html#abb0a375abc8eb9918d19e51317ae9a15',1,'Interface.cpp']]],
+  ['controller',['controller',['../classPS3Controller_1_1PS3Controller.html#a5daacfadf19b6e12c463caa2c08249ba',1,'PS3Controller::PS3Controller']]],
+  ['controller_5fispresent',['controller_isPresent',['../classPS3Controller_1_1PS3Controller.html#a11546cebae973dc5f1ebc439de6ad74e',1,'PS3Controller::PS3Controller']]],
+  ['controller_5fselect',['controller_select',['../classno__imu_1_1Ui__RoboticsMain.html#a3ed0c37eddadc8f0e45a30e4a8200fb3',1,'no_imu::Ui_RoboticsMain']]],
+  ['controller_5fupdatefrequency',['controller_updateFrequency',['../classVARIABLES_1_1misc__vars.html#ab96ddace59c4e4a6c24bc647480409c9',1,'VARIABLES.misc_vars.controller_updateFrequency()'],['../classVARIABLES__conventions_1_1misc__vars.html#ada61b9ec8b75815a89342d8a4c9803e9',1,'VARIABLES_conventions.misc_vars.controller_updateFrequency()']]],
+  ['currentcvtask_5fdown',['currentCVTask_Down',['../distanceCalculator__backup3-9_8cpp.html#a5158db282cbc5fbb24801e902cdd6697',1,'distanceCalculator_backup3-9.cpp']]],
+  ['currentcvtask_5ffront',['currentCVTask_Front',['../distanceCalculator-preTF_8cpp.html#acb26564e8e330c557d2d615ebaffdeb5',1,'currentCVTask_Front():&#160;distanceCalculator-preTF.cpp'],['../distanceCalculator_8cpp.html#a255f72d46a55a0e76301c409e739bce5',1,'currentCVTask_Front():&#160;distanceCalculator.cpp'],['../distanceCalculator__backup3-9_8cpp.html#acb26564e8e330c557d2d615ebaffdeb5',1,'currentCVTask_Front():&#160;distanceCalculator_backup3-9.cpp']]],
+  ['cv_5fobjs_5fpub',['CV_objs_pub',['../Interface_8cpp.html#a9697f7df3295dde5c65b44dc5556087f',1,'Interface.cpp']]],
+  ['cv_5fpublishing_5frate',['CV_PUBLISHING_RATE',['../distanceCalculator_8cpp.html#ab429207ea127efce76f14119c4acac60',1,'CV_PUBLISHING_RATE():&#160;distanceCalculator.cpp'],['../distanceCalculator__backup3-9_8cpp.html#ab429207ea127efce76f14119c4acac60',1,'CV_PUBLISHING_RATE():&#160;distanceCalculator_backup3-9.cpp']]]
+];
