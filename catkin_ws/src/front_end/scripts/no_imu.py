@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'UI/QT design/no_imu_gr_resizable.ui'
+# Form implementation generated from reading ui file 'no_imu_gr_resizable.ui'
 #
-# Created: Sun Mar 23 16:34:46 2014
+# Created: Wed Mar 26 22:23:34 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,8 +34,8 @@ class Ui_RoboticsMain(object):
         self.frame_2.setLineWidth(0)
         self.frame_2.setObjectName(_fromUtf8("frame_2"))
         self.gridLayout_3 = QtGui.QGridLayout(self.frame_2)
-        self.gridLayout_3.setMargin(0)
         self.gridLayout_3.setSpacing(0)
+        self.gridLayout_3.setMargin(0)
         self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.horizontalLayout_3 = QtGui.QHBoxLayout()
         self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
@@ -404,7 +404,7 @@ class Ui_RoboticsMain(object):
         self.gridLayout_7.addLayout(self.gridLayout_4, 0, 0, 1, 1)
         RoboticsMain.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(RoboticsMain)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1125, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1125, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         RoboticsMain.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(RoboticsMain)
@@ -463,4 +463,3 @@ class Ui_RoboticsMain(object):
         self.label_4.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Pose", None, QtGui.QApplication.UnicodeUTF8))
 
 from pyqtgraph import GraphicsLayoutWidget
-import Robotics_graphical_ressources_rc

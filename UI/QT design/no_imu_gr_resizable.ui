@@ -14,7 +14,7 @@
    <string>Robotics Diagnostics and Testing</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Robotics_graphical_ressources.qrc">
+   <iconset>
     <normaloff>:/Images/Only-Logo.png</normaloff>:/Images/Only-Logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -39,7 +39,16 @@
          <number>0</number>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <property name="spacing">
@@ -978,7 +987,7 @@
      <x>0</x>
      <y>0</y>
      <width>1125</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
@@ -991,9 +1000,6 @@
    <header>pyqtgraph</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="Robotics_graphical_ressources.qrc"/>
-  <include location="../../../../Desktop/Robotics_graphical_ressources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
