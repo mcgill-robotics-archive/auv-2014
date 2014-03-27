@@ -9,7 +9,7 @@
 
 // Object IDs
 std::string objectID[] = {
-    "door",
+    "gate",
     "buoy",
     "ground_target_1",
     "ground_target_2",
