@@ -56,6 +56,9 @@ Roadmap
 
 */
 
+// Variables used for the trackbars window.
+const bool isUsingControlTrackbarWindow = true;
+const std::string CONTROL_TRACKBARS_WINDOW_NAME = "control_trackbars_window";
 
 //global vars
 double z_des = 0;
@@ -237,6 +240,23 @@ int main(int argc, char **argv)
 	    double ki_Pitch;
 	    double kd_Pitch;
 
+	    int kp_Yaw_dec = 0;
+	    int kp_Yaw_int = 5;
+
+//	    int variableThatIWantToModify = 5;
+
+	    // Adds the variables that you want to modify with the trackbars.
+	    if (isUsingControlTrackbarWindow) {
+	    	// Instantiates the window object used for the trackbars.
+	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_NAME, CV_WINDOW_KEEPRATIO);
+	    	ROS_INFO("Controls::The trackbars window was created.");
+
+	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	cv::createTrackbar("kp_Yaw_dec", CONTROL_TRACKBARS_WINDOW_NAME, &kp_Yaw_dec, 10);
+	    	cv::createTrackbar("kp_Yaw_int", CONTROL_TRACKBARS_WINDOW_NAME, &kp_Yaw_int, 25);
+	    }
+
+	    ROS_INFO("Controls::The window should be instantiated.");
 
     //ROS Params
 
@@ -348,8 +368,19 @@ int main(int argc, char **argv)
 	{
 		ros::spinOnce();	//Updates all variables
 		getStateFromTF();
-
 		
+		// Updates the variables to what the value set in the trackbar.
+		kp_Yaw = (double)kp_Yaw_int + (double)kp_Yaw_dec / 10;
+
+		ROS_INFO(("Controls::kp_Yaw value " + boost::lexical_cast<std::string>(kp_Yaw)).c_str());
+
+		// Refreshes the window.
+		if (isUsingControlTrackbarWindow) {
+			// I know this is not awesome, but you need to wait 1 milisecond if you want to be able
+			// to listen to events from the trackbars in the window....
+			cv::waitKey(1);
+		}
+
 		// Decoupled Controllers
 
 		//zero unless otherwise specified
@@ -555,5 +586,12 @@ int main(int argc, char **argv)
 
 
 	}
+
+	if (isUsingControlTrackbarWindow) {
+		ROS_INFO("Freeing memory used by the trackbar window.");
+		// Frees the memory used by the instantiated window.
+		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_NAME);
+	}
+
 	return 0;
 }

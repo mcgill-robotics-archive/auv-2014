@@ -11,11 +11,12 @@
     <include file="$(find computer_vision)/launch/computer_vision.launch" />
 
 
-  <!-- DEPRECATED MARCH 25
+  <!-- DEPRECATED MARCH 25 -->
   <!-- state estimation stuff -->
+  <!--
     <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
     <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
--->
+  -->
 
 
   <!-- RQT PLOT -->

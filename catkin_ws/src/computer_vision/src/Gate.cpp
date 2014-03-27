@@ -9,7 +9,7 @@
 
 #include "Gate.h"
 
-#define USE_CV_WINDOWS 1
+#define USE_CV_WINDOWS 0
 
 const std::string COLOR_THRESH_WINDOW = "color_thresh_window";
 const std::string TRACKBARS_WINDOW = "trackbars_window";
@@ -23,7 +23,7 @@ cv::Point centerOfCurrentFrame;
  */
 Gate::Gate() {
 
-#ifdef USE_CV_WINDOWS
+if (USE_CV_WINDOWS == 1) {
 	cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 	cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
@@ -33,17 +33,17 @@ Gate::Gate() {
 	cv::createTrackbar("gate_ratio_error", TRACKBARS_WINDOW, &gate_ratio_error, MAX_HSV_VALUE);
 	cv::createTrackbar("max_number_points", TRACKBARS_WINDOW, &max_number_points, MAX_HSV_VALUE);
 	cv::createTrackbar("polygon_approximation_threshold", TRACKBARS_WINDOW, &polygon_approximation_threshold, MAX_HSV_VALUE);
-#endif
+}
 }
 
 /**
  * Destructor.
  */
 Gate::~Gate() {
-#ifdef USE_CV_WINDOWS
+if (USE_CV_WINDOWS == 1) {
 	cv::destroyWindow(COLOR_THRESH_WINDOW);
 	cv::destroyWindow(TRACKBARS_WINDOW);
-#endif
+}
 }
 
 /**
@@ -73,10 +73,10 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 
 		messagesToReturn.push_back(visibleObjectData);
 
-		ROS_INFO("%s", "Added a ROS message in the list of messages to return to the cv node.");
+//		ROS_INFO("%s", "Added a ROS message in the list of messages to return to the cv node.");
 	}
 
-	ROS_INFO("%s", ("About to return the ROS message list to the cv node that contains " + boost::lexical_cast<std::string>(messagesToReturn.size()) + " element(s).").c_str());
+//	ROS_INFO("%s", ("About to return the ROS message list to the cv node that contains " + boost::lexical_cast<std::string>(messagesToReturn.size()) + " element(s).").c_str());
 
 	return (messagesToReturn);
 }
@@ -191,8 +191,8 @@ void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	float avgMPerPx = ((DOOR_REAL_HEIGHT / p1.h) + (DOOR_REAL_HEIGHT / p2.h)) / 2.0;
 	m_zDistance = (centerY - centerOfCurrentFrame.y) * avgMPerPx;
 
-	std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " << 
-			m_yawAngle * 180.0 / 3.141592654 << std::endl;
+//	std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " <<
+//			m_yawAngle * 180.0 / 3.141592654 << std::endl;
 }
 
 /**
@@ -273,9 +273,9 @@ std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Ma
 	// Don't forget that we are not using BGRX, but the HSV color space.
 	cv::inRange(frameInHSV, HSV_STARTING_FILTER_RANGE, HSV_ENDING_FILTER_RANGE, inRangeHSVFrame);
 
-#ifdef USE_CV_WINDOWS
+if (USE_CV_WINDOWS == 1) {
 	cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
-#endif
+}
 
 	// Finds the contours in the images.
 	cv::Mat inRangeFrame = inRangeHSVFrame.clone();

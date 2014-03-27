@@ -3,6 +3,8 @@
 
 #include "ros/ros.h"
 #include <ros/console.h> //to change verbosity of ROSINFO ROS_DEBUG etc
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv/cv.h>
 
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
