@@ -1,2 +1,2 @@
-. devl/setup.bash
+. devel/setup.bash
 catkin_make
