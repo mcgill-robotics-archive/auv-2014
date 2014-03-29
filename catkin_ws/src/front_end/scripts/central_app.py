@@ -169,7 +169,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
         rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/temp", Float32, self.temp_callback)
+        rospy.Subscriber("/arduino/temperature", Float32, self.temp_callback)
 
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
