@@ -89,49 +89,49 @@ class CentralUi(QtGui.QMainWindow):
         self.z2 = number
 
     def x_force(self, data):
-        if (5 * self.ui.x_force.value() - 5 * self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
+        if (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
             self.x1 = 500
-        elif (5 * self.ui.x_force.value() - 5 * self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
+        elif (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
             self.x1 = -500
         else:
-            self.x1 = 5 * self.ui.x_force.value() - 5 * self.ui.x_force.value() * self.ui.x_bal.value() / 100
+            self.x1 = self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100
 
-        if (5 * self.ui.x_force.value() + 5 * self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
+        if (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
             self.x2 = 500
-        elif (5 * self.ui.x_force.value() + 5 * self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
+        elif (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
             self.x2 = -500
         else:
-            self.x2 = 5 * self.ui.x_force.value() + 5 * self.ui.x_force.value() * self.ui.x_bal.value() / 100
+            self.x2 = self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100
 
     def y_force(self, data):
-        if (5 * self.ui.y_force.value() - 5 * self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
+        if (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
             self.y1 = 500
-        elif (5 * self.ui.y_force.value() - 5 * self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+        elif (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
             self.y1 = -500
         else:
-            self.y1 = 5 * self.ui.y_force.value() - 5 * self.ui.y_force.value() * self.ui.y_bal.value() / 100
+            self.y1 = self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100
 
-        if (5 * self.ui.y_force.value() + 5 * self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
+        if (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
             self.y2 = 500
-        elif (5 * self.ui.y_force.value() + 5 * self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+        elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
             self.y2 = -500
         else:
-            self.y2 = 5 * self.ui.y_force.value() + 5 * self.ui.y_force.value() * self.ui.y_bal.value() / 100
+            self.y2 = self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100
 
     def z_force(self, data):
-        if (5 * self.ui.z_force.value() - 5 * self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+        if (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
             self.z1 = 500
-        elif (5 * self.ui.z_force.value() - 5 * self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
+        elif (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
             self.z1 = -500
         else:
-            self.z1 = 5 * self.ui.z_force.value() - 5 * self.ui.z_force.value() * self.ui.z_bal.value() / 100
+            self.z1 = self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100
 
-        if (5 * self.ui.z_force.value() + 5 * self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+        if ( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
             self.z2 = 500
-        elif (5 * self.ui.z_force.value() + 5 * self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
+        elif (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
             self.z2 = -500
         else:
-            self.z2 = 5 * self.ui.z_force.value() + 5 * self.ui.z_force.value() * self.ui.z_bal.value() / 100
+            self.z2 = self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100
 
 
     def publish_thrusters(self):
