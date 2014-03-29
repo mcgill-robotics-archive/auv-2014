@@ -18,6 +18,10 @@ private:
 	void testAllThrusters();
 	void testLeftSurgeThrusters();
 	void testRightSurgeThrusters();
+	void testBackSwayThrusters();
+	void testFrontSwayThrusters();
+	void testFrontHeaveThrusters();
+	void testBackHeaveThrusters();
 	void testLEDs();
 
 public:
