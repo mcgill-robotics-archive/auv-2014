@@ -4,7 +4,7 @@
 #include "std_msgs/Float32.h"
 
 // Static variables.
-const int MAX_NUMBER_OF_DEPTH_SENSOR_READINGS = 5;
+const int MAX_NUMBER_OF_DEPTH_SENSOR_READINGS = 50;
 
 class HardwareTest {
 private: // Private variables.

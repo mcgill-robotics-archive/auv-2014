@@ -27,9 +27,10 @@ HardwareTest::HardwareTest(ros::NodeHandle& nodeHandle) {
 }
 
 HardwareTest::~HardwareTest() {
-	delete &motorCommandsPublisher;
-	delete &motorCommandTopicName;
-	delete &depthSensorDataTopicName;
+	// FIXME: handle that properly
+//	delete &motorCommandsPublisher;
+//	delete &motorCommandTopicName;
+//	delete &depthSensorDataTopicName;
 }
 
 void HardwareTest::runAllTests() {
@@ -113,19 +114,27 @@ void HardwareTest::testDepthSensor() {
 
 	this->depthSensorDataSubscriber = this->nodeHandle.subscribe(this->depthSensorDataTopicName, 10, &HardwareTest::depthSensorCallback, this);
 
+	// Starts listening for callback functions.
+	ros::AsyncSpinner* spinner = new ros::AsyncSpinner(1);
+	spinner->start();
+
 	while (this->numberOfReadingsFromDepthSensor < MAX_NUMBER_OF_DEPTH_SENSOR_READINGS) {
 		; // Waits for the test to be completed.
 	}
 
+	// Stops listening for callback functions.
+	spinner->stop();
+
 	ROS_INFO("%s", "The test has been completed.");
 	pressAKey();
 
-	delete &(this->depthSensorDataSubscriber);
+//	delete depthSensorDataSubscriber;// FIXME: handle that properly.
 }
 
 void HardwareTest::depthSensorCallback(std_msgs::Float32 readingFromDepthSensor) {
 	if (this->numberOfReadingsFromDepthSensor < MAX_NUMBER_OF_DEPTH_SENSOR_READINGS) {
 		ROS_INFO("%s", ("Measured depth from the sensor is: " + boost::lexical_cast<std::string>(readingFromDepthSensor.data)).c_str());
+		this->numberOfReadingsFromDepthSensor++;
 	}
 }
 
