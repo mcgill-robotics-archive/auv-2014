@@ -862,7 +862,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,1" columnminimumwidth="1,1">
+             <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0" columnminimumwidth="1,1,1,0">
               <item row="1" column="0">
                <widget class="QComboBox" name="resSelect">
                 <property name="toolTip">
@@ -885,20 +885,20 @@
                 </item>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_5">
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>17</height>
-                 </size>
-                </property>
+              <item row="1" column="3">
+               <widget class="QLCDNumber" name="bat_lcd1"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLCDNumber" name="temp_ind"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_31">
                 <property name="text">
-                 <string>Approximate resolution</string>
+                 <string>Temperature</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="0" column="3">
                <widget class="QLabel" name="bat_lbl">
                 <property name="minimumSize">
                  <size>
@@ -913,20 +913,30 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Battery State</string>
+                 <string>Battery 1</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QProgressBar" name="battery_progress">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_5">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>16777215</height>
+                  <height>17</height>
                  </size>
                 </property>
-                <property name="value">
-                 <number>24</number>
+                <property name="text">
+                 <string>Approximate resolution</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLCDNumber" name="bat_lcd2"/>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_32">
+                <property name="text">
+                 <string>Battery 2</string>
                 </property>
                </widget>
               </item>

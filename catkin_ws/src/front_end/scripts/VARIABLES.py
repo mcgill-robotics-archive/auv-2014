@@ -1,11 +1,7 @@
-##@package VARIABLES
+##@package VARIABLES_conventions
 #
-# file grouping similar variables in classes
-#since python does not have enums,
-#
-# also, these variables will be accessed by different python files therefore the need for a separate file
-#file containing all variables shared between one or more files also contains parameters and constants
-# used in the UI and the key mapping for the keyboard controller
+# same as VARIABLES but following the naming conventions we set. Not the primary file yet since we still use the simulator
+#and not all nodes have been changes.
 #@author David Lavoie-Boutin
 PI = 3.141592653
 from PyQt4 import QtCore
@@ -13,7 +9,6 @@ from PyQt4 import QtCore
 
 ##    variables shared by all controller for the cmd_vel and z_position
 class vel_vars(object):
-    pitch_velocity = 0
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
@@ -21,14 +16,11 @@ class vel_vars(object):
     z_position_step = 0.2
 
     MAX_YAW_VEL = 5
-    MAX_PITCH_ANGLE = PI/4
     MAX_LINEAR_VEL = 5
 
 
 ##    Here we define the keyboard map for our controller
 class KeyMapping(object):
-    PitchForward = QtCore.Qt.Key_I
-    PitchBackward = QtCore.Qt.Key_K
     YawLeft = QtCore.Qt.Key_J
     YawRight = QtCore.Qt.Key_L
     IncreaseDepth = QtCore.Qt.Key_R
@@ -38,25 +30,6 @@ class KeyMapping(object):
     IncreaseY = QtCore.Qt.Key_E
     DecreaseY = QtCore.Qt.Key_D
     Surface = QtCore.Qt.Key_H
-
-
-##   variables for the ros topic names
-class ROS_Topics(object):
-    battery_voltage = "battery_voltage"
-    pressure = "pressure"
-    depth = "/depth"
-    front_left_pre_topic = "/simulator/camera1/image_raw"
-    front_right_pre_topic = "/simulator/camera2/image_raw"
-    down_pre_topic = "/simulator/camera3/image_raw"
-    front_left_post_topic = "/front_cv/camera1"
-    front_right_post_topic = "/front_cv/camera2"
-    down_post_topic = "/down_cv/camera1"
-    simulator_pose = "/gazebo/model_states"
-    imu_filtered = 'pose'
-    vel_topic = '/planner/setPoints'
-    front_cv_data = 'front_cv_data'
-    down_cv_data = "down_cv_data"
-    planner_task = 'planner/task'
 
 
 ##    various parameters and constants

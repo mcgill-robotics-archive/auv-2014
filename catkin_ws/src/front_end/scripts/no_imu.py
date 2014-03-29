@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'no_imu_gr_resizable.ui'
 #
-# Created: Wed Mar 26 22:23:34 2014
+# Created: Sat Mar 29 11:49:22 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -363,24 +363,33 @@ class Ui_RoboticsMain(object):
         self.resSelect.addItem(_fromUtf8(""))
         self.resSelect.addItem(_fromUtf8(""))
         self.gridLayout_6.addWidget(self.resSelect, 1, 0, 1, 1)
-        self.label_5 = QtGui.QLabel(self.centralwidget)
-        self.label_5.setMaximumSize(QtCore.QSize(16777215, 17))
-        self.label_5.setObjectName(_fromUtf8("label_5"))
-        self.gridLayout_6.addWidget(self.label_5, 0, 0, 1, 1)
+        self.bat_lcd1 = QtGui.QLCDNumber(self.centralwidget)
+        self.bat_lcd1.setObjectName(_fromUtf8("bat_lcd1"))
+        self.gridLayout_6.addWidget(self.bat_lcd1, 1, 3, 1, 1)
+        self.temp_ind = QtGui.QLCDNumber(self.centralwidget)
+        self.temp_ind.setObjectName(_fromUtf8("temp_ind"))
+        self.gridLayout_6.addWidget(self.temp_ind, 1, 1, 1, 1)
+        self.label_31 = QtGui.QLabel(self.centralwidget)
+        self.label_31.setObjectName(_fromUtf8("label_31"))
+        self.gridLayout_6.addWidget(self.label_31, 0, 1, 1, 1)
         self.bat_lbl = QtGui.QLabel(self.centralwidget)
         self.bat_lbl.setMinimumSize(QtCore.QSize(0, 17))
         self.bat_lbl.setMaximumSize(QtCore.QSize(110, 17))
         self.bat_lbl.setObjectName(_fromUtf8("bat_lbl"))
-        self.gridLayout_6.addWidget(self.bat_lbl, 0, 1, 1, 1)
-        self.battery_progress = QtGui.QProgressBar(self.centralwidget)
-        self.battery_progress.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.battery_progress.setProperty("value", 24)
-        self.battery_progress.setObjectName(_fromUtf8("battery_progress"))
-        self.gridLayout_6.addWidget(self.battery_progress, 1, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.bat_lbl, 0, 3, 1, 1)
+        self.label_5 = QtGui.QLabel(self.centralwidget)
+        self.label_5.setMaximumSize(QtCore.QSize(16777215, 17))
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.gridLayout_6.addWidget(self.label_5, 0, 0, 1, 1)
+        self.bat_lcd2 = QtGui.QLCDNumber(self.centralwidget)
+        self.bat_lcd2.setObjectName(_fromUtf8("bat_lcd2"))
+        self.gridLayout_6.addWidget(self.bat_lcd2, 1, 2, 1, 1)
+        self.label_32 = QtGui.QLabel(self.centralwidget)
+        self.label_32.setObjectName(_fromUtf8("label_32"))
+        self.gridLayout_6.addWidget(self.label_32, 0, 2, 1, 1)
         self.gridLayout_6.setColumnMinimumWidth(0, 1)
         self.gridLayout_6.setColumnMinimumWidth(1, 1)
-        self.gridLayout_6.setColumnStretch(0, 1)
-        self.gridLayout_6.setColumnStretch(1, 1)
+        self.gridLayout_6.setColumnMinimumWidth(2, 1)
         self.verticalLayout_5.addLayout(self.gridLayout_6)
         self.verticalLayout_2.addLayout(self.verticalLayout_5)
         self.label_4 = QtGui.QLabel(self.centralwidget)
@@ -458,8 +467,10 @@ class Ui_RoboticsMain(object):
         self.resSelect.setItemText(0, QtGui.QApplication.translate("RoboticsMain", "1024*768", None, QtGui.QApplication.UnicodeUTF8))
         self.resSelect.setItemText(1, QtGui.QApplication.translate("RoboticsMain", "1280*720", None, QtGui.QApplication.UnicodeUTF8))
         self.resSelect.setItemText(2, QtGui.QApplication.translate("RoboticsMain", "1920x1080", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_31.setText(QtGui.QApplication.translate("RoboticsMain", "Temperature", None, QtGui.QApplication.UnicodeUTF8))
+        self.bat_lbl.setText(QtGui.QApplication.translate("RoboticsMain", "Battery 1", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("RoboticsMain", "Approximate resolution", None, QtGui.QApplication.UnicodeUTF8))
-        self.bat_lbl.setText(QtGui.QApplication.translate("RoboticsMain", "Battery State", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_32.setText(QtGui.QApplication.translate("RoboticsMain", "Battery 2", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Pose", None, QtGui.QApplication.UnicodeUTF8))
 
 from pyqtgraph import GraphicsLayoutWidget

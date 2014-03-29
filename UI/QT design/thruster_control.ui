@@ -261,10 +261,10 @@
                <bool>false</bool>
               </property>
               <property name="minimum">
-               <number>-100</number>
+               <number>-500</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>500</number>
               </property>
              </widget>
             </item>
@@ -274,10 +274,10 @@
                <bool>false</bool>
               </property>
               <property name="minimum">
-               <number>-100</number>
+               <number>-500</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>500</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -348,10 +348,10 @@
                <bool>false</bool>
               </property>
               <property name="minimum">
-               <number>-100</number>
+               <number>-500</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>500</number>
               </property>
              </widget>
             </item>
@@ -361,10 +361,10 @@
                <bool>false</bool>
               </property>
               <property name="minimum">
-               <number>-100</number>
+               <number>-500</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>500</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -435,10 +435,10 @@
                <bool>false</bool>
               </property>
               <property name="minimum">
-               <number>-100</number>
+               <number>-500</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>500</number>
               </property>
              </widget>
             </item>
@@ -448,10 +448,10 @@
                <bool>false</bool>
               </property>
               <property name="minimum">
-               <number>-100</number>
+               <number>-500</number>
               </property>
               <property name="maximum">
-               <number>100</number>
+               <number>500</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
