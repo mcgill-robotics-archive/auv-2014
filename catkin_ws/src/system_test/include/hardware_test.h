@@ -1,7 +1,11 @@
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
+#include "controls/motorCommands.h"
 
 class HardwareTest {
+private:
+	ros::Publisher motorCommandsPublisher;
+
 private:
 	void printHeader(std::string headerToPrint);
 	void pressAKey();
@@ -11,10 +15,13 @@ private:
 	void testMainPVPressureSensor();
 	void testMainPVTemperatureSensor();
 	void testIMU();
-	void testThrusters();
+	void testAllThrusters();
+	void testLeftSurgeThrusters();
+	void testRightSurgeThrusters();
+	void testLEDs();
 
 public:
-	HardwareTest();
+	HardwareTest(ros::NodeHandle& nodeHandle);
 	~HardwareTest();
 	void runAllTests();
 };
