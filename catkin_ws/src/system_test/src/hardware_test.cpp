@@ -36,9 +36,9 @@ HardwareTest::~HardwareTest() {
 void HardwareTest::runAllTests() {
 	printMainMenu();
 
-//	testAllThrusters();
+	testAllThrusters();
 
-	testDepthSensor();
+//	testDepthSensor();
 
 //	testIMU();
 
