@@ -17,26 +17,36 @@ int main(int argc, char **argv) {
 }
 
 HardwareTest::HardwareTest(ros::NodeHandle& nodeHandle) {
-	motorCommandsPublisher = nodeHandle.advertise<controls::motorCommands>("/arduino/motor", 10);
+	this->nodeHandle = nodeHandle;
+
+	nodeHandle.param<std::string>("motorCommandTopicName", motorCommandTopicName, "/arduino/motor");
+	nodeHandle.param<std::string>("motorCommandTopicName", depthSensorDataTopicName, "/arduino/depth");
+
+	this->motorCommandsPublisher = this->nodeHandle.advertise<controls::motorCommands>("/arduino/motor", 1);
+	this->numberOfReadingsFromDepthSensor = 0;
 }
 
 HardwareTest::~HardwareTest() {
+	// FIXME: handle that properly
+//	delete &motorCommandsPublisher;
+//	delete &motorCommandTopicName;
+//	delete &depthSensorDataTopicName;
 }
 
 void HardwareTest::runAllTests() {
 	printMainMenu();
 
-	testAllThrusters();
-
-	testVideoCameras();
+//	testAllThrusters();
 
 	testDepthSensor();
 
-	testIMU();
+//	testIMU();
 
-	testMainPVTemperatureSensor();
+//	testMainPVTemperatureSensor();
 
-	testMainPVPressureSensor();
+//	testMainPVPressureSensor();
+
+//	testVideoCameras();
 }
 
 /**
@@ -82,6 +92,8 @@ void HardwareTest::printMainMenu() {
 }
 
 void HardwareTest::testVideoCameras() {
+	// TODO: need to make sure that the GUI does not start because I will be on the computer.
+
 	printHeader("Testing the cameras");
 	ROS_INFO("About to test the front left camera node, once you have visually confirmed that the camera was operational press CTRL+C once in order to terminate the background process.");
 	pressAKey();
@@ -99,6 +111,31 @@ void HardwareTest::testVideoCameras() {
 void HardwareTest::testDepthSensor() {
 	printHeader("Testing the depth sensor");
 	pressAKey();
+
+	this->depthSensorDataSubscriber = this->nodeHandle.subscribe(this->depthSensorDataTopicName, 10, &HardwareTest::depthSensorCallback, this);
+
+	// Starts listening for callback functions.
+	ros::AsyncSpinner* spinner = new ros::AsyncSpinner(1);
+	spinner->start();
+
+	while (this->numberOfReadingsFromDepthSensor < MAX_NUMBER_OF_DEPTH_SENSOR_READINGS) {
+		; // Waits for the test to be completed.
+	}
+
+	// Stops listening for callback functions.
+	spinner->stop();
+
+	ROS_INFO("%s", "The test has been completed.");
+	pressAKey();
+
+//	delete depthSensorDataSubscriber;// FIXME: handle that properly.
+}
+
+void HardwareTest::depthSensorCallback(std_msgs::Float32 readingFromDepthSensor) {
+	if (this->numberOfReadingsFromDepthSensor < MAX_NUMBER_OF_DEPTH_SENSOR_READINGS) {
+		ROS_INFO("%s", ("Measured depth from the sensor is: " + boost::lexical_cast<std::string>(readingFromDepthSensor.data)).c_str());
+		this->numberOfReadingsFromDepthSensor++;
+	}
 }
 
 void HardwareTest::testMainPVPressureSensor() {
@@ -138,7 +175,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -147,7 +184,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -156,7 +193,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -165,7 +202,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -174,7 +211,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -183,7 +220,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -192,7 +229,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -201,7 +238,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -210,7 +247,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -219,7 +256,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -228,7 +265,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing positive out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -237,7 +274,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing negative out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -246,7 +283,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 
 	motorCommands->cmd_x1 = 0;
@@ -255,7 +292,7 @@ void HardwareTest::testLeftSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 
 	delete motorCommands;
 }
@@ -273,7 +310,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 25%");
 	motorCommands->cmd_x1 = (int32_t)((0.25)*(double)500);
@@ -282,7 +319,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 50%");
 	motorCommands->cmd_x1 = (int32_t)((0.50)*(double)500);
@@ -291,7 +328,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 75%");
 	motorCommands->cmd_x1 = (int32_t)((0.75)*(double)500);
@@ -300,7 +337,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 100%");
 	motorCommands->cmd_x1 = (int32_t)((1.00)*(double)500);
@@ -309,7 +346,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -318,7 +355,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 25%");
 	motorCommands->cmd_x1 = (int32_t)((0.25)*(double)-500);
@@ -327,7 +364,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 50%");
 	motorCommands->cmd_x1 = (int32_t)((0.50)*(double)-500);
@@ -336,7 +373,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 75%");
 	motorCommands->cmd_x1 = (int32_t)((0.75)*(double)-500);
@@ -345,7 +382,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 100%");
 	motorCommands->cmd_x1 = (int32_t)((1.00)*(double)-500);
@@ -354,7 +391,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -363,7 +400,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing positive out of bound value");
 	motorCommands->cmd_x1 = (int32_t)((1.25)*(double)500);
@@ -372,7 +409,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing negative out of bound value");
 	motorCommands->cmd_x1 = (int32_t)((1.25)*(double)-500);
@@ -381,7 +418,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 
 	motorCommands->cmd_x1 = 0;
@@ -390,7 +427,7 @@ void HardwareTest::testRightSurgeThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 
 	delete motorCommands;
 }
@@ -408,7 +445,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -417,7 +454,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -426,7 +463,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -435,7 +472,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -444,7 +481,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -453,7 +490,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -462,7 +499,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -471,7 +508,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -480,7 +517,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -489,7 +526,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -498,7 +535,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing positive out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -507,7 +544,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing negative out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -516,7 +553,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 
 	motorCommands->cmd_x1 = 0;
@@ -525,7 +562,7 @@ void HardwareTest::testFrontSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 
 	delete motorCommands;
 }
@@ -543,7 +580,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -552,7 +589,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((0.25)*(double)500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -561,7 +598,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((0.50)*(double)500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -570,7 +607,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((0.75)*(double)500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -579,7 +616,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((1.00)*(double)500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -588,7 +625,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -597,7 +634,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((0.25)*(double)-500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -606,7 +643,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((0.50)*(double)-500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -615,7 +652,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((0.75)*(double)-500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -624,7 +661,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((1.00)*(double)-500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -633,7 +670,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing positive out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -642,7 +679,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((1.25)*(double)500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing negative out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -651,7 +688,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = (int32_t)((1.25)*(double)-500);
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 
 	motorCommands->cmd_x1 = 0;
@@ -660,7 +697,7 @@ void HardwareTest::testBackSwayThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 
 	delete motorCommands;
 }
@@ -678,7 +715,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -687,7 +724,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((0.25)*(double)500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -696,7 +733,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((0.50)*(double)500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -705,7 +742,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((0.75)*(double)500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -714,7 +751,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((1.00)*(double)500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -723,7 +760,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -732,7 +769,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((0.25)*(double)-500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -741,7 +778,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((0.50)*(double)-500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -750,7 +787,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((0.75)*(double)-500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -759,7 +796,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((1.00)*(double)-500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -768,7 +805,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing positive out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -777,7 +814,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((1.25)*(double)500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing negative out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -786,7 +823,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = (int32_t)((1.25)*(double)-500);
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 
 	motorCommands->cmd_x1 = 0;
@@ -795,7 +832,7 @@ void HardwareTest::testFrontHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 
 	delete motorCommands;
 }
@@ -813,7 +850,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -822,7 +859,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((0.25)*(double)500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -831,7 +868,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((0.50)*(double)500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -840,7 +877,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((0.75)*(double)500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Forward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -849,7 +886,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((1.00)*(double)500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -858,7 +895,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 25%");
 	motorCommands->cmd_x1 = 0;
@@ -867,7 +904,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((0.25)*(double)-500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 50%");
 	motorCommands->cmd_x1 = 0;
@@ -876,7 +913,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((0.50)*(double)-500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 75%");
 	motorCommands->cmd_x1 = 0;
@@ -885,7 +922,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((0.75)*(double)-500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Backward at 100%");
 	motorCommands->cmd_x1 = 0;
@@ -894,7 +931,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((1.00)*(double)-500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Speed at 0%");
 	motorCommands->cmd_x1 = 0;
@@ -903,7 +940,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing positive out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -912,7 +949,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((1.25)*(double)500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 	ROS_INFO("%s", "Testing negative out of bound value");
 	motorCommands->cmd_x1 = 0;
@@ -921,7 +958,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = (int32_t)((1.25)*(double)-500);
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 	pressAKey();
 
 	motorCommands->cmd_x1 = 0;
@@ -930,7 +967,7 @@ void HardwareTest::testBackHeaveThrusters() {
 	motorCommands->cmd_y2 = 0;
 	motorCommands->cmd_z1 = 0;
 	motorCommands->cmd_z2 = 0;
-	motorCommandsPublisher.publish(*motorCommands);
+	this->motorCommandsPublisher.publish(*motorCommands);
 
 	delete motorCommands;
 }
