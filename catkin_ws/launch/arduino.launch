@@ -1,3 +1,13 @@
 <launch>
-<node pkg="rosserial_python" type="serial_node.py" name="arduino" args="/dev/arduino ~baud:=115200" />
+	<group ns="electrical_interface" >
+		<node pkg="rosserial_python" type="serial_node.py" name="arduino" args="/dev/arduino">
+        <remap from="/motor" to="/electrial_interface/motor"/>     
+        <remap from="/temperature" to="/electrial_interface/temperature"/>   
+        <remap from="/solenoid" to="/electrial_interface/solenoid"/>   
+        <remap from="/batteryVoltage1" to="/electrial_interface/batteryVoltage1"/>   
+        <remap from="/batteryVoltage2" to="/electrial_interface/batteryVoltage2"/>   
+        <remap from="/depth" to="/electrial_interface/depth"/>   
+        <remap from="/pressure" to="/electrial_interface/pressure"/>   
+        </node>
+	</group>
 </launch>

@@ -50,6 +50,12 @@ namespace ros
   //typedef NodeHandle_<ArduinoHardware, 25, 25, 280, 280> NodeHandle;
   //typedef NodeHandle_<ArduinoHardware> NodeHandle;
 
+
+
+//reduce the buffer size for mega
+#elif defined(__AVR_ATmega2560__)
+  typedef NodeHandle_<ArduinoHardware, 25, 25, 280, 280> NodeHandle;
+
 #else
 
   typedef NodeHandle_<ArduinoHardware> NodeHandle;

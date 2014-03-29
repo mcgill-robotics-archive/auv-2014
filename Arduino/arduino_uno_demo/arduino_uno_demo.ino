@@ -30,10 +30,11 @@
   #define VOLTAGE_PIN_1 A2
   #define VOLTAGE_PIN_2 A3
 
-//SENSING INTERVAL(unit microsecond)
-  #define VOLTAGE_INTERVAL 1000
-  #define PRESSURE_INTERVAL 200
-  #define DEPTH_INTERVAL 1000
+//TIME INTERVAL(unit microsecond)
+  #define MOTOR_TIMEOUT 4000    //amount of no signal required to start to reset motors 
+  #define VOLTAGE_INTERVAL 1000 //amount of delay between each voltage
+  #define PRESSURE_INTERVAL 1000
+  #define DEPTH_INTERVAL 200
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
@@ -47,7 +48,8 @@ Servo myservo[6];
 unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
 unsigned long temperaturePressureSechedule;
-
+unsigned long lastMotorCommand;
+boolean availabilityBMP085;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -60,13 +62,25 @@ int boundCheck(int x){
 }
 
 void motorCb( const controls::motorCommands& msg){
+  //lastMotorCommand = millis();
   myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
   myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));
-  myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
-  myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
-  myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
-  myservo[5].writeMicroseconds(1500 + boundCheck(msg.cmd_z2));
+  myservo[2].writeMicroseconds(1463 + boundCheck(msg.cmd_y1));
+  myservo[3].writeMicroseconds(1463 + boundCheck(msg.cmd_y2));
+  myservo[4].writeMicroseconds(1459 + boundCheck(msg.cmd_z1));
+  myservo[5].writeMicroseconds(1463 + boundCheck(msg.cmd_z2));
 }
+
+void resetMotor(){
+  myservo[0].writeMicroseconds(1500);
+  myservo[1].writeMicroseconds(1500);
+  myservo[2].writeMicroseconds(1463);
+  myservo[3].writeMicroseconds(1463);
+  myservo[4].writeMicroseconds(1459);
+  myservo[5].writeMicroseconds(1463);
+}
+
+
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
   digitalWrite(SOLENOID_PIN_T_1,msg.torpedo1.data);
@@ -116,7 +130,8 @@ void setup(){
   nh.subscribe(solenoidSub);
 
   //BMP085 Setup
-  bmp085Calibration();
+  availabilityBMP085 = bmp085Calibration(); // make sure that BMP085 is connected;
+  resetMotor();
 
 }
 
@@ -125,7 +140,7 @@ void loop(){
   long currentTime = millis();
 
   //temperature and pressure sensing
-  if(temperaturePressureSechedule < currentTime){
+  if((temperaturePressureSechedule < currentTime) && availabilityBMP085){
    pressure_msg.data= bmp085GetPressure(bmp085ReadUP());
    temperature_msg.data = bmp085GetTemperature(bmp085ReadUT());
    temperaturePub.publish(&temperature_msg);
@@ -150,5 +165,10 @@ void loop(){
     
     batteryVoltageSchedule += VOLTAGE_INTERVAL;     //Update at 1 Hz
   }  
+  
+  if(lastMotorCommand + MOTOR_TIMEOUT < currentTime){
+    resetMotor();
+    lastMotorCommand = currentTime;
+  }
   nh.spinOnce();
 }

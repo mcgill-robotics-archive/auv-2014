@@ -48,9 +48,12 @@ float altitude;
 // Stores all of the bmp085's calibration values into global variables
 // Calibration values are required to calculate temp and pressure
 // This function should be called at the beginning of the program
-void bmp085Calibration()
+boolean bmp085Calibration()
 {
   ac1 = bmp085ReadInt(0xAA);
+  if(ac1==0){
+    return false;
+  }
   ac2 = bmp085ReadInt(0xAC);
   ac3 = bmp085ReadInt(0xAE);
   ac4 = bmp085ReadInt(0xB0);
@@ -61,6 +64,7 @@ void bmp085Calibration()
   mb = bmp085ReadInt(0xBA);
   mc = bmp085ReadInt(0xBC);
   md = bmp085ReadInt(0xBE);
+  return true;
 }
 
 // Calculate temperature given ut.
@@ -140,8 +144,13 @@ int bmp085ReadInt(unsigned char address)
   Wire.endTransmission();
   
   Wire.requestFrom(BMP085_ADDRESS, 2);
-  while(Wire.available()<2)
-    ;
+  int i = 0;
+  while(Wire.available()<2){
+  i++;
+  if(i >10) return 0;
+  delay(1);
+  }
+ 
   msb = Wire.read();
   lsb = Wire.read();
   
@@ -191,8 +200,12 @@ unsigned long bmp085ReadUP()
   Wire.requestFrom(BMP085_ADDRESS, 3);
   
   // Wait for data to become available
-  while(Wire.available() < 3)
-    ;
+  int i =0;
+  while(Wire.available()<3){
+  i++;
+  if(i >1000) return 0;
+  delay(1);
+  }
   msb = Wire.read();
   lsb = Wire.read();
   xlsb = Wire.read();
