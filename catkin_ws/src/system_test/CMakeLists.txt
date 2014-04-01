@@ -4,6 +4,7 @@ project(system_test)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  controls
 )
 
 ################################################
