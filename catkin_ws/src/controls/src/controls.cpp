@@ -57,8 +57,21 @@ Roadmap
 */
 
 // Variables used for the trackbars window.
-const bool isUsingControlTrackbarWindow = true;
-const std::string CONTROL_TRACKBARS_WINDOW_NAME = "control_trackbars_window";
+const bool isUsingControlTrackbarWindow_xPos = true;
+const std::string CONTROL_TRACKBARS_WINDOW_XPOS = "control_trackbars_window_xpos";
+
+const bool isUsingControlTrackbarWindow_yPos = true;
+const std::string CONTROL_TRACKBARS_WINDOW_YPOS = "control_trackbars_window_ypos";
+
+const bool isUsingControlTrackbarWindow_Depth = true;
+const std::string CONTROL_TRACKBARS_WINDOW_DEPTH = "control_trackbars_window_depth";
+
+const bool isUsingControlTrackbarWindow_Yaw = true;
+const std::string CONTROL_TRACKBARS_WINDOW_YAW = "control_trackbars_window_yaw";
+
+const bool isUsingControlTrackbarWindow_Pitch = true;
+const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pitch";
+
 
 //global vars
 double z_des = 0;
@@ -240,22 +253,121 @@ int main(int argc, char **argv)
 	    double ki_Pitch;
 	    double kd_Pitch;
 
+
+
+	    int kp_xPos_dec = 0;
+	    int kp_xPos_int = 5;
+	    int ki_xPos_dec = 0;
+	    int ki_xPos_int = 5;
+	    int kd_xPos_dec = 0;
+	    int kd_xPos_int = 5;
+
+	    int kp_yPos_dec = 0;
+	    int kp_yPos_int = 5;
+	    int ki_yPos_dec = 0;
+	    int ki_yPos_int = 5;
+	    int kd_yPos_dec = 0;
+	    int kd_yPos_int = 5;
+
+	    int kp_Depth_dec = 0;
+	    int kp_Depth_int = 5;
+	    int ki_Depth_dec = 0;
+	    int ki_Depth_int = 5;
+	    int kd_Depth_dec = 0;
+	    int kd_Depth_int = 5;
+
 	    int kp_Yaw_dec = 0;
 	    int kp_Yaw_int = 5;
+	    int ki_Yaw_dec = 0;
+	    int ki_Yaw_int = 5;
+	    int kd_Yaw_dec = 0;
+	    int kd_Yaw_int = 5;
 
-//	    int variableThatIWantToModify = 5;
+	    int kp_Pitch_dec = 0;
+	    int kp_Pitch_int = 5;
+	    int ki_Pitch_dec = 0;
+	    int ki_Pitch_int = 5;
+	    int kd_Pitch_dec = 0;
+	    int kd_Pitch_int = 5;
+
+
 
 	    // Adds the variables that you want to modify with the trackbars.
-	    if (isUsingControlTrackbarWindow) {
+
+	    if (isUsingControlTrackbarWindow_xPos) {
 	    	// Instantiates the window object used for the trackbars.
-	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_NAME, CV_WINDOW_KEEPRATIO);
+	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_XPOS, CV_WINDOW_KEEPRATIO);
 	    	ROS_INFO("Controls::The trackbars window was created.");
 
 	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
-	    	cv::createTrackbar("kp_Yaw_dec", CONTROL_TRACKBARS_WINDOW_NAME, &kp_Yaw_dec, 10);
-	    	cv::createTrackbar("kp_Yaw_int", CONTROL_TRACKBARS_WINDOW_NAME, &kp_Yaw_int, 25);
+	    	cv::createTrackbar("kp_xPos_dec", CONTROL_TRACKBARS_WINDOW_XPOS, &kp_xPos_dec, 10);
+	    	cv::createTrackbar("kp_xPos_int", CONTROL_TRACKBARS_WINDOW_XPOS, &kp_xPos_int, 25);
+	    	cv::createTrackbar("ki_xPos_dec", CONTROL_TRACKBARS_WINDOW_XPOS, &ki_xPos_dec, 10);
+	    	cv::createTrackbar("ki_xPos_int", CONTROL_TRACKBARS_WINDOW_XPOS, &ki_xPos_int, 25);
+	    	cv::createTrackbar("kd_xPos_dec", CONTROL_TRACKBARS_WINDOW_XPOS, &kd_xPos_dec, 10);
+	    	cv::createTrackbar("kd_xPos_int", CONTROL_TRACKBARS_WINDOW_XPOS, &kd_xPos_int, 25);
+
 	    }
 
+		if (isUsingControlTrackbarWindow_yPos) {
+	    	// Instantiates the window object used for the trackbars.
+	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_YPOS, CV_WINDOW_KEEPRATIO);
+	    	ROS_INFO("Controls::The trackbars window was created.");
+
+	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	cv::createTrackbar("kp_yPos_dec", CONTROL_TRACKBARS_WINDOW_YPOS, &kp_yPos_dec, 10);
+	    	cv::createTrackbar("kp_yPos_int", CONTROL_TRACKBARS_WINDOW_YPOS, &kp_yPos_int, 25);
+	    	cv::createTrackbar("ki_yPos_dec", CONTROL_TRACKBARS_WINDOW_YPOS, &ki_yPos_dec, 10);
+	    	cv::createTrackbar("ki_yPos_int", CONTROL_TRACKBARS_WINDOW_YPOS, &ki_yPos_int, 25);
+	    	cv::createTrackbar("kd_yPos_dec", CONTROL_TRACKBARS_WINDOW_YPOS, &kd_yPos_dec, 10);
+	    	cv::createTrackbar("kd_yPos_int", CONTROL_TRACKBARS_WINDOW_YPOS, &kd_yPos_int, 25);
+
+	    }	    
+
+	    if (isUsingControlTrackbarWindow_Depth) {
+	    	// Instantiates the window object used for the trackbars.
+	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_DEPTH, CV_WINDOW_KEEPRATIO);
+	    	ROS_INFO("Controls::The trackbars window was created.");
+
+	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	cv::createTrackbar("kp_Depth_dec", CONTROL_TRACKBARS_WINDOW_DEPTH, &kp_Depth_dec, 10);
+	    	cv::createTrackbar("kp_Depth_int", CONTROL_TRACKBARS_WINDOW_DEPTH, &kp_Depth_int, 25);
+	    	cv::createTrackbar("ki_Depth_dec", CONTROL_TRACKBARS_WINDOW_DEPTH, &ki_Depth_dec, 10);
+	    	cv::createTrackbar("ki_Depth_int", CONTROL_TRACKBARS_WINDOW_DEPTH, &ki_Depth_int, 25);
+	    	cv::createTrackbar("kd_Depth_dec", CONTROL_TRACKBARS_WINDOW_DEPTH, &kd_Depth_dec, 10);
+	    	cv::createTrackbar("kd_Depth_int", CONTROL_TRACKBARS_WINDOW_DEPTH, &kd_Depth_int, 25);
+
+	    }
+
+	    if (isUsingControlTrackbarWindow_Yaw) {
+	    	// Instantiates the window object used for the trackbars.
+	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_YAW, CV_WINDOW_KEEPRATIO);
+	    	ROS_INFO("Controls::The trackbars window was created.");
+
+	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	cv::createTrackbar("kp_Yaw_dec", CONTROL_TRACKBARS_WINDOW_YAW, &kp_Yaw_dec, 10);
+	    	cv::createTrackbar("kp_Yaw_int", CONTROL_TRACKBARS_WINDOW_YAW, &kp_Yaw_int, 25);
+	    	cv::createTrackbar("ki_Yaw_dec", CONTROL_TRACKBARS_WINDOW_YAW, &ki_Yaw_dec, 10);
+	    	cv::createTrackbar("ki_Yaw_int", CONTROL_TRACKBARS_WINDOW_YAW, &ki_Yaw_int, 25);
+	    	cv::createTrackbar("kd_Yaw_dec", CONTROL_TRACKBARS_WINDOW_YAW, &kd_Yaw_dec, 10);
+	    	cv::createTrackbar("kd_Yaw_int", CONTROL_TRACKBARS_WINDOW_YAW, &kd_Yaw_int, 25);
+
+	    }
+
+	    if (isUsingControlTrackbarWindow_Pitch) {
+	    	// Instantiates the window object used for the trackbars.
+	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_PITCH, CV_WINDOW_KEEPRATIO);
+	    	ROS_INFO("Controls::The trackbars window was created.");
+
+	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	cv::createTrackbar("kp_Pitch_dec", CONTROL_TRACKBARS_WINDOW_PITCH, &kp_Pitch_dec, 10);
+	    	cv::createTrackbar("kp_Pitch_int", CONTROL_TRACKBARS_WINDOW_PITCH, &kp_Pitch_int, 25);
+	    	cv::createTrackbar("ki_Pitch_dec", CONTROL_TRACKBARS_WINDOW_PITCH, &ki_Pitch_dec, 10);
+	    	cv::createTrackbar("ki_Pitch_int", CONTROL_TRACKBARS_WINDOW_PITCH, &ki_Pitch_int, 25);
+	    	cv::createTrackbar("kd_Pitch_dec", CONTROL_TRACKBARS_WINDOW_PITCH, &kd_Pitch_dec, 10);
+	    	cv::createTrackbar("kd_Pitch_int", CONTROL_TRACKBARS_WINDOW_PITCH, &kd_Pitch_int, 25);
+
+	    }
 	    ROS_INFO("Controls::The window should be instantiated.");
 
     //ROS Params
@@ -370,12 +482,31 @@ int main(int argc, char **argv)
 		getStateFromTF();
 		
 		// Updates the variables to what the value set in the trackbar.
+		kp_xPos = (double)kp_xPos_int + (double)kp_xPos_dec / 10;
+		ki_xPos = (double)ki_xPos_int + (double)ki_xPos_dec / 10;
+		kd_xPos = (double)kd_xPos_int + (double)kd_xPos_dec / 10;
+
+		kp_yPos = (double)kp_yPos_int + (double)kp_yPos_dec / 10;
+		ki_yPos = (double)ki_yPos_int + (double)ki_yPos_dec / 10;
+		kd_yPos = (double)kd_yPos_int + (double)kd_yPos_dec / 10;
+
+		kp_Depth = (double)kp_Depth_int + (double)kp_Depth_dec / 10;
+		ki_Depth = (double)ki_Depth_int + (double)ki_Depth_dec / 10;
+		kd_Depth = (double)kd_Depth_int + (double)kd_Depth_dec / 10;
+
 		kp_Yaw = (double)kp_Yaw_int + (double)kp_Yaw_dec / 10;
+		ki_Yaw = (double)ki_Yaw_int + (double)ki_Yaw_dec / 10;
+		kd_Yaw = (double)kd_Yaw_int + (double)kd_Yaw_dec / 10;
+
+		kp_Pitch = (double)kp_Pitch_int + (double)kp_Pitch_dec / 10;
+		ki_Pitch = (double)ki_Pitch_int + (double)ki_Pitch_dec / 10;
+		kd_Pitch = (double)kd_Pitch_int + (double)kd_Pitch_dec / 10;
+
 
 		ROS_INFO(("Controls::kp_Yaw value " + boost::lexical_cast<std::string>(kp_Yaw)).c_str());
 
 		// Refreshes the window.
-		if (isUsingControlTrackbarWindow) {
+		if (isUsingControlTrackbarWindow_Yaw) {
 			// I know this is not awesome, but you need to wait 1 milisecond if you want to be able
 			// to listen to events from the trackbars in the window....
 			cv::waitKey(1);
@@ -587,10 +718,34 @@ int main(int argc, char **argv)
 
 	}
 
-	if (isUsingControlTrackbarWindow) {
+	if (isUsingControlTrackbarWindow_xPos) {
 		ROS_INFO("Freeing memory used by the trackbar window.");
 		// Frees the memory used by the instantiated window.
-		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_NAME);
+		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_XPOS);
+	}
+
+	if (isUsingControlTrackbarWindow_yPos) {
+		ROS_INFO("Freeing memory used by the trackbar window.");
+		// Frees the memory used by the instantiated window.
+		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YPOS);
+	}
+
+	if (isUsingControlTrackbarWindow_Depth) {
+		ROS_INFO("Freeing memory used by the trackbar window.");
+		// Frees the memory used by the instantiated window.
+		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_DEPTH);
+	}
+
+	if (isUsingControlTrackbarWindow_Yaw) {
+		ROS_INFO("Freeing memory used by the trackbar window.");
+		// Frees the memory used by the instantiated window.
+		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YAW);
+	}
+
+	if (isUsingControlTrackbarWindow_Pitch) {
+		ROS_INFO("Freeing memory used by the trackbar window.");
+		// Frees the memory used by the instantiated window.
+		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_PITCH);
 	}
 
 	return 0;
