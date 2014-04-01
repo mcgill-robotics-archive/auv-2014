@@ -33,7 +33,7 @@ int b2;
 int mb;
 int mc;
 int md;
-
+boolean error = false;
 // b5 is calculated in bmp085GetTemperature(...), this variable is also used in bmp085GetPressure(...)
 // so ...Temperature(...) must be called before ...Pressure(...).
 long b5; 
@@ -61,11 +61,12 @@ boolean bmp085Calibration()
   mb = bmp085ReadInt(0xBA);
   mc = bmp085ReadInt(0xBC);
   md = bmp085ReadInt(0xBE);
-  return true;
+  return error;
 }
 
 // Calculate temperature given ut.
 // Value returned will be in units of 0.1 deg C
+
 short bmp085GetTemperature(unsigned int ut)
 {
   long x1, x2;
@@ -81,6 +82,7 @@ short bmp085GetTemperature(unsigned int ut)
 // calibration values must be known
 // b5 is also required so bmp085GetTemperature(...) must be called first.
 // Value returned will be pressure in units of Pa.
+
 long bmp085GetPressure(unsigned long up)
 {
   long x1, x2, x3, b3, b6, p;
@@ -123,9 +125,16 @@ char bmp085Read(unsigned char address)
   Wire.endTransmission();
   
   Wire.requestFrom(BMP085_ADDRESS, 1);
-  while(!Wire.available())
-    ;
-    
+  int i = 0;
+  while(!Wire.available())while(Wire.available()<2){
+  i++;
+  if(i >1000){
+  error=true; 
+  return 0;
+  }
+  delay(1);
+  }
+  
   return Wire.read();
 }
 
@@ -143,7 +152,12 @@ int bmp085ReadInt(unsigned char address)
   Wire.requestFrom(BMP085_ADDRESS, 2);
   int i = 0;
   while(Wire.available()<2){
-  ;
+  i++;
+  if(i >1000){
+  error=true; 
+  return 0;
+  }
+  delay(1);
   }
  
   msb = Wire.read();
@@ -198,7 +212,10 @@ unsigned long bmp085ReadUP()
   int i =0;
   while(Wire.available()<3){
   i++;
-  if(i >1000) return 0;
+  if(i >1000){
+  error=true; 
+  return 0;
+  }
   delay(1);
   }
   msb = Wire.read();

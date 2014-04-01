@@ -64,21 +64,21 @@ int boundCheck(int x){
 
 void motorCb( const controls::motorCommands& msg){
   //lastMotorCommand = millis();
-  myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
-  myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));
-  myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
-  myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
-  myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
-  myservo[5].writeMicroseconds(1500 + boundCheck(msg.cmd_z2));
+  myservo[0].writeMicroseconds(1496 + boundCheck(msg.cmd_surge_starboard));
+  myservo[1].writeMicroseconds(1499 + boundCheck(msg.cmd_surge_port));
+  myservo[2].writeMicroseconds(1471 + boundCheck(msg.cmd_sway_bow));
+  myservo[3].writeMicroseconds(1476 + boundCheck(msg.cmd_sway_stern));
+  myservo[4].writeMicroseconds(1469 + boundCheck(msg.cmd_heave_bow));
+  myservo[5].writeMicroseconds(1476 + boundCheck(msg.cmd_heave_stern));
 }
 
 void resetMotor(){
-  myservo[0].writeMicroseconds(1500);
-  myservo[1].writeMicroseconds(1500);
-  myservo[2].writeMicroseconds(1500);
-  myservo[3].writeMicroseconds(1500);
-  myservo[4].writeMicroseconds(1500);
-  myservo[5].writeMicroseconds(1500);
+  myservo[0].writeMicroseconds(1496);
+  myservo[1].writeMicroseconds(1499);
+  myservo[2].writeMicroseconds(1471);
+  myservo[3].writeMicroseconds(1476);
+  myservo[4].writeMicroseconds(1469);
+  myservo[5].writeMicroseconds(1476);
 }
 
 
