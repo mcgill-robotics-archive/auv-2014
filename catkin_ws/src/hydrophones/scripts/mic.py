@@ -104,14 +104,18 @@ def analyze():
                                                                  mics[i].dist[j])
         print ""
 
+
+# FIND MAX
+def maximize():
+    for i in range(NUMBER_OF_MICS):
+        max = np.argmax(mics[i].magn)
+        print '%s %d\t  %4d Hz\t%+3.2f\t\t%+3.2f\t\t%+3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
+                                                               mics[i].magn[max],
+                                                               mics[i].angl[max],
+                                                               mics[i].dist[max])
+
 # SHOW MAX
 read()
 process()
 analyze()
-
-for i in range(NUMBER_OF_MICS):
-    max = np.argmax(mics[i].magn)
-    print '%s %d\t  %4d Hz\t%+3.2f\t\t%+3.2f\t\t%+3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
-                                                           mics[i].magn[max],
-                                                           mics[i].angl[max],
-                                                           mics[i].dist[max])
+maximize()
