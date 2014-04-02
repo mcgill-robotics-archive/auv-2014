@@ -215,7 +215,7 @@ void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 	broadcastStaticFrames(broadcaster);
 }
 
-void imuCallback(geometry_msgs::PoseStamped::ConstPtr& msg) {
+void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	tf::TransformBroadcaster broadcaster;
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
@@ -242,7 +242,6 @@ int main(int argc, char** argv) {
 
 	ros::Subscriber cvSub = n.subscribe("state_estimation/state_estimate", 1000, cvCallBack);
 	ros::Subscriber imuSub = n.subscribe("pose", 1000, imuCallBack);
-
 	ros::spin();
 
 	return 0;
