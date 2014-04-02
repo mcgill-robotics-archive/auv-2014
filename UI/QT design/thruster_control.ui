@@ -27,6 +27,9 @@
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QComboBox" name="mode_selector">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
           <item>
            <property name="text">
             <string>Individual Thrusters</string>
@@ -43,6 +46,9 @@
          <layout class="QGridLayout" name="gridLayout">
           <item row="4" column="1">
            <widget class="QSpinBox" name="fiel_thruster_3">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -53,6 +59,9 @@
           </item>
           <item row="6" column="2">
            <widget class="QSlider" name="slider_thruster_5">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -66,6 +75,9 @@
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="label">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Thruster 1</string>
             </property>
@@ -73,6 +85,9 @@
           </item>
           <item row="3" column="1">
            <widget class="QSpinBox" name="fiel_thruster_2">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -83,6 +98,9 @@
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_2">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Thruster 2</string>
             </property>
@@ -90,6 +108,9 @@
           </item>
           <item row="6" column="1">
            <widget class="QSpinBox" name="fiel_thruster_5">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -100,6 +121,9 @@
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_3">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Thruster 3</string>
             </property>
@@ -107,6 +131,9 @@
           </item>
           <item row="7" column="2">
            <widget class="QSlider" name="slider_thruster_6">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -120,6 +147,9 @@
           </item>
           <item row="7" column="0">
            <widget class="QLabel" name="label_6">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Thruster 6</string>
             </property>
@@ -127,6 +157,9 @@
           </item>
           <item row="5" column="1">
            <widget class="QSpinBox" name="fiel_thruster_4">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -137,6 +170,9 @@
           </item>
           <item row="5" column="2">
            <widget class="QSlider" name="slider_thruster_4">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -150,6 +186,9 @@
           </item>
           <item row="6" column="0">
            <widget class="QLabel" name="label_5">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Thruster 5</string>
             </property>
@@ -157,6 +196,9 @@
           </item>
           <item row="7" column="1">
            <widget class="QSpinBox" name="fiel_thruster_6">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -167,6 +209,9 @@
           </item>
           <item row="5" column="0">
            <widget class="QLabel" name="label_4">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Thruster 4</string>
             </property>
@@ -174,6 +219,9 @@
           </item>
           <item row="4" column="2">
            <widget class="QSlider" name="slider_thruster_3">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -187,6 +235,9 @@
           </item>
           <item row="3" column="2">
            <widget class="QSlider" name="slider_thruster_2">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -200,6 +251,9 @@
           </item>
           <item row="2" column="1">
            <widget class="QSpinBox" name="fiel_thruste_1">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>-500</number>
             </property>
@@ -211,7 +265,7 @@
           <item row="2" column="2">
            <widget class="QSlider" name="slider_thruster_1">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="minimum">
              <number>-500</number>
@@ -226,6 +280,9 @@
           </item>
           <item row="1" column="2" alignment="Qt::AlignBottom">
            <widget class="QLabel" name="label_7">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Max Voltage / 1000</string>
             </property>
@@ -241,6 +298,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <widget class="QLabel" name="label_14">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>X- Axis</string>
             </property>
@@ -250,6 +310,9 @@
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="0" column="0">
              <widget class="QLabel" name="label_15">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Force</string>
               </property>
@@ -258,7 +321,7 @@
             <item row="0" column="1">
              <widget class="QSpinBox" name="x_force">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-500</number>
@@ -271,7 +334,7 @@
             <item row="0" column="2">
              <widget class="QSlider" name="slider_thruster_15">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-500</number>
@@ -286,6 +349,9 @@
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_16">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Balance</string>
               </property>
@@ -294,7 +360,7 @@
             <item row="1" column="1">
              <widget class="QSpinBox" name="x_bal">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-100</number>
@@ -307,7 +373,7 @@
             <item row="1" column="2">
              <widget class="QSlider" name="slider_thruster_16">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-100</number>
@@ -328,6 +394,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QLabel" name="label_11">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Y- Axis</string>
             </property>
@@ -337,6 +406,9 @@
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
              <widget class="QLabel" name="label_12">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Force</string>
               </property>
@@ -345,7 +417,7 @@
             <item row="0" column="1">
              <widget class="QSpinBox" name="y_force">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-500</number>
@@ -358,7 +430,7 @@
             <item row="0" column="2">
              <widget class="QSlider" name="slider_thruster_13">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-500</number>
@@ -373,6 +445,9 @@
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_13">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Balance</string>
               </property>
@@ -381,7 +456,7 @@
             <item row="1" column="1">
              <widget class="QSpinBox" name="y_bal">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-100</number>
@@ -394,7 +469,7 @@
             <item row="1" column="2">
              <widget class="QSlider" name="slider_thruster_14">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-100</number>
@@ -415,6 +490,9 @@
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QLabel" name="label_10">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
             <property name="text">
              <string>Z- Axis</string>
             </property>
@@ -424,6 +502,9 @@
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
              <widget class="QLabel" name="label_8">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Force</string>
               </property>
@@ -432,7 +513,7 @@
             <item row="0" column="1">
              <widget class="QSpinBox" name="z_force">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-500</number>
@@ -445,7 +526,7 @@
             <item row="0" column="2">
              <widget class="QSlider" name="slider_thruster_12">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-500</number>
@@ -460,6 +541,9 @@
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_9">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="text">
                <string>Balance</string>
               </property>
@@ -468,7 +552,7 @@
             <item row="1" column="1">
              <widget class="QSpinBox" name="z_bal">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-100</number>
@@ -481,7 +565,7 @@
             <item row="1" column="2">
              <widget class="QSlider" name="slider_thruster_11">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="minimum">
                <number>-100</number>

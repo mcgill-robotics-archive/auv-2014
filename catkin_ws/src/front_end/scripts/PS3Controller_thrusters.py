@@ -17,6 +17,7 @@ except ImportError:
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
 
+
 ##
 #  Class containing all relevant commands to fetch data from a ps3 controller
 class PS3Controller(object):
@@ -46,6 +47,15 @@ class PS3Controller(object):
             print "Shutting down the process..."
             self.controller_isPresent = False
 
+        self.thruster1 = 0
+        self.thruster2 = 0
+        self.thruster3 = 0
+        self.thruster4 = 0
+        self.thruster5 = 0
+        self.thruster6 = 0
+
+
+
     ##
     # This part will set all the Global variables used in PS3Controller.
     # It is only called if the constructor finds only 1 joystick
@@ -57,43 +67,31 @@ class PS3Controller(object):
         print "The initialized Joystick is: " + self.controller.get_name()
 
     ##
-    #increments the z position (robot lowers) in VARIABLES by a step defined in the same file
-    #@param self th eobject pointer
-    def z_lower(self):
-        vel_vars.z_position += vel_vars.z_position_step
-
-    ##
-    #decrements the z position (robot rises) in VARIABLES by a step defined in the same file
-    #@param self th eobject pointer
-    def z_rise(self):
-        if vel_vars.z_position > 0:
-            vel_vars.z_position -= vel_vars.z_position_step
-    
-    ##
-    #Sets z position in VARIABLES to 0, robot surfaces
-    #@param self th eobject pointer
-    def z_surface(self):
-        vel_vars.z_position = 0
-
-    ##
-    #It reads the data from the controller (the queue of event more precisely) and updates the Global data of the instance.
+    #It reads the data from the controller (the queue of event more precisely)
+    # and updates the Global data of the instance.
     #@param self the object pointer
     def updateController(self):
         # If a changed occurred, the value will be updated; else the value will be the last one fetched.
         if self.controller_isPresent:
             for anEvent in pygame.event.get():
                 if anEvent.type == pygame.locals.JOYBUTTONDOWN:
-
-                    if self.controller.get_button(7):  # left arrow
-                        self.z_surface()
-                    elif self.controller.get_button(6):  # down arrow
-                        self.z_lower()
+                    pass
+                    #if self.controller.get_button(7):  # left arrow
+                    #elif self.controller.get_button(6):  # down arrow
                     #elif self.controller.get_button(5):  # right arrow
-                    elif self.controller.get_button(4):  # up arrow
-                        self.z_rise()
+                    #elif self.controller.get_button(4):  # up arrow
 
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                    vel_vars.x_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(0)  # left left/right axis
+                    if self.controller.get_button(10):  # find l2
+                        self.thruster1 = 500*self.controller.get_axis(1)  # left up/down axis
+                        self.thruster2 = 500*self.controller.get_axis(0)  # left left/right axis
+                    elif self.controller.get_button(11):  # find r2
+                        self.thruster3 = 500*self.controller.get_axis(2)  # right up/down axis
+                        self.thruster4 = 500*self.controller.get_axis(3)  # right left/right axis
+                    elif self.controller.get_button(12):  # find l1
+                        self.thruster5 = 500*self.controller.get_axis(1)  # left up/down axis
+                        self.thruster6 = 500*self.controller.get_axis(0)  # left left/right axis
+
                     vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
                     vel_vars.yaw_velocity = -vel_vars.MAX_YAW_VEL*self.controller.get_axis(2)  # right left/right axis
                     #vel_vars.pitch_velocity = -vel_vars.MAX_PITCH_ANGLE*self.controller.get_axis(3)  # right front/back axis

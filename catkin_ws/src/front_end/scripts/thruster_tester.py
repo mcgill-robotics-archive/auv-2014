@@ -41,6 +41,7 @@ class CentralUi(QtGui.QMainWindow):
 
         self.ui.setupUi(self)
 
+
         self.x1 = 0
         self.x2 = 0
         self.y1 = 0
@@ -48,14 +49,15 @@ class CentralUi(QtGui.QMainWindow):
         self.z1 = 0
         self.z2 = 0
 
-        # buttons connects
-        QtCore.QObject.connect(self.ui.mode_selector, QtCore.SIGNAL("currentIndexChanged(int)"), self.change_mode)
-
+        #timer for publisher
         self.value_update = QtCore.QTimer()
         QtCore.QObject.connect(self.value_update, QtCore.SIGNAL("timeout()"), self.publish_thrusters)
-        self.value_update.start(50)
-
+        self.value_update.start(500)
+        #init node
         rospy.init_node('manual_trust_mapper', anonymous=False)
+
+        # buttons and sliders connects
+        QtCore.QObject.connect(self.ui.mode_selector, QtCore.SIGNAL("currentIndexChanged(int)"), self.change_mode)
 
         QtCore.QObject.connect(self.ui.fiel_thruste_1, QtCore.SIGNAL("valueChanged(int)"), self.setX1)
         QtCore.QObject.connect(self.ui.fiel_thruster_2, QtCore.SIGNAL("valueChanged(int)"), self.setX2)
@@ -133,9 +135,8 @@ class CentralUi(QtGui.QMainWindow):
         else:
             self.z2 = self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100
 
-
     def publish_thrusters(self):
-        vel_pub = rospy.Publisher("/controls/motor_commands", motorCommands)
+        vel_pub = rospy.Publisher("/motor", motorCommands)
 
         msg = motorCommands()
 
