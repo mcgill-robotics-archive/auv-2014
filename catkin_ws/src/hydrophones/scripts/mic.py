@@ -28,7 +28,7 @@ asound.snd_lib_error_set_handler(c_error_handler)
 
 # MIC OBJECT
 class mic(object):
-    __slots__ = ['name', 'time', 'freq', 'magn', 'angl', 'dist']
+    __slots__ = ['name', 'time', 'frequency', 'magnitude', 'angle', 'distance']
 
     def __init__(self, quadrant):
         self.reset(quadrant)
@@ -36,23 +36,23 @@ class mic(object):
     def reset(self, quadrant):
         self.name = quadrant + 1
         self.time = []
-        self.freq = []
-        self.magn = []
-        self.angl = []
-        self.dist = [0. for x in range(BUFFERSIZE / 2 + 1)]
+        self.frequency = []
+        self.magnitude = []
+        self.angle = []
+        self.distance = [0. for x in range(BUFFERSIZE / 2 + 1)]
 
     def fft(self):
-        self.freq = np.fft.rfft(self.time)
+        self.frequency = np.fft.rfft(self.time)
 
     def decibel(self):
-        self.magn = np.absolute(self.freq)
+        self.magnitude = np.absolute(self.frequency)
 
     def phase(self):
-        self.angl = np.degrees(np.arctan2(self.freq.imag, self.freq.real)) - 180
+        self.angle = np.degrees(np.arctan2(self.frequency.imag, self.frequency.real)) - 180
 
-    def distance(self):
+    def distances(self):
         frequency = np.multiply(FREQUENCY_PER_INDEX, range(1, BUFFERSIZE / 2 + 1))
-        self.dist[1:] = self.angl[1:] / 360. / 2 / frequency * SPEED
+        self.distance[1:] = self.angle[1:] / 360. / 2 / frequency * SPEED
 
 
 # CREATE MIC OBJECTS
@@ -86,10 +86,10 @@ def process():
 
     for i in range(1, NUMBER_OF_MICS):
         for j in range(BUFFERSIZE / 2 + 1):
-            mics[i].angl[j] -= mics[0].angl[j]
-            mics[0].angl[j] = 0
+            mics[i].angle[j] -= mics[0].angle[j]
+            mics[0].angle[j] = 0
 
-        mics[i].distance()
+        mics[i].distances()
 
 
 # LOOK AT RELEVANT FREQUENCY
@@ -98,20 +98,24 @@ def analyze():
 
     for i in range(NUMBER_OF_MICS):
         for j in range(INDEX - RANGE, INDEX + RANGE + 1):
-            print '%1d\t  %4d Hz\t%3.2f\t\t%3.2f\t\t%3.2f' % (i, j * FREQUENCY_PER_INDEX,
-                                                              mics[i].magn[j],
-                                                              mics[i].angl[j],
-                                                              mics[i].dist[j])
+            print '%1d\t  %4d Hz\t%+3.2f\t\t%+3.2f\t\t%+3.2f' % (i, j * FREQUENCY_PER_INDEX,
+                                                                 mics[i].magnitude[j],
+                                                                 mics[i].angle[j],
+                                                                 mics[i].distance[j])
         print ""
+
+
+# FIND MAX
+def maximize():
+    for i in range(NUMBER_OF_MICS):
+        max = np.argmax(mics[i].magnitude)
+        print '%s %d\t  %4d Hz\t%+3.2f\t\t%+3.2f\t\t%+3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
+                                                               mics[i].magnitude[max],
+                                                               mics[i].angle[max],
+                                                               mics[i].distance[max])
 
 # SHOW MAX
 read()
 process()
 analyze()
-
-for i in range(NUMBER_OF_MICS):
-    max = np.argmax(mics[i].magn)
-    print '%s %d\t  %4d Hz\t%3.2f\t\t%3.2f\t\t%3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
-                                                        mics[i].magn[max],
-                                                        mics[i].angl[max],
-                                                        mics[i].dist[max])
+maximize()
