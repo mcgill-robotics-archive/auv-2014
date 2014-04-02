@@ -94,12 +94,14 @@ def process():
 
 # LOOK AT RELEVANT FREQUENCY
 def analyze():
+    print '%s\t%s\t%s\t%s\t\t%s\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE', 'PHASE', 'DISTANCE')
+
     for i in range(NUMBER_OF_MICS):
         for j in range(INDEX - RANGE, INDEX + RANGE + 1):
-            print '%1d\t%4d Hz\t\t%3.2f\t%3.2f\t%3.2f' % (i, j * FREQUENCY_PER_INDEX,
-                                                          mics[i].magn[j],
-                                                          mics[i].angl[j],
-                                                          mics[i].dist[j])
+            print '%1d\t  %4d Hz\t%3.2f\t\t%3.2f\t\t%3.2f' % (i, j * FREQUENCY_PER_INDEX,
+                                                              mics[i].magn[j],
+                                                              mics[i].angl[j],
+                                                              mics[i].dist[j])
         print ""
 
 # SHOW MAX
@@ -109,7 +111,7 @@ analyze()
 
 for i in range(NUMBER_OF_MICS):
     max = np.argmax(mics[i].magn)
-    print '%s %d\t%4d Hz\t\t%3.2f\t%3.2f\t%3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
-                                                    mics[i].magn[max],
-                                                    mics[i].angl[max],
-                                                    mics[i].dist[max])
+    print '%s %d\t  %4d Hz\t%3.2f\t\t%3.2f\t\t%3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
+                                                        mics[i].magn[max],
+                                                        mics[i].angl[max],
+                                                        mics[i].dist[max])

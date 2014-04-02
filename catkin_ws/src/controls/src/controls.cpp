@@ -540,7 +540,7 @@ int main(int argc, char **argv)
 			debugMsg.xGain.integral = ki;
 			debugMsg.xGain.derivative = kd;
 
-			/*
+			
 			debugMsg.xGain.proportional = kp_xPos;
 			debugMsg.yGain.proportional = kp_yPos;
 			debugMsg.depthGain.proportional = kp_Depth;
@@ -558,7 +558,7 @@ int main(int argc, char **argv)
 			debugMsg.depthGain.derivative = kd_Depth;
 			debugMsg.pitchGain.derivative = kd_Pitch;
 			debugMsg.yawGain.derivative = kd_Yaw;
-			*/
+			
 			
 			// Forces
 			debugMsg.xForce.proportional = kp*ep_XPos;

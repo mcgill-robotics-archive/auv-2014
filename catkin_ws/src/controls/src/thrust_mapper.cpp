@@ -7,21 +7,28 @@ Maps voltage to motor command
 
 //global vars
 ros::Publisher voltage_publisher;
+ros::Publisher thrust_publisher;
 double VOLTAGE_MAX;
 int32_t MOTOR_CMD_MAX;
 double F_MAX;
 double T_MAX;
 
-float limit_check(float value, float max, char* value_type, char* value_id ){
+float limit_check(float value, float max, char* value_type, char* value_id){
 	if (value > max | value < -1*max) {
-		ROS_WARN("%s: %s value has been exceeded. Value is %f", value_type, value_id, value);
-		value = 0;
+		ROS_WARN("%s: %s value is %f. This exceeds the maximum allowable value of %f.", value_type, value_id, value, max);
+
+		value = 0; 
+
 		return value;
 	}
 	else {
 		return value;
 	}
+
 }
+
+
+//update these values based on final characterization
 float thrust_voltage(float thrust){
 	float voltage;	
 	    if (thrust<0.4641 & thrust>-0.01095 ) {
@@ -49,6 +56,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
 
 	controls::motorCommands motorCommands;
+	controls::DebugControls DebugControls;
 
 	//Limit check for input wrench values
 	wrenchMsg.force.x=limit_check(wrenchMsg.force.x, F_MAX, "Net Force", "X");
@@ -58,7 +66,8 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MAX, "Net Torque", "Z");
 
 	//Account for geometry of the robot, thruster placement:
-	thrust[0] = 0.5 * wrenchMsg.force.x;
+	// Coefficients are radii from center of rotation to thruster?
+	thrust[0] = 0.5 * wrenchMsg.force.x; 
 	thrust[1] = thrust[0];
 	thrust[2] = 0.5 * wrenchMsg.force.y + 1.6667 * wrenchMsg.torque.z;
 	thrust[3] = 0.5 * wrenchMsg.force.y - 1.6667 * wrenchMsg.torque.z;
@@ -92,7 +101,18 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	motorCommands.cmd_z1=motor_cmd[4];
 	motorCommands.cmd_z2=motor_cmd[5]; 
 
+	DebugControls.thrust_surge_port=thrust[0];
+	DebugControls.thrust_surge_starboard=thrust[1];
+	DebugControls.thrust_sway_bow=thrust[2];
+	DebugControls.thrust_sway_stern=thrust[3];
+	DebugControls.thrust_heave_bow=thrust[4];
+	DebugControls.thrust_heave_stern=thrust[5];
+
+
+		//publish
 	voltage_publisher.publish(motorCommands);
+	thrust_publisher.publish(DebugControls);
+
 }
 
 
@@ -115,6 +135,8 @@ int main(int argc, char **argv)
 
 	//ROS Publisher setup
 	voltage_publisher = n.advertise<controls::motorCommands>("/controls/motorCommands", 100); //TODO change message type and name
+	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
+
 	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");
 	ros::spin();
 	return 0;
