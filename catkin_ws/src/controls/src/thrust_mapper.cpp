@@ -47,7 +47,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	float thrust[6] = {0, 0, 0, 0, 0, 0};
 	float voltage[6] = {0, 0, 0, 0, 0, 0};
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
-	
 
 	controls::motorCommands motorCommands;
 
@@ -65,23 +64,19 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	thrust[3] = 0.5 * wrenchMsg.force.y - 1.6667 * wrenchMsg.torque.z;
 	thrust[4] = 0.5 * wrenchMsg.force.z + 1.6667 * wrenchMsg.torque.y;
 	thrust[5] = 0.5 * wrenchMsg.force.z - 1.6667 * wrenchMsg.torque.y;    
-
 	
-	//for each thrust, map to a voltage
-	for (int i=0; i<6; i++) {
-	}
-	
-	//Saturation of voltage values
+	//for each thrust, map to a voltage, considering saturation
 	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
  	for (int i=0; i<6; i++)
 	{
 		voltage[i] = thrust_voltage(thrust[i]);
 		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
+		ROS_INFO("Voltage %i: %f",i,voltage[i]);
 	}	
 
 	//map voltages to motor commands
-	//Conversion to integer between -500 and +500
-	//linear for now TODO change mapping according to test
+		//Conversion to integer between -500 and +500
+		//linear for now TODO change mapping according to motor controller characterization test
 
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
