@@ -1,12 +1,7 @@
 /*
-
 Maps thrust to voltage
 Maps voltage to motor command
-
 */
-
-
-
 
 #include "thrust_mapper.h"
 
@@ -20,18 +15,18 @@ double T_MAX;
 
 float limit_check(float value, float max, char* value_type, char* value_id){
 	if (value > max | value < -1*max) {
-
 		ROS_WARN("%s: %s value is %f. This exceeds the maximum allowable value of %f.", value_type, value_id, value, max);
 
 		value = 0; 
-		return value;
 
+		return value;
 	}
 	else {
 		return value;
 	}
 
 }
+
 
 //update these values based on final characterization
 float thrust_voltage(float thrust){
@@ -52,7 +47,6 @@ float thrust_voltage(float thrust){
 	    	voltage = (thrust-2.5582)/0.9609;
 	    }
 	    	return voltage;
-
 }
 
 void thrust_callback(geometry_msgs::Wrench wrenchMsg)
@@ -72,9 +66,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	wrenchMsg.torque.y=limit_check(wrenchMsg.torque.y, T_MAX, "Net Torque", "Y");
 	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MAX, "Net Torque", "Z");
 
-
-
-	ROS_DEBUG("Subscriber received wrench");
 	//Account for geometry of the robot, thruster placement:
 	// Coefficients are radii from center of rotation to thruster?
 	thrust[0] = 0.5 * wrenchMsg.force.x; 
@@ -93,18 +84,13 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
  	for (int i=0; i<6; i++)
 	{
-		
 		voltage[i] = thrust_voltage(thrust[i]);
 		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
-
 	}	
-
-	
 
 	//map voltages to motor commands
 	//Conversion to integer between -500 and +500
 	//linear for now TODO change mapping according to test
-
 
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
@@ -112,8 +98,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 		motor_cmd[i]=21.93*voltage[i]-33.729; //TODO Take out of loop, use data from all motor controller characterization tests
 		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
-
-
 
 	motorCommands.cmd_x1=motor_cmd[0];
 	motorCommands.cmd_x2=motor_cmd[1];
@@ -137,7 +121,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 }
 
 
-
 int main(int argc, char **argv)
 {
 	// ROS subscriber setup
@@ -150,16 +133,16 @@ int main(int argc, char **argv)
 	n.param<double>("force/max", F_MAX, 0.0);
 	n.param<double>("torque/max", T_MAX, 0.0);
 
-
 	//TODO raise warning if any of these variables == their default of 0. This means bad parameter file.
-
+	if (VOLTAGE_MAX == 0.0){ROS_ERROR("PARAMETER FILE DID NOT LOAD IN THRUST_MAPPER");}
 	ros::Subscriber thrust_subscriber = n.subscribe("/controls/wrench", 1000, thrust_callback);
 	//add clock subscription
 
 	//ROS Publisher setup
 	voltage_publisher = n.advertise<controls::motorCommands>("/controls/motorCommands", 100); //TODO change message type and name
-	voltage_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
+	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
 
+	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");
 	ros::spin();
 	return 0;
 }

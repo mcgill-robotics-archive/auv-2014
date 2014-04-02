@@ -1,33 +1,56 @@
 #include <Servo.h> 
 #include <ros.h>
-#include <std_msgs/Int32.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
-#include <std_msgs/Empty.h>
 #include <controls/motorCommands.h>
 #include <arduino_msgs/solenoid.h>
 
+//Pin definitions 
+
+//PWM MOTOR
+  #define MOTOR_PIN_X_1 3
+  #define MOTOR_PIN_X_2 5
+  #define MOTOR_PIN_Y_1 6
+  #define MOTOR_PIN_Y_2 9
+  #define MOTOR_PIN_Z_1 10
+  #define MOTOR_PIN_Z_2 11
+
+//SOLENOID
+  #define SOLENOID_PIN_D_1 2 
+  #define SOLENOID_PIN_D_2 4
+  #define SOLENOID_PIN_G_1 7
+  #define SOLENOID_PIN_G_2 8
+  #define SOLENOID_PIN_T_1 12
+  #define SOLENOID_PIN_T_2 13
+
+//ANALOG
+  #define DEPTH_SENSOR_PIN A0
+  #define GRABBER_SWTCH_PIN A1
+  #define VOLTAGE_PIN_1 A2
+  #define VOLTAGE_PIN_2 A3
+
+//TIME INTERVAL(unit microsecond)
+  #define MOTOR_TIMEOUT 4000    //amount of no signal required to start to reset motors 
+  #define VOLTAGE_INTERVAL 1000 //amount of delay between each voltage
+  #define PRESSURE_INTERVAL 1000
+  #define DEPTH_INTERVAL 200
+
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
-std_msgs::Int16 batteryCurrent;
-std_msgs::Int16 batteryVoltage0;
-std_msgs::Int16 batteryVoltage1;
-//PINOUT:
-//Motor control   : 2 - 7
-//Solenoid valve  : 14 - 19 
-//Depth sensor    :  A0
-//Battery voltage : A3, A4
-//Battery current : A5
+std_msgs::Int16 batteryVoltage1_msg;
+std_msgs::Int16 batteryVoltage2_msg;
+std_msgs::Int16 temperature_msg;
+std_msgs::Int32 pressure_msg;
+
 Servo myservo[6];
-const static int depthPin = A0;      // select the input pin for the potentiometer
-const static int motorControlPin = 2 ; 
-const static int solenoidValvePin = 14;
-const static int battPin = A3;
 
 unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
-unsigned long batteryCurrentSchedule;
-boolean killSwitchEngaged = false;
+unsigned long temperaturePressureSechedule;
+unsigned long lastMotorCommand;
+boolean availabilityBMP085;
+
 int boundCheck(int x){
   if(x> 500 || x< -500){
     char msg[70];
@@ -39,83 +62,113 @@ int boundCheck(int x){
 }
 
 void motorCb( const controls::motorCommands& msg){
+  //lastMotorCommand = millis();
   myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
   myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));
-  myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
-  myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
-  myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
-  myservo[5].writeMicroseconds(1500 + boundCheck(msg.cmd_z2));
+  myservo[2].writeMicroseconds(1463 + boundCheck(msg.cmd_y1));
+  myservo[3].writeMicroseconds(1463 + boundCheck(msg.cmd_y2));
+  myservo[4].writeMicroseconds(1459 + boundCheck(msg.cmd_z1));
+  myservo[5].writeMicroseconds(1463 + boundCheck(msg.cmd_z2));
 }
+
+void resetMotor(){
+  myservo[0].writeMicroseconds(1500);
+  myservo[1].writeMicroseconds(1500);
+  myservo[2].writeMicroseconds(1463);
+  myservo[3].writeMicroseconds(1463);
+  myservo[4].writeMicroseconds(1459);
+  myservo[5].writeMicroseconds(1463);
+}
+
+
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
-  digitalWrite(14,msg.torpedo0.data);
-  digitalWrite(15,msg.torpedo1.data);
-  digitalWrite(16,msg.grabber0.data);
-  digitalWrite(17,msg.grabber1.data);
-  digitalWrite(18,msg.dropper0.data);
-  digitalWrite(19,msg.dropper1.data);
+  digitalWrite(SOLENOID_PIN_T_1,msg.torpedo1.data);
+  digitalWrite(SOLENOID_PIN_T_2,msg.torpedo2.data);
+  digitalWrite(SOLENOID_PIN_G_1,msg.grabber1.data);
+  digitalWrite(SOLENOID_PIN_G_2,msg.grabber2.data);
+  digitalWrite(SOLENOID_PIN_D_1,msg.dropper1.data);
+  digitalWrite(SOLENOID_PIN_D_2,msg.dropper2.data);
 }
 
-void killSwitchCb( const std_msgs::Empty& msg){
-  if(!killSwitchEngaged){
-    nh.logwarn("Kill switch engaged! Initiating self-destruction!");
-    killSwitchEngaged = true;
-    digitalWrite(0,HIGH);
-  }
-}
 
-ros::Publisher depth("/arduino/depth", &depth_msg);  // Publish the depth topic
-ros::Publisher battVoltPub0("/arduino/batteryVoltage0", &batteryVoltage0);
-ros::Publisher battVoltPub1("/arduino/batteryVoltage1", &batteryVoltage1);
-ros::Publisher battCurrPub("/arduino/batteryCurrent", &batteryCurrent);
-ros::Subscriber<arduino_msgs::solenoid> solenoid_sub("/arduino/solenoid", &solenoidCb );
-ros::Subscriber<controls::motorCommands> motor_sub("/arduino/motor", &motorCb );
-ros::Subscriber<std_msgs::Empty> killSwitch_sub("/arduino/KillSwitch", &killSwitchCb);
-
+ros::Publisher depthPub("/depth", &depth_msg);  // Publish the depth topic
+ros::Publisher voltagePub1("/batteryVoltage1", &batteryVoltage1_msg);
+ros::Publisher voltagePub2("/batteryVoltage2", &batteryVoltage2_msg);
+ros::Publisher temperaturePub("/temperature", &temperature_msg);
+ros::Publisher pressurePub("/pressure", &pressure_msg);
+ros::Subscriber<arduino_msgs::solenoid> solenoidSub("/solenoid", &solenoidCb );
+ros::Subscriber<controls::motorCommands> motorSub("/motor", &motorCb );
 void setup(){
-  for(int i = 0; i<6; i++){
-    //MotorControl setup
-    myservo[i].attach(i+2); 
-    //SolenoidValve setup  
-    pinMode(14+i,OUTPUT);
-   }
-  //ros node initializtion
+  myservo[0].attach(MOTOR_PIN_X_1);
+  myservo[1].attach(MOTOR_PIN_X_2);
+  myservo[2].attach(MOTOR_PIN_Y_1);
+  myservo[3].attach(MOTOR_PIN_Y_2);
+  myservo[4].attach(MOTOR_PIN_Z_1);
+  myservo[5].attach(MOTOR_PIN_Z_2);
+  
+  pinMode(SOLENOID_PIN_T_1,OUTPUT);
+  pinMode(SOLENOID_PIN_T_2,OUTPUT);
+  pinMode(SOLENOID_PIN_G_1,OUTPUT);
+  pinMode(SOLENOID_PIN_G_2,OUTPUT);
+  pinMode(SOLENOID_PIN_D_1,OUTPUT);
+  pinMode(SOLENOID_PIN_D_2,OUTPUT);
+
+    
+  //ros node initialization
   nh.initNode();
-  nh.advertise(depth);        //depth sensor
   
-  nh.advertise(battVoltPub0);     //battery level
-  nh.advertise(battVoltPub1);
-  nh.advertise(battCurrPub);
+  //ros publisher initialization
+  nh.advertise(depthPub);        //depth sensor
+  nh.advertise(voltagePub1);     //battery level
+  nh.advertise(voltagePub2);
+  nh.advertise(temperaturePub);
+  nh.advertise(pressurePub);
   
-  nh.subscribe(killSwitch_sub);// kill switch
-  nh.subscribe(motor_sub);    //motor 
-  nh.subscribe(solenoid_sub); // solenoid
+  //ros subscribe initialization
+  nh.subscribe(motorSub);  
+  nh.subscribe(solenoidSub);
+
+  //BMP085 Setup
+  availabilityBMP085 = bmp085Calibration(); // make sure that BMP085 is connected;
+  resetMotor();
+
 }
 
 void loop(){
-  long currentTime = millis();
   
-  if(batteryCurrentSchedule < currentTime){
-    batteryCurrent.data = analogRead(battPin + 2);
-    battCurrPub.publish(&batteryCurrent);    
-    batteryCurrentSchedule += 100;     //Update at 10 Hz
+  long currentTime = millis();
+
+  //temperature and pressure sensing
+  if((temperaturePressureSechedule < currentTime) && availabilityBMP085){
+   pressure_msg.data= bmp085GetPressure(bmp085ReadUP());
+   temperature_msg.data = bmp085GetTemperature(bmp085ReadUT());
+   temperaturePub.publish(&temperature_msg);
+   pressurePub.publish(&pressure_msg);
+   temperaturePressureSechedule += PRESSURE_INTERVAL;
   }
   
+  //depth sensing  
   if(depthSensorSchedule < currentTime){
-    depth_msg.data = analogRead(depthPin );
-    depth.publish(&depth_msg);
-    depthSensorSchedule += 200;        //Update at 5Hz  
+    depth_msg.data = analogRead(DEPTH_SENSOR_PIN);
+    depthPub.publish(&depth_msg);
+    depthSensorSchedule += DEPTH_INTERVAL;        //Update at 5Hz  
   }
 
+  //voltages sensing
   if(batteryVoltageSchedule < currentTime){
-    batteryVoltage0.data = analogRead(battPin + 0);
-    batteryVoltage1.data = analogRead(battPin + 1);
+    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1);
+    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2);
     
-    battVoltPub0.publish(&batteryVoltage0);
-    battVoltPub1.publish(&batteryVoltage1);
+    voltagePub1.publish(&batteryVoltage1_msg);
+    voltagePub2.publish(&batteryVoltage2_msg);
     
-    batteryVoltageSchedule += 1000;     //Update at 1 Hz
+    batteryVoltageSchedule += VOLTAGE_INTERVAL;     //Update at 1 Hz
   }  
+  
+  if(lastMotorCommand + MOTOR_TIMEOUT < currentTime){
+    resetMotor();
+    lastMotorCommand = currentTime;
+  }
   nh.spinOnce();
-  delay(1);
 }

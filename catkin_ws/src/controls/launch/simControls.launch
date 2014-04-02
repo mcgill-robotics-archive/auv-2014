@@ -13,9 +13,10 @@
 
   <!-- DEPRECATED MARCH 25 -->
   <!-- state estimation stuff -->
+  <!--
     <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
     <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
--->
+  -->
 
 
   <!-- RQT PLOT -->
@@ -24,7 +25,6 @@
     "
     /controls/wrench/force/y
     /setPoints/YPos/data
-    /front_cv/data/y_distance
     "
     />
 

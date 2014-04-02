@@ -56,7 +56,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
 
 	// Topics on which the node will be subscribing.
-	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this); 
+	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this);
 
 	this->visibleObjectList.push_back(new Gate());
 
@@ -111,11 +111,11 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 
-		ROS_INFO("%s", ("The front cv node received the list of ROS messages that will be sent to the state estimation, which contains " + boost::lexical_cast<std::string>(messagesToPublish.size()) + " element(s).").c_str());
+//		ROS_INFO("%s", ("The front cv node received the list of ROS messages that will be sent to the state estimation, which contains " + boost::lexical_cast<std::string>(messagesToPublish.size()) + " element(s).").c_str());
 
 		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
 		if (messagesToPublish.size() == 0 || (messagesToPublish.size() != 0 && messagesToPublish[0]->object_type == messagesToPublish[0]->CANNOT_DETERMINE_OBJECT)) {
-			ROS_INFO("%s", "The current message contains no useful information, it will not be sent to the state estimation.");
+//			ROS_INFO("%s", "The current message contains no useful information, it will not be sent to the state estimation.");
 			numFramesWithoutObject++;
 			if (numFramesWithoutObject < FRAME_VISIBILITY_THRESHOLD) return;
 		} else {

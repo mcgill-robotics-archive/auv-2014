@@ -1,2 +1,0 @@
-\form#0:$ \mu = Matrix[1] . ConditionalArguments[0] + Matrix[2]. ConditionalArguments[1] + ... + Noise.\mu $
-\form#1:$\mu$

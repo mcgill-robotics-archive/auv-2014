@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'low_battery_warning.ui'
 #
-# Created: Tue Dec 10 19:07:08 2013
+# Created: Wed Mar 26 22:29:40 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,4 +48,3 @@ class Ui_warning(object):
         warning.setWindowTitle(QtGui.QApplication.translate("warning", "Low Battery Warning", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("warning", "<html><head/><body><p>Battery voltage below acceptable threshold</p><p>Initiating re-surfacing protocols</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
 
-import Robotics_graphical_ressources_rc

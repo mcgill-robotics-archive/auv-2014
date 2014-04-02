@@ -32,7 +32,7 @@
    <string>Low Battery Warning</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Robotics_graphical_ressources.qrc">
+   <iconset>
     <normaloff>:/Images/Only-Logo.png</normaloff>:/Images/Only-Logo.png</iconset>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
@@ -81,9 +81,7 @@
    </property>
   </widget>
  </widget>
- <resources>
-  <include location="Robotics_graphical_ressources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

@@ -15,9 +15,9 @@
     </node>
     <node ns="camera" pkg="image_proc" type="image_proc"
           name="image_proc" />
-    <node pkg="image_view" type="image_view" name="image_view" >
+    <!--node pkg="image_view" type="image_view" name="image_view" >
       <remap from="image" to="camera/image_color" />
-    </node>
+    </node-->
   </group>
 
 </launch>
