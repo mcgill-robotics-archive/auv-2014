@@ -28,5 +28,11 @@ VectorPID yawForce
 
 # Total Forces?
 
-# 
+# Thrusts
+int32 thrust_surge_port
+int32 thrust_surge_starboard
+int32 thrust_sway_bow
+int32 thrust_sway_stern
+int32 thrust_heave_bow
+int32 thrust_heave_stern
 
