@@ -109,6 +109,8 @@ add_executable(BatteryClientExample src/BatteryClientExample.cpp)
 ## as an example, message headers may need to be generated before nodes
 add_dependencies(BatteryClientExample blinky_generate_messages_cpp)
 add_dependencies(PlannerClientExample blinky_generate_messages_cpp)
+add_dependencies(BlinkyAPI ${catkin_EXPORTED_TARGETS})
+
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(
