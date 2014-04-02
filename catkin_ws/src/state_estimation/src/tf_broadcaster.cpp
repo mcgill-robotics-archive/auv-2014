@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <std_msgs/String.h>
+#include <geometry_msgs/PoseStamped.h>
 
 // Custom messages
 #include <state_estimation/AUVState.h>
@@ -178,7 +179,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	);		
 }
 
-void callBack(const state_estimation::AUVState::ConstPtr& msg) {
+void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 	// Create a transform listener in every callback	
 	tf::TransformBroadcaster broadcaster;
 	if (msg->hasTarget) {
@@ -214,13 +215,33 @@ void callBack(const state_estimation::AUVState::ConstPtr& msg) {
 	broadcastStaticFrames(broadcaster);
 }
 
+void imuCallback(geometry_msgs::PoseStamped::ConstPtr& msg) {
+	tf::TransformBroadcaster broadcaster;
+	broadcaster.sendTransform(
+		// Transform data, quaternion for rotations and vector3 for translational vectors
+		tf::StampedTransform(
+			tf::Transform(
+				tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w), 
+				tf::Vector3(0.0, 0.0, 0.0)
+			),
+			// Give it a time stamp
+			ros::Time::now(),
+			// from
+			"/robot/rotation_center",
+			// to
+			"/robot/initial_pose"
+		)
+	);
+}
+
 int main(int argc, char** argv) {
 	ros::init(argc, argv, "tf_broadcaster");
 
 	ros::NodeHandle n;
 	tf::TransformBroadcaster broadcaster;
 
-	ros::Subscriber sub = n.subscribe("state_estimation/state_estimate", 1000, callBack);
+	ros::Subscriber cvSub = n.subscribe("state_estimation/state_estimate", 1000, cvCallBack);
+	ros::Subscriber imuSub = n.subscribe("pose", 1000, imuCallBack);
 
 	ros::spin();
 
