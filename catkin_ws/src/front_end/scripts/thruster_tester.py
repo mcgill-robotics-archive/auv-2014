@@ -53,7 +53,7 @@ class CentralUi(QtGui.QMainWindow):
 
         self.value_update = QtCore.QTimer()
         QtCore.QObject.connect(self.value_update, QtCore.SIGNAL("timeout()"), self.publish_thrusters)
-        self.value_update.start(50)
+        self.value_update.start(500)
 
         rospy.init_node('manual_trust_mapper', anonymous=False)
 
