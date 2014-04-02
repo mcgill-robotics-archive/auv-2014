@@ -86,7 +86,6 @@ if (receiver.isQuaternionGetReady()) {
 int main(int argc, char** argv) {
 printf("Starting XimuPublisher\n");
 	ros::init(argc, argv, "x_imu_pose");
-	ros::NodeHandle node;
 
 	pub = node.advertise<geometry_msgs::PoseStamped>("pose", 100);
         pub2 = node.advertise<geometry_msgs::Vector3>("acc", 100);
