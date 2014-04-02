@@ -37,19 +37,11 @@ def cvCallback(visObject):
                        visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
 
 
-def multiplyQuaternions(q,p):
-    #Hamilton product
-    return [p[0]*q[0] - p[1]*q[1] - p[2]*q[2] - p[3]*q[3]
-           ,p[0]*q[1] + p[1]*q[0] + p[2]*q[3] - p[3]*q[2]
-           ,p[0]*q[2] - p[1]*q[3] + p[2]*q[0] + p[3]*q[1]
-           ,p[0]*q[3] + p[1]*q[2] - p[2]*q[1] + p[3]*q[0]]
-
 def imuCallback(poseStamped):
     q = poseStamped.pose.orientation
-    q1 = [q.w, q.x, q.y, q.z]
+    Q = [q.w, q.x, q.y, q.z]
 
-    halfx = [1/math.sqrt(2),1/math.sqrt(2),0 ,0]
-    Q = multiplyQuaternions(q1, halfx)
+
     #print "Corrected {}".format(Q)
     print "%3f %3f %3f"%(Q[1],Q[2],Q[3])
 
