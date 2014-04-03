@@ -33,10 +33,10 @@ int main(int argc, char **argv)
 		const bool isUsingControlTrackbarWindow_xPos = true;
 		const std::string CONTROL_TRACKBARS_WINDOW_XPOS = "control_trackbars_window_xpos";
 
-		const bool isUsingControlTrackbarWindow_yPos = false;
+		const bool isUsingControlTrackbarWindow_yPos = true;
 		const std::string CONTROL_TRACKBARS_WINDOW_YPOS = "control_trackbars_window_ypos";
 
-		const bool isUsingControlTrackbarWindow_Depth = false;
+		const bool isUsingControlTrackbarWindow_Depth = true;
 		const std::string CONTROL_TRACKBARS_WINDOW_DEPTH = "control_trackbars_window_depth";
 
 		const bool isUsingControlTrackbarWindow_Yaw = true;
@@ -190,12 +190,12 @@ int main(int argc, char **argv)
 	    ROS_INFO(("Controls::kp_xPos value " + boost::lexical_cast<std::string>(kp_xPos)).c_str());
 
 	    //Refreshes the window.
-	    if (isUsingControlTrackbarWindow_xPos) {
-	    	//Wait 1 milisecond to listen to events from trackbars
-	    	cv::waitKey(1);
-	    }	
+	    // if (isUsingControlTrackbarWindow_xPos) {
+	    // 	//Wait 1 milisecond to listen to events from trackbars
+	    // 	cv::waitKey(1);
+	    // }	
 
-
+	    cv::waitKey(1);
 
 	    n.setParam("/gains/kp_xPos", kp_xPos);
 	    n.setParam("/gains/ki_xPos", ki_xPos);
@@ -219,35 +219,35 @@ int main(int argc, char **argv)
 	    n.setParam("/gains/kd_Pitch", kd_Pitch);	    
 
 
-		if (isUsingControlTrackbarWindow_xPos) {
-			ROS_INFO("Freeing memory used by the trackbar window.");
-			// Frees the memory used by the instantiated window.
-			cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_XPOS);
-		}
+		// if (isUsingControlTrackbarWindow_xPos) {
+		// 	ROS_INFO("Freeing memory used by the trackbar window.");
+		// 	// Frees the memory used by the instantiated window.
+		// 	cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_XPOS);
+		// }
 
-		if (isUsingControlTrackbarWindow_yPos) {
-			ROS_INFO("Freeing memory used by the trackbar window.");
-			// Frees the memory used by the instantiated window.
-			cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YPOS);
-		}
+		// if (isUsingControlTrackbarWindow_yPos) {
+		// 	ROS_INFO("Freeing memory used by the trackbar window.");
+		// 	// Frees the memory used by the instantiated window.
+		// 	cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YPOS);
+		// }
 
-		if (isUsingControlTrackbarWindow_Depth) {
-			ROS_INFO("Freeing memory used by the trackbar window.");
-			// Frees the memory used by the instantiated window.
-			cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_DEPTH);
-		}
+		// if (isUsingControlTrackbarWindow_Depth) {
+		// 	ROS_INFO("Freeing memory used by the trackbar window.");
+		// 	// Frees the memory used by the instantiated window.
+		// 	cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_DEPTH);
+		// }
 
-		if (isUsingControlTrackbarWindow_Yaw) {
-			ROS_INFO("Freeing memory used by the trackbar window.");
-			// Frees the memory used by the instantiated window.
-			cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YAW);
-		}
+		// if (isUsingControlTrackbarWindow_Yaw) {
+		// 	ROS_INFO("Freeing memory used by the trackbar window.");
+		// 	// Frees the memory used by the instantiated window.
+		// 	cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YAW);
+		// }
 
-		if (isUsingControlTrackbarWindow_Pitch) {
-			ROS_INFO("Freeing memory used by the trackbar window.");
-			// Frees the memory used by the instantiated window.
-			cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_PITCH);
-		}
+		// if (isUsingControlTrackbarWindow_Pitch) {
+		// 	ROS_INFO("Freeing memory used by the trackbar window.");
+		// 	// Frees the memory used by the instantiated window.
+		// 	cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_PITCH);
+		// }
 
 		
 	}
