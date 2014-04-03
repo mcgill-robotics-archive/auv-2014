@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -84,7 +85,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sensor_publisher
-#  CATKIN_DEPENDS nav_msgs roscpp rospy sensor_msgs std_msgs
+ CATKIN_DEPENDS nav_msgs roscpp rospy sensor_msgs std_msgs geometry_msgs
 #  DEPENDS system_lib
 )
 
@@ -172,6 +173,7 @@ target_link_libraries(XimuPublisher
   ${catkin_LIBRARIES}
   XimuReceiver
 )
+add_dependencies(XimuPublisher ${catkin_EXPORTED_TARGETS})
 add_dependencies(XimuPublisher 
   sensor_publisher_generate_messages_cpp
 )
