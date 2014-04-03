@@ -6,7 +6,7 @@ import pyaudio
 import numpy as np
 
 # VARIABLES
-BUFFERSIZE = 2048
+BUFFERSIZE = 512
 NUMBER_OF_MICS = 2
 SAMPLING_FREQUENCY = 48000  # IN Hz
 TARGET_FREQUENCY = 1000     # IN Hz
@@ -39,7 +39,7 @@ class mic(object):
         self.frequency = []
         self.magnitude = []
         self.angle = []
-        self.distance = [0. for x in range(BUFFERSIZE / 2 + 1)]
+        self.distance = np.zeros(BUFFERSIZE/2 + 1, np.float);
 
     def fft(self):
         self.frequency = np.fft.rfft(self.time)
@@ -84,14 +84,6 @@ def process():
         mics[i].decibel()
         mics[i].phase()
 
-    for i in range(1, NUMBER_OF_MICS):
-        for j in range(BUFFERSIZE / 2 + 1):
-            mics[i].angle[j] -= mics[0].angle[j]
-            mics[0].angle[j] = 0
-
-        mics[i].distances()
-
-
 # LOOK AT RELEVANT FREQUENCY
 def analyze():
     print '%s\t%s\t%s\t%s\t\t%s\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE', 'PHASE', 'DISTANCE')
@@ -119,3 +111,8 @@ read()
 process()
 analyze()
 maximize()
+
+while True:
+    read()
+    process()
+    maximize()

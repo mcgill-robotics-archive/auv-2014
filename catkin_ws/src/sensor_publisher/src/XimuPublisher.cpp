@@ -58,12 +58,12 @@ if (receiver.isInertialAndMagGetReady()) {
 
                         // IMU raw data
                         sensor_msgs::Imu imu;
-                        imu.angular_velocity.x = gyrX;
-                        imu.angular_velocity.y = gyrY;
-                        imu.angular_velocity.z = gyrZ;
-                        imu.linear_acceleration.x = accX;
-                        imu.linear_acceleration.y = accY;
-                        imu.linear_acceleration.z = accZ;
+                        imu.angular_velocity.x = ims.gyrX;
+                        imu.angular_velocity.y = ims.gyrY;
+                        imu.angular_velocity.z = ims.gyrZ;
+                        imu.linear_acceleration.x = ims.accX;
+                        imu.linear_acceleration.y = ims.accY;
+                        imu.linear_acceleration.z = ims.accZ;
                         rawPub.publish(imu);
                 }		
 
