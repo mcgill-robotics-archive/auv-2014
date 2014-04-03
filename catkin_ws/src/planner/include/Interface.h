@@ -20,6 +20,15 @@
 #include <vector>
 #include <cmath>
 #include <boost/thread.hpp>
+#include <math.h>
+#include <gazebo_msgs/ModelState.h>
+#include <gazebo_msgs/SetModelState.h>
+#include <ros/callback_queue.h>
+#include "blinky/RGBArray.h"
+#include "blinky/RGB.h"
+#include "blinky/BlinkyTapeService.h"
+
+enum BlinkyColors {RED, GREEN, BLUE, WHITE, BLACK, PURPS};
 
 void spinThread();
 
@@ -48,8 +57,12 @@ void setPosition (std::vector<double> desired);
 
 void rosSleep(int length);
 
-int main (int argc, char **argv);
+blinky::RGB getColorValues(int myColor);
 
-void ps3Control (); //LEGACY -- NOT FOR TOUCHING
+void updateBlinkyTape(int myColor);
+
+int get_task_id(std::string name);
+
+int main (int argc, char **argv);
 
 #endif // Interface_h

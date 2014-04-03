@@ -1,7 +1,4 @@
 #include "Interface.h"
-#include <math.h>
-#include <gazebo_msgs/ModelState.h>
-#include <gazebo_msgs/SetModelState.h>
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
@@ -9,6 +6,8 @@ double maxHeadingError = 0.5;
 
 ros::Subscriber estimatedState_subscriber;
 ros::Subscriber estimatedDepth_subscriber;
+
+ros::ServiceClient btClient;
 
 ros::Publisher wrench_pub;
 ros::Publisher CV_objs_pub;
@@ -42,6 +41,11 @@ std::string xmlFilesPath;
  * Object the we currently want CV to look for
  */
 std::string visionObj;
+
+/*
+* Number of individual LEDs on our half of the blinky tape
+*/
+int blinkyLength = 30;
 
 void spinThread() {
 	ros::spin();
@@ -304,6 +308,60 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	}
 }
 
+blinky::RGB getColorValues(int myColor) {
+	blinky::RGB color;
+	switch (myColor) {
+		case (0) :
+			color.r = 255;
+			color.g = 0;
+			color.b = 0;
+			break;
+		case (1):
+			color.r = 0;
+			color.g = 255;
+			color.b = 0;
+			break;
+		case (2):
+			color.r = 0;
+			color.g = 0;
+			color.b = 255;
+			break;
+		case (3):
+			color.r = 255;
+			color.g = 255;
+			color.b = 255;
+			break;
+		case (4):
+			color.r = 0;
+			color.g = 0;
+			color.b = 0;
+			break;
+		case (5):
+			color.r = 255;
+			color.g = 0;
+			color.b = 255;
+			break;
+	}
+	return color;
+}
+//30 blinkies
+void updateBlinkyTape(int myColor) {
+	std::vector<blinky::RGB> colors;
+	blinky::RGB color = getColorValues(myColor);
+
+	for(int i = 0; i < blinkyLength; i++) {
+		colors.push_back(color);
+	}
+	//send_colorList(colors);
+	blinky::BlinkyTapeService srv;
+	srv.request.btColors = colors;
+	//1 is the code for planner
+	srv.request.blinkyID = 1;
+	if(!btClient.call(srv)) {
+		ROS_ERROR("failed to call serivce BlinkyDisplay");
+	}
+}
+
 int get_task_id(std::string name) {
 	if (name == "gate") return 0;
 	if (name == "lane") return 1;
@@ -317,6 +375,8 @@ int main(int argc, char **argv) {
 
 	//estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
+
+	btClient = n.serviceClient<blinky::BlinkyTapeService>("BlinkyDisplay");
 
 	taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000);
 	taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000);
@@ -379,8 +439,4 @@ std::cout<<starting_task<<std::endl;
 	//delete loader; //delete invoker;
 
 	return 0;
-}
-
-//LEGACY -- NOT FOR TOUCHING
-void ps3Control() {
 }
