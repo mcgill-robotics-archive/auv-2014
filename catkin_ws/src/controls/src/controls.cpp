@@ -128,7 +128,7 @@ void getStateFromTF()
 	tf::StampedTransform transform;
 	tf::TransformListener tf_listener; 
 
-	const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string targetFrame = "/robot/rotation center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string originalFrame = frame; //gate_center_sim
 	
@@ -265,7 +265,7 @@ int main(int argc, char **argv)
 		n.param<double>("Pitch/max", PITCH_MAX, 0.0);
 		n.param<double>("Yaw/max", YAW_MAX, 0.0);
 
-	    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	//set later in the controller
+	    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
 	    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
 	    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
 
