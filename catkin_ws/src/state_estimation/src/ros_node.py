@@ -36,15 +36,23 @@ def cvCallback(visObject):
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
                        visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
 
+
 def imuCallback(poseStamped):
     q = poseStamped.pose.orientation
+    Q = [q.w, q.x, q.y, q.z]
 
-    sin = math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z)
-    cos = q.w
+
+    #print "Corrected {}".format(Q)
+    print "%3f %3f %3f"%(Q[1],Q[2],Q[3])
+
+    sin = math.sqrt(Q[1]*Q[1] + Q[2]*Q[2] + Q[3]*Q[3])
+    cos = Q[0]
     angle = 2*math.atan2(sin,cos)
 
     estimator.updateOrientation(angle)
     publish()
+
+
 
 def depthCallback(depth):
     estimator.updateDepth(depth.data)

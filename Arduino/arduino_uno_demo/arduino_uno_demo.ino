@@ -4,6 +4,7 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
 #include <controls/motorCommands.h>
+#include <std_msgs/Float32.h>
 #include <arduino_msgs/solenoid.h>
 
 //Pin definitions 
@@ -38,8 +39,8 @@
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
-std_msgs::Int16 batteryVoltage1_msg;
-std_msgs::Int16 batteryVoltage2_msg;
+std_msgs::Float32 batteryVoltage1_msg;
+std_msgs::Float32 batteryVoltage2_msg;
 std_msgs::Int16 temperature_msg;
 std_msgs::Int32 pressure_msg;
 
@@ -53,9 +54,9 @@ boolean availabilityBMP085;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
-    char msg[70];
-    String("Motor Speed out of bound: " + String(x) +" !").toCharArray(msg,70);
-    nh.logerror(msg);
+    //char msg[70];
+    //String("Motor Speed out of bound: " + String(x) +" !").toCharArray(msg,70);
+    //nh.logerror(msg);
     return 0;  
   }
   return x;
@@ -130,7 +131,7 @@ void setup(){
   nh.subscribe(solenoidSub);
 
   //BMP085 Setup
-  availabilityBMP085 = bmp085Calibration(); // make sure that BMP085 is connected;
+  bmp085Calibration(); // make sure that BMP085 is connected;
   resetMotor();
 
 }
@@ -140,7 +141,7 @@ void loop(){
   long currentTime = millis();
 
   //temperature and pressure sensing
-  if((temperaturePressureSechedule < currentTime) && availabilityBMP085){
+  if(temperaturePressureSechedule < currentTime){
    pressure_msg.data= bmp085GetPressure(bmp085ReadUP());
    temperature_msg.data = bmp085GetTemperature(bmp085ReadUT());
    temperaturePub.publish(&temperature_msg);
@@ -157,8 +158,8 @@ void loop(){
 
   //voltages sensing
   if(batteryVoltageSchedule < currentTime){
-    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1);
-    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2);
+    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1)*35/1024.0;
+    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2)*35/1024.0;
     
     voltagePub1.publish(&batteryVoltage1_msg);
     voltagePub2.publish(&batteryVoltage2_msg);

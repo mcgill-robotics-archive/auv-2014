@@ -1,26 +1,18 @@
 #!/usr/bin/env python
-#Created on Nov 16th, 2013
-
-## @package central_app
-#
-#  Main file for McGill Robotics AUV Design Team testing User Interface
-#
-#  @author David Lavoie-Boutin
-
-#bunch of import statements
-#Ui declarations and GUI libraries
-
-import signal
 
 from thruster_control_ui import *
 from PyQt4 import QtCore, QtGui
 
 import sys
-
+import os
+import signal
+from pygame import locals
+import pygame
 import rospy  # ros module for subscribing to topics
 
 from controls.msg import motorCommands  # ros message types
 
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 ## Main window class linking ROS with the UI and controllers
 class CentralUi(QtGui.QMainWindow):
@@ -40,29 +32,39 @@ class CentralUi(QtGui.QMainWindow):
         self.ui = Ui_Thrust_Ui()
 
         self.ui.setupUi(self)
+        self.controller_present = False
+        pygame.init()
+        pygame.joystick.init()
+        if pygame.joystick.get_count() == 0:
+            print "The controller is not connected"
+            print "Shutting down the process..."
+        elif pygame.joystick.get_count() == 1:
+            print "One controller is connected"
+            print "All set to go"
+            self.controller = pygame.joystick.Joystick(0)
+            self.controller.init()
+            self.controller_present = True
+            self.ui.ps3_present.setChecked(True)
+            print "The initialized Joystick is: " + self.controller.get_name()
+        else:
+            pass
 
-        self.x1 = 0
-        self.x2 = 0
-        self.y1 = 0
-        self.y2 = 0
-        self.z1 = 0
-        self.z2 = 0
-
-        # buttons connects
-        QtCore.QObject.connect(self.ui.mode_selector, QtCore.SIGNAL("currentIndexChanged(int)"), self.change_mode)
-
+        #timer for publisher
         self.value_update = QtCore.QTimer()
         QtCore.QObject.connect(self.value_update, QtCore.SIGNAL("timeout()"), self.publish_thrusters)
-        self.value_update.start(500)
+        self.value_update.start(200)
 
+        #timer for controller
+        self.controller_update = QtCore.QTimer()
+        QtCore.QObject.connect(self.controller_update, QtCore.SIGNAL("timeout()"), self.updateController)
+        if self.controller_present:
+            print "Starting "
+            self.controller_update.start(50)
+
+        #init node
         rospy.init_node('manual_trust_mapper', anonymous=False)
 
-        QtCore.QObject.connect(self.ui.fiel_thruste_1, QtCore.SIGNAL("valueChanged(int)"), self.setX1)
-        QtCore.QObject.connect(self.ui.fiel_thruster_2, QtCore.SIGNAL("valueChanged(int)"), self.setX2)
-        QtCore.QObject.connect(self.ui.fiel_thruster_3, QtCore.SIGNAL("valueChanged(int)"), self.setY1)
-        QtCore.QObject.connect(self.ui.fiel_thruster_4, QtCore.SIGNAL("valueChanged(int)"), self.setY2)
-        QtCore.QObject.connect(self.ui.fiel_thruster_5, QtCore.SIGNAL("valueChanged(int)"), self.setZ1)
-        QtCore.QObject.connect(self.ui.fiel_thruster_6, QtCore.SIGNAL("valueChanged(int)"), self.setZ2)
+
         QtCore.QObject.connect(self.ui.x_force, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
         QtCore.QObject.connect(self.ui.x_bal, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
         QtCore.QObject.connect(self.ui.y_force, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
@@ -70,135 +72,99 @@ class CentralUi(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
         QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
 
-    def setX1(self, number):
-        self.x1 = number
+    def updateController(self):
+        # If a changed occurred, the value will be updated; else the value will be the last one fetched.
+        if self.controller_present:
+            for anEvent in pygame.event.get():
+                if anEvent.type == pygame.locals.JOYBUTTONDOWN:
 
-    def setX2(self, number):
-        self.x2 = number
+                    if self.controller.get_button(3):  # left arrow
+                        if self.ui.thruster_stop.isChecked():
+                            self.ui.thruster_stop.setChecked(False)
+                        else:
+                            self.ui.thruster_stop.setChecked(True)
+                            
+                elif anEvent.type == pygame.locals.JOYAXISMOTION:
+                    if self.controller.get_button(10):  # find l1
+                        self.ui.fiel_thruste_1.setValue( -500*self.controller.get_axis(1))
+                        self.ui.fiel_thruster_2.setValue( - 500*self.controller.get_axis(1))  
+                        # ui.fiel_thruste_1 & x2 are the same, left front/back
 
-    def setY1(self, number):
-        self.y1 = number
+                        if self.controller.get_axis(2) == 0:  # if not turning yaw (right x)
+                            self.ui.fiel_thruster_3.setValue(500*self.controller.get_axis(0))
+                            self.ui.fiel_thruster_4.setValue(500*self.controller.get_axis(0))
+                    if self.controller.get_button(11):  # find r1
+                        self.ui.fiel_thruster_5.setValue(-500*self.controller.get_axis(3))
+                        self.ui.fiel_thruster_6.setValue(-500*self.controller.get_axis(3))
 
-    def setY2(self, number):
-        self.y2 = number
-
-    def setZ1(self, number):
-        self.z1 = number
-
-    def setZ2(self, number):
-        self.z2 = number
+                        self.ui.fiel_thruster_3.setValue(500*self.controller.get_axis(2))
+                        self.ui.fiel_thruster_4.setValue(- 500*self.controller.get_axis(2))
 
     def x_force(self, data):
         if (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
-            self.x1 = 500
+            self.ui.fiel_thruste_1.setValue(500)
         elif (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
-            self.x1 = -500
+            self.ui.fiel_thruste_1.setValue(-500)
         else:
-            self.x1 = self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100
+            self.ui.fiel_thruste_1.setValue(self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100)
 
         if (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
-            self.x2 = 500
+            self.ui.fiel_thruster_2.setValue(500)
         elif (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
-            self.x2 = -500
+            self.ui.fiel_thruster_2.setValue(-500)
         else:
-            self.x2 = self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100
+            self.ui.fiel_thruster_2.setValue(self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100)
 
     def y_force(self, data):
         if (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
-            self.y1 = 500
+            self.ui.fiel_thruster_3.setValue( 500)
         elif (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
-            self.y1 = -500
+            self.ui.fiel_thruster_3.setValue( -500)
         else:
-            self.y1 = self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100
+            self.ui.fiel_thruster_3.setValue( self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100)
 
         if (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
-            self.y2 = 500
+            self.ui.fiel_thruster_4.setValue( 500)
         elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
-            self.y2 = -500
+            self.ui.fiel_thruster_4.setValue( -500)
         else:
-            self.y2 = self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100
+            self.ui.fiel_thruster_4.setValue( self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100)
 
     def z_force(self, data):
         if (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
-            self.z1 = 500
+            self.ui.fiel_thruster_5.setValue( 500)
         elif (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
-            self.z1 = -500
+            self.ui.fiel_thruster_5.setValue( -500)
         else:
-            self.z1 = self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100
+            self.ui.fiel_thruster_5.setValue( self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
-        if ( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
-            self.z2 = 500
+        if (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_3.setValue( 500)
         elif (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
-            self.z2 = -500
+            self.ui.fiel_thruster_3.setValue( -500)
         else:
-            self.z2 = self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100
-
+            self.ui.fiel_thruster_3.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
     def publish_thrusters(self):
-        vel_pub = rospy.Publisher("/controls/motor_commands", motorCommands)
+        vel_pub = rospy.Publisher("/motor", motorCommands)
 
         msg = motorCommands()
-
-        msg.cmd_x1 = self.x1
-        msg.cmd_x2 = self.x2
-        msg.cmd_y1 = self.y1
-        msg.cmd_y2 = self.y2
-        msg.cmd_z1 = self.z1
-        msg.cmd_z2 = self.z2
+        if not self.ui.thruster_stop.isChecked():
+            msg.cmd_x1 = self.ui.fiel_thruste_1.value()
+            msg.cmd_x2 = self.ui.fiel_thruster_2.value()
+            msg.cmd_y1 = self.ui.fiel_thruster_3.value()
+            msg.cmd_y2 = self.ui.fiel_thruster_4.value()
+            msg.cmd_z1 = self.ui.fiel_thruster_5.value()
+            msg.cmd_z2 = self.ui.fiel_thruster_6.value()
+        else:
+            msg.cmd_x1 = 0
+            msg.cmd_x2 = 0
+            msg.cmd_y1 = 0
+            msg.cmd_y2 = 0
+            msg.cmd_z1 = 0
+            msg.cmd_z2 = 0
 
         vel_pub.publish(msg)
-
-    def change_mode(self, mode):
-        if mode == 0:  # individual control
-            self.ui.x_bal.setEnabled(False)
-            self.ui.x_force.setEnabled(False)
-            self.ui.y_bal.setEnabled(False)
-            self.ui.y_force.setEnabled(False)
-            self.ui.z_bal.setEnabled(False)
-            self.ui.z_force.setEnabled(False)
-            self.ui.slider_thruster_11.setEnabled(False)
-            self.ui.slider_thruster_12.setEnabled(False)
-            self.ui.slider_thruster_13.setEnabled(False)
-            self.ui.slider_thruster_14.setEnabled(False)
-            self.ui.slider_thruster_15.setEnabled(False)
-            self.ui.slider_thruster_16.setEnabled(False)
-            self.ui.fiel_thruste_1.setEnabled(True)
-            self.ui.fiel_thruster_2.setEnabled(True)
-            self.ui.fiel_thruster_3.setEnabled(True)
-            self.ui.fiel_thruster_4.setEnabled(True)
-            self.ui.fiel_thruster_5.setEnabled(True)
-            self.ui.fiel_thruster_6.setEnabled(True)
-            self.ui.slider_thruster_1.setEnabled(True)
-            self.ui.slider_thruster_2.setEnabled(True)
-            self.ui.slider_thruster_3.setEnabled(True)
-            self.ui.slider_thruster_4.setEnabled(True)
-            self.ui.slider_thruster_5.setEnabled(True)
-            self.ui.slider_thruster_6.setEnabled(True)
-        elif mode == 1:  # group control
-            self.ui.x_bal.setEnabled(True)
-            self.ui.x_force.setEnabled(True)
-            self.ui.y_bal.setEnabled(True)
-            self.ui.y_force.setEnabled(True)
-            self.ui.z_bal.setEnabled(True)
-            self.ui.z_force.setEnabled(True)
-            self.ui.slider_thruster_11.setEnabled(True)
-            self.ui.slider_thruster_12.setEnabled(True)
-            self.ui.slider_thruster_13.setEnabled(True)
-            self.ui.slider_thruster_14.setEnabled(True)
-            self.ui.slider_thruster_15.setEnabled(True)
-            self.ui.slider_thruster_16.setEnabled(True)
-            self.ui.fiel_thruste_1.setEnabled(False)
-            self.ui.fiel_thruster_2.setEnabled(False)
-            self.ui.fiel_thruster_3.setEnabled(False)
-            self.ui.fiel_thruster_4.setEnabled(False)
-            self.ui.fiel_thruster_5.setEnabled(False)
-            self.ui.fiel_thruster_6.setEnabled(False)
-            self.ui.slider_thruster_1.setEnabled(False)
-            self.ui.slider_thruster_2.setEnabled(False)
-            self.ui.slider_thruster_3.setEnabled(False)
-            self.ui.slider_thruster_4.setEnabled(False)
-            self.ui.slider_thruster_5.setEnabled(False)
-            self.ui.slider_thruster_6.setEnabled(False)
 
 
 def sigint_handler(*args):
