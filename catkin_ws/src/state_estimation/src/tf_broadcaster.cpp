@@ -1,4 +1,4 @@
-#include <string>
+ #include <string>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <std_msgs/String.h>
@@ -215,7 +215,7 @@ void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 	broadcastStaticFrames(broadcaster);
 }
 
-void imuCallback(geometry_msgs::PoseStamped::ConstPtr& msg) {
+void imuCallBack(geometry_msgs::PoseStamped::ConstPtr& msg) {
 	tf::TransformBroadcaster broadcaster;
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
