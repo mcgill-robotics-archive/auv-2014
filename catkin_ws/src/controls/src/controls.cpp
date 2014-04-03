@@ -29,7 +29,7 @@ Created by Nick Speal Jan 10.
 	int8_t isActive_YSpeed = 0;
 	int8_t isActive_YawSpeed = 0;
 
-	std::string frame = "/target/gate"; //default
+	std::string frame = "target/gate"; //default
 
 	double estimated_XPos = 0;
 	double estimated_YPos = 0;
@@ -129,7 +129,7 @@ void getStateFromTF()
 	tf::TransformListener tf_listener; 
 
 	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	const std::string targetFrame = "/robot/rotation center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	const std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string originalFrame = frame; //gate_center_sim
 	
 	try
@@ -182,9 +182,6 @@ int main(int argc, char **argv)
 		double dt; //temporary! TODO update this dynamically
 
 		//Gains for the Proportional, Integral, and Derivative controllers
-		double kp;
-	    double ki;
-	    double kd;
 
 	    double kp_xPos;
 	    double ki_xPos;
@@ -210,68 +207,6 @@ int main(int argc, char **argv)
 	    double OL_coef_y;
 	    double OL_coef_yaw;
 	   
-
-    //ROS Params
-
-	    n.param<double>("gains/kp", kp, 0.0);
-	    n.param<double>("gains/ki", ki, 0.0);
-	    n.param<double>("gains/kd", kd, 0.0);
-
-	    n.param<double>("gains/kp_xPos", kp_xPos, 0.0);
-	    n.param<double>("gains/ki_xPos", ki_xPos, 0.0);
-	    n.param<double>("gains/kd_xPos", kd_xPos, 0.0);
-
-	    n.param<double>("gains/kp_yPos", kp_yPos, 0.0);
-	    n.param<double>("gains/ki_yPos", ki_yPos, 0.0);
-	    n.param<double>("gains/kd_yPos", kd_yPos, 0.0);
-	    
-	    n.param<double>("gains/kp_Depth", kp_Depth, 0.0);
-	    n.param<double>("gains/ki_Depth", ki_Depth, 0.0);
-	    n.param<double>("gains/kd_Depth", kd_Depth, 0.0);
-
-	    n.param<double>("gains/kp_Pitch", kp_Pitch, 0.0);
-	    n.param<double>("gains/ki_Pitch", ki_Pitch, 0.0);
-	    n.param<double>("gains/kd_Pitch", kd_Pitch, 0.0);
-
-	    n.param<double>("gains/kp_Yaw", kp_Yaw, 0.0);
-	    n.param<double>("gains/ki_Yaw", ki_Yaw, 0.0);
-	    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
-
-	   
-	    n.param<double>("coefs/mass", m, -1); //defaut negative to check for proper loading
-	    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
-	    n.param<double>("coefs/drag", cd, 0.0);
-	    n.param<double>("coefs/gravity", g, 9.81);
-	    n.param<double>("coefs/dt", dt, 0.01);
-
-		n.param<double>("force/max", F_MAX, 0.0);
-		n.param<double>("torque/max", T_MAX, 0.0);
-
-		n.param<double>("max_error_x_p", MAX_ERROR_X_P, 0.0);
-		n.param<double>("max_error_y_p", MAX_ERROR_Y_P, 0.0);
-		n.param<double>("max_error_z_p", MAX_ERROR_Z_P, 0.0);
-		n.param<double>("max_error_pitch_p", MAX_ERROR_PITCH_P, 0.0);
-		n.param<double>("max_error_yaw_p", MAX_ERROR_YAW_P, 0.0);
-		
-		n.param<double>("max_error_x_d", MAX_ERROR_X_D, 0.0);
-		n.param<double>("max_error_y_d", MAX_ERROR_Y_D, 0.0);
-		n.param<double>("max_error_z_d", MAX_ERROR_Z_D, 0.0);
-		n.param<double>("max_error_pitch_d", MAX_ERROR_PITCH_D, 0.0);
-		n.param<double>("max_error_yaw_d", MAX_ERROR_YAW_D, 0.0);	
-
-		n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
-		n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
-
-		n.param<double>("Pitch/max", PITCH_MAX, 0.0);
-		n.param<double>("Yaw/max", YAW_MAX, 0.0);
-
-	    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
-	    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
-	    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
-
-		if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
-
-
 	//define and initialize error variables
 	
 
@@ -332,6 +267,63 @@ int main(int argc, char **argv)
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
+
+	    //ROS Params
+
+		    n.param<double>("gains/kp_xPos", kp_xPos, 0.0);
+		    n.param<double>("gains/ki_xPos", ki_xPos, 0.0);
+		    n.param<double>("gains/kd_xPos", kd_xPos, 0.0);
+
+		    n.param<double>("gains/kp_yPos", kp_yPos, 0.0);
+		    n.param<double>("gains/ki_yPos", ki_yPos, 0.0);
+		    n.param<double>("gains/kd_yPos", kd_yPos, 0.0);
+		    
+		    n.param<double>("gains/kp_Depth", kp_Depth, 0.0);
+		    n.param<double>("gains/ki_Depth", ki_Depth, 0.0);
+		    n.param<double>("gains/kd_Depth", kd_Depth, 0.0);
+
+		    n.param<double>("gains/kp_Pitch", kp_Pitch, 0.0);
+		    n.param<double>("gains/ki_Pitch", ki_Pitch, 0.0);
+		    n.param<double>("gains/kd_Pitch", kd_Pitch, 0.0);
+
+		    n.param<double>("gains/kp_Yaw", kp_Yaw, 0.0);
+		    n.param<double>("gains/ki_Yaw", ki_Yaw, 0.0);
+		    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
+
+		   
+		    n.param<double>("coefs/mass", m, -1); //defaut negative to check for proper loading
+		    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
+		    n.param<double>("coefs/drag", cd, 0.0);
+		    n.param<double>("coefs/gravity", g, 9.81);
+		    n.param<double>("coefs/dt", dt, 0.01);
+
+			n.param<double>("force/max", F_MAX, 0.0);
+			n.param<double>("torque/max", T_MAX, 0.0);
+
+			n.param<double>("max_error_x_p", MAX_ERROR_X_P, 0.0);
+			n.param<double>("max_error_y_p", MAX_ERROR_Y_P, 0.0);
+			n.param<double>("max_error_z_p", MAX_ERROR_Z_P, 0.0);
+			n.param<double>("max_error_pitch_p", MAX_ERROR_PITCH_P, 0.0);
+			n.param<double>("max_error_yaw_p", MAX_ERROR_YAW_P, 0.0);
+			
+			n.param<double>("max_error_x_d", MAX_ERROR_X_D, 0.0);
+			n.param<double>("max_error_y_d", MAX_ERROR_Y_D, 0.0);
+			n.param<double>("max_error_z_d", MAX_ERROR_Z_D, 0.0);
+			n.param<double>("max_error_pitch_d", MAX_ERROR_PITCH_D, 0.0);
+			n.param<double>("max_error_yaw_d", MAX_ERROR_YAW_D, 0.0);	
+
+			n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
+			n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
+
+			n.param<double>("Pitch/max", PITCH_MAX, 0.0);
+			n.param<double>("Yaw/max", YAW_MAX, 0.0);
+
+		    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
+		    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
+		    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
+
+			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
+
 		double currentTime = ros::Time::now().toSec();
 		ROS_INFO("\n--\nTop of main loop - currentTime: %f", currentTime);
 		ros::spinOnce();	//Updates all variables
@@ -488,10 +480,6 @@ int main(int argc, char **argv)
 				debugMsg.yawError.derivative = ed_Yaw;
 
 			// Gains	
-				debugMsg.xGain.proportional = kp;
-				debugMsg.xGain.integral = ki;
-				debugMsg.xGain.derivative = kd;
-
 				
 				debugMsg.xGain.proportional = kp_xPos;
 				debugMsg.yGain.proportional = kp_yPos;
@@ -512,23 +500,23 @@ int main(int argc, char **argv)
 				debugMsg.yawGain.derivative = kd_Yaw;
 				
 			// Forces
-				debugMsg.xForce.proportional = kp*ep_XPos;
-				debugMsg.yForce.proportional = kp*ep_YPos;
-				debugMsg.depthForce.proportional = kp*ep_Depth;
-				debugMsg.pitchForce.proportional = kp*ep_Pitch;
-				debugMsg.yawForce.proportional = kp*ep_Yaw;
+				debugMsg.xForce.proportional = kp_xPos*ep_XPos;
+				debugMsg.yForce.proportional = kp_yPos*ep_YPos;
+				debugMsg.depthForce.proportional = kp_Depth*ep_Depth;
+				debugMsg.pitchForce.proportional = kp_Pitch*ep_Pitch;
+				debugMsg.yawForce.proportional = kp_Yaw*ep_Yaw;
 
-				debugMsg.xForce.integral = kp*ei_XPos;
-				debugMsg.yForce.integral = kp*ei_YPos;
-				debugMsg.depthForce.integral = kp*ei_Depth;
-				debugMsg.pitchForce.integral = kp*ei_Pitch;
-				debugMsg.yawForce.integral = kp*ei_Yaw;
+				debugMsg.xForce.integral = ki_xPos*ei_XPos;
+				debugMsg.yForce.integral = ki_yPos*ei_YPos;
+				debugMsg.depthForce.integral = ki_Depth*ei_Depth;
+				debugMsg.pitchForce.integral = ki_Pitch*ei_Pitch;
+				debugMsg.yawForce.integral = ki_Yaw*ei_Yaw;
 
-				debugMsg.xForce.derivative = kp*ed_XPos;
-				debugMsg.yForce.derivative = kp*ed_YPos;
-				debugMsg.depthForce.derivative = kp*ed_Depth;
-				debugMsg.pitchForce.derivative = kp*ed_Pitch;
-				debugMsg.yawForce.derivative = kp*ed_Yaw;
+				debugMsg.xForce.derivative = kd_xPos*ed_XPos;
+				debugMsg.yForce.derivative = kd_yPos*ed_YPos;
+				debugMsg.depthForce.derivative = kd_Depth*ed_Depth;
+				debugMsg.pitchForce.derivative = kd_Pitch*ed_Pitch;
+				debugMsg.yawForce.derivative = kd_Yaw*ed_Yaw;
 
 		wrench_publisher.publish(wrenchMsg);
 		debug_publisher.publish(debugMsg);
