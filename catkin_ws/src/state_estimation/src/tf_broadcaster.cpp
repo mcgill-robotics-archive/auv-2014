@@ -215,7 +215,7 @@ void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 	broadcastStaticFrames(broadcaster);
 }
 
-void imuCallBack(geometry_msgs::PoseStamped::ConstPtr& msg) {
+void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	tf::TransformBroadcaster broadcaster;
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
