@@ -7,12 +7,13 @@
 #include "geometry_msgs/Vector3.h"
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/PoseStamped.h"
+#include "sensor_msgs/Imu.h"
 #include <cmath>
 
 using namespace boost;
 
 static unsigned int sequence = 0;
-ros::Publisher pub, pub2;
+ros::Publisher pub, pub2, rawPub;
 geometry_msgs::Pose pos;
 geometry_msgs::PoseStamped posStamped;
 double prerotation[] = {1.0/sqrt(2.0), 1.0/sqrt(2.0),0.0,0.0};
@@ -54,6 +55,16 @@ if (receiver.isInertialAndMagGetReady()) {
                         acc.y = ims.accY;
                         acc.z = ims.accZ;
                         pub2.publish(acc);
+
+                        // IMU raw data
+                        sensor_msgs::Imu imu;
+                        imu.angular_velocity.x = gyrX;
+                        imu.angular_velocity.y = gyrY;
+                        imu.angular_velocity.z = gyrZ;
+                        imu.linear_acceleration.x = accX;
+                        imu.linear_acceleration.y = accY;
+                        imu.linear_acceleration.z = accZ;
+                        rawPub.publish(imu);
                 }		
 
 if (receiver.isQuaternionGetReady()) {
@@ -88,8 +99,10 @@ printf("Starting XimuPublisher\n");
 	ros::init(argc, argv, "x_imu_pose");
 	ros::NodeHandle node;
 
-	pub = node.advertise<geometry_msgs::PoseStamped>("pose", 100);
+	pub = node.advertise<geometry_msgs::PoseStamped>("state_estimation/pose", 100);
     pub2 = node.advertise<geometry_msgs::Vector3>("acc", 100);
+    // Publish raw data
+    rawPub = node.advertise<sensor_msgs::Imu>("state_estimation/raw", 100);
 	
 	spin();
 	

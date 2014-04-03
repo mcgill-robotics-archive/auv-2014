@@ -241,7 +241,7 @@ int main(int argc, char** argv) {
 	tf::TransformBroadcaster broadcaster;
 
 	ros::Subscriber cvSub = n.subscribe("state_estimation/state_estimate", 1000, cvCallBack);
-	ros::Subscriber imuSub = n.subscribe("pose", 1000, imuCallBack);
+	ros::Subscriber imuSub = n.subscribe("state_estimation/pose", 1000, imuCallBack);
 
 	ros::spin();
 
