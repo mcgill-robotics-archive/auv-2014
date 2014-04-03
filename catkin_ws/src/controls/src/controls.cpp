@@ -60,7 +60,9 @@ Created by Nick Speal Jan 10.
 
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
-	ROS_DEBUG("Subscriber received set points");
+	double currentTime = ros::Time::now().toSec();
+	ROS_INFO("received setPoints - currentTime: %f", currentTime);
+
 	setPoint_XPos = setPointsMsg.XPos.data;
 	setPoint_YPos = setPointsMsg.YPos.data;
 	setPoint_Depth = setPointsMsg.Depth.data;
@@ -86,6 +88,8 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 void depth_callback(const std_msgs::Float64 data)
 {
 	depth = data.data;
+	double currentTime = ros::Time::now().toSec();
+	ROS_INFO("Received depth - currentTime: %f", currentTime);
 }
 
 float output_limit_check(float value, float min, float max, char* value_name ){ //can this be deleted?
@@ -125,16 +129,22 @@ void getStateFromTF()
 	tf::TransformListener tf_listener; 
 
 	const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	const std::string targetFrame = "/robot/rotation center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string originalFrame = frame; //gate_center_sim
 	
 	try
 	{
+	double currentTime = ros::Time::now().toSec();
+	ROS_INFO("waiting for transform- currentTime: %f", currentTime);
 	tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
+	currentTime = ros::Time::now().toSec();
+	ROS_INFO("done waiting for transform - currentTime: %f", currentTime);
 	tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
 	}
 	catch (tf::TransformException ex){
 	ROS_ERROR("%s",ex.what());
 	}
+	
 
 	estimated_XPos = transform.getOrigin().x();
 	estimated_YPos = transform.getOrigin().y();
@@ -322,11 +332,13 @@ int main(int argc, char **argv)
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
+		double currentTime = ros::Time::now().toSec();
+		ROS_INFO("\n--\nTop of main loop - currentTime: %f", currentTime);
 		ros::spinOnce();	//Updates all variables
 		getStateFromTF();
+		currentTime = ros::Time::now().toSec();
 
-		// Decoupled Controllers
-		//zero unless otherwise specified
+		//zero wrench unless otherwise specified
 		Fx = 0;
     	Fy = 0;
     	Fz = 0;
@@ -521,7 +533,6 @@ int main(int argc, char **argv)
 		wrench_publisher.publish(wrenchMsg);
 		debug_publisher.publish(debugMsg);
 		loop_rate.sleep();
-
+	} //end while ros ok
 	return 0;
-}
-}
+} //end int main}
