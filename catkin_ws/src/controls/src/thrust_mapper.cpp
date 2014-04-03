@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	voltage_publisher = n.advertise<controls::motorCommands>("/controls/motor", 100); //TODO change message type and name
+	voltage_publisher = n.advertise<controls::motorCommands>("/motor", 100); //TODO change message type and name
 	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
 
 	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");

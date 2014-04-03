@@ -30,9 +30,7 @@ def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
         msg.XSpeed.data = x_vel
         msg.YSpeed.data = y_vel
         msg.Depth.data = z_depth
-
         msg.YawSpeed.data = yaw_vel
-
 
         msg.XPos.isActive = 0
         msg.YPos.isActive = 0
@@ -50,11 +48,8 @@ def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
         msg.XSpeed.data = 0
         msg.YSpeed.data = 0
         msg.Depth.data = 0
-
         msg.Pitch.data = 0
         msg.YawSpeed.data = 0
-
-
         msg.XPos.isActive = 0
         msg.YPos.isActive = 0
         msg.Depth.isActive = 0
@@ -66,4 +61,3 @@ def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
 
         vel_pub.publish(msg)
 
-    #return str(msg)

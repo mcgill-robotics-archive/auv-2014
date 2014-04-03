@@ -129,10 +129,6 @@ class CentralUi(QtGui.QMainWindow):
         pygame.init()
         pygame.mixer.init()
 
-        #TODO: change path to a machine specific path, I can't get this thing to work with a relative path
-        ## path to alarm sound
-        self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/resource/Ticktac.wav"
-
         # buttons connects
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
@@ -157,7 +153,7 @@ class CentralUi(QtGui.QMainWindow):
     #note that all the topic names are set in the file "VARIABLES.py"
     #@param self the object pointer
     def start_ros_subscriber(self):
-        rospy.init_node('Front_End_UI', anonymous=True)
+        rospy.init_node('Front_End', anonymous=True)
         rospy.Subscriber("/state_estimation/depth", Float32, self.depth_callback)
         rospy.Subscriber("/batteryVoltage1", Float32, self.bat_1)
         rospy.Subscriber("/batteryVoltage2", Float32, self.bat_2)
@@ -287,29 +283,25 @@ class CentralUi(QtGui.QMainWindow):
     def set_controller_timer(self):
         # radio button PS3
         if self.ui.manualControl.isChecked():
-            self.keyboard_control=False
+            self.keyboard_control = False
             self.key_timer.stop()
+
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent:
-                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
-                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
                 pass
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
             self.ps3_timer.stop()
             self.keyboard_control = True
-            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
-            #QtCore.QTimer.singleShot(0, self.planner)
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
             velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints", 0)
-            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
 
     ##  Method for the keyboard controller
     #
@@ -556,8 +548,14 @@ class CentralUi(QtGui.QMainWindow):
         #    self.battery_empty = True
         #    self.empty_battery_signal.emit()
         #    self.play_alarm()
+
     def bat_2(self, voltage_data):
         self.ui.bat_lcd2.display(voltage_data.data)
+
+    def check_low_bat(self):
+        if self.ui.bat_lcd1.value()+self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
+            self.play_alarm()
+            self.open_low_battery_dialog()
 
     ## start the alarm sound
     #
