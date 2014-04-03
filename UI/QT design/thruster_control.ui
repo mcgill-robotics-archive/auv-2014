@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>726</width>
-    <height>354</height>
+    <width>620</width>
+    <height>358</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>Thruster controller</string>
   </property>
+  <property name="animated">
+   <bool>true</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_5">
     <item row="0" column="0">
@@ -26,28 +29,21 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QComboBox" name="mode_selector">
-          <property name="currentIndex">
-           <number>1</number>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Thruster Speed</string>
           </property>
-          <item>
-           <property name="text">
-            <string>Individual Thrusters</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Grouped Thrusters</string>
-           </property>
-          </item>
          </widget>
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="4" column="1">
+          <item row="3" column="1">
            <widget class="QSpinBox" name="fiel_thruster_3">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
             <property name="minimum">
              <number>-500</number>
@@ -57,36 +53,49 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="2">
-           <widget class="QSlider" name="slider_thruster_5">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Thruster 1</string>
+             <string>x1</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="2" column="1">
            <widget class="QSpinBox" name="fiel_thruster_2">
             <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="minimum">
+             <number>-500</number>
+            </property>
+            <property name="maximum">
+             <number>500</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="enabled">
              <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>x2</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="fiel_thruster_5">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
             <property name="minimum">
              <number>-500</number>
@@ -97,107 +106,32 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Thruster 2</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QSpinBox" name="fiel_thruster_5">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
            <widget class="QLabel" name="label_3">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Thruster 3</string>
+             <string>y1</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="2">
-           <widget class="QSlider" name="slider_thruster_6">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
+          <item row="6" column="0">
            <widget class="QLabel" name="label_6">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Thruster 6</string>
+             <string>z2</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="4" column="1">
            <widget class="QSpinBox" name="fiel_thruster_4">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QSlider" name="slider_thruster_4">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Thruster 5</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QSpinBox" name="fiel_thruster_6">
-            <property name="enabled">
-             <bool>false</bool>
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
             <property name="minimum">
              <number>-500</number>
@@ -208,83 +142,54 @@
            </widget>
           </item>
           <item row="5" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>z1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QSpinBox" name="fiel_thruster_6">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="minimum">
+             <number>-500</number>
+            </property>
+            <property name="maximum">
+             <number>500</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
            <widget class="QLabel" name="label_4">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Thruster 4</string>
+             <string>y2</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="2">
-           <widget class="QSlider" name="slider_thruster_3">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QSlider" name="slider_thruster_2">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
+          <item row="1" column="1">
            <widget class="QSpinBox" name="fiel_thruste_1">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
             </property>
             <property name="minimum">
              <number>-500</number>
             </property>
             <property name="maximum">
              <number>500</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QSlider" name="slider_thruster_1">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>-500</number>
-            </property>
-            <property name="maximum">
-             <number>500</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2" alignment="Qt::AlignBottom">
-           <widget class="QLabel" name="label_7">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Max Voltage / 1000</string>
             </property>
            </widget>
           </item>
@@ -293,105 +198,132 @@
        </layout>
       </item>
       <item>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QCheckBox" name="thruster_stop">
+          <property name="text">
+           <string>Thruster stop</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="ps3_present">
+          <property name="text">
+           <string>PS3 Controller</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="tristate">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QLabel" name="label_14">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>X- Axis</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_4">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_15">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QLabel" name="label_14">
               <property name="enabled">
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>Force</string>
+               <string>X- Axis</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="x_force">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimum">
-               <number>-500</number>
-              </property>
-              <property name="maximum">
-               <number>500</number>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QSlider" name="slider_thruster_15">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimum">
-               <number>-500</number>
-              </property>
-              <property name="maximum">
-               <number>500</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>Balance</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="x_bal">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimum">
-               <number>-100</number>
-              </property>
-              <property name="maximum">
-               <number>100</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QSlider" name="slider_thruster_16">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="minimum">
-               <number>-100</number>
-              </property>
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
+            <item>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_15">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Force</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="x_force">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="minimum">
+                 <number>-500</number>
+                </property>
+                <property name="maximum">
+                 <number>500</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QSlider" name="slider_thruster_15">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="minimum">
+                 <number>-500</number>
+                </property>
+                <property name="maximum">
+                 <number>500</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_16">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Balance</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="x_bal">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="minimum">
+                 <number>-100</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QSlider" name="slider_thruster_16">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="minimum">
+                 <number>-100</number>
+                </property>
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QLabel" name="label_11">
             <property name="enabled">
@@ -593,7 +525,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>726</width>
+     <width>620</width>
      <height>25</height>
     </rect>
    </property>
@@ -617,198 +549,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>fiel_thruste_1</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>slider_thruster_1</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>132</x>
-     <y>206</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>255</x>
-     <y>205</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fiel_thruster_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>slider_thruster_2</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>145</x>
-     <y>240</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>249</x>
-     <y>238</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fiel_thruster_3</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>slider_thruster_3</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>132</x>
-     <y>284</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>205</x>
-     <y>261</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fiel_thruster_4</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>slider_thruster_4</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>135</x>
-     <y>318</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>212</x>
-     <y>306</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fiel_thruster_5</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>slider_thruster_5</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>146</x>
-     <y>351</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>231</x>
-     <y>350</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>fiel_thruster_6</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>slider_thruster_6</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>148</x>
-     <y>381</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>234</x>
-     <y>378</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_thruster_1</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>fiel_thruste_1</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>356</x>
-     <y>197</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>139</x>
-     <y>192</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_thruster_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>fiel_thruster_2</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>289</x>
-     <y>232</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>123</x>
-     <y>240</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_thruster_3</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>fiel_thruster_3</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>321</x>
-     <y>263</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>160</x>
-     <y>276</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_thruster_4</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>fiel_thruster_4</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>327</x>
-     <y>302</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>315</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_thruster_5</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>fiel_thruster_5</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>293</x>
-     <y>338</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>153</x>
-     <y>336</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>slider_thruster_6</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>fiel_thruster_6</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>283</x>
-     <y>384</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>365</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>slider_thruster_15</sender>
    <signal>valueChanged(int)</signal>

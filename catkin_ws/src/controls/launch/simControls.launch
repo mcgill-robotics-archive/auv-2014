@@ -1,14 +1,38 @@
 <launch>
-	<!-- launches simulator, controls, testControls, currentCVTaskPublisher, distanceCalculator -->
-
+	
   <include file="$(find simulator)/launch/simulator.launch" />
   <include file="$(find controls)/launch/controls.launch" />
 
   <!--setPointPublisher -->
-  <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
+      <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
  
   <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
-    <include file="$(find computer_vision)/launch/computer_vision.launch" />
+  
+  <!-- COMPUTER VISION -->
+      <arg name="realCV" default="1"/>
+      <group if="$(arg realCV)">
+          <include file="$(find computer_vision)/launch/computer_vision.launch" />
+      </group>
+      <group unless="$(arg realCV)">
+          <node name="CurrentCVTaskPublisher" pkg="planner" type="CurrentCVTaskPublisher"  respawn="false" output="screen"/>
+          <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="true" output="screen"/>
+      </group>
+
+  <!-- RQT PLOT -->
+    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
+    args=
+    "
+    /setPoints/XPos/data
+    /controls/debug/xError/proportional
+    /controls/debug/xError/derivative
+    "
+    />
+
+</launch>
+
+<!-- . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . -->
+
+
 
 
   <!-- DEPRECATED MARCH 25 -->
@@ -19,16 +43,8 @@
   -->
 
 
-  <!-- RQT PLOT -->
-    <node name="rqt_plot" pkg="rqt_plot" type="rqt_plot"  respawn="false" output="screen"
-    args=
-    "
-    /controls/wrench/force/y
-    /setPoints/YPos/data
-    "
-    />
 
-</launch>
+
 
       <!-- X
       /controls/wrench/force/x

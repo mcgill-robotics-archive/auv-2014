@@ -94,8 +94,18 @@ double estimated_Yaw = 0;
 double F_MAX;
 double T_MAX;
 
-double EP_XPOS_MAX;
-double EP_YPOS_MAX;
+double MAX_ERROR_X_P;
+double MAX_ERROR_Y_P;
+double MAX_ERROR_Z_P;
+double MAX_ERROR_PITCH_P;
+double MAX_ERROR_YAW_P;
+
+double MAX_ERROR_X_D;
+double MAX_ERROR_Y_D;
+double MAX_ERROR_Z_D;
+double MAX_ERROR_PITCH_D;
+double MAX_ERROR_YAW_D;	
+
 double XSPEED_MAX;
 double YSPEED_MAX;
 
@@ -285,7 +295,7 @@ int main(int argc, char **argv)
 	    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
 
 	   
-	    n.param<double>("coefs/mass", m, 30.0);
+	    n.param<double>("coefs/mass", m, -1); //defaut negative to check for proper loading
 	    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
 	    n.param<double>("coefs/drag", cd, 0.0);
 	    n.param<double>("coefs/gravity", g, 9.81);
@@ -294,13 +304,25 @@ int main(int argc, char **argv)
 		n.param<double>("force/max", F_MAX, 0.0);
 		n.param<double>("torque/max", T_MAX, 0.0);
 
-		n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
-		n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
+		n.param<double>("max_error_x_p", MAX_ERROR_X_P, 0.0);
+		n.param<double>("max_error_y_p", MAX_ERROR_Y_P, 0.0);
+		n.param<double>("max_error_z_p", MAX_ERROR_Z_P, 0.0);
+		n.param<double>("max_error_pitch_p", MAX_ERROR_PITCH_P, 0.0);
+		n.param<double>("max_error_yaw_p", MAX_ERROR_YAW_P, 0.0);
+		
+		n.param<double>("max_error_x_d", MAX_ERROR_X_D, 0.0);
+		n.param<double>("max_error_y_d", MAX_ERROR_Y_D, 0.0);
+		n.param<double>("max_error_z_d", MAX_ERROR_Z_D, 0.0);
+		n.param<double>("max_error_pitch_d", MAX_ERROR_PITCH_D, 0.0);
+		n.param<double>("max_error_yaw_d", MAX_ERROR_YAW_D, 0.0);	
+
 		n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
 		n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
 
 		n.param<double>("Pitch/max", PITCH_MAX, 0.0);
 		n.param<double>("Yaw/max", YAW_MAX, 0.0);
+
+		if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
 
 
 	//initializations
@@ -372,7 +394,7 @@ int main(int argc, char **argv)
 		// Updates the variables to what the value set in the trackbar.
 		kp_Yaw = (double)kp_Yaw_int + (double)kp_Yaw_dec / 10;
 
-		ROS_INFO(("Controls::kp_Yaw value " + boost::lexical_cast<std::string>(kp_Yaw)).c_str());
+		//ROS_INFO(("Controls::kp_Yaw value " + boost::lexical_cast<std::string>(kp_Yaw)).c_str());
 
 		// Refreshes the window.
 		if (isUsingControlTrackbarWindow) {
@@ -402,9 +424,10 @@ int main(int argc, char **argv)
 			{
 				ep_XPos_prev = ep_XPos;
 				ep_XPos = setPoint_XPos - estimated_XPos;
-				ep_XPos=saturate(ep_XPos, EP_XPOS_MAX, "X Position Error term");
+				ep_XPos=saturate(ep_XPos, MAX_ERROR_X_P, "X Proportional Error");
 				ei_XPos += ep_XPos*dt;
 				ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
+				ed_XPos = saturate(ed_XPos, MAX_ERROR_X_D, "X Derivative Error");
 				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
 				Fx *= -1; //flip direction to account for relative coordinate system
 				//ROS_INFO("controlling xpos");
@@ -431,7 +454,7 @@ int main(int argc, char **argv)
 			{
 				ep_YPos_prev = ep_YPos;
 				ep_YPos = setPoint_YPos - estimated_YPos;
-				ep_YPos=saturate(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
+				ep_YPos=saturate(ep_YPos, MAX_ERROR_Y_P, "Y Position Error term");
 				ei_YPos += ep_YPos*dt;
 				ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 				Fy = kp_yPos*ep_YPos + ki_yPos*ei_YPos + kd_yPos*ed_YPos;

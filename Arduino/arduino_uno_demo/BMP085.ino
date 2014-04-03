@@ -51,9 +51,6 @@ float altitude;
 boolean bmp085Calibration()
 {
   ac1 = bmp085ReadInt(0xAA);
-  if(ac1==0){
-    return false;
-  }
   ac2 = bmp085ReadInt(0xAC);
   ac3 = bmp085ReadInt(0xAE);
   ac4 = bmp085ReadInt(0xB0);
@@ -146,9 +143,7 @@ int bmp085ReadInt(unsigned char address)
   Wire.requestFrom(BMP085_ADDRESS, 2);
   int i = 0;
   while(Wire.available()<2){
-  i++;
-  if(i >10) return 0;
-  delay(1);
+  ;
   }
  
   msb = Wire.read();
