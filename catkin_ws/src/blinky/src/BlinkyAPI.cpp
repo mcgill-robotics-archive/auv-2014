@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <vector>
 
-#include <blinky/BlinkyTapeService.h>
+#include <blinky/BlinkyService.h>
 #include <blinky/RGB.h>
 #include "BlinkyAPI.h"
 
@@ -16,9 +16,9 @@ BlinkyClient::BlinkyClient(ros::NodeHandle node_handle)
 
 int8_t BlinkyClient::send_colorList(const std::vector<blinky::RGB>& colors, int8_t blinkyID)
 {
-	ros::ServiceClient client = n.serviceClient<blinky::BlinkyTapeService>("BlinkyDisplay");
+	ros::ServiceClient client = n.serviceClient<blinky::BlinkyService>("Blinky");
 
-	blinky::BlinkyTapeService srv;
+	blinky::BlinkyService srv;
 	srv.request.btColors = colors;
 	srv.request.blinkyID = blinkyID;
 
@@ -26,12 +26,12 @@ int8_t BlinkyClient::send_colorList(const std::vector<blinky::RGB>& colors, int8
 		int8_t res = srv.response.success;
 
 		if (res) {
-			ROS_INFO("BlinkyDisplay request unsuccessful: %d", res);
+			ROS_INFO("Blinky request unsuccessful: %d", res);
 		}
 
 		return res;
 	} else {
-		ROS_ERROR("Failed to call service BlinkyDisplay");
+		ROS_ERROR("Failed to call service Blinky");
 		return -1;
 	}
 

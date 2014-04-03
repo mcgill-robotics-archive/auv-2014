@@ -16,12 +16,12 @@ BATTERY_ID = 2
 # blinkyID:	blinky segment the colors should be sent to
 def send_colorList(colors, blinkyID):
 	try:
-		rospy.wait_for_service('BlinkyDisplay')
-		BlinkyDisplay = rospy.ServiceProxy('BlinkyDisplay', BlinkyTapeService)
-		res = BlinkyDisplay(colors, blinkyID)
+		rospy.wait_for_service('Blinky')
+		Blinky = rospy.ServiceProxy('Blinky', BlinkyService)
+		res = Blinky(colors, blinkyID)
 
 		if res.success != 0:
-			print "BlinkyDisplay request unsuccessful: %s"%res
+			print "Blinky request unsuccessful: %s"%res
 
 	except Exception as e:
 		print "Exception: %s"%e
