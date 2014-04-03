@@ -84,6 +84,12 @@ def process():
         mics[i].decibel()
         mics[i].phase()
 
+    for i in range(1, NUMBER_OF_MICS):
+        for j in range(BUFFERSIZE/2+1):
+            mics[i].angle[j] -= mics[0].angle[j]
+            mics[0].angle[j] = 0
+        mics[i].distances()
+
 # LOOK AT RELEVANT FREQUENCY
 def analyze():
     print '%s\t%s\t%s\t%s\t\t%s\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE', 'PHASE', 'DISTANCE')
