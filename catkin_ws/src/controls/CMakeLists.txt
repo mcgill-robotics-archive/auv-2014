@@ -183,16 +183,23 @@ add_executable(depthController src/depthController.cpp)
 add_executable(controls src/controls.cpp)
 add_executable(testControls src/testControls.cpp)
 add_executable(thrust_mapper src/thrust_mapper.cpp)
+add_executable(gui_controls src/gui_controls.cpp)
+
 
 target_link_libraries(controls ${catkin_LIBRARIES})
 target_link_libraries(depthController ${catkin_LIBRARIES})
 target_link_libraries(testControls ${catkin_LIBRARIES})
 target_link_libraries(thrust_mapper ${catkin_LIBRARIES})
+target_link_libraries(gui_controls ${catkin_LIBRARIES})
+
 
 add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
 add_dependencies(controls ${catkin_EXPORTED_TARGETS})
 add_dependencies(testControls ${catkin_EXPORTED_TARGETS})
 add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})
+add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})
+add_dependencies(gui_controls ${catkin_EXPORTED_TARGETS})
+
 
 
 #add_dependencies(controls ${PROJECT_NAME}_gencpp)

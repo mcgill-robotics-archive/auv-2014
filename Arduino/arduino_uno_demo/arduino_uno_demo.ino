@@ -4,6 +4,7 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/String.h>
 #include <controls/motorCommands.h>
+#include <std_msgs/Float32.h>
 #include <arduino_msgs/solenoid.h>
 
 //Pin definitions 
@@ -30,15 +31,16 @@
   #define VOLTAGE_PIN_1 A2
   #define VOLTAGE_PIN_2 A3
 
-//SENSING INTERVAL(unit microsecond)
-  #define VOLTAGE_INTERVAL 1000
-  #define PRESSURE_INTERVAL 200
-  #define DEPTH_INTERVAL 1000
+//TIME INTERVAL(unit microsecond)
+  #define MOTOR_TIMEOUT 4000    //amount of no signal required to start to reset motors 
+  #define VOLTAGE_INTERVAL 1000 //amount of delay between each voltage
+  #define PRESSURE_INTERVAL 1000
+  #define DEPTH_INTERVAL 200
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
-std_msgs::Int16 batteryVoltage1_msg;
-std_msgs::Int16 batteryVoltage2_msg;
+std_msgs::Float32 batteryVoltage1_msg;
+std_msgs::Float32 batteryVoltage2_msg;
 std_msgs::Int16 temperature_msg;
 std_msgs::Int32 pressure_msg;
 
@@ -47,26 +49,39 @@ Servo myservo[6];
 unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
 unsigned long temperaturePressureSechedule;
-
+unsigned long lastMotorCommand;
+boolean availabilityBMP085;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
-    char msg[70];
-    String("Motor Speed out of bound: " + String(x) +" !").toCharArray(msg,70);
-    nh.logerror(msg);
+    //char msg[70];
+    //String("Motor Speed out of bound: " + String(x) +" !").toCharArray(msg,70);
+    //nh.logerror(msg);
     return 0;  
   }
   return x;
 }
 
 void motorCb( const controls::motorCommands& msg){
+  //lastMotorCommand = millis();
   myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
   myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));
-  myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
-  myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
-  myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
-  myservo[5].writeMicroseconds(1500 + boundCheck(msg.cmd_z2));
+  myservo[2].writeMicroseconds(1463 + boundCheck(msg.cmd_y1));
+  myservo[3].writeMicroseconds(1463 + boundCheck(msg.cmd_y2));
+  myservo[4].writeMicroseconds(1459 + boundCheck(msg.cmd_z1));
+  myservo[5].writeMicroseconds(1463 + boundCheck(msg.cmd_z2));
 }
+
+void resetMotor(){
+  myservo[0].writeMicroseconds(1500);
+  myservo[1].writeMicroseconds(1500);
+  myservo[2].writeMicroseconds(1463);
+  myservo[3].writeMicroseconds(1463);
+  myservo[4].writeMicroseconds(1459);
+  myservo[5].writeMicroseconds(1463);
+}
+
+
 
 void solenoidCb( const arduino_msgs::solenoid& msg){
   digitalWrite(SOLENOID_PIN_T_1,msg.torpedo1.data);
@@ -116,7 +131,8 @@ void setup(){
   nh.subscribe(solenoidSub);
 
   //BMP085 Setup
-  bmp085Calibration();
+  bmp085Calibration(); // make sure that BMP085 is connected;
+  resetMotor();
 
 }
 
@@ -142,13 +158,18 @@ void loop(){
 
   //voltages sensing
   if(batteryVoltageSchedule < currentTime){
-    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1);
-    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2);
+    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1)*35/1024.0;
+    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2)*35/1024.0;
     
     voltagePub1.publish(&batteryVoltage1_msg);
     voltagePub2.publish(&batteryVoltage2_msg);
     
     batteryVoltageSchedule += VOLTAGE_INTERVAL;     //Update at 1 Hz
   }  
+  
+  if(lastMotorCommand + MOTOR_TIMEOUT < currentTime){
+    resetMotor();
+    lastMotorCommand = currentTime;
+  }
   nh.spinOnce();
 }

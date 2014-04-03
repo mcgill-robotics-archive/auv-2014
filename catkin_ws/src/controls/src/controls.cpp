@@ -1,110 +1,68 @@
 #include "controls.h"
-
 /*
-
-First integrated 5DOF control system
+5DOF control system for the McGill Robotics AUV
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
 Open Loop Speed Control.	
 
 Created by Nick Speal Jan 10.
 */
 
-
-/*
-Topics in form topic messagetype
-
-Subscribers:
-
-
-Publishers:
-
-/controls/wrench geometry_msgs/Wrench
-
-*/
-
-/*
-TODO
-service for reset
-ros params
-	implement check if not parametrized properly (rather than 0 default which can go unnoticed)
-remove old depthcontroller relics
-
-subscribe to estimated position from planner?
-different gains for different axes
-add a saturate functionality to the forces
-	should integral error accumulate?
-fix coordinate system integration with Gen and Mathieu
-
-
-
-
-/*
-Simulator needs
------------------
-
-drag
-apply force in body frame
-
-*/
-
-
-
-/*
-Roadmap
-
-
-
-*/
-
-// Variables used for the trackbars window.
-const bool isUsingControlTrackbarWindow = true;
-const std::string CONTROL_TRACKBARS_WINDOW_NAME = "control_trackbars_window";
-
 //global vars
-double z_des = 0;
-double z_est = 0;
+	double z_des = 0;
+	double z_est = 0;
 
-double setPoint_XPos = 0; 
-double setPoint_YPos = 0;
-double setPoint_Depth = 0;
-double setPoint_Yaw = 0;
-double setPoint_Pitch = 0;
-double setPoint_XSpeed = 0;
-double setPoint_YSpeed = 0;
-double setPoint_YawSpeed = 0;
+	double setPoint_XPos = 0; 
+	double setPoint_YPos = 0;
+	double setPoint_Depth = 0;
+	double setPoint_Yaw = 0;
+	double setPoint_Pitch = 0;
+	double setPoint_XSpeed = 0;
+	double setPoint_YSpeed = 0;
+	double setPoint_YawSpeed = 0;
 
-int8_t isActive_XPos = 0;	
-int8_t isActive_YPos = 0;
-int8_t isActive_Depth = 0;
-int8_t isActive_Yaw = 0;
-int8_t isActive_Pitch = 0;
-int8_t isActive_XSpeed = 0;
-int8_t isActive_YSpeed = 0;
-int8_t isActive_YawSpeed = 0;
+	int8_t isActive_XPos = 0;	
+	int8_t isActive_YPos = 0;
+	int8_t isActive_Depth = 0;
+	int8_t isActive_Yaw = 0;
+	int8_t isActive_Pitch = 0;
+	int8_t isActive_XSpeed = 0;
+	int8_t isActive_YSpeed = 0;
+	int8_t isActive_YawSpeed = 0;
 
-std::string frame = "/target/gate"; //default
-//std_msgs::String frame = "target/gate"; 
+	std::string frame = "/target/gate"; //default
 
-double estimated_XPos = 0;
-double estimated_YPos = 0;
-double depth = 0;
-double estimated_Pitch = 0;
-double estimated_Yaw = 0;
+	double estimated_XPos = 0;
+	double estimated_YPos = 0;
+	double depth = 0;
+	double estimated_Pitch = 0;
+	double estimated_Yaw = 0;
 
-double F_MAX;
-double T_MAX;
+	double F_MAX;
+	double T_MAX;
 
-double EP_XPOS_MAX;
-double EP_YPOS_MAX;
-double XSPEED_MAX;
-double YSPEED_MAX;
+	double MAX_ERROR_X_P;
+	double MAX_ERROR_Y_P;
+	double MAX_ERROR_Z_P;
+	double MAX_ERROR_PITCH_P;
+	double MAX_ERROR_YAW_P;
 
-double YAW_MAX;
-double PITCH_MAX;
+	double MAX_ERROR_X_D;
+	double MAX_ERROR_Y_D;
+	double MAX_ERROR_Z_D;
+	double MAX_ERROR_PITCH_D;
+	double MAX_ERROR_YAW_D;	
+
+	double XSPEED_MAX;
+	double YSPEED_MAX;
+
+	double YAW_MAX;
+	double PITCH_MAX;
 
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
-	ROS_DEBUG("Subscriber received set points");
+	double currentTime = ros::Time::now().toSec();
+	ROS_INFO("received setPoints - currentTime: %f", currentTime);
+
 	setPoint_XPos = setPointsMsg.XPos.data;
 	setPoint_YPos = setPointsMsg.YPos.data;
 	setPoint_Depth = setPointsMsg.Depth.data;
@@ -130,6 +88,8 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 void depth_callback(const std_msgs::Float64 data)
 {
 	depth = data.data;
+	double currentTime = ros::Time::now().toSec();
+	ROS_INFO("Received depth - currentTime: %f", currentTime);
 }
 
 float output_limit_check(float value, float min, float max, char* value_name ){ //can this be deleted?
@@ -162,23 +122,29 @@ float saturate(float value, float max, char* value_name) {
 void getStateFromTF()
 {
 	/*
-	* Looks up the TF and saves local variables.
+	* Looks up the TF and saves local variables for estimated position.
 	*/
 
 	tf::StampedTransform transform;
-	tf::TransformListener tf_listener; //THIS LINE MAKES IT NOT COMPILE
+	tf::TransformListener tf_listener; 
 
-	const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	const std::string targetFrame = "/robot/rotation center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string originalFrame = frame; //gate_center_sim
 	
 	try
 	{
+	double currentTime = ros::Time::now().toSec();
+	ROS_INFO("waiting for transform- currentTime: %f", currentTime);
 	tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
+	currentTime = ros::Time::now().toSec();
+	ROS_INFO("done waiting for transform - currentTime: %f", currentTime);
 	tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
 	}
 	catch (tf::TransformException ex){
 	ROS_ERROR("%s",ex.what());
 	}
+	
 
 	estimated_XPos = transform.getOrigin().x();
 	estimated_YPos = transform.getOrigin().y();
@@ -208,7 +174,7 @@ int main(int argc, char **argv)
    	//	ros::console::notifyLoggerLevelsChanged();
 	//}
 
-	//Parameters
+	//define variables for Parameters 
 		double m; //mass in kg
 		double g;
 		double cd; // drag coefficient
@@ -240,23 +206,10 @@ int main(int argc, char **argv)
 	    double ki_Pitch;
 	    double kd_Pitch;
 
-	    int kp_Yaw_dec = 0;
-	    int kp_Yaw_int = 5;
-
-//	    int variableThatIWantToModify = 5;
-
-	    // Adds the variables that you want to modify with the trackbars.
-	    if (isUsingControlTrackbarWindow) {
-	    	// Instantiates the window object used for the trackbars.
-	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_NAME, CV_WINDOW_KEEPRATIO);
-	    	ROS_INFO("Controls::The trackbars window was created.");
-
-	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
-	    	cv::createTrackbar("kp_Yaw_dec", CONTROL_TRACKBARS_WINDOW_NAME, &kp_Yaw_dec, 10);
-	    	cv::createTrackbar("kp_Yaw_int", CONTROL_TRACKBARS_WINDOW_NAME, &kp_Yaw_int, 25);
-	    }
-
-	    ROS_INFO("Controls::The window should be instantiated.");
+	    double OL_coef_x;	//set later in the controller
+	    double OL_coef_y;
+	    double OL_coef_yaw;
+	   
 
     //ROS Params
 
@@ -285,7 +238,7 @@ int main(int argc, char **argv)
 	    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
 
 	   
-	    n.param<double>("coefs/mass", m, 30.0);
+	    n.param<double>("coefs/mass", m, -1); //defaut negative to check for proper loading
 	    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
 	    n.param<double>("coefs/drag", cd, 0.0);
 	    n.param<double>("coefs/gravity", g, 9.81);
@@ -294,16 +247,32 @@ int main(int argc, char **argv)
 		n.param<double>("force/max", F_MAX, 0.0);
 		n.param<double>("torque/max", T_MAX, 0.0);
 
-		n.param<double>("ep_XPos/max", EP_XPOS_MAX, 0.0);
-		n.param<double>("ep_YPos/max", EP_YPOS_MAX, 0.0);
+		n.param<double>("max_error_x_p", MAX_ERROR_X_P, 0.0);
+		n.param<double>("max_error_y_p", MAX_ERROR_Y_P, 0.0);
+		n.param<double>("max_error_z_p", MAX_ERROR_Z_P, 0.0);
+		n.param<double>("max_error_pitch_p", MAX_ERROR_PITCH_P, 0.0);
+		n.param<double>("max_error_yaw_p", MAX_ERROR_YAW_P, 0.0);
+		
+		n.param<double>("max_error_x_d", MAX_ERROR_X_D, 0.0);
+		n.param<double>("max_error_y_d", MAX_ERROR_Y_D, 0.0);
+		n.param<double>("max_error_z_d", MAX_ERROR_Z_D, 0.0);
+		n.param<double>("max_error_pitch_d", MAX_ERROR_PITCH_D, 0.0);
+		n.param<double>("max_error_yaw_d", MAX_ERROR_YAW_D, 0.0);	
+
 		n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
 		n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
 
 		n.param<double>("Pitch/max", PITCH_MAX, 0.0);
 		n.param<double>("Yaw/max", YAW_MAX, 0.0);
 
+	    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
+	    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
+	    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
 
-	//initializations
+		if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
+
+
+	//define and initialize error variables
 	
 
 	    double ep_XPos = 0; //error
@@ -327,16 +296,13 @@ int main(int argc, char **argv)
 	    double ed_Yaw = 0;
 	    double ep_Yaw_prev = 0;
 
-
+	//Define wrench variables. They get reinitialized to zero on each iteration.
 	    double Fx = 0;
 	    double Fy = 0;
 	    double Fz = 0;
 	    double Ty = 0;
 	    double Tz = 0;
 
-	    double OL_coef_x;	//set later in the controller
-	    double OL_coef_y;
-	    double OL_coef_yaw;
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
@@ -366,24 +332,13 @@ int main(int argc, char **argv)
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
+		double currentTime = ros::Time::now().toSec();
+		ROS_INFO("\n--\nTop of main loop - currentTime: %f", currentTime);
 		ros::spinOnce();	//Updates all variables
 		getStateFromTF();
-		
-		// Updates the variables to what the value set in the trackbar.
-		kp_Yaw = (double)kp_Yaw_int + (double)kp_Yaw_dec / 10;
+		currentTime = ros::Time::now().toSec();
 
-		ROS_INFO(("Controls::kp_Yaw value " + boost::lexical_cast<std::string>(kp_Yaw)).c_str());
-
-		// Refreshes the window.
-		if (isUsingControlTrackbarWindow) {
-			// I know this is not awesome, but you need to wait 1 milisecond if you want to be able
-			// to listen to events from the trackbars in the window....
-			cv::waitKey(1);
-		}
-
-		// Decoupled Controllers
-
-		//zero unless otherwise specified
+		//zero wrench unless otherwise specified
 		Fx = 0;
     	Fy = 0;
     	Fz = 0;
@@ -402,9 +357,10 @@ int main(int argc, char **argv)
 			{
 				ep_XPos_prev = ep_XPos;
 				ep_XPos = setPoint_XPos - estimated_XPos;
-				ep_XPos=saturate(ep_XPos, EP_XPOS_MAX, "X Position Error term");
+				ep_XPos=saturate(ep_XPos, MAX_ERROR_X_P, "X Proportional Error");
 				ei_XPos += ep_XPos*dt;
 				ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
+				ed_XPos = saturate(ed_XPos, MAX_ERROR_X_D, "X Derivative Error");
 				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
 				Fx *= -1; //flip direction to account for relative coordinate system
 				//ROS_INFO("controlling xpos");
@@ -418,7 +374,6 @@ int main(int argc, char **argv)
         
         if (isActive_XSpeed)
         {
-        	OL_coef_x = 5;
            	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	//ROS_INFO("controlling xspeed");
@@ -431,7 +386,7 @@ int main(int argc, char **argv)
 			{
 				ep_YPos_prev = ep_YPos;
 				ep_YPos = setPoint_YPos - estimated_YPos;
-				ep_YPos=saturate(ep_YPos, EP_YPOS_MAX, "Y Position Error term");
+				ep_YPos=saturate(ep_YPos, MAX_ERROR_Y_P, "Y Position Error term");
 				ei_YPos += ep_YPos*dt;
 				ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 				Fy = kp_yPos*ep_YPos + ki_yPos*ei_YPos + kd_yPos*ed_YPos;
@@ -444,7 +399,6 @@ int main(int argc, char **argv)
         }
         if (isActive_YSpeed)
         {
-        	OL_coef_y = 5;
         	setPoint_YSpeed=saturate(setPoint_YSpeed, YSPEED_MAX, "Y Speed");
         	Fy = OL_coef_y*setPoint_YSpeed;
         }
@@ -495,103 +449,90 @@ int main(int argc, char **argv)
 
 		if (isActive_YawSpeed)
         {
-        	OL_coef_yaw = 1;
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
 		//Limit check for output force/torque values
-		Fx=saturate(Fx, F_MAX, "Force: X");
-		Fy=saturate(Fy, F_MAX, "Force: Y");
-		Fz=saturate(Fz, F_MAX, "Force: Z");
-		Ty=saturate(Ty, T_MAX, "Torque: Y");
-		Tz=saturate(Tz, T_MAX, "Torque: Z");
+			Fx=saturate(Fx, F_MAX, "Force: X");
+			Fy=saturate(Fy, F_MAX, "Force: Y");
+			Fz=saturate(Fz, F_MAX, "Force: Z");
+			Ty=saturate(Ty, T_MAX, "Torque: Y");
+			Tz=saturate(Tz, T_MAX, "Torque: Z");
 
-		// Assemble Wrench
-		wrenchMsg.force.x = Fx;
-		wrenchMsg.force.y = Fy;
-		wrenchMsg.force.z = Fz;
-		wrenchMsg.torque.x = 0;	//no active roll control
-		wrenchMsg.torque.y = Ty;
-		wrenchMsg.torque.z = Tz;
+		// Assemble Wrench Message
+			wrenchMsg.force.x = Fx;
+			wrenchMsg.force.y = Fy;
+			wrenchMsg.force.z = Fz;
+			wrenchMsg.torque.x = 0;	//no active roll control
+			wrenchMsg.torque.y = Ty;
+			wrenchMsg.torque.z = Tz;
 
-		// Assemble Debug
+		// Assemble Debug Message
 
 			// Error
-			debugMsg.xError.proportional = ep_XPos;
-			debugMsg.yError.proportional = ep_YPos;
-			debugMsg.depthError.proportional = ep_Depth;
-			debugMsg.pitchError.proportional = ep_Pitch;
-			debugMsg.yawError.proportional = ep_Yaw;
+				debugMsg.xError.proportional = ep_XPos;
+				debugMsg.yError.proportional = ep_YPos;
+				debugMsg.depthError.proportional = ep_Depth;
+				debugMsg.pitchError.proportional = ep_Pitch;
+				debugMsg.yawError.proportional = ep_Yaw;
 
-			debugMsg.xError.integral = ei_XPos;
-			debugMsg.yError.integral = ei_YPos;
-			debugMsg.depthError.integral = ei_Depth;
-			debugMsg.pitchError.integral = ei_Pitch;
-			debugMsg.yawError.integral = ei_Yaw;
+				debugMsg.xError.integral = ei_XPos;
+				debugMsg.yError.integral = ei_YPos;
+				debugMsg.depthError.integral = ei_Depth;
+				debugMsg.pitchError.integral = ei_Pitch;
+				debugMsg.yawError.integral = ei_Yaw;
 
-			debugMsg.xError.derivative = ed_XPos;
-			debugMsg.yError.derivative = ed_YPos;
-			debugMsg.depthError.derivative = ed_Depth;
-			debugMsg.pitchError.derivative = ed_Pitch;
-			debugMsg.yawError.derivative = ed_Yaw;
+				debugMsg.xError.derivative = ed_XPos;
+				debugMsg.yError.derivative = ed_YPos;
+				debugMsg.depthError.derivative = ed_Depth;
+				debugMsg.pitchError.derivative = ed_Pitch;
+				debugMsg.yawError.derivative = ed_Yaw;
 
-			// Gains
-			
-			debugMsg.xGain.proportional = kp;
-			debugMsg.xGain.integral = ki;
-			debugMsg.xGain.derivative = kd;
+			// Gains	
+				debugMsg.xGain.proportional = kp;
+				debugMsg.xGain.integral = ki;
+				debugMsg.xGain.derivative = kd;
 
-			/*
-			debugMsg.xGain.proportional = kp_xPos;
-			debugMsg.yGain.proportional = kp_yPos;
-			debugMsg.depthGain.proportional = kp_Depth;
-			debugMsg.pitchGain.proportional = kp_Pitch;
-			debugMsg.yawGain.proportional = kp_Yaw;
+				
+				debugMsg.xGain.proportional = kp_xPos;
+				debugMsg.yGain.proportional = kp_yPos;
+				debugMsg.depthGain.proportional = kp_Depth;
+				debugMsg.pitchGain.proportional = kp_Pitch;
+				debugMsg.yawGain.proportional = kp_Yaw;
 
-			debugMsg.xGain.integral = ki_xPos;
-			debugMsg.yGain.integral = ki_yPos;
-			debugMsg.depthGain.integral = ki_Depth;
-			debugMsg.pitchGain.integral = ki_Pitch;
-			debugMsg.yawGain.integral = ki_Yaw;
+				debugMsg.xGain.integral = ki_xPos;
+				debugMsg.yGain.integral = ki_yPos;
+				debugMsg.depthGain.integral = ki_Depth;
+				debugMsg.pitchGain.integral = ki_Pitch;
+				debugMsg.yawGain.integral = ki_Yaw;
 
-			debugMsg.xGain.derivative = kd_xPos;
-			debugMsg.yGain.derivative = kd_yPos;
-			debugMsg.depthGain.derivative = kd_Depth;
-			debugMsg.pitchGain.derivative = kd_Pitch;
-			debugMsg.yawGain.derivative = kd_Yaw;
-			*/
-			
+				debugMsg.xGain.derivative = kd_xPos;
+				debugMsg.yGain.derivative = kd_yPos;
+				debugMsg.depthGain.derivative = kd_Depth;
+				debugMsg.pitchGain.derivative = kd_Pitch;
+				debugMsg.yawGain.derivative = kd_Yaw;
+				
 			// Forces
-			debugMsg.xForce.proportional = kp*ep_XPos;
-			debugMsg.yForce.proportional = kp*ep_YPos;
-			debugMsg.depthForce.proportional = kp*ep_Depth;
-			debugMsg.pitchForce.proportional = kp*ep_Pitch;
-			debugMsg.yawForce.proportional = kp*ep_Yaw;
+				debugMsg.xForce.proportional = kp*ep_XPos;
+				debugMsg.yForce.proportional = kp*ep_YPos;
+				debugMsg.depthForce.proportional = kp*ep_Depth;
+				debugMsg.pitchForce.proportional = kp*ep_Pitch;
+				debugMsg.yawForce.proportional = kp*ep_Yaw;
 
-			debugMsg.xForce.integral = kp*ei_XPos;
-			debugMsg.yForce.integral = kp*ei_YPos;
-			debugMsg.depthForce.integral = kp*ei_Depth;
-			debugMsg.pitchForce.integral = kp*ei_Pitch;
-			debugMsg.yawForce.integral = kp*ei_Yaw;
+				debugMsg.xForce.integral = kp*ei_XPos;
+				debugMsg.yForce.integral = kp*ei_YPos;
+				debugMsg.depthForce.integral = kp*ei_Depth;
+				debugMsg.pitchForce.integral = kp*ei_Pitch;
+				debugMsg.yawForce.integral = kp*ei_Yaw;
 
-			debugMsg.xForce.derivative = kp*ed_XPos;
-			debugMsg.yForce.derivative = kp*ed_YPos;
-			debugMsg.depthForce.derivative = kp*ed_Depth;
-			debugMsg.pitchForce.derivative = kp*ed_Pitch;
-			debugMsg.yawForce.derivative = kp*ed_Yaw;
-
+				debugMsg.xForce.derivative = kp*ed_XPos;
+				debugMsg.yForce.derivative = kp*ed_YPos;
+				debugMsg.depthForce.derivative = kp*ed_Depth;
+				debugMsg.pitchForce.derivative = kp*ed_Pitch;
+				debugMsg.yawForce.derivative = kp*ed_Yaw;
 
 		wrench_publisher.publish(wrenchMsg);
 		debug_publisher.publish(debugMsg);
 		loop_rate.sleep();
-
-
-	}
-
-	if (isUsingControlTrackbarWindow) {
-		ROS_INFO("Freeing memory used by the trackbar window.");
-		// Frees the memory used by the instantiated window.
-		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_NAME);
-	}
-
+	} //end while ros ok
 	return 0;
-}
+} //end int main}

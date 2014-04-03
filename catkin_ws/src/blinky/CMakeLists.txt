@@ -110,6 +110,8 @@ add_executable(BatteryClientExample src/BatteryClientExample.cpp)
 add_dependencies(BlinkyAPI blinky_generate_messages_cpp)
 add_dependencies(BatteryClientExample blinky_generate_messages_cpp)
 add_dependencies(PlannerClientExample blinky_generate_messages_cpp)
+add_dependencies(BlinkyAPI ${catkin_EXPORTED_TARGETS})
+
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(

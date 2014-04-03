@@ -80,6 +80,7 @@ class PS3Controller(object):
     #@param self the object pointer
     def updateController(self):
         # If a changed occurred, the value will be updated; else the value will be the last one fetched.
+
         if self.controller_isPresent:
             for anEvent in pygame.event.get():
                 if anEvent.type == pygame.locals.JOYBUTTONDOWN:

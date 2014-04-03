@@ -1,6 +1,5 @@
 <launch>
   <!-- launches: everything planner needs running before it can start-->
-  <!-- WARNING: DOES NOT START PLANNER -->
   <!-- Written by Alex Reiff, Jan 29, McGill Robotics -->
   <!-- Copied from Nick Speal's "template" in Controls -->
 
