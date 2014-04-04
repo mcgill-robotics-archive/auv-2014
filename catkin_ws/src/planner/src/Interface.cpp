@@ -353,7 +353,7 @@ void updateBlinkyTape(int myColor) {
 		colors.push_back(color);
 	}
 	//send_colorList(colors);
-	blinky::BlinkyTapeService srv;
+	blinky::BlinkyService srv;
 	srv.request.btColors = colors;
 	//1 is the code for planner
 	srv.request.blinkyID = 1;
@@ -376,7 +376,7 @@ int main(int argc, char **argv) {
 	//estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
-	btClient = n.serviceClient<blinky::BlinkyTapeService>("BlinkyDisplay");
+	btClient = n.serviceClient<blinky::BlinkyService>("BlinkyDisplay");
 
 	taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000);
 	taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000);

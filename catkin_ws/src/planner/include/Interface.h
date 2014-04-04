@@ -24,9 +24,8 @@
 #include <gazebo_msgs/ModelState.h>
 #include <gazebo_msgs/SetModelState.h>
 #include <ros/callback_queue.h>
-#include "blinky/RGBArray.h"
 #include "blinky/RGB.h"
-#include "blinky/BlinkyTapeService.h"
+#include "blinky/BlinkyService.h"
 
 enum BlinkyColors {RED, GREEN, BLUE, WHITE, BLACK, PURPS};
 
