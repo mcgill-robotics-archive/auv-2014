@@ -66,19 +66,19 @@ void motorCb( const controls::motorCommands& msg){
   //lastMotorCommand = millis();
   myservo[0].writeMicroseconds(1500 + boundCheck(msg.cmd_x1));
   myservo[1].writeMicroseconds(1500 + boundCheck(msg.cmd_x2));
-  myservo[2].writeMicroseconds(1463 + boundCheck(msg.cmd_y1));
-  myservo[3].writeMicroseconds(1463 + boundCheck(msg.cmd_y2));
-  myservo[4].writeMicroseconds(1459 + boundCheck(msg.cmd_z1));
-  myservo[5].writeMicroseconds(1463 + boundCheck(msg.cmd_z2));
+  myservo[2].writeMicroseconds(1500 + boundCheck(msg.cmd_y1));
+  myservo[3].writeMicroseconds(1500 + boundCheck(msg.cmd_y2));
+  myservo[4].writeMicroseconds(1500 + boundCheck(msg.cmd_z1));
+  myservo[5].writeMicroseconds(1500 + boundCheck(msg.cmd_z2));
 }
 
 void resetMotor(){
   myservo[0].writeMicroseconds(1500);
   myservo[1].writeMicroseconds(1500);
-  myservo[2].writeMicroseconds(1463);
-  myservo[3].writeMicroseconds(1463);
-  myservo[4].writeMicroseconds(1459);
-  myservo[5].writeMicroseconds(1463);
+  myservo[2].writeMicroseconds(1500);
+  myservo[3].writeMicroseconds(1500);
+  myservo[4].writeMicroseconds(1500);
+  myservo[5].writeMicroseconds(1500);
 }
 
 
