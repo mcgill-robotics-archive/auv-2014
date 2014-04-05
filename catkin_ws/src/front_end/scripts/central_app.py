@@ -154,10 +154,10 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End', anonymous=True)
-        rospy.Subscriber("/state_estimation/depth", Float32, self.depth_callback)
+        rospy.Subscriber("/depth", Int16, self.depth_callback)
         rospy.Subscriber("/batteryVoltage1", Float32, self.bat_1)
         rospy.Subscriber("/batteryVoltage2", Float32, self.bat_2)
-        rospy.Subscriber("/front_left_camera/image_rect_color", Image, self.front_left_pre_callback)
+        rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
         rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
         rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
         rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
@@ -553,7 +553,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.bat_lcd2.display(voltage_data.data)
 
     def check_low_bat(self):
-        if self.ui.bat_lcd1.value()+self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
+        if self.ui.bat_lcd1.value()<misc_vars.low_battery_threshold or self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
             self.play_alarm()
             self.open_low_battery_dialog()
 

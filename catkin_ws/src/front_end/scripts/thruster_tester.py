@@ -139,11 +139,11 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.fiel_thruster_5.setValue( self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
         if (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
-            self.ui.fiel_thruster_3.setValue( 500)
+            self.ui.fiel_thruster_6.setValue( 500)
         elif (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
-            self.ui.fiel_thruster_3.setValue( -500)
+            self.ui.fiel_thruster_6.setValue( -500)
         else:
-            self.ui.fiel_thruster_3.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
+            self.ui.fiel_thruster_6.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
     def publish_thrusters(self):
         vel_pub = rospy.Publisher("/motor", motorCommands)
