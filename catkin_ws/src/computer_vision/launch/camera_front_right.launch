@@ -1,4 +1,5 @@
 <launch>
+
   <group ns="camera_front_right" >
     <node pkg="camera1394" type="camera1394_node" name="camera1394_node" >
       <param name="guid" value="00b09d0100cd1e8d" />
@@ -10,10 +11,18 @@
       <param name="bayer_pattern" value="gbrg" />
       <param name="format7_color_coding" value="raw8"/>
     </node>
-    <node ns="camera" pkg="image_proc" type="image_proc"
-          name="image_proc" />
-    <node pkg="image_view" type="image_view" name="image_view" >
-      <remap from="image" to="camera/image_color" />
-    </node>
+
+    <!-- Launches the node that will rectify the image based on the calibration .yaml file. -->
+    <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" />
+
+    <!-- Launches the image viewer if the parameter 'viewFeed' is set to 1 -->
+    <arg name="viewFeed" default="0"/>
+    <group if="$(arg viewFeed)">
+      <node pkg="image_view" type="image_view" name="image_view" >
+        <remap from="image" to="camera/image_color" />
+      </node>
+    </group>
+    
   </group>
+
 </launch>
