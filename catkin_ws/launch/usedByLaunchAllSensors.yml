@@ -1,0 +1,10 @@
+# This file launches 4 tmux terminals and launches the arduino node, and the cameras node.
+windows:
+  - name: "all-sensor-nodes"
+    root: "~/"
+    layout: tiled
+    panes:
+      - cmd: ["roslaunch ~/McGill_RoboSub_2014/catkin_ws/launch/arduino.launch"]
+      - cmd: ["roslaunch computer_vision camera_down.launch"]
+      - cmd: ["roslaunch computer_vision camera_front_left.launch"]
+      - cmd: ["roslaunch computer_vision camera_front_right.launch"]
