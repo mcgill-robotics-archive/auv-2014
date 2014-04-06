@@ -25,6 +25,7 @@
     /setPoints/XPos/data
     /controls/debug/xError/proportional
     /controls/debug/xError/derivative
+    /front_cv/data/x_distance
     "
     />
 

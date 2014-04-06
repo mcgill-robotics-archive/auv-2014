@@ -15,8 +15,8 @@ class vel_vars(object):
     z_position = 9
     z_position_step = 0.2
 
-    MAX_YAW_VEL = 5
-    MAX_LINEAR_VEL = 5
+    MAX_YAW_VEL = 10
+    MAX_LINEAR_VEL = 10
 
 
 ##    Here we define the keyboard map for our controller
@@ -35,7 +35,7 @@ class KeyMapping(object):
 ##    various parameters and constants
 class misc_vars(object):
     controller_updateFrequency = 50
-    low_battery_threshold = 2.0
+    low_battery_threshold = 22.0
     max_voltage = 24.0
     GUI_UPDATE_PERIOD = 10 #ms
     length_plot = 50

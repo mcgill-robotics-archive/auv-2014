@@ -15,7 +15,7 @@ from low_battery_warning import*
 from PyQt4 import QtCore, QtGui
 
 import velocity_publisher  # custom modules for publishing cmd_vel and desired z position
-import PS3Controller  # custom modules for acquiring ps3 input
+import PS3Controller_central  # custom modules for acquiring ps3 input
 
 from VARIABLES import *  # file containing all the shared variables and parameters
 
@@ -28,6 +28,7 @@ import pygame  # module top play the alarm
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
 from std_msgs.msg import Float64
+from std_msgs.msg import Int16
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
 
@@ -117,7 +118,7 @@ class CentralUi(QtGui.QMainWindow):
         self.key_timer = QtCore.QTimer()
 
         ## create the ps3 controller object
-        self.ps3 = PS3Controller.PS3Controller()
+        self.ps3 = PS3Controller_central.PS3Controller()
         ## creates battery depleted ui
         self.warning_ui = BatteryWarningUi(self)
 
@@ -127,10 +128,6 @@ class CentralUi(QtGui.QMainWindow):
         # initiate pygame for the battery alarm
         pygame.init()
         pygame.mixer.init()
-
-        #TODO: change path to a machine specific path, I can't get this thing to work with a relative path
-        ## path to alarm sound
-        self.alarm_file = "/home/david/repo/McGill_RoboSub_2014/catkin_ws/src/front_end/scripts/resource/Ticktac.wav"
 
         # buttons connects
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
@@ -156,20 +153,20 @@ class CentralUi(QtGui.QMainWindow):
     #note that all the topic names are set in the file "VARIABLES.py"
     #@param self the object pointer
     def start_ros_subscriber(self):
-        rospy.init_node('Front_End_UI', anonymous=True)
-        rospy.Subscriber("/state_estimation/depth", Float32, self.depth_callback)
-        rospy.Subscriber("/arduino/battery_voltage1", Float64, self.bat_1)
-        rospy.Subscriber("/arduino/battery_voltage2", Float64, self.bat_2)
-        rospy.Subscriber("/front_left_camera/image", Image, self.front_left_pre_callback)
-        rospy.Subscriber("/front_right_camera/image", Image, self.front_right_pre_callback)
-        rospy.Subscriber("/down_right_camera/image", Image, self.down_pre_callback)
+        rospy.init_node('Front_End', anonymous=True)
+        rospy.Subscriber("/depth", Int16, self.depth_callback)
+        rospy.Subscriber("/batteryVoltage1", Float32, self.bat_1)
+        rospy.Subscriber("/batteryVoltage2", Float32, self.bat_2)
+        rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
+        rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
+        rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
         rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
         rospy.Subscriber("/front_cv/camera2", Image, self.front_post_right_callback)
         rospy.Subscriber("/down_cv/camera1", Image, self.down_post_callback)
         rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
         rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/arduino/temperature", Float32, self.temp_callback)
+        rospy.Subscriber("/temperature", Int16, self.temp_callback)
 
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
@@ -286,29 +283,25 @@ class CentralUi(QtGui.QMainWindow):
     def set_controller_timer(self):
         # radio button PS3
         if self.ui.manualControl.isChecked():
-            self.keyboard_control=False
+            self.keyboard_control = False
             self.key_timer.stop()
+
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent:
-                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/green.gif"))
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
             else:
-                #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
                 pass
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
             self.ps3_timer.stop()
             self.keyboard_control = True
-            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/yellow.gif"))
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
-            #QtCore.QTimer.singleShot(0, self.planner)
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
-            velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "planner/setPoints", 0)
-            #self.ui.colourStatus.setPixmap(QtGui.QPixmap(":/Images/red.jpg"))
+            velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints", 0)
 
     ##  Method for the keyboard controller
     #
@@ -329,7 +322,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "planner/setPoints",1)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints",1)
 
     ## Method for the ps3 control
     #
@@ -357,7 +350,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "planner/setPoints", 1)
+        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints", 1)
 
     ## updates the data displayed by the depth graph
     #
@@ -373,7 +366,7 @@ class CentralUi(QtGui.QMainWindow):
             self.depth_graph.setYRange(0, misc_vars.depth_max)
 
     def temp_callback(self, temp):
-        self.ui.temp_ind.display(temp)
+        self.ui.temp_ind.display(temp.data)
 
     ##
     #appends the last message recieved from planner to a textbox in screen
@@ -550,13 +543,19 @@ class CentralUi(QtGui.QMainWindow):
     # @param self the object pointer
     # @param voltage_data data received by the subscriber
     def bat_1(self, voltage_data):
-        self.ui.bat_lcd1.display(voltage_data)
+        self.ui.bat_lcd1.display(voltage_data.data)
         #if (not self.battery_empty) and voltage_data.data < misc_vars.low_battery_threshold:
         #    self.battery_empty = True
         #    self.empty_battery_signal.emit()
         #    self.play_alarm()
+
     def bat_2(self, voltage_data):
-        self.ui.bat_lcd2.display(voltage_data)
+        self.ui.bat_lcd2.display(voltage_data.data)
+
+    def check_low_bat(self):
+        if self.ui.bat_lcd1.value()<misc_vars.low_battery_threshold or self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
+            self.play_alarm()
+            self.open_low_battery_dialog()
 
     ## start the alarm sound
     #

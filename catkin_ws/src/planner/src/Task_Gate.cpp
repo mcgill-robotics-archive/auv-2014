@@ -26,6 +26,7 @@ int Task_Gate::Execute() {
 	ROS_INFO("%s", "Gate Task setting position relative to gate:  setPosition(-1, 0, 0, 0, 8.8)");
 
 	setVisionObj(1);
+	updateBlinkyTape(PURPS);
 	loop_rate.sleep();
 	
 	//std::vector<double> desired =  (1.0, 0.0, 0.0, 0.0, 8.8);

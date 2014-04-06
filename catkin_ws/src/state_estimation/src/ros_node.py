@@ -67,8 +67,8 @@ def init():
     # Subscribe to different inputing topics
     rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
-    rospy.Subscriber('pose', PoseStamped, imuCallback)
-    rospy.Subscriber('depth', Float64, depthCallback)
+    rospy.Subscriber('state_estimation/pose', PoseStamped, imuCallback)
+    rospy.Subscriber('state_estimation/depth', Float64, depthCallback)
 
     # Publish the filtered data to a topic
     pub = rospy.Publisher('state_estimation/state_estimate', AUVState)

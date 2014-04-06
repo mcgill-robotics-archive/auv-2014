@@ -22,7 +22,9 @@ gains/kp_Yaw: .2
 gains/ki_Yaw: 0
 gains/kd_Yaw: 1
 
-
+gains/OL_coef_x: 5
+gains/OL_coef_y: 5
+gains/OL_coef_yaw: 1
 
 setPoints/XPos/value: 0.5
 setPoints/XSpeed/value: 0
@@ -70,7 +72,7 @@ coefs/mass: 30
 coefs/buoyancy: 0.02
 coefs/drag: 0.1
 coefs/gravity: 9.81
-coefs/dt: 0.1
+coefs/dt: 0.5
 
 #thrust_mapper parameters
 voltage/min: -20 

@@ -87,12 +87,35 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 		//Conversion to integer between -500 and +500
 		//linear for now TODO change mapping according to motor controller characterization test
 
+/*
+	OLD THRUST MAPPING. MODIFIED RIGHT BEFORE TEST ON APRIL 3
+
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
 	for (int i=0; i<6; i++)
 	{	
 		motor_cmd[i]=21.93*voltage[i]-33.729; //TODO Take out of loop, use data from all motor controller characterization tests
 		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
+
+
+*/
+
+	//NEW voltage mapping. modified right before test on april 3
+
+	motor_cmd[0] = 21.176*voltage[0] - 4.4494;
+	motor_cmd[1] = 21.2*voltage[1] - 1.324;
+	motor_cmd[2] = 20.686*voltage[2] - 28.9;
+	motor_cmd[3] = 20.704*voltage[3] - 24.533;
+	motor_cmd[4] = 20.583*voltage[4] - 30.652;
+	motor_cmd[5] = 20.63*voltage[5] - 26.482;
+
+
+	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
+	for (int i=0; i<6; i++)
+	{	
+		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
+	}
+
 
 	motorCommands.cmd_x1=motor_cmd[0];
 	motorCommands.cmd_x2=motor_cmd[1];
@@ -134,7 +157,7 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	voltage_publisher = n.advertise<controls::motorCommands>("/controls/motorCommands", 100); //TODO change message type and name
+	voltage_publisher = n.advertise<controls::motorCommands>("/motor", 100); //TODO change message type and name
 	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
 
 	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");

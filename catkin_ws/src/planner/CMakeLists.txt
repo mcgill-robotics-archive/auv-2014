@@ -7,6 +7,7 @@ project(planner)
    geometry_msgs
    simulator
    message_generation
+   blinky
  )
 
 ################################################

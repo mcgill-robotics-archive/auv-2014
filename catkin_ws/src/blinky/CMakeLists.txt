@@ -53,7 +53,7 @@ add_message_files(
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  BlinkyTapeService.srv
+  BlinkyService.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -107,6 +107,7 @@ add_executable(BatteryClientExample src/BatteryClientExample.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
+add_dependencies(BlinkyAPI blinky_generate_messages_cpp)
 add_dependencies(BatteryClientExample blinky_generate_messages_cpp)
 add_dependencies(PlannerClientExample blinky_generate_messages_cpp)
 add_dependencies(BlinkyAPI ${catkin_EXPORTED_TARGETS})

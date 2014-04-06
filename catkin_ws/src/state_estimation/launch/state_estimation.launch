@@ -1,0 +1,10 @@
+<launch>
+	<!-- launches 3 nodes: State estimation, and XimuPublisher and depth publishers for use with the testing -->   
+
+	<node name="state_estimation" pkg="state_estimation" type="state_estimation" respawn="false" output="screen"/>         
+
+	<node name="XimuPublisher" pkg="sensor_publisher" type="XimuPublisher"  respawn="false" output="screen"/>   
+
+	<node name="depth_node" pkg="state_estimation" type="depth_node"  respawn="false" output="screen" />
+
+</launch>

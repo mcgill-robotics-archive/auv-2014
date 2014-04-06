@@ -1,0 +1,6 @@
+<launch>
+	<!-- launches gui_controls node. -->	
+    <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/>   <!-- Parameters needed for controls to work at all!!! -->
+  <!-- Controls node -->
+	 <node name="gui_controls" pkg="controls" type="gui_controls"  respawn="false" output="screen"/>
+</launch>
