@@ -150,19 +150,19 @@ class CentralUi(QtGui.QMainWindow):
 
         msg = motorCommands()
         if not self.ui.thruster_stop.isChecked():
-            msg.cmd_x1 = self.ui.fiel_thruste_1.value()
-            msg.cmd_x2 = self.ui.fiel_thruster_2.value()
-            msg.cmd_y1 = self.ui.fiel_thruster_3.value()
-            msg.cmd_y2 = self.ui.fiel_thruster_4.value()
-            msg.cmd_z1 = self.ui.fiel_thruster_5.value()
-            msg.cmd_z2 = self.ui.fiel_thruster_6.value()
+            msg.cmd_surge_starboard = self.ui.fiel_thruste_1.value()
+            msg.cmd_surge_port = self.ui.fiel_thruster_2.value()
+            msg.cmd_sway_bow = self.ui.fiel_thruster_3.value()
+            msg.cmd_sway_stern = self.ui.fiel_thruster_4.value()
+            msg.cmd_heave_bow = self.ui.fiel_thruster_5.value()
+            msg.cmd_heave_stern = self.ui.fiel_thruster_6.value()
         else:
-            msg.cmd_x1 = 0
-            msg.cmd_x2 = 0
-            msg.cmd_y1 = 0
-            msg.cmd_y2 = 0
-            msg.cmd_z1 = 0
-            msg.cmd_z2 = 0
+            msg.cmd_surge_starboard = 0
+            msg.cmd_surge_port = 0
+            msg.cmd_sway_bow = 0
+            msg.cmd_sway_stern = 0
+            msg.cmd_heave_bow = 0
+            msg.cmd_heave_stern = 0
 
         vel_pub.publish(msg)
 
