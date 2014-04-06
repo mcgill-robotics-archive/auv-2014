@@ -17,6 +17,7 @@ def poseCallback(pose):
     pose.pose.position.x = float(position[0])
     pose.pose.position.y = float(position[1])
     pose.pose.position.z = float(position[2])
+    pose.header.frame_id = 'base_link'
     pub.publish(pose)
 
 
@@ -24,7 +25,7 @@ def accCallback(acc):
     global time, position, velocity
     if time:
         dt = (rospy.Time.now() - time).to_sec()
-        acc = np.matrix([[acc.x],[acc.y],[acc.z]])
+        acc = np.matrix([[acc.x],[-acc.z],[acc.y]])
         g = QU.rotateVectorByQuaternion(np.matrix([[0],[0],[1.0]]), orientation)
         acc = 9.8*(acc - g)
         velocity += acc*dt
@@ -38,8 +39,8 @@ def init():
 
     rospy.init_node('integrate_acc')
     # Subscribe to different inputing topics
-    rospy.Subscriber('pose', PoseStamped, poseCallback)
-    rospy.Subscriber('acc', Vector3, accCallback)
+    rospy.Subscriber('/state_estimation/pose', PoseStamped, poseCallback)
+    rospy.Subscriber('/state_estimation/acc', Vector3, accCallback)
 
     # Publish the filtered data to a topic
     pub = rospy.Publisher('integrated_acc', PoseStamped)

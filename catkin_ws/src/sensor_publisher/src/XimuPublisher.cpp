@@ -76,9 +76,9 @@ if (receiver.isQuaternionGetReady()) {
 			q[3] = quaternionStruct.z;
     	    		multiplyQuaternions(q, prerotation);
 			pos.orientation.w = q[0];
-			pos.orientation.x = -q[1];
+			pos.orientation.x = q[1];
 			pos.orientation.y = q[2];
-			pos.orientation.z = -q[3];
+			pos.orientation.z = q[3];
 			
 			posStamped = geometry_msgs::PoseStamped();
 			posStamped.pose = pos;
