@@ -116,13 +116,12 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
 
-
-	motorCommands.cmd_x1=motor_cmd[0];
-	motorCommands.cmd_x2=motor_cmd[1];
-	motorCommands.cmd_y1=motor_cmd[2];
-	motorCommands.cmd_y2=motor_cmd[3];
-	motorCommands.cmd_z1=motor_cmd[4];
-	motorCommands.cmd_z2=motor_cmd[5]; 
+	motorCommands.cmd_surge_starboard=motor_cmd[0];
+	motorCommands.cmd_surge_port=motor_cmd[1];
+	motorCommands.cmd_sway_bow=motor_cmd[2];
+	motorCommands.cmd_sway_stern=motor_cmd[3];
+	motorCommands.cmd_heave_bow=motor_cmd[4];
+	motorCommands.cmd_heave_stern=motor_cmd[5];
 
 	DebugControls.thrust_surge_port=thrust[0];
 	DebugControls.thrust_surge_starboard=thrust[1];
