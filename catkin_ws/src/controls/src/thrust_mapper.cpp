@@ -99,8 +99,8 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 
 
 */
-
-	//NEW voltage mapping. modified right before test on april 3
+/*
+	//less old voltage mapping. modified right before test on april 3
 
 	motor_cmd[0] = 21.176*voltage[0] - 4.4494;
 	motor_cmd[1] = 21.2*voltage[1] - 1.324;
@@ -108,6 +108,15 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	motor_cmd[3] = 20.704*voltage[3] - 24.533;
 	motor_cmd[4] = 20.583*voltage[4] - 30.652;
 	motor_cmd[5] = 20.63*voltage[5] - 26.482;
+*/
+
+	// y intercepts moved because the offsets will be done on the arduino
+	motor_cmd[0] = 21.176*voltage[0];
+	motor_cmd[1] = 21.2*voltage[1];
+	motor_cmd[2] = 20.686*voltage[2];
+	motor_cmd[3] = 20.704*voltage[3];
+	motor_cmd[4] = 20.583*voltage[4];
+	motor_cmd[5] = 20.63*voltage[5];
 
 
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
