@@ -73,14 +73,15 @@ def update_colors(req):
 		with lock:
 			blinky2_colorList = colorList
 	else:
-		return BlinkyTapeServiceResponse(UNKNOWN_ID)
+		return BlinkyServiceResponse(UNKNOWN_ID)
 
-	return BlinkyTapeServiceResponse(SUCCESS)
+        print colorList
+	return BlinkyServiceResponse(SUCCESS)
 
 def BlinkyTapeServer():
 	initialize_blinkies()
-	rospy.init_node('BlinkyDisplay')
-	s = rospy.Service('BlinkyDisplay', BlinkyTapeService, update_colors)
+	rospy.init_node('Blinky')
+	s = rospy.Service('Blinky', BlinkyService, update_colors)
 
 	lock = threading.Lock()
 	
