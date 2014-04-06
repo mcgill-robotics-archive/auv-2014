@@ -100,7 +100,7 @@ printf("Starting XimuPublisher\n");
 	ros::NodeHandle node;
 
 	pub = node.advertise<geometry_msgs::PoseStamped>("state_estimation/pose", 100);
-    pub2 = node.advertise<geometry_msgs::Vector3>("acc", 100);
+    pub2 = node.advertise<geometry_msgs::Vector3>("state_estimation/acc", 100);
     // Publish raw data
     rawPub = node.advertise<sensor_msgs::Imu>("state_estimation/raw", 100);
 	
