@@ -13,6 +13,7 @@ WINDOW_WIDTH = 3
 depth = 0.0
 
 def depthCallBack(sensor_reading):
+    global depth
     depth_reading = sensor_reading.data
     
     # Calculations
@@ -40,9 +41,9 @@ def init():
     
     
     rospy.init_node('depth_node')
-    rospy.Subscriber('/arduino/depth', Int16, depthCallBack)
-    pub1 = rospy.Publisher('/state_estimation/rawDepth', Float64)
-    pub2 = rospy.Publisher('/state_estimation/filteredDepth', Float64)
+    rospy.Subscriber('depth', Int16, depthCallBack)
+    pub1 = rospy.Publisher('state_estimation/rawDepth', Float64)
+    pub2 = rospy.Publisher('state_estimation/filteredDepth', Float64)
     
     # Constants
     max_analog = 1023  			# in bits
