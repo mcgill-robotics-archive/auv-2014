@@ -14,4 +14,4 @@
 	roslaunch front_end front_end.launch
 
 4) On local computer: launch rosbag to record data:
-	rosbag record -a
+	rosbag record [topic name 1] [topic name 2]
