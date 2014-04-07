@@ -146,7 +146,7 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.fiel_thruster_6.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
     def publish_thrusters(self):
-        vel_pub = rospy.Publisher("/motor", motorCommands)
+        vel_pub = rospy.Publisher("/electrical_interface/motor", motorCommands)
 
         msg = motorCommands()
         if not self.ui.thruster_stop.isChecked():
