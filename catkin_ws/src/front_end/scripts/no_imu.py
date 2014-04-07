@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'no_imu_gr_resizable.ui'
 #
-# Created: Mon Mar 31 12:17:27 2014
+# Created: Sun Apr  6 23:42:12 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_RoboticsMain(object):
     def setupUi(self, RoboticsMain):
         RoboticsMain.setObjectName(_fromUtf8("RoboticsMain"))
-        RoboticsMain.resize(1125, 845)
+        RoboticsMain.resize(1125, 924)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/Images/Only-Logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         RoboticsMain.setWindowIcon(icon)
@@ -363,12 +363,6 @@ class Ui_RoboticsMain(object):
         self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
         self.gridLayout_6 = QtGui.QGridLayout()
         self.gridLayout_6.setObjectName(_fromUtf8("gridLayout_6"))
-        self.resSelect = QtGui.QComboBox(self.centralwidget)
-        self.resSelect.setObjectName(_fromUtf8("resSelect"))
-        self.resSelect.addItem(_fromUtf8(""))
-        self.resSelect.addItem(_fromUtf8(""))
-        self.resSelect.addItem(_fromUtf8(""))
-        self.gridLayout_6.addWidget(self.resSelect, 1, 0, 1, 1)
         self.bat_lcd1 = QtGui.QLCDNumber(self.centralwidget)
         self.bat_lcd1.setObjectName(_fromUtf8("bat_lcd1"))
         self.gridLayout_6.addWidget(self.bat_lcd1, 1, 3, 1, 1)
@@ -393,6 +387,9 @@ class Ui_RoboticsMain(object):
         self.label_32 = QtGui.QLabel(self.centralwidget)
         self.label_32.setObjectName(_fromUtf8("label_32"))
         self.gridLayout_6.addWidget(self.label_32, 0, 2, 1, 1)
+        self.pressure_lcd = QtGui.QLCDNumber(self.centralwidget)
+        self.pressure_lcd.setObjectName(_fromUtf8("pressure_lcd"))
+        self.gridLayout_6.addWidget(self.pressure_lcd, 1, 0, 1, 1)
         self.gridLayout_6.setColumnMinimumWidth(0, 1)
         self.gridLayout_6.setColumnMinimumWidth(1, 1)
         self.gridLayout_6.setColumnMinimumWidth(2, 1)
@@ -471,13 +468,9 @@ class Ui_RoboticsMain(object):
         self.postRight.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.posBottom.setText(QtGui.QApplication.translate("RoboticsMain", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.label_30.setText(QtGui.QApplication.translate("RoboticsMain", "Planner Info", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setToolTip(QtGui.QApplication.translate("RoboticsMain", "<html><head/><body><p>Approximate resolution to set the size of the video displays</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setItemText(0, QtGui.QApplication.translate("RoboticsMain", "1024*768", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setItemText(1, QtGui.QApplication.translate("RoboticsMain", "1280*720", None, QtGui.QApplication.UnicodeUTF8))
-        self.resSelect.setItemText(2, QtGui.QApplication.translate("RoboticsMain", "1920x1080", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_31.setText(QtGui.QApplication.translate("RoboticsMain", "Temperature", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_31.setText(QtGui.QApplication.translate("RoboticsMain", "Ambiant Temp.", None, QtGui.QApplication.UnicodeUTF8))
         self.bat_lbl.setText(QtGui.QApplication.translate("RoboticsMain", "Battery 1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setText(QtGui.QApplication.translate("RoboticsMain", "Approximate resolution", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("RoboticsMain", "Internal pressure", None, QtGui.QApplication.UnicodeUTF8))
         self.label_32.setText(QtGui.QApplication.translate("RoboticsMain", "Battery 2", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("RoboticsMain", "IMU Pose", None, QtGui.QApplication.UnicodeUTF8))
 

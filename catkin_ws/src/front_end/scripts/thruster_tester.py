@@ -92,13 +92,13 @@ class CentralUi(QtGui.QMainWindow):
 
                         if self.controller.get_axis(2) == 0:  # if not turning yaw (right x)
                             self.ui.fiel_thruster_3.setValue(500*self.controller.get_axis(0))
-                            self.ui.fiel_thruster_4.setValue(500*self.controller.get_axis(0))
+                            self.ui.fiel_thruster_4.setValue(-500*self.controller.get_axis(0))
                     if self.controller.get_button(11):  # find r1
                         self.ui.fiel_thruster_5.setValue(-500*self.controller.get_axis(3))
                         self.ui.fiel_thruster_6.setValue(-500*self.controller.get_axis(3))
 
                         self.ui.fiel_thruster_3.setValue(500*self.controller.get_axis(2))
-                        self.ui.fiel_thruster_4.setValue(- 500*self.controller.get_axis(2))
+                        self.ui.fiel_thruster_4.setValue(500*self.controller.get_axis(2))
 
     def x_force(self, data):
         if (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
@@ -124,11 +124,11 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.fiel_thruster_3.setValue( self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100)
 
         if (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
-            self.ui.fiel_thruster_4.setValue( 500)
-        elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
             self.ui.fiel_thruster_4.setValue( -500)
+        elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_4.setValue( 500)
         else:
-            self.ui.fiel_thruster_4.setValue( self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100)
+            self.ui.fiel_thruster_4.setValue(- (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100))
 
     def z_force(self, data):
         if (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
@@ -146,7 +146,7 @@ class CentralUi(QtGui.QMainWindow):
             self.ui.fiel_thruster_6.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
     def publish_thrusters(self):
-        vel_pub = rospy.Publisher("/motor", motorCommands)
+        vel_pub = rospy.Publisher("/electrical_interface/motor", motorCommands)
 
         msg = motorCommands()
         if not self.ui.thruster_stop.isChecked():

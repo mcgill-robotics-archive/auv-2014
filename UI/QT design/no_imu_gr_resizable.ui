@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1125</width>
-    <height>845</height>
+    <height>924</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -871,28 +871,6 @@
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
              <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0" columnminimumwidth="1,1,1,0">
-              <item row="1" column="0">
-               <widget class="QComboBox" name="resSelect">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Approximate resolution to set the size of the video displays&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>1024*768</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>1280*720</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>1920x1080</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
               <item row="1" column="3">
                <widget class="QLCDNumber" name="bat_lcd1"/>
               </item>
@@ -902,7 +880,7 @@
               <item row="0" column="1">
                <widget class="QLabel" name="label_31">
                 <property name="text">
-                 <string>Temperature</string>
+                 <string>Ambiant Temp.</string>
                 </property>
                </widget>
               </item>
@@ -934,7 +912,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Approximate resolution</string>
+                 <string>Internal pressure</string>
                 </property>
                </widget>
               </item>
@@ -947,6 +925,9 @@
                  <string>Battery 2</string>
                 </property>
                </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLCDNumber" name="pressure_lcd"/>
               </item>
              </layout>
             </item>
@@ -998,7 +979,6 @@
     </item>
    </layout>
    <zorder></zorder>
-   <zorder>imugraphics</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
