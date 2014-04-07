@@ -132,7 +132,6 @@ class CentralUi(QtGui.QMainWindow):
         # buttons connects
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
-        QtCore.QObject.connect(self.ui.resSelect, QtCore.SIGNAL("currentIndexChanged(int)"), self.setVideoRes)
 
         # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -154,9 +153,9 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End', anonymous=True)
-        rospy.Subscriber("/depth", Int16, self.depth_callback)
-        rospy.Subscriber("/batteryVoltage1", Float32, self.bat_1)
-        rospy.Subscriber("/batteryVoltage2", Float32, self.bat_2)
+        rospy.Subscriber("/electrical_interface/depth", Int16, self.depth_callback)
+        rospy.Subscriber("/electrical_interface/batteryVoltage1", Float32, self.bat_1)
+        rospy.Subscriber("/electrical_interface/batteryVoltage2", Float32, self.bat_2)
         rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
         rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
         rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
@@ -166,10 +165,15 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
         rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/temperature", Int16, self.temp_callback)
+        rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
+        rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
 
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
+
+    def pressure_callback(self, data):
+        self.ui.pressure_lcd.display(data.data)
+        pass
 
     ##sets the maximum size of the video displays
     #
