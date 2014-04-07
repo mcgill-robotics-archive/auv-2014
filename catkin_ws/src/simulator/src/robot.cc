@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include "ros/ros.h"
 #include "geometry_msgs/Twist.h"
-#include "simulator/ThrusterForces.h"
 #include "gazebo_msgs/ApplyBodyWrench.h" 
 #include "geometry_msgs/Vector3.h"
 #include "geometry_msgs/Wrench.h"
@@ -57,9 +56,6 @@ public:
 		// ROS Subscriber
 		this->twistSub = this->node->subscribe("simulator/robot_twist", 1000, &Robot::moveCallback, this);
 
-		// Thruster Forces
-		this->thrusterForcesSub = this->node->subscribe("simulator/thruster_forces", 1000, &Robot::thrusterForcesCallBack, this);
-
 		// /controls/wrench/
 		this->controlsWrenchSub = this->node->subscribe("/controls/wrench", 1000, &Robot::controlsWrenchCallBack, this);
 
@@ -93,60 +89,6 @@ public:
 	void moveCallback(const geometry_msgs::Twist::ConstPtr& msg) {
 		this->model->SetLinearVel(math::Vector3(msg->linear.x, msg->linear.y, -msg->linear.z));
 		this->model->SetAngularVel(math::Vector3(msg->angular.x, msg->angular.y, msg->angular.z));
-	};
-
-	/**
-	 * Function called when a message is passed to ThrusterForces topic.
-	 * @param msg message of type ThrusterForces
-	 */
-	void thrusterForcesCallBack(const simulator::ThrusterForces::ConstPtr& msg){
-		float fx, fy, fz, taoX, taoY, taoZ;
-
-		// map individual thrusts to net wrench
-		fx = msg->tx1 + msg->tx2;
-		fy = msg->ty1 + msg->ty2;
-		fz = msg->tz1 + msg->tz2;
-
-		taoX = 0;
-		taoY = RZ1 * msg->tz1 + RZ2 * msg->tz2;	
-		taoZ = RX1 * msg->tx1 + RX2 * msg->tx2 + RY1 * msg->ty1 + RY2 * msg->ty2;
-
-		// make service call
-
-		// wrench msg
-		geometry_msgs::Vector3 forceVector;
-		forceVector.x = fx; 
-		forceVector.y = fy; 
-		forceVector.z = fz;
-
-		geometry_msgs::Vector3 torqueVector;
-		torqueVector.x = taoX; 
-		torqueVector.y = taoY; 
-		torqueVector.z = taoZ;
-
-		geometry_msgs::Wrench wrench;
-
-		wrench.force = forceVector;
-		wrench.torque = torqueVector;
-
-		// ApplyBodyWrench msg
-		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
-		applyBodyWrench.request.body_name = (std::string) "robot::body";
-		applyBodyWrench.request.reference_frame = (std::string) "robot::dummy";
-		applyBodyWrench.request.wrench = wrench;
-		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
-		applyBodyWrench.request.duration = ros::Duration(1);
-
-		ros::ServiceClient client = node->serviceClient<gazebo_msgs::ApplyBodyWrench>("/gazebo/apply_body_wrench");
-
-		std::cout << "fx:" << fx << ", fy:" << fy << " fz:" << fz; 
-		std::cout << " taoX:" << taoX << ", taoY:" << taoY << " taoZ:" << taoZ << std::endl;
-
-		client.call(applyBodyWrench);
-
-		if (!applyBodyWrench.response.success) {
-			ROS_ERROR("ApplyBodyWrench call failed.");
-		}
 	};
 
 	/**
@@ -323,9 +265,6 @@ private:
 
 	/** robot_twist Subscriber */
 	ros::Subscriber twistSub;
-	
-	/** ThrusterForces Subscriber */
-	ros::Subscriber thrusterForcesSub;
 	
 	/** Controls wrench topic subscriber */
 	ros::Subscriber controlsWrenchSub;

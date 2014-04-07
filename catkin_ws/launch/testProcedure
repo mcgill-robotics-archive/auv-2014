@@ -1,0 +1,17 @@
+1) SSH into the on-board computer:
+	ssh robotics@10.0.0.1
+
+2) On on-board computer: launch in 4 different terminal or tmux windows the sensor nodes and arduino node:
+	roslaunch ~/McGill_RoboSub_2014/catkin_ws/launch/arduino.launch
+    roslaunch computer_vision camera_down.launch
+    roslaunch computer_vision camera_front_left.launch
+    roslaunch computer_vision camera_front_right.launch
+
+3.1) On local computer: launch front-end for thrusters:
+	rosrun front_end thruster_tester.py
+
+3.2) On local computer: launch front-end for cameras:
+	roslaunch front_end front_end.launch
+
+4) On local computer: launch rosbag to record data:
+	rosbag record [topic name 1] [topic name 2]

@@ -33,9 +33,9 @@
       <static>false</static>
       <pose>2.7 -3.5 1 0 0 3.14159265359</pose>
 
-    <!-- Metric Inertial Properties -->
-    <!-- Units of kg, or kg*m^2 -->
       <link name='body'>
+	    <!-- Metric Inertial Properties -->
+	    <!-- Units of kg, or kg*m^2 -->
       	<inertial>
       		<mass>22.2006</mass>
       		<inertia>

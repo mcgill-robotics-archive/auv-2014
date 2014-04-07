@@ -1,6 +1,6 @@
-int32 cmd_x1
-int32 cmd_x2
-int32 cmd_y1
-int32 cmd_y2
-int32 cmd_z1
-int32 cmd_z2
+int32 cmd_surge_starboard
+int32 cmd_surge_port
+int32 cmd_sway_bow
+int32 cmd_sway_stern
+int32 cmd_heave_bow
+int32 cmd_heave_stern

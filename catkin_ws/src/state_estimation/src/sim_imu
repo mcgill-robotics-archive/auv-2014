@@ -31,7 +31,7 @@ def init():
     rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
 
     # Publish the filtered data to a topic
-    pub = rospy.Publisher('pose', PoseStamped)
+    pub = rospy.Publisher('state_estimation/pose', PoseStamped)
     rospy.spin()
     
 if __name__ == '__main__':

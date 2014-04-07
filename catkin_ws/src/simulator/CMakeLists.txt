@@ -7,7 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   rospy
   std_msgs
-  message_generation
 )
 
 # Depend on system install of Gazebo
@@ -20,14 +19,6 @@ link_directories(${GAZEBO_LIBRARY_DIRS} ${roscpp_LIBRARY_DIRS})
 include_directories(${roscpp_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 
 include(cmake/rospack.cmake)
-
-
-add_message_files(
-  FILES
-  ThrusterForces.msg
-)
-
-generate_messages()
 
 catkin_package(
   CATKIN_DEPENDS

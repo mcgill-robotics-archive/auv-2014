@@ -25,7 +25,7 @@ XimuReceiver receiver;
 void multiplyQuaternions(double q[],double p[])
 {
     double temp[4];
-	temp[0] = p[0]*q[0] - p[1]*q[1] - p[2]*q[2] - p[3]*q[3];
+    temp[0] = p[0]*q[0] - p[1]*q[1] - p[2]*q[2] - p[3]*q[3];
     temp[1] = p[0]*q[1] + p[1]*q[0] + p[2]*q[3] - p[3]*q[2];
     temp[2] = p[0]*q[2] - p[1]*q[3] + p[2]*q[0] + p[3]*q[1];
     temp[3] = p[0]*q[3] + p[1]*q[2] - p[2]*q[1] + p[3]*q[0];
@@ -74,7 +74,7 @@ if (receiver.isQuaternionGetReady()) {
 			q[1] = quaternionStruct.x;
 			q[2] = quaternionStruct.y;
 			q[3] = quaternionStruct.z;
-    	    multiplyQuaternions(q, prerotation);
+    	    		multiplyQuaternions(q, prerotation);
 			pos.orientation.w = q[0];
 			pos.orientation.x = q[1];
 			pos.orientation.y = q[2];
@@ -100,7 +100,7 @@ printf("Starting XimuPublisher\n");
 	ros::NodeHandle node;
 
 	pub = node.advertise<geometry_msgs::PoseStamped>("state_estimation/pose", 100);
-    pub2 = node.advertise<geometry_msgs::Vector3>("acc", 100);
+    pub2 = node.advertise<geometry_msgs::Vector3>("state_estimation/acc", 100);
     // Publish raw data
     rawPub = node.advertise<sensor_msgs::Imu>("state_estimation/raw", 100);
 	

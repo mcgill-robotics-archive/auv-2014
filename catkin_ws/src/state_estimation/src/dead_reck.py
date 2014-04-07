@@ -33,7 +33,11 @@ class dead_reck():
     def updateOrientation(self, newHeading):
         if self.heading != -123456789:
             headingChange = newHeading - self.heading
-            self.yawOfTarget -= headingChange
+            self.yawOfTarget += headingChange
+            self.yawOfTarget %= (2*math.pi)
+            if self.yawOfTarget > math.pi:
+                self.yawOfTarget -= 2*math.pi
+            print self.yawOfTarget
             self.x = self.x*math.cos(headingChange) + self.y*math.sin(headingChange)
             self.y = self.y*math.cos(headingChange) - self.x*math.sin(headingChange)
         self.heading = newHeading

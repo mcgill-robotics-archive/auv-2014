@@ -155,11 +155,12 @@ void getStateFromTF()
 
 	double roll; //unused, but needs to be sent to getRPY method
 
-	//m.getRPY(roll, msg.pitch_angle, msg.yaw_angle); //get rpy from matrix
+
+	
 	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
-	estimated_Pitch *= -1;
+	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
-	//ROS_INFO("RPY: %f %f %f", roll, msg.pitch_angle, msg.yaw_angle); //debug output}
+	//ROS_INFO("RPY: %f %f %f %f %f %f", roll, estimated_Pitch, estimated_Yaw, r2, p2, y2); //debug output}
 }
 int main(int argc, char **argv)
 {
