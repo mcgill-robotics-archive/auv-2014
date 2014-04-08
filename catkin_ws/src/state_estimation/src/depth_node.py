@@ -52,7 +52,7 @@ def init():
     base_current = 4.0
     current_range = 16.0   		# from 4.0 mA to 20.0 mA
     max_depth = 914.4      		# In centimeters. 30 feet
-    offset = 7.0          		# Just substract it. May need to be recalculated when circuit is built.
+    offset = 17.0          		# Just substract it. May need to be recalculated when circuit is built.
 
     rospy.spin()
 
