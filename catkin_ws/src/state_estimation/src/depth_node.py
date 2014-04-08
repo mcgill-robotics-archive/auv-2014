@@ -41,7 +41,7 @@ def init():
     
     
     rospy.init_node('depth_node')
-    rospy.Subscriber('depth', Int16, depthCallBack)
+    rospy.Subscriber('electrical_interface/depth', Int16, depthCallBack)
     pub1 = rospy.Publisher('state_estimation/rawDepth', Float64)
     pub2 = rospy.Publisher('state_estimation/filteredDepth', Float64)
     
