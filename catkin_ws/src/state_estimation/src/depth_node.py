@@ -4,11 +4,8 @@ import rospy
 from std_msgs.msg import Int16
 from std_msgs.msg import Float64
 
-# Queue used for filtering
-from collections import deque
-
 # Filter window
-depths = deque([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+depths = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 WINDOW_WIDTH = 10
 depth = 0.0
 
@@ -20,9 +17,18 @@ def depthCallBack(sensor_reading):
     current_depth = ((depth_reading * max_arduino_voltage / max_analog / resistance - base_current) / current_range) * max_depth - offset
     current_depth = current_depth / 100.0	# To meters
     
+    # Get depths
+    depths_tmp = list(depths)
+    depths_tmp.sort()
+    median = (depths_tmp[4] + depths_tmp[5]) / 2.0
+    
     # Apply Filters
+    if abs(current_depth - median) > 0.15 :
+        current_depth = median
+    
     depths.append(current_depth)
-    depth = depth + (current_depth - depths.popleft()) / WINDOW_WIDTH
+	
+    depth = depth + (current_depth - depths.pop(0)) / WINDOW_WIDTH
 
     # Publish
     pub1.publish(current_depth)
