@@ -8,8 +8,8 @@ from std_msgs.msg import Float64
 from collections import deque
 
 # Filter window
-depths = deque([0.0, 0.0, 0.0])
-WINDOW_WIDTH = 3
+depths = deque([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+WINDOW_WIDTH = 10
 depth = 0.0
 
 def depthCallBack(sensor_reading):
