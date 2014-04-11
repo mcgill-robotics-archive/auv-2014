@@ -6,3 +6,4 @@ source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
 export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
 export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 #export ROS_MASTER_URI=http://mcgill:11311
+export ROS_HOSTNAME=10.0.0.1
