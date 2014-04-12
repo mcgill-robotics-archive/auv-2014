@@ -34,7 +34,7 @@
 //TIME INTERVAL(unit microsecond)
   #define MOTOR_TIMEOUT 4000    //amount of no signal required to start to reset motors 
   #define VOLTAGE_INTERVAL 1000 //amount of delay between each voltage
-  #define PRESSURE_INTERVAL 1000
+  #define PRESSURE_INTERVAL 1000 
   #define DEPTH_INTERVAL 200
 
 ros::NodeHandle nh;
@@ -63,7 +63,7 @@ int boundCheck(int x){
 }
 
 void motorCb( const controls::motorCommands& msg){
-  //lastMotorCommand = millis();
+  lastMotorCommand = millis(); //who commented this line?
   myservo[0].writeMicroseconds(1496 + boundCheck(msg.cmd_surge_starboard));
   myservo[1].writeMicroseconds(1499 + boundCheck(msg.cmd_surge_port));
   myservo[2].writeMicroseconds(1471 + boundCheck(msg.cmd_sway_bow));
@@ -153,7 +153,7 @@ void loop(){
   if(depthSensorSchedule < currentTime){
     depth_msg.data = analogRead(DEPTH_SENSOR_PIN);
     depthPub.publish(&depth_msg);
-    depthSensorSchedule += DEPTH_INTERVAL;        //Update at 5Hz  
+    depthSensorSchedule += DEPTH_INTERVAL;   
   }
 
   //voltages sensing
@@ -164,7 +164,7 @@ void loop(){
     voltagePub1.publish(&batteryVoltage1_msg);
     voltagePub2.publish(&batteryVoltage2_msg);
     
-    batteryVoltageSchedule += VOLTAGE_INTERVAL;     //Update at 1 Hz
+    batteryVoltageSchedule += VOLTAGE_INTERVAL;
   }  
   
   if(lastMotorCommand + MOTOR_TIMEOUT < currentTime){
