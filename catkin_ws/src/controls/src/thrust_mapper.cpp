@@ -95,14 +95,14 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	*/
 	
 	float mystery = 1.6667; //TODO figure out what this number is. I think it's a combo of the distnce between axes and the distribution across yaw thrusters (Actually I think it comes from inverting a matrix in matlab)
-	int directions = {1, 1, -1, 1, -1, -1}; //the math below assumes thrusters apply force in their positive coordinate directions. -1 here if oriented otherwise
+	int directions[] = {1, 1, -1, 1, -1, -1}; //the math below assumes thrusters apply force in their positive coordinate directions. -1 here if oriented otherwise
 
 	thrust[0] = 0.5 * wrenchMsg.force.x; 										//surge-starbord
 	thrust[1] = thrust[0];														//surge-port
 	thrust[2] = 0.5 * wrenchMsg.force.y + mystery * wrenchMsg.torque.z;			//Sway-Bow
 	thrust[3] = 0.5 * wrenchMsg.force.y - mystery * wrenchMsg.torque.z;			//sway-stern
-	thrust[4] = 0.5 * wrenchMsg.force.z + mystery * wrenchMsg.torque.y;			//heave-bow
-	thrust[5] = 0.5 * wrenchMsg.force.z - mystery * wrenchMsg.torque.y;    		//heave-stern
+	thrust[4] = 0.5 * wrenchMsg.force.z - mystery * wrenchMsg.torque.y;			//heave-bow  //sign between force and mystery swapped April 14, see nicks design notebok page 158
+	thrust[5] = 0.5 * wrenchMsg.force.z + mystery * wrenchMsg.torque.y;    		//heave-stern  //sign between force and mystery swapped April 14, see nicks design notebok page 158
 	
 	for (int i=0; i<6; i++)
 	{
@@ -114,7 +114,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	{
 		voltage[i] = thrust_voltage(thrust[i]);
 		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
-		ROS_INFO("Voltage %i: %f",i,voltage[i]);
+		//ROS_INFO("Voltage %i: %f",i,voltage[i]);
 	}	
 
 	//map voltages to motor commands
@@ -199,8 +199,8 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	voltage_publisher = n.advertise<controls::motorCommands>("/motor", 100); //TODO change message type and name
-	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
+	voltage_publisher = n.advertise<controls::motorCommands>("/electrical_interface/motor", 100); 
+	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); 
 
 	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");
 	ros::spin();
