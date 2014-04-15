@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
 HardwareTest::HardwareTest(ros::NodeHandle& nodeHandle) {
 	this->nodeHandle = nodeHandle;
 
-	nodeHandle.param<std::string>("motorCommandTopicName", motorCommandTopicName, "/arduino/motor");
-	nodeHandle.param<std::string>("motorCommandTopicName", depthSensorDataTopicName, "/arduino/depth");
+	//nodeHandle.param<std::string>("motorCommandTopicName", motorCommandTopicName, "/electrical_interface/motor");
+	//nodeHandle.param<std::string>("motorCommandTopicName", depthSensorDataTopicName, "/arduino/depth");
 
-	this->motorCommandsPublisher = this->nodeHandle.advertise<controls::motorCommands>("/arduino/motor", 1);
+	this->motorCommandsPublisher = this->nodeHandle.advertise<controls::motorCommands>("/electrical_interface/motor", 1);
 	this->numberOfReadingsFromDepthSensor = 0;
 }
 

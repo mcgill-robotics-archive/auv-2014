@@ -63,7 +63,7 @@ int boundCheck(int x){
 }
 
 void motorCb( const controls::motorCommands& msg){
-  //lastMotorCommand = millis();
+  lastMotorCommand = millis();
   myservo[0].writeMicroseconds(1496 + boundCheck(msg.cmd_surge_starboard));
   myservo[1].writeMicroseconds(1499 + boundCheck(msg.cmd_surge_port));
   myservo[2].writeMicroseconds(1471 + boundCheck(msg.cmd_sway_bow));
