@@ -7,6 +7,9 @@
     roslaunch computer_vision camera_front_left.launch
     roslaunch computer_vision camera_front_right.launch
 
+in a local terminal:
+export ROS_MASTER_URI=http://10.0.0.1:11311
+
 3.1) On local computer: launch front-end for thrusters:
 	rosrun front_end thruster_tester.py
 
