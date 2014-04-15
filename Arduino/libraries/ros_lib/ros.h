@@ -46,6 +46,7 @@ namespace ros
 
 #elif defined(__AVR_ATmega328P__)
 
+  // changed buffer size to reduce the memory impact 
   typedef NodeHandle_<ArduinoHardware, 25, 25, 100, 100> NodeHandle;
 
 #else

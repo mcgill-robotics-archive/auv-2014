@@ -50,7 +50,7 @@ unsigned long depthSensorSchedule;
 unsigned long batteryVoltageSchedule;
 unsigned long temperaturePressureSechedule;
 unsigned long lastMotorCommand;
-boolean availabilityBMP085;
+boolean availabilityBMP085 = false;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -131,7 +131,7 @@ void setup(){
   nh.subscribe(solenoidSub);
 
   //BMP085 Setup
-  bmp085Calibration(); // make sure that BMP085 is connected;
+  availabilityBMP085 = !bmp085Calibration(); // make sure that BMP085 is connected;
   resetMotor();
 
 }
@@ -141,7 +141,7 @@ void loop(){
   long currentTime = millis();
 
   //temperature and pressure sensing
-  if(temperaturePressureSechedule < currentTime){
+  if((temperaturePressureSechedule < currentTime)&&availabilityBMP085){
    pressure_msg.data= bmp085GetPressure(bmp085ReadUP());
    temperature_msg.data = bmp085GetTemperature(bmp085ReadUT());
    temperaturePub.publish(&temperature_msg);
