@@ -8,4 +8,3 @@ export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 #export ROS_MASTER_URI=http://mcgill:11311
 #export ROS_MASTER_URI=http://10.0.0.1:11311
 #export ROS_HOSTNAME=10.0.0.1
-#echo Sourced .roboticrc
