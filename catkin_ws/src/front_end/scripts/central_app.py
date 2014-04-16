@@ -132,7 +132,6 @@ class CentralUi(QtGui.QMainWindow):
         # buttons connects
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
-        QtCore.QObject.connect(self.ui.resSelect, QtCore.SIGNAL("currentIndexChanged(int)"), self.setVideoRes)
 
         # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -157,9 +156,9 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber("/depth", Int16, self.depth_callback)
         rospy.Subscriber("/batteryVoltage1", Float32, self.bat_1)
         rospy.Subscriber("/batteryVoltage2", Float32, self.bat_2)
-        rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
-        rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
-        rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
+        rospy.Subscriber("/camera_front_left/camera/image_rect_color/compressed", Image, self.front_left_pre_callback)
+        rospy.Subscriber("/camera_front_right/camera/image_rect_color/compressed", Image, self.front_right_pre_callback)
+        rospy.Subscriber("/camera_down/camera/image_rect_color/compressed", Image, self.down_pre_callback)
         rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
         rospy.Subscriber("/front_cv/camera2", Image, self.front_post_right_callback)
         rospy.Subscriber("/down_cv/camera1", Image, self.down_post_callback)
@@ -170,39 +169,6 @@ class CentralUi(QtGui.QMainWindow):
 
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
-
-    ##sets the maximum size of the video displays
-    #
-    #the selected resolution sets the maximal size to not over size the window
-    #@param self the object pointer
-    #@param data the data passed by the connect of the resolution combo box, is the index of the selected option
-    def setVideoRes(self, data):
-        #xga display
-        if data == 0:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(190, 170))
-        #720p display
-        elif data == 1:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(220, 200))
-        #1080p display
-        elif data == 2:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
-        else:
-            pass
 
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
