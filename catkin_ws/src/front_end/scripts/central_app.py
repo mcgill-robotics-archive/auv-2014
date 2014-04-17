@@ -175,39 +175,6 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.pressure_lcd.display(data.data)
         pass
 
-    ##sets the maximum size of the video displays
-    #
-    #the selected resolution sets the maximal size to not over size the window
-    #@param self the object pointer
-    #@param data the data passed by the connect of the resolution combo box, is the index of the selected option
-    def setVideoRes(self, data):
-        #xga display
-        if data == 0:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(190, 170))
-        #720p display
-        elif data == 1:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(220, 200))
-        #1080p display
-        elif data == 2:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
-        else:
-            pass
-
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
         self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)

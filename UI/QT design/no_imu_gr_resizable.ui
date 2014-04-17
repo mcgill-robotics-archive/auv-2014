@@ -870,7 +870,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0" columnminimumwidth="1,1,1,0">
+             <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0" columnminimumwidth="100,100,100,100">
               <item row="1" column="3">
                <widget class="QLCDNumber" name="bat_lcd1"/>
               </item>
