@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'no_imu_gr_resizable_TAB.ui'
 #
-# Created: Fri Apr 18 10:11:35 2014
+# Created: Fri Apr 18 11:34:03 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -682,6 +682,18 @@ class Ui_RoboticsMain(object):
         self.retranslateUi(RoboticsMain)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.tabWidget, QtCore.SIGNAL(_fromUtf8("currentChanged(int)")), self.front_pitch.cut)
+        QtCore.QObject.connect(self.slider_thruster_15, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.x_force.setValue)
+        QtCore.QObject.connect(self.x_force, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_15.setValue)
+        QtCore.QObject.connect(self.x_bal, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_16.setValue)
+        QtCore.QObject.connect(self.slider_thruster_16, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.x_bal.setValue)
+        QtCore.QObject.connect(self.y_force, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_13.setValue)
+        QtCore.QObject.connect(self.slider_thruster_13, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.y_force.setValue)
+        QtCore.QObject.connect(self.y_bal, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_14.setValue)
+        QtCore.QObject.connect(self.slider_thruster_14, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.y_bal.setValue)
+        QtCore.QObject.connect(self.slider_thruster_12, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.z_force.setValue)
+        QtCore.QObject.connect(self.z_force, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_12.setValue)
+        QtCore.QObject.connect(self.z_bal, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_11.setValue)
+        QtCore.QObject.connect(self.slider_thruster_11, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.z_bal.setValue)
         QtCore.QMetaObject.connectSlotsByName(RoboticsMain)
 
     def retranslateUi(self, RoboticsMain):

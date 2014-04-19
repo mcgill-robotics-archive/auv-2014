@@ -1548,5 +1548,197 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>slider_thruster_15</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>x_force</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>918</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>797</x>
+     <y>117</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>x_force</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_thruster_15</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>805</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>935</x>
+     <y>117</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>x_bal</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_thruster_16</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>817</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>882</x>
+     <y>140</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_thruster_16</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>x_bal</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>873</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>804</x>
+     <y>161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>y_force</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_thruster_13</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>811</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>859</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_thruster_13</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>y_force</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>878</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>811</x>
+     <y>207</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>y_bal</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_thruster_14</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>801</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>868</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_thruster_14</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>y_bal</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>917</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>789</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_thruster_12</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>z_force</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>855</x>
+     <y>301</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>798</x>
+     <y>309</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>z_force</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_thruster_12</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>793</x>
+     <y>319</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>859</x>
+     <y>319</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>z_bal</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_thruster_11</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>794</x>
+     <y>351</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>866</x>
+     <y>349</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_thruster_11</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>z_bal</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>977</x>
+     <y>342</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>795</x>
+     <y>342</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>
