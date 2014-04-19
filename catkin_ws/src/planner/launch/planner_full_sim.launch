@@ -1,9 +1,10 @@
 <launch>
-  <!-- launches: everything planner needs running before it can start-->
+  <!-- launches: planner node as well as all of its dependencies -->
   <!-- Written by Alex Reiff, Jan 29, McGill Robotics -->
   <!-- Copied from Nick Speal's "template" in Controls -->
 
   <arg name="starting_task" default="gate"/> 
+  
   <!--control systems -->
   <include file="$(find controls)/launch/controls4planner.launch" >
     <arg name="useDC" value="0"/>

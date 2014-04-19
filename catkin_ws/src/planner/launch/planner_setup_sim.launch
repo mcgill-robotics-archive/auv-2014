@@ -1,9 +1,8 @@
 <launch>
-  <!-- launches: everything software except planner (aka for front end use)-->
+  <!-- launches: the dependencies for planner but not the planner node itself (aka for front end use)-->
   <!-- WARNING: DOES NOT START PLANNER -->
   <!-- Written by Alex Reiff, April 2, McGill Robotics -->
 
-  <arg name="starting_task" default="gate"/> 
   <!--control systems -->
   <include file="$(find controls)/launch/controls4planner.launch" >
     <arg name="useDC" value="0"/>
