@@ -1,9 +1,0 @@
-<RCC>
-  <qresource prefix="Pictures">
-    <file>Landscape-Logo.png</file>
-    <file>Submarine-coral view.JPG</file>
-    <file>Nemo view.JPG</file>
-    <file>Only-Logo.png</file>
-    <file>Master-Logo-Inverted-for-PLM.jpg</file>
-  </qresource>
-</RCC>
