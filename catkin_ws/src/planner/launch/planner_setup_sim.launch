@@ -1,0 +1,17 @@
+<launch>
+  <!-- launches: the dependencies for planner but not the planner node itself (aka for front end use)-->
+  <!-- WARNING: DOES NOT START PLANNER -->
+  <!-- Written by Alex Reiff, April 2, McGill Robotics -->
+
+  <!--control systems -->
+  <include file="$(find controls)/launch/controls4planner.launch" >
+    <arg name="useDC" value="0"/>
+  </include>
+
+  <!-- computer vision -->
+  <include file="$(find computer_vision)/launch/computer_vision.launch" />
+
+  <!-- state estimation -->
+  <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
+
+</launch>

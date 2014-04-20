@@ -128,11 +128,10 @@ char bmp085Read(unsigned char address)
   int i = 0;
   while(!Wire.available())while(Wire.available()<2){
   i++;
-  if(i >1000){
+  if(i >100){
   error=true; 
   return 0;
   }
-  delay(1);
   }
   
   return Wire.read();
@@ -153,11 +152,10 @@ int bmp085ReadInt(unsigned char address)
   int i = 0;
   while(Wire.available()<2){
   i++;
-  if(i >1000){
+  if(i >100){
   error=true; 
   return 0;
   }
-  delay(1);
   }
  
   msb = Wire.read();
@@ -212,11 +210,10 @@ unsigned long bmp085ReadUP()
   int i =0;
   while(Wire.available()<3){
   i++;
-  if(i >1000){
+  if(i >100){
   error=true; 
   return 0;
   }
-  delay(1);
   }
   msb = Wire.read();
   lsb = Wire.read();

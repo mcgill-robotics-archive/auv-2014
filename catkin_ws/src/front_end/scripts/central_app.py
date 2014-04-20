@@ -145,6 +145,13 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
 
+        QtCore.QObject.connect(self.ui.x_force, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
+        QtCore.QObject.connect(self.ui.x_bal, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
+        QtCore.QObject.connect(self.ui.y_force, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
+        QtCore.QObject.connect(self.ui.y_bal, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
+        QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+        QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+
     ##initiallize the ros subscribers
     #
     #initiallize the ros node and starts all the ros subscribers and maps each topic to the correct callback
@@ -174,39 +181,6 @@ class CentralUi(QtGui.QMainWindow):
     def pressure_callback(self, data):
         self.ui.pressure_lcd.display(data.data)
         pass
-
-    ##sets the maximum size of the video displays
-    #
-    #the selected resolution sets the maximal size to not over size the window
-    #@param self the object pointer
-    #@param data the data passed by the connect of the resolution combo box, is the index of the selected option
-    def setVideoRes(self, data):
-        #xga display
-        if data == 0:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(190, 170))
-        #720p display
-        elif data == 1:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(220, 200))
-        #1080p display
-        elif data == 2:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
-        else:
-            pass
 
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
@@ -577,6 +551,50 @@ class CentralUi(QtGui.QMainWindow):
     def open_low_battery_dialog(self):
         self.warning_ui.exec_()
 
+    def x_force(self, data):
+        if (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
+            self.ui.fiel_thruste_1.setValue(500)
+        elif (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
+            self.ui.fiel_thruste_1.setValue(-500)
+        else:
+            self.ui.fiel_thruste_1.setValue(self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100)
+
+        if (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_2.setValue(500)
+        elif (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_2.setValue(-500)
+        else:
+            self.ui.fiel_thruster_2.setValue(self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100)
+
+    def y_force(self, data):
+        if (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_3.setValue( 500)
+        elif (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_3.setValue( -500)
+        else:
+            self.ui.fiel_thruster_3.setValue( self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100)
+
+        if (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_4.setValue( -500)
+        elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_4.setValue( 500)
+        else:
+            self.ui.fiel_thruster_4.setValue(- (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100))
+
+    def z_force(self, data):
+        if (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_5.setValue( 500)
+        elif (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_5.setValue( -500)
+        else:
+            self.ui.fiel_thruster_5.setValue( self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100)
+
+        if (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_6.setValue( 500)
+        elif (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_6.setValue( -500)
+        else:
+            self.ui.fiel_thruster_6.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
 def sigint_handler(*args):
     """Handler for the SIGINT signal."""
