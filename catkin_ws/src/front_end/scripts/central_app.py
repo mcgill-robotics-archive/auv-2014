@@ -11,7 +11,7 @@
 #Ui declarations and GUI libraries
 from pose_view_widget import PoseViewWidget
 from no_imu import *
-from low_battery_warning import*
+from Battery_warning_popup import*
 from PyQt4 import QtCore, QtGui
 
 import velocity_publisher  # custom modules for publishing cmd_vel and desired z position
@@ -31,29 +31,6 @@ from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
-
-
-def stop_alarm():
-    pygame.mixer.music.stop()
-
-
-## Popup for low battery
-#
-# little class for displaying a popup when battery reaches critical levels
-class BatteryWarningUi(QtGui.QDialog):
-    ## The constructor
-    #  Loads the ui declaration
-    #  @param self The object pointer
-    def __init__(self, parent=None):
-        super(BatteryWarningUi, self).__init__(parent)
-        ## store the ui object
-        self.battery_warning_ui = Ui_warning()
-        self.battery_warning_ui.setupUi(self)
-
-        QtCore.QObject.connect(self.battery_warning_ui.buttonBox, QtCore.SIGNAL("accepted()"), stop_alarm)
-
-        self.battery_warning_ui.progressBar.setValue(misc_vars.low_battery_threshold/misc_vars.max_voltage*100)
-
 
 ## Main window class linking ROS with the UI and controllers
 class CentralUi(QtGui.QMainWindow):
@@ -119,8 +96,7 @@ class CentralUi(QtGui.QMainWindow):
 
         ## create the ps3 controller object
         self.ps3 = PS3Controller_central.PS3Controller()
-        ## creates battery depleted ui
-        self.warning_ui = BatteryWarningUi(self)
+
 
         ## place holder variable for internal battery status
         self.battery_empty = False
@@ -132,7 +108,6 @@ class CentralUi(QtGui.QMainWindow):
         # buttons connects
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
-        QtCore.QObject.connect(self.ui.resSelect, QtCore.SIGNAL("currentIndexChanged(int)"), self.setVideoRes)
 
         # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
@@ -146,6 +121,13 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
 
+        QtCore.QObject.connect(self.ui.x_force, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
+        QtCore.QObject.connect(self.ui.x_bal, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
+        QtCore.QObject.connect(self.ui.y_force, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
+        QtCore.QObject.connect(self.ui.y_bal, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
+        QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+        QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+
     ##initiallize the ros subscribers
     #
     #initiallize the ros node and starts all the ros subscribers and maps each topic to the correct callback
@@ -154,9 +136,9 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
         rospy.init_node('Front_End', anonymous=True)
-        rospy.Subscriber("/depth", Int16, self.depth_callback)
-        rospy.Subscriber("/batteryVoltage1", Float32, self.bat_1)
-        rospy.Subscriber("/batteryVoltage2", Float32, self.bat_2)
+        rospy.Subscriber("/electrical_interface/depth", Int16, self.depth_callback)
+        rospy.Subscriber("/electrical_interface/batteryVoltage1", Float32, self.bat_1)
+        rospy.Subscriber("/electrical_interface/batteryVoltage2", Float32, self.bat_2)
         rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
         rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
         rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
@@ -166,43 +148,14 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
         rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/temperature", Int16, self.temp_callback)
+        rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
+        rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
 
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
 
-    ##sets the maximum size of the video displays
-    #
-    #the selected resolution sets the maximal size to not over size the window
-    #@param self the object pointer
-    #@param data the data passed by the connect of the resolution combo box, is the index of the selected option
-    def setVideoRes(self, data):
-        #xga display
-        if data == 0:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(190, 170))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(190, 170))
-        #720p display
-        elif data == 1:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(220, 200))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(220, 200))
-        #1080p display
-        elif data == 2:
-            self.ui.preLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.preBottom.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postLeft.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.postRight.setMaximumSize(QtCore.QSize(320, 300))
-            self.ui.posBottom.setMaximumSize(QtCore.QSize(320, 300))
-        else:
-            pass
+    def pressure_callback(self, data):
+        self.ui.pressure_lcd.display(data.data)
 
     ##resize the sliders to fit the correct range of values
     def resizeSliders(self):
@@ -217,7 +170,6 @@ class CentralUi(QtGui.QMainWindow):
     #  @param event the data return by the Qt keyboard keypress signal
     def keyPressEvent(self, event):
         key = event.key()
-
         # If the key is not generated from an auto-repeating key
         if self.keyboard_control and not event.isAutoRepeat():
         # Handle the important cases first!
@@ -251,9 +203,7 @@ class CentralUi(QtGui.QMainWindow):
     #  @param self The object pointer
     #  @param event the data return by the Qt keyboard keyrelease signal
     def keyReleaseEvent(self, event):
-
         key = event.key()
-
         # If the key is not generated from an auto-repeating key
         if self.keyboard_control and not event.isAutoRepeat():
             # Now we handle moving, notice that this section is the opposite (-=) of the keypress section
@@ -289,8 +239,6 @@ class CentralUi(QtGui.QMainWindow):
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent:
                 self.ps3_timer.start(misc_vars.controller_updateFrequency)
-            else:
-                pass
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
             self.ps3_timer.stop()
@@ -301,7 +249,7 @@ class CentralUi(QtGui.QMainWindow):
             self.keyboard_control = False
             self.ps3_timer.stop()
             self.key_timer.stop()
-            velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints", 0)
+            velocity_publisher.velocity_publisher(vel_vars.y_velocity, "/setPoints", 0)
 
     ##  Method for the keyboard controller
     #
@@ -322,7 +270,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints",1)
+        velocity_publisher.velocity_publisher(vel_vars.y_velocity,  "/setPoints",1)
 
     ## Method for the ps3 control
     #
@@ -336,7 +284,7 @@ class CentralUi(QtGui.QMainWindow):
     #  @param self the object pointer
     def controller_update(self):
         # update the state of the controller
-        self.ps3.updateController()
+        self.ps3.updateController_for_controls_systems()
 
         # set ui
         self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
@@ -350,7 +298,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.x_velocity, -vel_vars.y_velocity, vel_vars.z_position, vel_vars.yaw_velocity, "/setPoints", 1)
+        velocity_publisher.velocity_publisher(-vel_vars.y_velocity, "/setPoints", 1)
 
     ## updates the data displayed by the depth graph
     #
@@ -470,9 +418,7 @@ class CentralUi(QtGui.QMainWindow):
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_pre_image.data, self.left_pre_image.width, self.left_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 pass
-
             self.ui.preLeft.setPixmap(image)
-
         else:
             self.ui.preLeft.setText("No video feed")
 
@@ -481,7 +427,6 @@ class CentralUi(QtGui.QMainWindow):
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_pre_image.data, self.right_pre_image.width, self.right_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 pass
-
             self.ui.preRight.setPixmap(image)
         else:
             self.ui.preRight.setText("No video feed")
@@ -491,7 +436,6 @@ class CentralUi(QtGui.QMainWindow):
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_pre_image.data, self.bottom_pre_image.width, self.bottom_pre_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 pass
-
             self.ui.preBottom.setPixmap(image)
         else:
             self.ui.preBottom.setText("No video feed")
@@ -501,7 +445,6 @@ class CentralUi(QtGui.QMainWindow):
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.left_post_image.data, self.left_post_image.width, self.left_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 pass
-
             self.ui.postLeft.setPixmap(image)
         else:
             self.ui.postLeft.setText("No video feed")
@@ -511,7 +454,6 @@ class CentralUi(QtGui.QMainWindow):
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.right_post_image.data, self.right_post_image.width, self.right_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 pass
-
             self.ui.postRight.setPixmap(image)
         else:
             self.ui.postRight.setText("No video feed")
@@ -521,7 +463,6 @@ class CentralUi(QtGui.QMainWindow):
                 image = QtGui.QPixmap.fromImage(QtGui.QImage(self.bottom_post_image.data, self.bottom_post_image.width, self.bottom_post_image.height, QtGui.QImage.Format_RGB888))
             finally:
                 pass
-
             self.ui.posBottom.setPixmap(image)
         else:
             self.ui.posBottom.setText("No video feed")
@@ -544,35 +485,66 @@ class CentralUi(QtGui.QMainWindow):
     # @param voltage_data data received by the subscriber
     def bat_1(self, voltage_data):
         self.ui.bat_lcd1.display(voltage_data.data)
-        #if (not self.battery_empty) and voltage_data.data < misc_vars.low_battery_threshold:
-        #    self.battery_empty = True
-        #    self.empty_battery_signal.emit()
-        #    self.play_alarm()
 
     def bat_2(self, voltage_data):
         self.ui.bat_lcd2.display(voltage_data.data)
 
     def check_low_bat(self):
         if self.ui.bat_lcd1.value()<misc_vars.low_battery_threshold or self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
-            self.play_alarm()
             self.open_low_battery_dialog()
-
-    ## start the alarm sound
-    #
-    #@param self the object pointer
-    def play_alarm(self):
-        pygame.mixer.music.load(self.alarm_file)
-        pygame.mixer.music.play(-1, 0)
-
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
 
     ## launch the popup for the low battery
     #
     #@param self the object pointer
     def open_low_battery_dialog(self):
-        self.warning_ui.exec_()
+        ## creates battery depleted ui
+        warning_ui = BatteryWarningUi(self)
+        warning_ui.exec_()
 
+    def x_force(self, data):
+        if (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
+            self.ui.fiel_thruste_1.setValue(500)
+        elif (self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
+            self.ui.fiel_thruste_1.setValue(-500)
+        else:
+            self.ui.fiel_thruste_1.setValue(self.ui.x_force.value() - self.ui.x_force.value() * self.ui.x_bal.value() / 100)
+
+        if (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_2.setValue(500)
+        elif (self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_2.setValue(-500)
+        else:
+            self.ui.fiel_thruster_2.setValue(self.ui.x_force.value() + self.ui.x_force.value() * self.ui.x_bal.value() / 100)
+
+    def y_force(self, data):
+        if (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_3.setValue( 500)
+        elif (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_3.setValue( -500)
+        else:
+            self.ui.fiel_thruster_3.setValue( self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100)
+
+        if (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_4.setValue( -500)
+        elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_4.setValue( 500)
+        else:
+            self.ui.fiel_thruster_4.setValue(- (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100))
+
+    def z_force(self, data):
+        if (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_5.setValue( 500)
+        elif (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_5.setValue( -500)
+        else:
+            self.ui.fiel_thruster_5.setValue( self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100)
+
+        if (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
+            self.ui.fiel_thruster_6.setValue( 500)
+        elif (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
+            self.ui.fiel_thruster_6.setValue( -500)
+        else:
+            self.ui.fiel_thruster_6.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
 def sigint_handler(*args):
     """Handler for the SIGINT signal."""
@@ -589,7 +561,6 @@ if __name__ == "__main__":
     timer = QtCore.QTimer()
     timer.start(500)  # You may change this if you wish.
     timer.timeout.connect(lambda: None)  # Let the interpreter run each 500 ms.
-    # Your code here.
     AppWindow = CentralUi()
     AppWindow.show()
     sys.exit(app.exec_())

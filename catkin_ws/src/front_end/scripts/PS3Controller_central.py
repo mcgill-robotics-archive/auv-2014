@@ -54,6 +54,13 @@ class PS3Controller(object):
         ##Default config as ps3 controller not existant
         #will be changed to true if the controller is initialized. 
         self.controller_isPresent=False
+        self.thruster_stop = False
+        self.fiel_thruste_1 = 0
+        self.fiel_thruster_2 = 0
+        self.fiel_thruster_3 = 0
+        self.fiel_thruster_4 = 0
+        self.fiel_thruster_5 = 0
+        self.fiel_thruster_6 = 0
         
         if pygame.joystick.get_count() == 0:
             print "The controller is not connected"
@@ -77,7 +84,10 @@ class PS3Controller(object):
     #It reads the data from the controller
     # (the queue of event more precisely) and updates the Global data of the instance.
     #@param self the object pointer
-    def updateController(self):
+    def updateController_for_controls_systems(self):
+        """This method fetches the information form the ps3 controller parses the data and returns values ready to be
+        published for the implementation with the controls systems, i.e. it should be used with the 'Sensor Information'
+        tab. """
         # If a changed occurred, the value will be updated; else the value will be the last one fetched.
 
         if self.controller_isPresent:
@@ -96,3 +106,34 @@ class PS3Controller(object):
                     vel_vars.x_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(0)  # left left/right axis
                     vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
                     vel_vars.yaw_velocity = -vel_vars.MAX_YAW_VEL*self.controller.get_axis(2)  # right left/right axis
+
+    def updateController_for_thrusters(self):
+        """Fetches the values of the ps3 controller axies and parses them to be published as voltage
+         command for the arduino node directly.  """
+        # If a changed occurred, the value will be updated; else the value will be the last one fetched.
+        if self.controller_isPresent:
+            for anEvent in pygame.event.get():
+                if anEvent.type == pygame.locals.JOYBUTTONDOWN:
+
+                    if self.controller.get_button(3):  # left arrow
+                        if self.thruster_stop:
+                            self.thruster_stop = False
+                        else:
+                            self.thruster_stop = True
+
+                elif anEvent.type == pygame.locals.JOYAXISMOTION:
+                    if self.controller.get_button(10):  # find l1
+                        self.fiel_thruste_1 = ( -500*self.controller.get_axis(1))
+                        self.fiel_thruster_2 = ( - 500*self.controller.get_axis(1))
+                        # ui.fiel_thruste_1 & x2 are the same, left front/back
+
+                        if self.controller.get_axis(2) == 0:  # if not turning yaw (right x)
+                            self.fiel_thruster_3 = (500*self.controller.get_axis(0))
+                            self.fiel_thruster_4 = (-500*self.controller.get_axis(0))
+                    if self.controller.get_button(11):  # find r1
+                        self.fiel_thruster_5 = (-500*self.controller.get_axis(3))
+                        self.fiel_thruster_6 = (-500*self.controller.get_axis(3))
+
+                        self.fiel_thruster_3 = (500*self.controller.get_axis(2))
+                        self.fiel_thruster_4 = (500*self.controller.get_axis(2))
+

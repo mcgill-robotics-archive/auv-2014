@@ -46,15 +46,8 @@ namespace ros
 
 #elif defined(__AVR_ATmega328P__)
 
-  typedef NodeHandle_<ArduinoHardware, 25, 25, 150, 150> NodeHandle;
-  //typedef NodeHandle_<ArduinoHardware, 25, 25, 280, 280> NodeHandle;
-  //typedef NodeHandle_<ArduinoHardware> NodeHandle;
-
-
-
-//reduce the buffer size for mega
-#elif defined(__AVR_ATmega2560__)
-  typedef NodeHandle_<ArduinoHardware, 25, 25, 280, 280> NodeHandle;
+  // changed buffer size to reduce the memory impact 
+  typedef NodeHandle_<ArduinoHardware, 25, 25, 100, 100> NodeHandle;
 
 #else
 

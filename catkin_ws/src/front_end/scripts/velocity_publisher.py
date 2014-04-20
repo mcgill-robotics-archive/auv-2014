@@ -8,6 +8,7 @@
 
 import rospy
 from planner.msg import setPoints
+from VARIABLES import vel_vars
 
 ##
 #publishes the passed data to ros
@@ -17,7 +18,7 @@ from planner.msg import setPoints
 #@param yaw_vel angular velocity for yaw float 64-bits
 #@param ros_topic the topic name to which you publish float 64-bits
 #@param set_null if set to 0, sends all controls NOT active
-def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
+def velocity_publisher(y_vel, ros_topic, set_null):
     vel_pub = rospy.Publisher(ros_topic, setPoints)
 
     msg = setPoints()
@@ -27,14 +28,14 @@ def velocity_publisher(x_vel, y_vel, z_depth, yaw_vel, ros_topic, set_null):
 
         # define the twist message from the joystick input
         
-        msg.XSpeed.data = x_vel
+        msg.XSpeed.data = vel_vars.x_velocity
         msg.YSpeed.data = y_vel
-        msg.Depth.data = z_depth
-        msg.YawSpeed.data = yaw_vel
+        #msg.Depth.data = vel_vars.z_position
+        msg.YawSpeed.data = vel_vars.yaw_velocity
 
         msg.XPos.isActive = 0
         msg.YPos.isActive = 0
-        msg.Depth.isActive = 1
+        msg.Depth.isActive = 0
         msg.Yaw.isActive = 0
         msg.Pitch.isActive = 0
         msg.XSpeed.isActive = 1

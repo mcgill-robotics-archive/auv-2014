@@ -75,7 +75,6 @@ def update_colors(req):
 	else:
 		return BlinkyServiceResponse(UNKNOWN_ID)
 
-        print colorList
 	return BlinkyServiceResponse(SUCCESS)
 
 def BlinkyTapeServer():

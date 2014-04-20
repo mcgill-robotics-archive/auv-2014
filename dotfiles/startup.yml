@@ -1,0 +1,11 @@
+windows:
+  - name: "Core"
+    clear: true
+    root: "~/McGill_RoboSub_2014"
+    layout: "4c9b,205x57,0,0[205x28,0,0{64x28,0,0,75x28,65,0,64x28,141,0},205x28,0,29{95x28,0,29,109x28,96,29}]"
+    panes:
+      - cmd: "clear && roscore"
+      - cmd: "sleep 2 && roslaunch /home/robotics/McGill_RoboSub_2014/catkin_ws/launch/arduino.launch"
+      - cmd: "sleep 2 && rosrun blinky Blinky.py"
+      - cmd: "glances -yet 5"
+      - cmd: "clear"

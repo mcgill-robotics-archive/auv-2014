@@ -1,5 +1,5 @@
-#~/bin/bash
+#!/bin/bash
 
-scp -r catkin_ws/src robotics:'elgordo21'@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
-scp -r Arduino robotics:'elgordo21'@10.0.0.1:~/McGill_RoboSub_2014/Arduino
-scp -r dotfiles robotics:'elgordo21'@10.0.0.1:~/McGill_RoboSub_2014/dotfiles
+sshpass -p 'elgordo21' scp -r catkin_ws/src robotics@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
+sshpass -p 'elgordo21' scp -r Arduino robotics@10.0.0.1:~/McGill_RoboSub_2014/
+sshpass -p 'elgordo21' scp -r dotfiles robotics@10.0.0.1:~/McGill_RoboSub_2014/

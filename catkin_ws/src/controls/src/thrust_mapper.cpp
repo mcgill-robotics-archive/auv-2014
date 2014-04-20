@@ -30,6 +30,11 @@ float limit_check(float value, float max, char* value_type, char* value_id){
 
 //update these values based on final characterization
 float thrust_voltage(float thrust){
+	/*
+	* Input: desired thrust from a certain thruster
+	* Output: voltage to send to that thruster
+	*/
+
 	float voltage;	
 	    if (thrust<0.4641 & thrust>-0.01095 ) {
 	        voltage = 0;
@@ -51,6 +56,16 @@ float thrust_voltage(float thrust){
 
 void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 {	
+	/*
+	* Input: net wrench to apply to robot
+	* computes the desired thrust for each thruster
+	* calculates the corresponding voltage via function call
+	* calculates the corresponding motor command for these voltages
+	*	-Motor controller characterization is coded here
+	*	-offsets are implemented on the arduino (adding or subtracting yintercept)	
+	* Output: motor commands saved in an array
+	*/
+
 	float thrust[6] = {0, 0, 0, 0, 0, 0};
 	float voltage[6] = {0, 0, 0, 0, 0, 0};
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
@@ -66,21 +81,40 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	wrenchMsg.torque.z=limit_check(wrenchMsg.torque.z, T_MAX, "Net Torque", "Z");
 
 	//Account for geometry of the robot, thruster placement:
-	// Coefficients are radii from center of rotation to thruster?
-	thrust[0] = 0.5 * wrenchMsg.force.x; 
-	thrust[1] = thrust[0];
-	thrust[2] = 0.5 * wrenchMsg.force.y + 1.6667 * wrenchMsg.torque.z;
-	thrust[3] = 0.5 * wrenchMsg.force.y - 1.6667 * wrenchMsg.torque.z;
-	thrust[4] = 0.5 * wrenchMsg.force.z + 1.6667 * wrenchMsg.torque.y;
-	thrust[5] = 0.5 * wrenchMsg.force.z - 1.6667 * wrenchMsg.torque.y;    
+	/*
+		Coefficients are radii from center of rotation to thruster? Not sure about this...
+			TODO WHERE TO THE COEFFICENTS COME FROM?????
+		Propeller shroud is in the direction of positive force (send positive motor command and the robot will move in the direction of the shroud)
+		Thruster layout as of April 14, 2014
+			Surge thrusters positive forward
+			Heave thrusters positive upward (should be switched though to avoid splashing at the surface)
+			Sway-Bow points in the negative-y direction (applies a negative force and negative torque)
+			Sway-Stern points in the positive-y direction (applies a positive force and negative torque)
+		Order of thrust array
+			0,1,2,3,4,5  :  x1,x2,y1,y2,z1,z2 :  surge-starbord, surge-port, sway-bow, sway-stern, heave-bow, heave-stern
+	*/
 	
+	float mystery = 1.6667; //TODO figure out what this number is. I think it's a combo of the distnce between axes and the distribution across yaw thrusters (Actually I think it comes from inverting a matrix in matlab)
+	int directions[] = {1, 1, -1, 1, -1, -1}; //the math below assumes thrusters apply force in their positive coordinate directions. -1 here if oriented otherwise
+
+	thrust[0] = 0.5 * wrenchMsg.force.x; 										//surge-starbord
+	thrust[1] = thrust[0];														//surge-port
+	thrust[2] = 0.5 * wrenchMsg.force.y + mystery * wrenchMsg.torque.z;			//Sway-Bow
+	thrust[3] = 0.5 * wrenchMsg.force.y - mystery * wrenchMsg.torque.z;			//sway-stern
+	thrust[4] = 0.5 * wrenchMsg.force.z - mystery * wrenchMsg.torque.y;			//heave-bow  //sign between force and mystery swapped April 14, see nicks design notebok page 158
+	thrust[5] = 0.5 * wrenchMsg.force.z + mystery * wrenchMsg.torque.y;    		//heave-stern  //sign between force and mystery swapped April 14, see nicks design notebok page 158
+	
+	for (int i=0; i<6; i++)
+	{
+		thrust[i]*=directions[i];
+	}
 	//for each thrust, map to a voltage, considering saturation
 	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
  	for (int i=0; i<6; i++)
 	{
 		voltage[i] = thrust_voltage(thrust[i]);
 		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
-		ROS_INFO("Voltage %i: %f",i,voltage[i]);
+		//ROS_INFO("Voltage %i: %f",i,voltage[i]);
 	}	
 
 	//map voltages to motor commands
@@ -99,8 +133,8 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 
 
 */
-
-	//NEW voltage mapping. modified right before test on april 3
+/*
+	//less old voltage mapping. modified right before test on april 3
 
 	motor_cmd[0] = 21.176*voltage[0] - 4.4494;
 	motor_cmd[1] = 21.2*voltage[1] - 1.324;
@@ -108,6 +142,15 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	motor_cmd[3] = 20.704*voltage[3] - 24.533;
 	motor_cmd[4] = 20.583*voltage[4] - 30.652;
 	motor_cmd[5] = 20.63*voltage[5] - 26.482;
+*/
+
+	// y intercepts moved because the offsets will be done on the arduino
+	motor_cmd[0] = 21.176*voltage[0];
+	motor_cmd[1] = 21.2*voltage[1];
+	motor_cmd[2] = 20.686*voltage[2];
+	motor_cmd[3] = 20.704*voltage[3];
+	motor_cmd[4] = 20.583*voltage[4];
+	motor_cmd[5] = 20.63*voltage[5];
 
 
 	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
@@ -156,8 +199,8 @@ int main(int argc, char **argv)
 	//add clock subscription
 
 	//ROS Publisher setup
-	voltage_publisher = n.advertise<controls::motorCommands>("/motor", 100); //TODO change message type and name
-	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); //TODO change message type and name
+	voltage_publisher = n.advertise<controls::motorCommands>("/electrical_interface/motor", 100); 
+	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); 
 
 	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");
 	ros::spin();

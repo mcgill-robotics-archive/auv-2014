@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# EXPORTS
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+TEAMOCIL_PATH=/home/robotics/McGill_RoboSub_2014/dotfiles/
+
+# START HERE
+tmux new -d 'teamocil startup'
+

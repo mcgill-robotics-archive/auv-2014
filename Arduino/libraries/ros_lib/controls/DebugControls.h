@@ -28,6 +28,12 @@ namespace controls
       controls::VectorPID depthForce;
       controls::VectorPID pitchForce;
       controls::VectorPID yawForce;
+      int32_t thrust_surge_port;
+      int32_t thrust_surge_starboard;
+      int32_t thrust_sway_bow;
+      int32_t thrust_sway_stern;
+      int32_t thrust_heave_bow;
+      int32_t thrust_heave_stern;
 
     virtual int serialize(unsigned char *outbuffer) const
     {
@@ -47,6 +53,66 @@ namespace controls
       offset += this->depthForce.serialize(outbuffer + offset);
       offset += this->pitchForce.serialize(outbuffer + offset);
       offset += this->yawForce.serialize(outbuffer + offset);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_surge_port;
+      u_thrust_surge_port.real = this->thrust_surge_port;
+      *(outbuffer + offset + 0) = (u_thrust_surge_port.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_thrust_surge_port.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_thrust_surge_port.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_thrust_surge_port.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->thrust_surge_port);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_surge_starboard;
+      u_thrust_surge_starboard.real = this->thrust_surge_starboard;
+      *(outbuffer + offset + 0) = (u_thrust_surge_starboard.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_thrust_surge_starboard.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_thrust_surge_starboard.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_thrust_surge_starboard.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->thrust_surge_starboard);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_sway_bow;
+      u_thrust_sway_bow.real = this->thrust_sway_bow;
+      *(outbuffer + offset + 0) = (u_thrust_sway_bow.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_thrust_sway_bow.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_thrust_sway_bow.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_thrust_sway_bow.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->thrust_sway_bow);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_sway_stern;
+      u_thrust_sway_stern.real = this->thrust_sway_stern;
+      *(outbuffer + offset + 0) = (u_thrust_sway_stern.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_thrust_sway_stern.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_thrust_sway_stern.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_thrust_sway_stern.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->thrust_sway_stern);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_heave_bow;
+      u_thrust_heave_bow.real = this->thrust_heave_bow;
+      *(outbuffer + offset + 0) = (u_thrust_heave_bow.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_thrust_heave_bow.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_thrust_heave_bow.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_thrust_heave_bow.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->thrust_heave_bow);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_heave_stern;
+      u_thrust_heave_stern.real = this->thrust_heave_stern;
+      *(outbuffer + offset + 0) = (u_thrust_heave_stern.base >> (8 * 0)) & 0xFF;
+      *(outbuffer + offset + 1) = (u_thrust_heave_stern.base >> (8 * 1)) & 0xFF;
+      *(outbuffer + offset + 2) = (u_thrust_heave_stern.base >> (8 * 2)) & 0xFF;
+      *(outbuffer + offset + 3) = (u_thrust_heave_stern.base >> (8 * 3)) & 0xFF;
+      offset += sizeof(this->thrust_heave_stern);
       return offset;
     }
 
@@ -68,11 +134,77 @@ namespace controls
       offset += this->depthForce.deserialize(inbuffer + offset);
       offset += this->pitchForce.deserialize(inbuffer + offset);
       offset += this->yawForce.deserialize(inbuffer + offset);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_surge_port;
+      u_thrust_surge_port.base = 0;
+      u_thrust_surge_port.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_thrust_surge_port.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_thrust_surge_port.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_thrust_surge_port.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->thrust_surge_port = u_thrust_surge_port.real;
+      offset += sizeof(this->thrust_surge_port);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_surge_starboard;
+      u_thrust_surge_starboard.base = 0;
+      u_thrust_surge_starboard.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_thrust_surge_starboard.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_thrust_surge_starboard.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_thrust_surge_starboard.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->thrust_surge_starboard = u_thrust_surge_starboard.real;
+      offset += sizeof(this->thrust_surge_starboard);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_sway_bow;
+      u_thrust_sway_bow.base = 0;
+      u_thrust_sway_bow.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_thrust_sway_bow.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_thrust_sway_bow.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_thrust_sway_bow.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->thrust_sway_bow = u_thrust_sway_bow.real;
+      offset += sizeof(this->thrust_sway_bow);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_sway_stern;
+      u_thrust_sway_stern.base = 0;
+      u_thrust_sway_stern.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_thrust_sway_stern.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_thrust_sway_stern.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_thrust_sway_stern.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->thrust_sway_stern = u_thrust_sway_stern.real;
+      offset += sizeof(this->thrust_sway_stern);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_heave_bow;
+      u_thrust_heave_bow.base = 0;
+      u_thrust_heave_bow.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_thrust_heave_bow.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_thrust_heave_bow.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_thrust_heave_bow.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->thrust_heave_bow = u_thrust_heave_bow.real;
+      offset += sizeof(this->thrust_heave_bow);
+      union {
+        int32_t real;
+        uint32_t base;
+      } u_thrust_heave_stern;
+      u_thrust_heave_stern.base = 0;
+      u_thrust_heave_stern.base |= ((uint32_t) (*(inbuffer + offset + 0))) << (8 * 0);
+      u_thrust_heave_stern.base |= ((uint32_t) (*(inbuffer + offset + 1))) << (8 * 1);
+      u_thrust_heave_stern.base |= ((uint32_t) (*(inbuffer + offset + 2))) << (8 * 2);
+      u_thrust_heave_stern.base |= ((uint32_t) (*(inbuffer + offset + 3))) << (8 * 3);
+      this->thrust_heave_stern = u_thrust_heave_stern.real;
+      offset += sizeof(this->thrust_heave_stern);
      return offset;
     }
 
     const char * getType(){ return "controls/DebugControls"; };
-    const char * getMD5(){ return "2c47c70851217027532bd882f9fcb36e"; };
+    const char * getMD5(){ return "07d63863f19e5d52d3eef13f925e3b65"; };
 
   };
 
