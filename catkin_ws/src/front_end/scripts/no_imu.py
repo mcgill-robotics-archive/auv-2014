@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'no_imu_gr_resizable_TAB.ui'
 #
-# Created: Fri Apr 18 11:34:03 2014
+# Created: Mon Apr 21 10:02:33 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -674,10 +674,16 @@ class Ui_RoboticsMain(object):
         self.menubar = QtGui.QMenuBar(RoboticsMain)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1398, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
+        self.menuFile = QtGui.QMenu(self.menubar)
+        self.menuFile.setObjectName(_fromUtf8("menuFile"))
         RoboticsMain.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(RoboticsMain)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         RoboticsMain.setStatusBar(self.statusbar)
+        self.actionQuit = QtGui.QAction(RoboticsMain)
+        self.actionQuit.setObjectName(_fromUtf8("actionQuit"))
+        self.menuFile.addAction(self.actionQuit)
+        self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(RoboticsMain)
         self.tabWidget.setCurrentIndex(0)
@@ -694,6 +700,7 @@ class Ui_RoboticsMain(object):
         QtCore.QObject.connect(self.z_force, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_12.setValue)
         QtCore.QObject.connect(self.z_bal, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.slider_thruster_11.setValue)
         QtCore.QObject.connect(self.slider_thruster_11, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.z_bal.setValue)
+        QtCore.QObject.connect(self.actionQuit, QtCore.SIGNAL(_fromUtf8("triggered()")), RoboticsMain.close)
         QtCore.QMetaObject.connectSlotsByName(RoboticsMain)
 
     def retranslateUi(self, RoboticsMain):
@@ -761,5 +768,8 @@ class Ui_RoboticsMain(object):
         self.label_47.setText(QtGui.QApplication.translate("RoboticsMain", "Force", None, QtGui.QApplication.UnicodeUTF8))
         self.label_48.setText(QtGui.QApplication.translate("RoboticsMain", "Balance", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("RoboticsMain", "Thruster control", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuFile.setTitle(QtGui.QApplication.translate("RoboticsMain", "File", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionQuit.setText(QtGui.QApplication.translate("RoboticsMain", "Quit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionQuit.setShortcut(QtGui.QApplication.translate("RoboticsMain", "Ctrl+C", None, QtGui.QApplication.UnicodeUTF8))
 
 from pyqtgraph import GraphicsLayoutWidget
