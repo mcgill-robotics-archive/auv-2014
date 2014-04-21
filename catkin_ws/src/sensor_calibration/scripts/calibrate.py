@@ -2,6 +2,7 @@
 import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import Vector3Stamped
+from sensor_msgs.msg import Imu
 
 gyroX = []
 gyroY = []
@@ -10,9 +11,9 @@ gyroZ = []
 
 def gyroCallback(data):
     global gyroX, gyroY, gyroZ
-    gyroX.append(data.vector.x)
-    gyroY.append(data.vector.y)
-    gyroZ.append(data.vector.z)
+    gyroX.append(data.angular_velocity.x)
+    gyroY.append(data.angular_velocity.y)
+    gyroZ.append(data.angular_velocity.z)
 
     
 
@@ -27,7 +28,7 @@ def gyroCallback(data):
 
 def init():
     rospy.init_node('sensor_calibration')
-    rospy.Subscriber('gyro_data', Vector3Stamped, gyroCallback)
+    rospy.Subscriber('imu_data', Imu, gyroCallback)
     global pub
     pub = rospy.Publisher('gyro_offsets', String)
     rospy.spin()

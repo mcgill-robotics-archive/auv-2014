@@ -2,6 +2,7 @@
 #define UKF_H_
 
 void h(double *sigma, double *gamma);
+void propogate(double* rotation, double* state);
 
 class ukf
 {
@@ -10,7 +11,6 @@ class ukf
     	void update(double* acc, double* gyro, double* quaternion);
 
 	private:
-    	int AUGDIM;
     	int DIM;
     	double* augState;
     	double* augCovar;
@@ -22,7 +22,6 @@ class ukf
     	void predict(double rotation[3]);
     	void correct(double acc[3]);
     	void generateSigmas();
-    	void propogateSigmas(double *rotation);
     	void recoverPrediction();
     	void recoverCorrection(double acc[3]);
 

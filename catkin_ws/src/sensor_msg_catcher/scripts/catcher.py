@@ -76,16 +76,19 @@ def accCallback(data):
     imu_msg.orientation_covariance = orientationCovariance
     imu_msg.angular_velocity = omega
     imu_msg.angular_velocity_covariance = getCovariance(gyroVariance)
-    imu_msg.linear_acceleration = data.vector
+    #Remove minus from y and z to switch to NED coord system
+    imu_msg.linear_acceleration.x = data.vector.y
+    imu_msg.linear_acceleration.y = -(data.vector.x)
+    imu_msg.linear_acceleration.z = -(data.vector.z)
     imu_msg.linear_acceleration_covariance = getCovariance(accVariance)
     pub.publish(imu_msg)
 
 def gyroCallback(data):
     global omega
-    omega = data.vector
-    omega.x -= 0.0006
-    omega.y -= 0.01444
-    omega.z -= -0.000135
+    #Remove minus from y and z to switch to NED coord system
+    omega.x = -data.vector.y+0.137
+    omega.y = -(-data.vector.x)
+    omega.z = -(-data.vector.z)
 
 def init():
     rospy.init_node('sensor_catcher')

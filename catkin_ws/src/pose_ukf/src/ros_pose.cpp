@@ -29,10 +29,14 @@ void dataCallback(const sensor_msgs::Imu::ConstPtr& imu) {
 	vectorToArray(acc, imu->linear_acceleration);
 	vectorToArray(gyro, imu->angular_velocity);
 
+	double accNorm = sqrt(acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]);
+	if (accNorm == 0) accNorm = 1;
 	for (int i = 0; i < 3; i++)
 	{
 		gyro[i] *= 0.026;
+		acc[i] *= -9.8/accNorm;
 	}
+
 
 	estimator.update(acc, gyro, quaternion);
 	geometry_msgs::Quaternion quat = geometry_msgs::Quaternion();
