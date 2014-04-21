@@ -7,6 +7,7 @@ import pygame
 
 alarm_file = ""
 
+
 ## Popup for low battery
 #
 # little class for displaying a popup when battery reaches critical levels
@@ -24,8 +25,10 @@ class BatteryWarningUi(QtGui.QDialog):
 
         self.battery_warning_ui.progressBar.setValue(misc_vars.low_battery_threshold/misc_vars.max_voltage*100)
 
+
 def stop_alarm():
     pygame.mixer.music.stop()
+
 
 ## start the alarm sound
 #

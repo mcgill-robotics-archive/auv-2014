@@ -14,7 +14,7 @@ from no_imu import *
 from Battery_warning_popup import*
 from PyQt4 import QtCore, QtGui
 
-import velocity_publisher  # custom modules for publishing cmd_vel and desired z position
+import velocity_publisher  # custom modules for publishing cmd_vel
 import PS3Controller_central  # custom modules for acquiring ps3 input
 
 from VARIABLES import *  # file containing all the shared variables and parameters
@@ -31,6 +31,8 @@ from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
+from controls.msg import motorCommands
+
 
 ## Main window class linking ROS with the UI and controllers
 class CentralUi(QtGui.QMainWindow):
@@ -52,7 +54,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui = Ui_RoboticsMain()
 
         self.ui.setupUi(self)
-        self.resizeSliders()
+        self.resize_sliders()
         self.ui.label_13.setText("Depth")
         ## variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
@@ -89,14 +91,14 @@ class CentralUi(QtGui.QMainWindow):
         
         self.start_ros_subscriber()
 
-        ## creates the timers to enable or disable the ps3 controller
-        self.ps3_timer = QtCore.QTimer()
+        ## creates the timers to enable or disable the ps3 controller for the controls systems
+        self.ps3_timer_with_controls = QtCore.QTimer()
         ## creates the timers to enable or disable the keyboard controllers
         self.key_timer = QtCore.QTimer()
-
+        self.ps3_timer_thrusters = QtCore.QTimer()
+        self.thrust_pub_timer = QtCore.QTimer()
         ## create the ps3 controller object
         self.ps3 = PS3Controller_central.PS3Controller()
-
 
         ## place holder variable for internal battery status
         self.battery_empty = False
@@ -113,7 +115,9 @@ class CentralUi(QtGui.QMainWindow):
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
 
         # controller timer connect
-        QtCore.QObject.connect(self.ps3_timer, QtCore.SIGNAL("timeout()"), self.controller_update)
+        QtCore.QObject.connect(self.ps3_timer_with_controls, QtCore.SIGNAL("timeout()"), self.controller_update_controls)
+        QtCore.QObject.connect(self.ps3_timer_thrusters, QtCore.SIGNAL("timeout()"), self.controller_update_thrusters)
+        QtCore.QObject.connect(self.thrust_pub_timer, QtCore.SIGNAL("timeout()"), self.publish_thrusters)
         QtCore.QObject.connect(self.key_timer, QtCore.SIGNAL("timeout()"), self.keyboard_update)
 
         ## A timer to redraw the GUI (video monitors)
@@ -121,12 +125,72 @@ class CentralUi(QtGui.QMainWindow):
         self.redraw_timer.timeout.connect(self.redraw_video_callback)
         self.redraw_timer.start(misc_vars.GUI_UPDATE_PERIOD)
 
+        # change tab connect
+        QtCore.QObject.connect(self.ui.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.change_tab)
+
+        #thruster sliders connects
         QtCore.QObject.connect(self.ui.x_force, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
         QtCore.QObject.connect(self.ui.x_bal, QtCore.SIGNAL("valueChanged(int)"), self.x_force)
         QtCore.QObject.connect(self.ui.y_force, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
         QtCore.QObject.connect(self.ui.y_bal, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
         QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
         QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+
+    def change_tab(self, tab_no):
+        if tab_no == 0:  # change to first tab
+            self.add_to_planner_log("[Front-end]Stopping thruster publisher")
+            self.reset_thrusters()
+            self.thrust_pub_timer.stop()
+            self.publish_thrusters()
+            pass
+        elif tab_no == 1:  # change to tab 2
+            self.add_to_planner_log("[Front-end]Stopping publishing to /setPoints")
+            self.ui.autonomousControl.setChecked(True)  # check autonomous controls
+            self.set_controller_timer()  # send all inactive to controls, stop acquisition of key/ps3 input for co
+            if self.ps3.controller_isPresent:
+                self.add_to_planner_log("[Front-end]Re-tasking ps3 controller")
+                self.ps3_timer_thrusters.start(misc_vars.controller_updateFrequency)
+            self.thrust_pub_timer.start(200)
+            self.add_to_planner_log("[Front-end]Starting thruster command publisher")
+
+    def controller_update_thrusters(self):
+        self.ps3.updateController_for_thrusters()
+        self.ui.fiel_thruste_1.setValue(self.ps3.fiel_thruste_1)
+        self.ui.fiel_thruster_2.setValue(self.ps3.fiel_thruster_2)
+        self.ui.fiel_thruster_3.setValue(self.ps3.fiel_thruster_3)
+        self.ui.fiel_thruster_4.setValue(self.ps3.fiel_thruster_4)
+        self.ui.fiel_thruster_5.setValue(self.ps3.fiel_thruster_5)
+        self.ui.fiel_thruster_6.setValue(self.ps3.fiel_thruster_6)
+
+    def reset_thrusters(self):
+        self.ps3.updateController_for_thrusters()
+        self.ui.fiel_thruste_1.setValue(0)
+        self.ui.fiel_thruster_2.setValue(0)
+        self.ui.fiel_thruster_3.setValue(0)
+        self.ui.fiel_thruster_4.setValue(0)
+        self.ui.fiel_thruster_5.setValue(0)
+        self.ui.fiel_thruster_6.setValue(0)
+
+    def publish_thrusters(self):
+        vel_pub = rospy.Publisher("/electrical_interface/motor", motorCommands)
+
+        msg = motorCommands()
+        if not self.ui.thruster_stop.isChecked():
+            msg.cmd_surge_starboard = self.ui.fiel_thruste_1.value()
+            msg.cmd_surge_port = self.ui.fiel_thruster_2.value()
+            msg.cmd_sway_bow = self.ui.fiel_thruster_3.value()
+            msg.cmd_sway_stern = self.ui.fiel_thruster_4.value()
+            msg.cmd_heave_bow = self.ui.fiel_thruster_5.value()
+            msg.cmd_heave_stern = self.ui.fiel_thruster_6.value()
+        else:
+            msg.cmd_surge_starboard = 0
+            msg.cmd_surge_port = 0
+            msg.cmd_sway_bow = 0
+            msg.cmd_sway_stern = 0
+            msg.cmd_heave_bow = 0
+            msg.cmd_heave_stern = 0
+
+        vel_pub.publish(msg)
 
     ##initiallize the ros subscribers
     #
@@ -158,7 +222,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.pressure_lcd.display(data.data)
 
     ##resize the sliders to fit the correct range of values
-    def resizeSliders(self):
+    def resize_sliders(self):
         self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)
         self.ui.linearVertical.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
         self.ui.linearHorizantal.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
@@ -231,6 +295,7 @@ class CentralUi(QtGui.QMainWindow):
     #   for the keyboard controller, simply start the keyboard timer
     #   @param self The object pointer
     def set_controller_timer(self):
+        self.ps3_timer_thrusters.stop()
         # radio button PS3
         if self.ui.manualControl.isChecked():
             self.keyboard_control = False
@@ -238,16 +303,16 @@ class CentralUi(QtGui.QMainWindow):
 
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent:
-                self.ps3_timer.start(misc_vars.controller_updateFrequency)
+                self.ps3_timer_with_controls.start(misc_vars.controller_updateFrequency)
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
-            self.ps3_timer.stop()
+            self.ps3_timer_with_controls.stop()
             self.keyboard_control = True
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
             self.keyboard_control = False
-            self.ps3_timer.stop()
+            self.ps3_timer_with_controls.stop()
             self.key_timer.stop()
             velocity_publisher.velocity_publisher(vel_vars.y_velocity, "/setPoints", 0)
 
@@ -270,11 +335,11 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.y_velocity,  "/setPoints",1)
+        velocity_publisher.velocity_publisher(vel_vars.y_velocity,  "/setPoints", 1)
 
     ## Method for the ps3 control
     #
-    # activated when the ps3_timer times out
+    # activated when the ps3_timer_with_controls times out
     #
     # updates the value of the ps3 controller data
     #
@@ -282,7 +347,7 @@ class CentralUi(QtGui.QMainWindow):
     #
     # publishes to the correct topic
     #  @param self the object pointer
-    def controller_update(self):
+    def controller_update_controls(self):
         # update the state of the controller
         self.ps3.updateController_for_controls_systems()
 
@@ -322,6 +387,9 @@ class CentralUi(QtGui.QMainWindow):
     #@param string_data data passed by the ros callback
     def planner_callback(self, string_data):
         self.ui.logObject.append(string_data.data)
+
+    def add_to_planner_log(self, string_data):
+        self.ui.logObject.append(string_data)
 
     def front_cv_data_callback(self, data):
         self.ui.front_pitch.setText(str(data.pitch_angle))
@@ -490,7 +558,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.bat_lcd2.display(voltage_data.data)
 
     def check_low_bat(self):
-        if self.ui.bat_lcd1.value()<misc_vars.low_battery_threshold or self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
+        if self.ui.bat_lcd1.value() < misc_vars.low_battery_threshold or self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
             self.open_low_battery_dialog()
 
     ## launch the popup for the low battery
@@ -518,33 +586,34 @@ class CentralUi(QtGui.QMainWindow):
 
     def y_force(self, data):
         if (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
-            self.ui.fiel_thruster_3.setValue( 500)
+            self.ui.fiel_thruster_3.setValue(500)
         elif (self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
-            self.ui.fiel_thruster_3.setValue( -500)
+            self.ui.fiel_thruster_3.setValue(-500)
         else:
-            self.ui.fiel_thruster_3.setValue( self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100)
+            self.ui.fiel_thruster_3.setValue(self.ui.y_force.value() - self.ui.y_force.value() * self.ui.y_bal.value() / 100)
 
         if (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) > 500:
-            self.ui.fiel_thruster_4.setValue( -500)
+            self.ui.fiel_thruster_4.setValue(-500)
         elif (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100) < -500:
-            self.ui.fiel_thruster_4.setValue( 500)
+            self.ui.fiel_thruster_4.setValue(500)
         else:
             self.ui.fiel_thruster_4.setValue(- (self.ui.y_force.value() + self.ui.y_force.value() * self.ui.y_bal.value() / 100))
 
     def z_force(self, data):
         if (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
-            self.ui.fiel_thruster_5.setValue( 500)
+            self.ui.fiel_thruster_5.setValue(500)
         elif (self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
-            self.ui.fiel_thruster_5.setValue( -500)
+            self.ui.fiel_thruster_5.setValue(-500)
         else:
-            self.ui.fiel_thruster_5.setValue( self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100)
+            self.ui.fiel_thruster_5.setValue(self.ui.z_force.value() - self.ui.z_force.value() * self.ui.z_bal.value() / 100)
 
         if (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) > 500:
-            self.ui.fiel_thruster_6.setValue( 500)
+            self.ui.fiel_thruster_6.setValue(500)
         elif (self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100) < -500:
-            self.ui.fiel_thruster_6.setValue( -500)
+            self.ui.fiel_thruster_6.setValue(-500)
         else:
-            self.ui.fiel_thruster_6.setValue( self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
+            self.ui.fiel_thruster_6.setValue(self.ui.z_force.value() + self.ui.z_force.value() * self.ui.z_bal.value() / 100)
+
 
 def sigint_handler(*args):
     """Handler for the SIGINT signal."""
