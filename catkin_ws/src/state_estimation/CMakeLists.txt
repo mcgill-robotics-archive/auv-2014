@@ -49,6 +49,7 @@ find_package(catkin REQUIRED
 add_message_files(
   FILES
   AUVState.msg
+  SystemStatus.msg
 )
 
 ## Generate services in the 'srv' folder

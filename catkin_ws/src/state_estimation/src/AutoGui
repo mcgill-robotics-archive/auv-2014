@@ -1,0 +1,79 @@
+#!/usr/bin/env python2.7
+import rospy
+from state_estimation.msg import SystemStatus
+import Tkinter as Tk
+
+topics = {}
+
+bg_color = "black"
+header_color = "grey"
+sep_color = "white"
+sep_thick = 1
+alerts = ["green", "yellow", "red"]
+
+def newStatus(statusmsg):
+    topics[statusmsg.topic_name] = [
+        Tk.Label(root, text=statusmsg.topic_name, borderwidth=0)
+        ,Tk.Label(root, text=statusmsg.status, borderwidth=0, background=alerts[statusmsg.alert_level])
+        ,Tk.Label(root, text="No Prev Status", borderwidth=0)
+    ]
+
+    row_num = 2+len(topics.keys())
+
+    for i in range(0,3):
+        topics[statusmsg.topic_name][i].grid(row=row_num, column=i
+            ,padx=sep_thick, pady=sep_thick, sticky=Tk.N+Tk.S+Tk.E+Tk.W)
+
+def updateStatus(statusmsg):
+    cur_topic = topics[statusmsg.topic_name]
+
+    #Copy over to prev status
+    cur_topic[2].config(text=cur_topic[1]["text"], background=cur_topic[1]["background"])
+
+    #Set cur status
+    cur_topic[1].config(text=statusmsg.status, background=alerts[statusmsg.alert_level])
+
+def statusCallback(statusmsg):
+    if statusmsg.topic_name not in topics.keys():
+        newStatus(statusmsg)
+    else:
+        updateStatus(statusmsg)
+
+
+
+# Init the ros node, subscribers and publishers
+# And run the node
+def init():
+    global estimator, pub, root
+
+    rospy.init_node('statusGui')
+
+    root = Tk.Tk()
+    root.config(bg=bg_color)
+
+
+    Tk.Grid.columnconfigure(root,0,weight=1)
+    Tk.Grid.columnconfigure(root,1,weight=1)
+    Tk.Grid.columnconfigure(root,2,weight=1)
+    #Tk.Grid.rowconfigure(root,0,weight=1)
+
+    #root.config(bg="black")
+    Tk.Label(root, text="Topic", borderwidth=0).grid(row=0, column=0
+        ,padx=sep_thick, pady=sep_thick, sticky=Tk.N+Tk.S+Tk.E+Tk.W)
+    Tk.Label(root, text="Current Status", borderwidth=0).grid(row=0, column=1
+        ,padx=sep_thick, pady=sep_thick, sticky=Tk.N+Tk.S+Tk.E+Tk.W)
+    Tk.Label(root, text="Prev Status", borderwidth=0).grid(row=0, column=2
+        ,padx=sep_thick, pady=sep_thick, sticky=Tk.N+Tk.S+Tk.E+Tk.W)
+
+
+    # Subscribe to different inputing topics
+    rospy.Subscriber('status', SystemStatus, statusCallback)
+
+    #GUI loop
+    root.mainloop()
+
+if __name__ == '__main__':
+    try:
+        init()
+    except rospy.ROSInterruptException:
+        pass
