@@ -35,6 +35,12 @@ from controls.msg import motorCommands
 
 
 ## Main window class linking ROS with the UI and controllers
+def reset_controls_speed():
+    vel_vars.yaw_velocity = 0
+    vel_vars.x_velocity = 0
+    vel_vars.y_velocity = 0
+
+
 class CentralUi(QtGui.QMainWindow):
     ##Qt signal for battery empty alarm
     empty_battery_signal = QtCore.pyqtSignal()
@@ -136,22 +142,51 @@ class CentralUi(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
         QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
 
+    ##initiallize the ros subscribers
+    #
+    #initiallize the ros node and starts all the ros subscribers and maps each topic to the correct callback
+    #
+    #note that all the topic names are set in the file "VARIABLES.py"
+    #@param self the object pointer
+    def start_ros_subscriber(self):
+        rospy.init_node('Front_End', anonymous=True)
+        rospy.Subscriber("/electrical_interface/depth", Int16, self.depth_callback)
+        rospy.Subscriber("/electrical_interface/batteryVoltage1", Float32, self.bat_1)
+        rospy.Subscriber("/electrical_interface/batteryVoltage2", Float32, self.bat_2)
+        rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
+        rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
+        rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
+        rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
+        rospy.Subscriber("/front_cv/camera2", Image, self.front_post_right_callback)
+        rospy.Subscriber("/down_cv/camera1", Image, self.down_post_callback)
+        rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
+        rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
+        rospy.Subscriber('planner/task', String, self.planner_callback)
+        rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
+        rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
+
+        #subscriber and callback for the 3d viz of pose data
+        self.pose_ui.subscribe_topic('/state_estimation/pose')
+
     def change_tab(self, tab_no):
         if tab_no == 0:  # change to first tab
-            self.add_to_planner_log("[Front-end]Stopping thruster publisher")
-            self.reset_thrusters()
+            reset_controls_speed()
+            self.ps3_timer_thrusters.stop()
+            self.log_info("Stopping thruster publisher")
             self.thrust_pub_timer.stop()
+            self.reset_thrusters()
             self.publish_thrusters()
-            pass
+
         elif tab_no == 1:  # change to tab 2
-            self.add_to_planner_log("[Front-end]Stopping publishing to /setPoints")
+            self.log_info("Stopping publishing to /setPoints")
             self.ui.autonomousControl.setChecked(True)  # check autonomous controls
             self.set_controller_timer()  # send all inactive to controls, stop acquisition of key/ps3 input for co
             if self.ps3.controller_isPresent:
-                self.add_to_planner_log("[Front-end]Re-tasking ps3 controller")
+                self.ui.ps3_present.setChecked(True)
+                self.log_info("Re-tasking ps3 controller")
                 self.ps3_timer_thrusters.start(misc_vars.controller_updateFrequency)
             self.thrust_pub_timer.start(200)
-            self.add_to_planner_log("[Front-end]Starting thruster command publisher")
+            self.log_info("Starting thruster command publisher")
 
     def controller_update_thrusters(self):
         self.ps3.updateController_for_thrusters()
@@ -161,6 +196,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.fiel_thruster_4.setValue(self.ps3.fiel_thruster_4)
         self.ui.fiel_thruster_5.setValue(self.ps3.fiel_thruster_5)
         self.ui.fiel_thruster_6.setValue(self.ps3.fiel_thruster_6)
+        self.ui.thruster_stop.setChecked(self.ps3.thruster_stop)
 
     def reset_thrusters(self):
         self.ps3.updateController_for_thrusters()
@@ -192,31 +228,6 @@ class CentralUi(QtGui.QMainWindow):
 
         vel_pub.publish(msg)
 
-    ##initiallize the ros subscribers
-    #
-    #initiallize the ros node and starts all the ros subscribers and maps each topic to the correct callback
-    #
-    #note that all the topic names are set in the file "VARIABLES.py"
-    #@param self the object pointer
-    def start_ros_subscriber(self):
-        rospy.init_node('Front_End', anonymous=True)
-        rospy.Subscriber("/electrical_interface/depth", Int16, self.depth_callback)
-        rospy.Subscriber("/electrical_interface/batteryVoltage1", Float32, self.bat_1)
-        rospy.Subscriber("/electrical_interface/batteryVoltage2", Float32, self.bat_2)
-        rospy.Subscriber("/camera_front_left/camera/image_rect_color", Image, self.front_left_pre_callback)
-        rospy.Subscriber("/front_right_camera/image_rect_color", Image, self.front_right_pre_callback)
-        rospy.Subscriber("/camera_down/camera/image_rect_color", Image, self.down_pre_callback)
-        rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
-        rospy.Subscriber("/front_cv/camera2", Image, self.front_post_right_callback)
-        rospy.Subscriber("/down_cv/camera1", Image, self.down_post_callback)
-        rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
-        rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
-        rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
-        rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
-
-        #subscriber and callback for the 3d viz of pose data
-        self.pose_ui.subscribe_topic('/state_estimation/pose')
 
     def pressure_callback(self, data):
         self.ui.pressure_lcd.display(data.data)
@@ -298,19 +309,25 @@ class CentralUi(QtGui.QMainWindow):
         self.ps3_timer_thrusters.stop()
         # radio button PS3
         if self.ui.manualControl.isChecked():
+            self.log_info("Starting ps3 control")
             self.keyboard_control = False
             self.key_timer.stop()
 
             # checks if the ps3 controller is present before starting the acquisition
             if self.ps3.controller_isPresent:
                 self.ps3_timer_with_controls.start(misc_vars.controller_updateFrequency)
+            else:
+                self.log_warning("PS3 Controller not found")
+
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
+            self.log_info("Starting keyboard control")
             self.ps3_timer_with_controls.stop()
             self.keyboard_control = True
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
+            self.log_info("Stopping all controllers")
             self.keyboard_control = False
             self.ps3_timer_with_controls.stop()
             self.key_timer.stop()
@@ -388,8 +405,17 @@ class CentralUi(QtGui.QMainWindow):
     def planner_callback(self, string_data):
         self.ui.logObject.append(string_data.data)
 
-    def add_to_planner_log(self, string_data):
-        self.ui.logObject.append(string_data)
+    def log_info(self, string_data):
+        self.ui.logObject.append("[INFO] "+string_data)
+
+        string_data = "[Front-end] "+string_data
+        rospy.logdebug(string_data)
+
+    def log_warning(self, string_data):
+        self.ui.logObject.append("[WARN] "+string_data)
+
+        string_data = "[Front-end] "+string_data
+        rospy.loginfo(string_data)
 
     def front_cv_data_callback(self, data):
         self.ui.front_pitch.setText(str(data.pitch_angle))
@@ -621,6 +647,7 @@ def sigint_handler(*args):
     #if QtGui.QMessageBox.question(None, '', "Are you sure you want to quit?",
     #                              QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
     #                              QtGui.QMessageBox.Yes) == QtGui.QMessageBox.Yes:
+    rospy.loginfo("[Front-end] EXITING")
     QtGui.QApplication.quit()
 
 
