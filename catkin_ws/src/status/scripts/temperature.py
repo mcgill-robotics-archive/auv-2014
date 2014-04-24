@@ -36,14 +36,14 @@ def update():
     for chip in sensors.iter_detected_chips():
         for feature in chip:
             name = feature.get_label()
-            if name.startswith('Core'):
-                if name.endswith('0'):
+            if name.startswith('temp'):
+                if name.endswith('2'):
                     temps.core_0 = feature.get_value()
-                elif name.endswith('1'):
-                    temps.core_1 = feature.get_value()
-                elif name.endswith('2'):
-                    temps.core_2 = feature.get_value()
                 elif name.endswith('3'):
+                    temps.core_1 = feature.get_value()
+                elif name.endswith('4'):
+                    temps.core_2 = feature.get_value()
+                elif name.endswith('5'):
                     temps.core_3 = feature.get_value()
 
     # GET SSD TEMPERATURE
@@ -72,7 +72,7 @@ def checkup():
         ok = False
 
     if not ok:
-        Battery_sendColors(generate_colors(255))
+        blinky()
 
 # PUBLISH
 def publish():
