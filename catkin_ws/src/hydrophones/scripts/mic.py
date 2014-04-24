@@ -4,7 +4,6 @@
 from ctypes import *
 import pyaudio
 import numpy as np
-<<<<<<< HEAD
 import curses
 import os
 import time
@@ -19,15 +18,6 @@ FREQUENCY_RANGE = 100       # RANGE OFF TARGET TO MONITOR   Hz
 SPEED = 343                 # SPEED OF SOUND IN AIR         m/s
 
 ### USEFUL CONSTANTS
-=======
-
-# VARIABLES
-BUFFERSIZE = 512
-NUMBER_OF_MICS = 2
-SAMPLING_FREQUENCY = 48000  # IN Hz
-TARGET_FREQUENCY = 1000     # IN Hz
-RANGE = 2                   # HOW FAR ON EACH SIDE TO LOOK
->>>>>>> FETCH_HEAD
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TIME_PER_INDEX = 1 / SAMPLING_FREQUENCY
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
@@ -49,62 +39,41 @@ curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE) # HEADING
 
 
 class mic(object):
-<<<<<<< HEAD
     ''' Microphone class '''
     __slots__ = ['label', 'time', 'frequency', 'magnitude',
-                 'phase', 'difference', 'distance']
-
-    def __init__(self, i):
-        ''' Initializes mic object '''
-        self.reset(i)
-
-    def reset(self, i):
-        ''' Resets mic object '''
-        self.label = LABELS[i]
-        self.time = [0. for x in range(BUFFERSIZE)]
-        self.frequency = [0. for x in range(RFFT_LENGTH)]
-        self.magnitude = [0. for x in range(RFFT_LENGTH)]
-        self.phase = [0. for x in range(RFFT_LENGTH)]
-        self.difference = 0
-        self.distance = 0
-=======
-    __slots__ = ['name', 'time', 'frequency', 'magnitude', 'angle', 'distance']
+                 'difference', 'distance']
 
     def __init__(self, quadrant):
+        ''' Initializes mic object '''
         self.reset(quadrant)
 
     def reset(self, quadrant):
-        self.name = quadrant + 1
-        self.time = []
-        self.frequency = []
-        self.magnitude = []
-        self.angle = []
-        self.distance = np.zeros(BUFFERSIZE/2 + 1, np.float);
->>>>>>> FETCH_HEAD
+        ''' Resets mic object '''
+        self.label = LABELS[quadrant]
+        self.time = np.zeros(BUFFERSIZE, np.float)
+        self.frequency = np.zeros(RFFT_LENGTH, np.float)
+        self.magnitude = np.zeros(RFFT_LENGTH, np.float)
+        self.difference = 0
+        self.distance = 0
 
-    def fft(self):
+    def compute_fft(self):
         ''' FFTs time domain '''
         self.frequency = np.fft.rfft(self.time)
 
-    def update_magnitude(self):
+    def compute_magnitude(self):
         ''' Computes magnitude '''
         self.magnitude = np.absolute(self.frequency)
 
-    def update_phase(self):
-        ''' Computes phase in degrees '''
-        # self.phase = np.degrees(np.arctan2(self.frequency.imag, self.frequency.real)) - 180
-        pass
-
     def compute_phase_difference(self):
         ''' Computes phase difference in seconds '''
-        if self.label == 'I':
+        if self.label == LABELS[0]:
             self.difference = 0
         else:
             gcc = np.multiply(np.conj(mics[0].frequency), self.frequency)
             phat = np.fft.ifft(np.divide(gcc, np.absolute(gcc)))
             self.difference = np.argmax(phat) * TIME_PER_INDEX
 
-    def update_distance(self):
+    def compute_distance(self):
         ''' Computes distance in meters '''
         self.distance = self.difference * SPEED
 
@@ -147,27 +116,13 @@ def read():
 def process():
     ''' FFTs the time domain and computes its magnitude and phase '''
     for i in range(NUMBER_OF_MICS):
-        mics[i].fft()
-        mics[i].update_magnitude()
-        mics[i].update_phase()
+        mics[i].compute_fft()
+        mics[i].compute_magnitude()
+        mics[i].compute_phase_difference()
+        mics[i].compute_distance()
 
-<<<<<<< HEAD
-    for i in range(NUMBER_OF_MICS):
-        for j in range(RFFT_LENGTH):
-            mics[i].compute_phase_difference()
-
-        mics[i].update_distance()
-
-
-=======
-    for i in range(1, NUMBER_OF_MICS):
-        for j in range(BUFFERSIZE/2+1):
-            mics[i].angle[j] -= mics[0].angle[j]
-            mics[0].angle[j] = 0
-        mics[i].distances()
 
 # LOOK AT RELEVANT FREQUENCY
->>>>>>> FETCH_HEAD
 def analyze():
     ''' Monitors target frequency and prints table '''
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
@@ -192,7 +147,6 @@ def maximize():
     screen.addstr(' MAX\t\t\t\t\t\t\n\n', curses.color_pair(3))
     for i in range(NUMBER_OF_MICS):
         max = np.argmax(mics[i].magnitude)
-<<<<<<< HEAD
 
         state = 0
         if max >= TARGET_INDEX - RANGE and max <= TARGET_INDEX + RANGE:
@@ -238,20 +192,3 @@ if __name__ == '__main__':
         curses.endwin()
         os.system('clear')
         exit(0)
-=======
-        print '%s %d\t  %4d Hz\t%+3.2f\t\t%+3.2f\t\t%+3.2f' % ('MAX', i, max * FREQUENCY_PER_INDEX,
-                                                               mics[i].magnitude[max],
-                                                               mics[i].angle[max],
-                                                               mics[i].distance[max])
-
-# SHOW MAX
-read()
-process()
-analyze()
-maximize()
-
-while True:
-    read()
-    process()
-    maximize()
->>>>>>> FETCH_HEAD
