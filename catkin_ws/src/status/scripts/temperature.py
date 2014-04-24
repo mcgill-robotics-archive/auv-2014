@@ -5,6 +5,7 @@ import sensors
 import roslib; roslib.load_manifest('status')
 import rospy
 import blinky
+from blinky.msg import *
 from blinky.srv import *
 from status.msg import *
 import socket
@@ -35,16 +36,16 @@ def update():
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
         for feature in chip:
-            name = feature.get_label()
+            name = feature.name
             if name.startswith('temp'):
                 if name.endswith('2'):
-                    temps.core_0 = feature.get_value()
+                    temps.core_0 = int(feature.get_value())
                 elif name.endswith('3'):
-                    temps.core_1 = feature.get_value()
+                    temps.core_1 = int(feature.get_value())
                 elif name.endswith('4'):
-                    temps.core_2 = feature.get_value()
+                    temps.core_2 = int(feature.get_value())
                 elif name.endswith('5'):
-                    temps.core_3 = feature.get_value()
+                    temps.core_3 = int(feature.get_value())
 
     # GET SSD TEMPERATURE
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -72,7 +73,7 @@ def checkup():
         ok = False
 
     if not ok:
-        blinky()
+       blinky()
 
 # PUBLISH
 def publish():
@@ -85,7 +86,7 @@ def blinky():
     colors = []
 
     for i in range(30):
-        colors.append(RGB(n, n, n))
+        colors.append(RGB(255, 255, 255))
 
     try:
         rospy.wait_for_service('Blinky')
