@@ -27,7 +27,7 @@ def send_colorList(colors, blinkyID):
         print "Exception: %s"%e
 
 def Planner_sendColors(colors):
-    send_colorList(colors,1)
+    send_colorList(colors, PLANNER_ID)
 
 def Battery_sendColors(colors):
-    send_colorList(colors,2)
+    send_colorList(colors, BATTERY_ID)

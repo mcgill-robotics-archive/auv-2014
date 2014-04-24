@@ -5,6 +5,7 @@ import sensors
 import roslib; roslib.load_manifest('status')
 import rospy
 import blinky
+from blinky.srv import *
 from status.msg import *
 import socket
 import time
@@ -21,8 +22,9 @@ temps = temp()
 # SET UP HDDTEMP SOCKET
 PORT = 7634
 HOST = '127.0.0.1'
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((HOST, PORT))
+
+# SET UP SENSORS
+sensors.init()
 
 # THRESHOLDS
 CPU_THRESHOLD = 90
@@ -33,19 +35,26 @@ def update():
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
         for feature in chip:
-            if feature.name.startswith('Core'):
-                if feature.name.endswith('0'):
+            name = feature.get_label()
+            if name.startswith('Core'):
+                if name.endswith('0'):
                     temps.core_0 = feature.get_value()
-                elif feature.name.endswith('1'):
+                elif name.endswith('1'):
                     temps.core_1 = feature.get_value()
-                elif feature.name.endswith('2'):
+                elif name.endswith('2'):
                     temps.core_2 = feature.get_value()
-                elif feature.name.endswith('3'):
+                elif name.endswith('3'):
                     temps.core_3 = feature.get_value()
 
     # GET SSD TEMPERATURE
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((HOST, PORT))
     data = sock.recv(4096)
-    temps.ssd = int(data.split('|')[3])
+    sock.close()
+    try:
+        temps.ssd = int(data.split('|')[3])
+    except IndexError:
+        pass
 
 # CHECK THRESHOLDS
 def checkup():
@@ -68,17 +77,26 @@ def checkup():
 # PUBLISH
 def publish():
     rospy.loginfo(temps)
-    temp.publish(temps)
-    rate.sleep(10)
+    temperature.publish(temps)
+    rate.sleep()
 
 # BLINKYTAPE
-def generate_colors(n):
+def blinky():
     colors = []
 
     for i in range(30):
         colors.append(RGB(n, n, n))
 
-    return colors
+    try:
+        rospy.wait_for_service('Blinky')
+        Blinky = rospy.ServiceProxy('Blinky', BlinkyService)
+        res = Blinky(colors, 1)
+
+        if res.success != 0:
+            print "Blinky request unsuccessful: %s"%res
+
+    except Exception as e:
+        print "Exception: %s"%e
 
 # MAIN
 if __name__ == '__main__':
@@ -92,5 +110,5 @@ if __name__ == '__main__':
                 break
 
         except Exception:
-            sock.close()
+            sensors.cleanup()
             break
