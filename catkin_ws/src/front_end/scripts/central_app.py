@@ -14,6 +14,8 @@ from no_imu import *
 from Battery_warning_popup import*
 from PyQt4 import QtCore, QtGui
 
+import psutil
+
 import velocity_publisher  # custom modules for publishing cmd_vel
 import PS3Controller_central  # custom modules for acquiring ps3 input
 
@@ -33,6 +35,8 @@ from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
 from controls.msg import motorCommands
 
+from blinky.msg import RGB
+from blinky.srv import BlinkyService
 
 ## Main window class linking ROS with the UI and controllers
 def reset_controls_speed():
@@ -78,6 +82,7 @@ class CentralUi(QtGui.QMainWindow):
         ## Holds the bottom post-processed image received from the sub and later processed by the GUI
         self.bottom_post_image = None
 
+
         ## Pose Visualiser widget
         self.pose_ui = PoseViewWidget(self)
         self.ui.poseVizFrame.addWidget(self.pose_ui)
@@ -117,6 +122,10 @@ class CentralUi(QtGui.QMainWindow):
         # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
 
+        QtCore.QObject.connect(self.ui.blinky_red, QtCore.SIGNAL("clicked()"), lambda red = 255, blue = 0, green = 0 : self.send_color_blinky(red,green, blue))
+        QtCore.QObject.connect(self.ui.blinky_green, QtCore.SIGNAL("clicked()"), lambda red = 0, blue = 0, green = 255 : self.send_color_blinky(red,green, blue))
+        QtCore.QObject.connect(self.ui.blinky_blue, QtCore.SIGNAL("clicked()"), lambda red = 0, blue = 255, green = 0 : self.send_color_blinky(red,green, blue))
+        QtCore.QObject.connect(self.ui.blinky_custom, QtCore.SIGNAL("clicked()"), self.custom_color)
         # low battery connect
         self.empty_battery_signal.connect(self.open_low_battery_dialog)
 
@@ -141,6 +150,15 @@ class CentralUi(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.y_bal, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
         QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
         QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+
+    def custom_color(self):
+        col = QtGui.QColorDialog.getColor()
+
+        if col.isValid():
+            hexa = col.name()
+            hexa = hexa.lstrip('#')
+            tup = tuple(int(hexa[i:i+2],16) for i in range(0,6,2))
+            self.send_color_blinky(tup[0],tup[1], tup[2])
 
     ##initiallize the ros subscribers
     #
@@ -168,25 +186,41 @@ class CentralUi(QtGui.QMainWindow):
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
 
+    def send_color_blinky(self, red, green, blue):
+        #build message
+        color = RGB(red, green, blue)
+        try:
+            self.log_info("Waiting for service")
+            rospy.wait_for_service('Blinky', timeout = 2)
+            blinky = rospy.ServiceProxy('Blinky', BlinkyService)
+            self.log_info("Making service call")
+            res = blinky(color, 1)
+
+            if res.success != 0:
+                self.log_warning("Blinky request unsuccessful: %s"%res)
+
+        except Exception as e:
+            self.log_error("Exception: %s"%e)
+
     def change_tab(self, tab_no):
         if tab_no == 0:  # change to first tab
             reset_controls_speed()
             self.ps3_timer_thrusters.stop()
-            self.log_info("Stopping thruster publisher")
+            self.log_debug("Stopping thruster publisher")
             self.thrust_pub_timer.stop()
             self.reset_thrusters()
             self.publish_thrusters()
 
         elif tab_no == 1:  # change to tab 2
-            self.log_info("Stopping publishing to /setPoints")
+            self.log_debug("Stopping publishing to /setPoints")
             self.ui.autonomousControl.setChecked(True)  # check autonomous controls
             self.set_controller_timer()  # send all inactive to controls, stop acquisition of key/ps3 input for co
             if self.ps3.controller_isPresent:
                 self.ui.ps3_present.setChecked(True)
-                self.log_info("Re-tasking ps3 controller")
+                self.log_debug("Re-tasking ps3 controller")
                 self.ps3_timer_thrusters.start(misc_vars.controller_updateFrequency)
             self.thrust_pub_timer.start(200)
-            self.log_info("Starting thruster command publisher")
+            self.log_debug("Starting thruster command publisher")
 
     def controller_update_thrusters(self):
         self.ps3.updateController_for_thrusters()
@@ -227,7 +261,6 @@ class CentralUi(QtGui.QMainWindow):
             msg.cmd_heave_stern = 0
 
         vel_pub.publish(msg)
-
 
     def pressure_callback(self, data):
         self.ui.pressure_lcd.display(data.data)
@@ -309,7 +342,7 @@ class CentralUi(QtGui.QMainWindow):
         self.ps3_timer_thrusters.stop()
         # radio button PS3
         if self.ui.manualControl.isChecked():
-            self.log_info("Starting ps3 control")
+            self.log_debug("Starting ps3 control")
             self.keyboard_control = False
             self.key_timer.stop()
 
@@ -317,17 +350,17 @@ class CentralUi(QtGui.QMainWindow):
             if self.ps3.controller_isPresent:
                 self.ps3_timer_with_controls.start(misc_vars.controller_updateFrequency)
             else:
-                self.log_warning("PS3 Controller not found")
+                self.log_info("PS3 Controller not found")
 
         # radio button KEYBOARD
         elif self.ui.keyboardControl.isChecked():
-            self.log_info("Starting keyboard control")
+            self.log_debug("Starting keyboard control")
             self.ps3_timer_with_controls.stop()
             self.keyboard_control = True
             self.key_timer.start(misc_vars.controller_updateFrequency)
         # radio button AUTONOMOUS
         elif self.ui.autonomousControl.isChecked():
-            self.log_info("Stopping all controllers")
+            self.log_debug("Stopping all controllers")
             self.keyboard_control = False
             self.ps3_timer_with_controls.stop()
             self.key_timer.stop()
@@ -405,17 +438,29 @@ class CentralUi(QtGui.QMainWindow):
     def planner_callback(self, string_data):
         self.ui.logObject.append(string_data.data)
 
+    def log_debug(self, string_data):
+        self.ui.logObject.append("[DEBUG] "+string_data)
+
+        string_data = "[Front-end] "+string_data
+        rospy.logdebug(string_data)
+
     def log_info(self, string_data):
         self.ui.logObject.append("[INFO] "+string_data)
 
         string_data = "[Front-end] "+string_data
-        rospy.logdebug(string_data)
+        rospy.loginfo(string_data)
+
+    def log_error(self, string_data):
+        self.ui.logObject.append("[ERROR] "+string_data)
+
+        string_data = "[Front-end] "+string_data
+        rospy.logerr(string_data)
 
     def log_warning(self, string_data):
         self.ui.logObject.append("[WARN] "+string_data)
 
         string_data = "[Front-end] "+string_data
-        rospy.loginfo(string_data)
+        rospy.logwarn(string_data)
 
     def front_cv_data_callback(self, data):
         self.ui.front_pitch.setText(str(data.pitch_angle))
