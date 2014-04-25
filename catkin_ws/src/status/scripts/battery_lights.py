@@ -33,6 +33,8 @@ def process_voltage(voltage):
     volts = voltage.data
     color = RGB(0,0,0)
 
+    # Voltage thresholds are approximate
+    # Ask power section for accurate voltage values
     if volts < 21:
         color = RGB(255,0,0)  #RED
     elif volts < 23.5:
