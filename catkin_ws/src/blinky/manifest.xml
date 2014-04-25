@@ -1,8 +1,0 @@
-<package>
-    <description brief="The blinky tape package">
-        Sends color data to be printed by the blinky tape.
-    </description>
-    <export>
-        <python path="${prefix}/scripts"/>
-    </export>
-</package>
