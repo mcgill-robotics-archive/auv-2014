@@ -53,7 +53,9 @@ add_message_files(
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  BlinkyService.srv
+  UpdateBatteryLights.srv
+  UpdatePlannerLights.srv
+  WarningLights.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -67,7 +69,6 @@ add_service_files(
 generate_messages(
   DEPENDENCIES
   std_msgs  # Or other packages containing msgs
-  blinky
 )
 
 ###################################
@@ -80,10 +81,9 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-   INCLUDE_DIRS include
-   LIBRARIES BlinkyAPI
-   CATKIN_DEPENDS roscpp rospy message_runtime
-#  DEPENDS system_lib
+  #INCLUDE_DIRS include
+  CATKIN_DEPENDS roscpp rospy message_runtime std_msgs
+  #DEPENDS system_lib
 )
 
 ###########
@@ -92,14 +92,14 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+#include_directories(include)
 include_directories(
-    include/
+# include/
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
-add_library(BlinkyAPI src/BlinkyAPI.cpp)
+# add_library(ExampleLibrary src/ExampleLibrary.cpp)
 
 ## Declare a cpp executable
 add_executable(PlannerClientExample src/PlannerClientExample.cpp)
@@ -107,22 +107,17 @@ add_executable(BatteryClientExample src/BatteryClientExample.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(BlinkyAPI blinky_generate_messages_cpp)
-add_dependencies(BatteryClientExample blinky_generate_messages_cpp)
-add_dependencies(PlannerClientExample blinky_generate_messages_cpp)
-add_dependencies(BlinkyAPI ${catkin_EXPORTED_TARGETS})
-
+add_dependencies(BatteryClientExample ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(PlannerClientExample ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(
-    BatteryClientExample
-    BlinkyAPI
+    PlannerClientExample
     ${catkin_LIBRARIES}
 )
 
 target_link_libraries(
-    PlannerClientExample
-    BlinkyAPI
+    BatteryClientExample
     ${catkin_LIBRARIES}
 )
 

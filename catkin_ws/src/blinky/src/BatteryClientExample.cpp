@@ -1,56 +1,82 @@
-#include <vector>
-#include <ros/ros.h>
-#include <ros/callback_queue.h>
-
-#include "BlinkyAPI.h"
-
-#include <ctime>
+#include "ros/ros.h"
 #include <cstdlib>
-#include <unistd.h>
+#include <vector>
 
-blinky::RGB createRGB(int8_t r, int8_t g, int8_t b)
+// Include the required service and message headers
+#include <blinky/UpdateBatteryLights.h>
+#include <blinky/RGB.h>
+
+ros::NodeHandle n;
+
+// Send RGB vector colors to the battery segment
+int8_t Battery_updateColors(const std::vector<blinky::RGB>& colors)
 {
-        blinky::RGB color;
-        color.r = r;
-        color.g = g;
-        color.b = b;
+    // Get access to the blinky server for the UpdateBatteryLights service
+    ros::ServiceClient client = n.serviceClient<blinky::UpdateBatteryLights>("blinky");
 
-        return color;
+    // The service request for UpdateBatteryLights service
+    blinky::UpdateBatteryLights srv;
+    srv.request.colors = colors;
+
+    // Call the service with that request
+    if (client.call(srv)) {
+    	int8_t res = srv.response.success; // Get service response
+
+    	if (res) {
+    	    ROS_INFO("UpdateBatteryLights request unsuccessful: %d", res);
+	}
+
+	return res;
+    } else {
+	ROS_ERROR("Failed to call service UpdateBatteryLights");
+	return -1;
+    }
+
+    return 0;
 }
 
-std::vector<blinky::RGB> generate_colors(unsigned long int n)
+
+// Just for convenience. This returns an RGB color with r, g and b components
+blinky::RGB createRGB(uint8_t r, uint8_t g, uint8_t b)
 {
-        unsigned long int t = n;
-        std::vector<blinky::RGB> colors;
+    blinky::RGB color;
+    color.r = r;
+    color.g = g;
+    color.b = b;
 
-        for (int i = 0; i < 30; i++) {
-                if (n % 2 == 0)
-                    colors.push_back(createRGB(0,0,0));
-                else
-                    colors.push_back(createRGB(rand() % 256, rand() % 256, rand() % 256));
-                
-                n /= 2;
-        }
+    return color;
+}
 
-        return colors;
+// Just an example. Returns array of colors representing n in binary.
+// 1 is a random color and 0 is turning the led off.
+std::vector<blinky::RGB> generate_colors(unsigned int n)
+{
+    unsigned int t = n;
+    std::vector<blinky::RGB> colors;
+
+    for (int i = 0; i < 30; i++) {
+        if (n % 2 == 0)
+            colors.push_back(createRGB(0,0,0));
+        else
+            colors.push_back(createRGB(rand() % 256, rand() % 256, rand() % 256));    
+        
+        n /= 2;
+    }
+
+    return colors;
 }
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "BatteryClientExample");
-        ros::NodeHandle n;
+    unsigned int i = 0;
+    ros::init(argc, argv, "BatteryClientExample");
+    srand(time(0));
 
-        BlinkyClient btClient = BlinkyClient(n);
+    while (true) {
+        Battery_updateColors(generate_colors(i));
+        ++i;
+        usleep(100000);
+    }
 
-        srand(time(0));
-
-        int i = 0;
-
-        while (true) {
-                btClient.Battery_sendColors(generate_colors(i));
-                ++i;
-                usleep(100000);
-        }
-
-	return 0;
+    return 0;
 }

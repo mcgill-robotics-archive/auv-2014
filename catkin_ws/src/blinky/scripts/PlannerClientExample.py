@@ -1,6 +1,30 @@
 #!/usr/bin/env python
+import roslib; roslib.load_manifest('blinky')
+import rospy
 
-from BlinkyAPI import *
+from blinky.msg import *
+from blinky.srv import *
 
-colors = [RGB(255,255,255), RGB(0,255,0), RGB(255,0,0)]
+ledCount = 30
+
+# Handles the ROS-specific communication with the service
+# colors: array of RGB
+def Planner_sendColors(colors):
+    try:
+        # wait for the blinky server node
+        rospy.wait_for_service('blinky')
+
+        # get access to the PlannerUpdateLights service from the blinky server
+        blinky_proxy = rospy.ServiceProxy('blinky', PlannerUpdateLights)
+
+        # call service
+        res = blinky_proxy(colors)
+
+        if res.success != 0:
+            print "PlannerUpdateLights request unsuccessful: %s"%res
+
+    except Exception as e:
+        print "Exception: %s"%e
+
+colors = [RGB(255,255,255), RGB(255,0,0), RGB(0,255,0)]
 Planner_sendColors(colors)
