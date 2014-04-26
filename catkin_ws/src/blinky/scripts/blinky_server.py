@@ -27,7 +27,7 @@ planner_colorList = []
 battery_colorList = []
 
 # Warnings on the planner segment
-warning_colors = []
+warning_colorList = []
 
 # Frequency of the warning display in Hz
 warning_freq = 0.0
@@ -91,14 +91,14 @@ def update_battery(req):
 # req.frequency: frequency at which to flash the warning (in Hz)
 # req.on: activate warning or stop it
 def warn_lights(req):
-    global warning_colors
+    global warning_colorList
     global warning_freq
     global warning_on
     lock = threading.Lock()
 
     with lock:
         warning_on = req.on
-        warning_colors = req.colors
+        warning_colorList = req.colors
         warning_freq = req.frequency
 
     return WarningLightsResponse(0)
@@ -133,12 +133,12 @@ def BlinkyTapeServer():
         elif (warning_freq > 0.0) and (time.time() - edge_time >= 0.5 / warning_freq):
             if state == 0:
                 with lock:
-                    list1 = warning_colors
+                    list1 = warning_colorList
 
                 state = 1
             else:
                 with lock:
-                    list1 = planner_colors
+                    list1 = planner_colorList
 
                 state = 0
             
