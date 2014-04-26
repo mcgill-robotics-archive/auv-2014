@@ -118,42 +118,36 @@ def BlinkyTapeServer():
 
     # Print the current state
     while not rospy.is_shutdown():
+        # get stable copies of the (volatile) lists
         # get current warning state. Keep a copy to avoid the risk
         # of warning_freq changing to 0 while testing the if condition
         # thereby causing a division by zero.
         with lock:
+            planner_colorList_copy = planner_colorList
+            battery_colorList_copy = battery_colorList
             warning_on_copy = warning_on
             warning_freq_copy = warning_freq
+            warning_colorList_copy = warning_colorList
 
-        # get stable copies of the (volatile) lists
         # if warnings are on, alternate between planner colors
         # and warning colors, after measuring the time period.
         if (warning_on_copy == False) or (warning_freq_copy <= 0.0):
-            with lock:
-                list1 = planner_colorList
-
-            # reset time counter
-            edge_time = time.time()
+            list1 = planner_colorList_copy
+            edge_time = time.time() # reset time counter
             
         # if warnings are on, toggle the planner display after each half-period
         elif (warning_freq_copy > 0.0) and (time.time() - edge_time >= 0.5 / warning_freq_copy):
             if state == 0:
-                with lock:
-                    list1 = warning_colorList
-
+                list1 = warning_colorList_copy
                 state = 1
             else:
-                with lock:
-                    list1 = planner_colorList
-
+                list1 = planner_colorList
                 state = 0
             
             # reset time counter
             edge_time = time.time()
 
-        with lock:
-            list2 = battery_colorList
-
+        list2 = battery_colorList_copy
         length1 = len(list1)
         length2 = len(list2)
 
