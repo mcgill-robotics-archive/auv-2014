@@ -4,14 +4,14 @@
 import sensors
 import roslib
 import rospy
-import blinky
 from blinky.srv import *
 from blinky.msg import *
 from status.msg import *
+from std_msgs.msg import *
 import socket
 import time
 import os
-roslib.load_manifest('status')
+roslib.load_manifest('blinky')
 
 # SET UP NODE AND TOPIC
 rospy.init_node('status')
@@ -29,7 +29,7 @@ PORT = 7634
 sensors.init()
 
 # THRESHOLDS IN CELCIUS
-CPU_THRESHOLD = 90
+CPU_THRESHOLD = 30
 SSD_THRESHOLD = 65
 
 # VARIABLES
@@ -82,6 +82,7 @@ def checkup():
         ok = False
 
     # SET BLINKYTAPE ACCORDINGLY
+    global FREQUENCY
     if not ok:
        FREQUENCY += 1
        blinky(True)
@@ -99,11 +100,13 @@ def publish():
 
 def blinky(state):
     ''' Lights up blinkytape for warnings '''
+    global YELLOW
+    global FREQUENCY
     try:
-        rospy.wait_for_service('blinky')
-        blinky_proxy = rospy.ServiceProxy('blinky', WarningLights)
+        rospy.wait_for_service('warning_lights')
+        blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
         result = blinky_proxy(YELLOW, FREQUENCY, state)
-        
+
         if result.success != 0:
             print "WarningUpdateLights request unsuccessful: %s" % result
 
@@ -123,6 +126,6 @@ if __name__ == '__main__':
             else:
                 break
 
-        except Exception:
+        except IndexError:
             sensors.cleanup()
             break
