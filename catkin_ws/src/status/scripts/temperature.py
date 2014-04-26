@@ -84,10 +84,10 @@ def checkup():
     # SET BLINKYTAPE ACCORDINGLY
     if not ok:
        FREQUENCY += 1
-       blinky()
+       blinky(True)
     else:
        FREQUENCY = 0
-       blinky()
+       blinky(False)
 
 
 def publish():
@@ -97,15 +97,15 @@ def publish():
     rate.sleep()
 
 
-def blinky():
+def blinky(state):
     ''' Lights up blinkytape for warnings '''
     try:
         rospy.wait_for_service('blinky')
-        Blinky = rospy.ServiceProxy('blinky', BlinkyService)
-        result = Blinky(YELLOW, 1)
-
+        blinky_proxy = rospy.ServiceProxy('blinky', WarningLights)
+        result = blinky_proxy(YELLOW, FREQUENCY, state)
+        
         if result.success != 0:
-            print "Blinky request unsuccessful: %s" % result
+            print "WarningUpdateLights request unsuccessful: %s" % result
 
     except Exception as e:
         print "\n%s: %s" % ('Exception', e)

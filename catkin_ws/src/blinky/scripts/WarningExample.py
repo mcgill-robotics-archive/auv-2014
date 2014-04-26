@@ -26,11 +26,11 @@ def warn(colors, frequency, on):
         res = blinky_proxy(colors, frequency, on)
 
         if res.success != 0:
-            print "PlannerUpdateLights request unsuccessful: %s"%res
+            print "WarningUpdateLights request unsuccessful: %s"%res
 
     except Exception as e:
-        print "Exception: %s"%e
-
+        print "\n%s: %s" % ('Exception', e)
+ 
 # Callback function which checks the topic and sends a warning
 # for 10 seconds if the value is larger than 100.0
 def process_topic(value):
