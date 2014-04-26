@@ -94,6 +94,7 @@ def warn_lights(req):
     global warning_colors
     global warning_freq
     global warning_on
+    lock = threading.Lock()
 
     with lock:
         warning_on = req.on

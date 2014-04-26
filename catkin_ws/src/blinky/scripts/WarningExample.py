@@ -16,8 +16,8 @@ ledCount = 30
 # on: activate warning or stop it
 def warn(colors, frequency, on):
     try:
-        # wait for the blinky server node
-        rospy.wait_for_service('blinky')
+        # wait for the warning_lights service
+        rospy.wait_for_service('warning_lights')
 
         # get access to the WarningLights service from the blinky server
         blinky_proxy = rospy.ServiceProxy('blinky', WarningLights)
