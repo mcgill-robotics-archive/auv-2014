@@ -2,37 +2,43 @@
 
 # IMPORTS
 import sensors
-import roslib; roslib.load_manifest('status')
+import roslib
 import rospy
 import blinky
-from blinky.msg import *
 from blinky.srv import *
+from blinky.msg import *
 from status.msg import *
 import socket
 import time
 import os
+roslib.load_manifest('status')
 
-# SET UP NODES AND TOPICS
-rospy.init_node('temperature')
+# SET UP NODE AND TOPIC
+rospy.init_node('status')
 temperature = rospy.Publisher('temperature', temp)
 rate = rospy.Rate(10)
 
 # SET UP MESSAGE
 temps = temp()
 
-# SET UP HDDTEMP SOCKET
-PORT = 7634
+# SET UP HDDTEMP
 HOST = '127.0.0.1'
+PORT = 7634
 
 # SET UP SENSORS
 sensors.init()
 
-# THRESHOLDS
+# THRESHOLDS IN CELCIUS
 CPU_THRESHOLD = 90
 SSD_THRESHOLD = 65
 
-# UPDATE TEMPERATURES
+# VARIABLES
+FREQUENCY = 0
+YELLOW = [RGB(255, 255, 0)]
+
+
 def update():
+    ''' Updates temperatures '''
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
         for feature in chip:
@@ -47,20 +53,23 @@ def update():
                 elif name.endswith('5'):
                     temps.core_3 = int(feature.get_value())
 
-    # GET SSD TEMPERATURE
+    # SET UP SOCKET
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST, PORT))
     data = sock.recv(4096)
     sock.close()
+
+    # GET SSD TEMPERATURE
     try:
         temps.ssd = int(data.split('|')[3])
     except IndexError:
         pass
 
-# CHECK THRESHOLDS
-def checkup():
-    ok = True
 
+def checkup():
+    ''' Checks if temperatures are above thresholds '''
+    # COMPARE
+    ok = True
     if temps.core_0 > CPU_THRESHOLD:
         ok = False
     if temps.core_1 > CPU_THRESHOLD:
@@ -72,32 +81,35 @@ def checkup():
     if temps.ssd > SSD_THRESHOLD:
         ok = False
 
+    # SET BLINKYTAPE ACCORDINGLY
     if not ok:
+       FREQUENCY += 1
+       blinky()
+    else:
+       FREQUENCY = 0
        blinky()
 
-# PUBLISH
+
 def publish():
+    ''' Publishes temperatures '''
     rospy.loginfo(temps)
     temperature.publish(temps)
     rate.sleep()
 
-# BLINKYTAPE
+
 def blinky():
-    colors = []
-
-    for i in range(30):
-        colors.append(RGB(255, 255, 255))
-
+    ''' Lights up blinkytape for warnings '''
     try:
-        rospy.wait_for_service('Blinky')
-        Blinky = rospy.ServiceProxy('Blinky', BlinkyService)
-        res = Blinky(colors, 1)
+        rospy.wait_for_service('blinky')
+        Blinky = rospy.ServiceProxy('blinky', BlinkyService)
+        result = Blinky(YELLOW, 1)
 
-        if res.success != 0:
-            print "Blinky request unsuccessful: %s"%res
+        if result.success != 0:
+            print "Blinky request unsuccessful: %s" % result
 
     except Exception as e:
-        print "Exception: %s"%e
+        print "\n%s: %s" % ('Exception', e)
+
 
 # MAIN
 if __name__ == '__main__':
@@ -107,6 +119,7 @@ if __name__ == '__main__':
                 update()
                 publish()
                 checkup()
+
             else:
                 break
 

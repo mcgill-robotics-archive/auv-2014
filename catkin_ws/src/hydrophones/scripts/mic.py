@@ -65,13 +65,13 @@ class mic(object):
         self.magnitude = np.absolute(self.frequency)
 
     def compute_phase_difference(self):
-        ''' Computes phase difference in seconds '''
+        ''' Computes phase difference in microseconds '''
         if self.label == LABELS[0]:
             self.difference = 0
         else:
             gcc = np.multiply(np.conj(mics[0].frequency), self.frequency)
             phat = np.fft.ifft(np.divide(gcc, np.absolute(gcc)))
-            self.difference = np.argmax(phat) * TIME_PER_INDEX
+            self.difference = np.argmax(phat) * TIME_PER_INDEX * 1e6
 
     def compute_distance(self):
         ''' Computes distance in meters '''
@@ -128,7 +128,7 @@ def analyze():
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
     screen.addstr(0, 0, target)
 
-    header = '\n%s\t%s\t%s\t%s\t\n\n' % (' MIC', 'FREQUENCY', 'MAGNITUDE', 'TDOA')
+    header = '\n%s\t%s\t%s\t%s\t\n\n' % (' MIC', 'FREQUENCY', 'MAGNITUDE', 'TDOA (μs)')
     screen.addstr(header, curses.color_pair(3))
 
     for i in range(NUMBER_OF_MICS):
