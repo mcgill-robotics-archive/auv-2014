@@ -11,8 +11,8 @@ ledCount = 30
 # colors: array of RGB
 def Planner_sendColors(colors):
     try:
-        # wait for the blinky server node
-        rospy.wait_for_service('blinky')
+        # wait for the planner_update_lights service
+        rospy.wait_for_service('planner_update_lights')
 
         # get access to the PlannerUpdateLights service from the blinky server
         blinky_proxy = rospy.ServiceProxy('blinky', PlannerUpdateLights)

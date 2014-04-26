@@ -12,8 +12,8 @@ ledCount = 30
 # colors: array of RGB
 def Battery_sendColors(colors):
     try:
-        # wait for the blinky server node
-        rospy.wait_for_service('blinky')
+        # wait for the battery_update_lights service
+        rospy.wait_for_service('battery_update_lights')
 
         # get access to the BatteryUpdateLights service from the blinky server
         blinky_proxy = rospy.ServiceProxy('blinky', BatteryUpdateLights)
