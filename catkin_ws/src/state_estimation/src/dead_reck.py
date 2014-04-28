@@ -37,7 +37,6 @@ class dead_reck():
             self.yawOfTarget %= (2*math.pi)
             if self.yawOfTarget > math.pi:
                 self.yawOfTarget -= 2*math.pi
-            print self.yawOfTarget
             self.x = self.x*math.cos(headingChange) + self.y*math.sin(headingChange)
             self.y = self.y*math.cos(headingChange) - self.x*math.sin(headingChange)
         self.heading = newHeading
