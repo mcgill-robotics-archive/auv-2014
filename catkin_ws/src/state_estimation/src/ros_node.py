@@ -59,9 +59,7 @@ def imuCallback(poseStamped):
 
 def depthCallback(depth):
     estimator.updateDepth(depth.data)
-    msg = Float64()
-    msg.data = POOL_DEPTH - depth.data
-    down_distance_pub.publish(msg)
+    down_distance_pub.publish(POOL_DEPTH - depth.data)
 
 # Init the ros node, subscribers and publishers
 # And run the node
