@@ -13,14 +13,14 @@ roslib.load_manifest('status')
 
 # VARIABLES
 frequency = 0.00            # BLINKING FREQUENCY            Hz
-temperatures = temp()       # MESSAGE TO PUBLISH        CUSTOM
+temperatures = temp()       # MESSAGE TO PUBLISH
+warning = False             # STORES WHETHER WARNING OR NOT
 
 # CONSTANTS
 COLOR = [RGB(255, 255, 0)]  # COLOR TO FLASH            YELLOW
-HOST = '127.0.0.1'          # HDDTEMP DAEMON SOCKET         IP
-PORT = 7634                 # HDDTEMP DAEMON SOCKET       PORT
-CPU_THRESHOLD = 90          # THRESHOLD FOR CPU CORES       °C
-SSD_THRESHOLD = 65          # THRESHOLD FOR SSD             °C
+HOST = ('127.0.0.1', 7634)  # HDDTEMP DAEMON SOCKET
+CPU_THRESHOLD = 90          # THRESHOLD FOR CPU CORES        C
+SSD_THRESHOLD = 65          # THRESHOLD FOR SSD              C
 
 # SET UP NODE AND TOPIC
 rospy.init_node('status')
@@ -49,7 +49,7 @@ def update():
 
     # SET UP SOCKET
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((HOST, PORT))
+    sock.connect(HOST)
     data = sock.recv(4096)
     sock.close()
 
@@ -91,23 +91,31 @@ def publish():
 
 def blinky(state):
     ''' Lights up blinkytape for warnings '''
-    global COLOR
-    global frequency
+    global COLOR, frequency, warning
 
     # INCREASE FREQUENCY
     if state:
         frequency += 0.01
+        warning = True
     else:
         frequency = 0.00
 
-    # CALL SERVICE
-    rospy.wait_for_service('warning_lights')
-    blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
-    result = blinky_proxy(COLOR, frequency, state)
+    # CALL SERVICE IF NEEDED
+    if state or warning:
+        try:
+            rospy.wait_for_service('warning_lights')
+            blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
+            result = blinky_proxy(COLOR, frequency, state)
 
-    if result.success != 0:
-        print 'WarningUpdateLights request unsuccessful: %s' % (result)
+            if result.success != 0:
+                print 'WarningUpdateLights request unsuccessful: %s' % (result)
+        
+        except rospy.exceptions.ROSInterruptException:
+            pass
 
+    # RESET FLAG
+    if not state:
+        warning = False
 
 # MAIN
 if __name__ == '__main__':
@@ -121,7 +129,8 @@ if __name__ == '__main__':
             else:
                 break
 
-        except Exception:
+        except Exception as e:
+            print e
             sensors.cleanup()
             blinky(False)
             break
