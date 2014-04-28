@@ -374,7 +374,7 @@ int main(int argc, char **argv) {
 	//estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
-	btClient = n.serviceClient<blinky::UpdatePlannerLights>("blinky");
+	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
 
 	taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000);
 	taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000);

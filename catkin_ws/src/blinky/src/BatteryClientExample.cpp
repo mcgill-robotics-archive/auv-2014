@@ -6,13 +6,11 @@
 #include <blinky/UpdateBatteryLights.h>
 #include <blinky/RGB.h>
 
-ros::NodeHandle n;
-
 // Send RGB vector colors to the battery segment
-int8_t Battery_updateColors(const std::vector<blinky::RGB>& colors)
+int8_t Battery_updateColors(const std::vector<blinky::RGB>& colors, ros::NodeHandle n)
 {
     // Get access to the blinky server for the UpdateBatteryLights service
-    ros::ServiceClient client = n.serviceClient<blinky::UpdateBatteryLights>("blinky");
+    ros::ServiceClient client = n.serviceClient<blinky::UpdateBatteryLights>("update_battery_lights");
 
     // The service request for UpdateBatteryLights service
     blinky::UpdateBatteryLights srv;
@@ -70,10 +68,12 @@ int main(int argc, char **argv)
 {
     unsigned int i = 0;
     ros::init(argc, argv, "BatteryClientExample");
+    ros::NodeHandle n;
+
     srand(time(0));
 
     while (true) {
-        Battery_updateColors(generate_colors(i));
+        Battery_updateColors(generate_colors(i), n);
         ++i;
         usleep(100000);
     }
