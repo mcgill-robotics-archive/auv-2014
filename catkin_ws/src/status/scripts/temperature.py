@@ -23,7 +23,7 @@ BLINKING_CAP = 5.0          # MAX BLINKING FREQUENCY        Hz
 
 # SET UP NODE AND TOPIC
 rospy.init_node('status')
-temperature_topic = rospy.Publisher('temperature', temp)
+temperature_topic = rospy.Publisher('status/temperature', temp)
 rate = rospy.Rate(1)
 
 # SET UP SENSORS
@@ -83,7 +83,7 @@ def checkup():
 
 def publish():
     ''' Publishes temperatures '''
-    rospy.loginfo(temperatures)
+    rospy.logdebug(temperatures)
     temperature_topic.publish(temperatures)
     rate.sleep()
 
