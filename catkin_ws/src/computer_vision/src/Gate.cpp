@@ -2,14 +2,12 @@
  * This object is used to detect the gate object.
  *
  * @author Jean-Sebastien Dery
+ * @author Frederic Lafrance
  * @author Renaud Dagenais
  * @author Haris Haidary
- * @author Frederic Lafrance
  */
 
 #include "Gate.h"
-
-#define USE_CV_WINDOWS 0
 
 const std::string COLOR_THRESH_WINDOW = "color_thresh_window";
 const std::string TRACKBARS_WINDOW = "trackbars_window";
@@ -23,10 +21,16 @@ cv::Point centerOfCurrentFrame;
  */
 Gate::Gate() {
 
-if (USE_CV_WINDOWS == 1) {
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: a Gate object was instantiated.").c_str());
+
+	ros::NodeHandle nodeHandle;
+	nodeHandle.param<bool>("is_using_helper_windows", isUsingHelperWindows, false);
+
+if (isUsingHelperWindows == 1) {
 	cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 	cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
+	cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &start_hsv_hue_threshold, MAX_HSV_VALUE);
 	cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &end_hsv_hue_threshold, MAX_HSV_VALUE);
 	cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &start_hsv_value_threshold, MAX_HSV_VALUE);
 	cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &end_hsv_value_threshold, MAX_HSV_VALUE);
@@ -40,7 +44,7 @@ if (USE_CV_WINDOWS == 1) {
  * Destructor.
  */
 Gate::~Gate() {
-if (USE_CV_WINDOWS == 1) {
+if (isUsingHelperWindows == 1) {
 	cv::destroyWindow(COLOR_THRESH_WINDOW);
 	cv::destroyWindow(TRACKBARS_WINDOW);
 }
@@ -88,7 +92,7 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
  */
 void Gate::applyFilter(cv::Mat& currentFrame) {
 	HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_hsv_value_threshold);
-	HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, start_hsv_value_threshold);
+	HSV_STARTING_FILTER_RANGE = cv::Scalar(start_hsv_hue_threshold, 0, start_hsv_value_threshold);
 
 	std::vector<PoleCandidate> potentialMatchRectangles;
 	centerOfCurrentFrame.x = currentFrame.cols/2;
@@ -273,7 +277,7 @@ std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Ma
 	// Don't forget that we are not using BGRX, but the HSV color space.
 	cv::inRange(frameInHSV, HSV_STARTING_FILTER_RANGE, HSV_ENDING_FILTER_RANGE, inRangeHSVFrame);
 
-if (USE_CV_WINDOWS == 1) {
+if (isUsingHelperWindows == 1) {
 	cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
 }
 

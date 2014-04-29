@@ -1,25 +1,25 @@
 <launch>
-	<!-- launches 2 nodes: FronCVNode and simulator -->
-	<!-- Written by Jean-Sebastien Dery, Jan 25, McGill Robotics -->
-	
- 	<!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
-	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" value="$(find simulator)/worlds/simulator.world"/>
-		<!-- more default parameters can be changed here -->
-	</include>       
+	<!-- Launches the front_cv node and Gazebo. -->
 
-	<!-- front-end -->
-	<!--<node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/>-->     
+	<!-- Loads the appropriate parameters used by the computer vision package -->
+	<rosparam command="load" file="$(find computer_vision)/computerVisionParameters.yaml"/>
 
-	<!-- Controls systems -->
-	<!--<node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/> -->
-	
-	<!-- CVNode front-->
-	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
-		<param name="image_feed/left" type="str" value="/simulator/camera1/image_raw" />
-		<param name="image_feed/right" type="str" value="/simulator/camera2/image_raw" />
-	</node>
+ 	<arg name="isUsingSimulation" default="1"/>
 
-	<!-- CVNode down -->
-	<!-- <node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/> -->
+ 	<group if="$(arg isUsingSimulation)">
+ 		<!-- Launches front_cv node. -->
+    	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
+    		<param name="is_using_helper_windows" type="bool" value="true" />
+    	</node>
+    	<!-- Launches Gazebo. -->
+ 		<include file="$(find simulator)/launch/simulator.launch" />
+  	</group>
+
+  	<group unless="$(arg isUsingSimulation)">
+  		<!-- Launches front_cv node. -->
+    	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
+    		<param name="image_feed/left" type="str" value="/camera_front_left/camera/image_color" />
+    		<param name="is_using_helper_windows" type="bool" value="true" />
+    	</node>
+  	</group>
 </launch>

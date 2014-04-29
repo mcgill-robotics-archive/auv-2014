@@ -22,6 +22,8 @@ public:
 
 protected:
 
+	bool isUsingHelperWindows;
+
 	virtual void applyFilter(cv::Mat& currentFrame) = 0;
 };
 

@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	ros::init(argc, argv, FRONT_CV_NODE_NAME);
 	ros::NodeHandle nodeHandle;
 
-	ROS_INFO("Initializing node %s", ros::this_node::getName().c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: Initializing node '" + ros::this_node::getName() + "'.").c_str());
 
 	std::string imageFeedLeft, imageFeedRight;
 
@@ -51,6 +51,8 @@ void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
  *
  */
 FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) : CVNode(nodeHandle, topicName, receptionRate, bufferSize) {
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: initializing FrontCVNode.").c_str());
+
 	// Topics on which the node will be publishing.
 	frontEndPublisher = pImageTransport->advertise(CAMERA1_CV_TOPIC_NAME, bufferSize);
 	frontEndVisibleObjectDataPublisher = nodeHandle.advertise<computer_vision::VisibleObjectData>(OUTPUT_DATA_TOPIC_NAME, 10);
@@ -75,6 +77,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
  *
  */
 FrontCVNode::~FrontCVNode() {
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: destroying FrontCVNode.").c_str());
 	cv::destroyWindow(CAMERA1_CV_TOPIC_NAME);
 }
 

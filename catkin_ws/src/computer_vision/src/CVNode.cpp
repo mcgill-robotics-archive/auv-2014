@@ -19,18 +19,21 @@
  * @param topicName The name of the topic on which the images are published
  */
 CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) {
-	ROS_INFO("%s", "CVNode::constructor() has been called.");
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": initializing CVNode (the parent of FrontCVNod and DownCVNode).").c_str());
 
 	this->receptionRate = receptionRate;
 	this->pImageTransport = new image_transport::ImageTransport(nodeHandle);
 
 	// Instanciate the subscribers
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": will subscribe to the topic named '" + topicName + "'.").c_str());
 	cameraNodeSubscriber = pImageTransport->subscribe(topicName, bufferSize, &CVNode::receiveImage, this);
 
 	// Wait for publisher(s) to be ready
 	while (cameraNodeSubscriber.getNumPublishers() == 0) {
-		ROS_INFO_THROTTLE(DELAY_BETWEEN_INFOS, "Waiting for a publisher to start publishing on the topic /%s", topicName.c_str());
+		ROS_INFO_THROTTLE(DELAY_BETWEEN_INFOS, (std::string(__PRETTY_FUNCTION__) + ": Waiting for a publisher to start publishing on the topic '" + topicName + "'.").c_str());
 	}
+
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": CVNode (the parent of FrontCVNode and DownCVNode) has been initialized.").c_str());
 }
 
 /**
@@ -54,7 +57,7 @@ CVNode::~CVNode() {
  * @brief Function that dictates the rate at which the node checks if an image is received.
  */
 void CVNode::receiveImages() {
-	ROS_INFO("%s", (ros::this_node::getName() + " will start to receive images from publisher.").c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: will start to receive images from publisher.").c_str());
 
 	ros::Rate loop_rate(receptionRate);
 
