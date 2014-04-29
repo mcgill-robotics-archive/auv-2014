@@ -14,8 +14,6 @@ from no_imu import *
 from Battery_warning_popup import*
 from PyQt4 import QtCore, QtGui
 
-import psutil
-
 import velocity_publisher  # custom modules for publishing cmd_vel
 import PS3Controller_central  # custom modules for acquiring ps3 input
 
@@ -29,7 +27,6 @@ import pygame  # module top play the alarm
 
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
-from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
@@ -39,15 +36,15 @@ from status.msg import temp
 from blinky.msg import RGB
 from blinky.srv import BlinkyService
 
-## Main window class linking ROS with the UI and controllers
 def reset_controls_speed():
     vel_vars.yaw_velocity = 0
     vel_vars.x_velocity = 0
     vel_vars.y_velocity = 0
 
 
-def lbl_bg_red(object):
-    object.setStyleSheet('background-color:#ff0000')
+def lbl_bg_red(thing):
+    """sets a style sheet to the @param thing resulting in a red background"""
+    thing.setStyleSheet('background-color:#ff0000')
 
 
 class CentralUi(QtGui.QMainWindow):
@@ -211,7 +208,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('planner/task', String, self.planner_callback)
         rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
         rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
-        rospy.Subscriber("tempearture", temp, self.cpu_hdd_temp_callback)
+        rospy.Subscriber("/status/tempearture", temp, self.cpu_hdd_temp_callback)
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
 
