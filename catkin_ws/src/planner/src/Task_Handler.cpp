@@ -1,20 +1,31 @@
-#include "Task_Gate.h"
+#include "Task_Handler.h"
 
-/**
- * Constructor.
- */
-Task_Gate::Task_Gate() {
-	id = "Gate Task";
+void run_routine(int start_task, int end_task) {
+	for(int i = start_task; i <= end_task; i++) {
+		switch(i) {
+			case 1:
+			ROS_INFO("Planner::Task_Handler - beginning gate task");
+				run_gate();
+			break;
+
+			case 2:
+			ROS_INFO("Planner::Task_Handler - beginning lane task");
+				run_lane();
+			break;
+
+			case 3:
+			ROS_INFO("Planner::Task_Handler - beginning lane task");
+				run_buoy();
+			break;
+		}
+  }
+  
+	ROS_INFO("Planner::Task_Handler - ending routine");
+	end_routine();
 }
 
-/**
- * Destructor.
- */
-Task_Gate::~Task_Gate() {
-
-}
-
-int Task_Gate::Execute() {
+//copy of Task_Gate, will clean up eventually
+int run_gate() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
 	
@@ -57,3 +68,36 @@ int Task_Gate::Execute() {
 
 	return 0;
 }
+
+int run_lane() {
+	return 0;
+}
+
+int run_buoy() {
+	return 0;
+}
+
+//copy of Task_Kill, will clean up eventually
+int end_routine() {
+	ros::Rate loop_rate(50);
+	loop_rate.sleep();
+
+	std::vector<double> desired_pos;
+	
+	//the section needs to be implemented so that we can resurface and set all 
+	//messages to zero or default
+	/*desired_pos.push_back(0.0);//
+	desired_pos.push_back(0.0);
+	desired_pos.push_back(0.0);
+	desired_pos.push_back(0.0);
+	desired_pos.push_back(0.0); 
+	setPosition(desired_pos);*/
+	setVelocity(0,0,0,8.8); //Sets x,y,yaw speeds all to zero and gives a depth of 0 i.e resurface
+
+	std::cout<<"Mission completed"<<std::endl;
+	weAreHere("RESURFACING");	
+	loop_rate.sleep();
+	
+	return 0;
+}
+

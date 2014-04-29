@@ -1,7 +1,6 @@
 <launch>
   <!-- launches: planner node as well as all of its dependencies -->
   <!-- Written by Alex Reiff, Jan 29, McGill Robotics -->
-  <!-- Copied from Nick Speal's "template" in Controls -->
 
   <arg name="starting_task" default="gate"/> 
   
@@ -21,7 +20,9 @@
   	<param name="xml_files_path" value="$(find planner)/xml"/>
 
     <param name="starting_task" type="str" value="$(arg starting_task)"/>
+    
+    <param name ="start_task" type="int" value="1"/>
+    
+    <param name ="end_task" type="int" value="1"/>
   </node>
- 
-
 </launch>

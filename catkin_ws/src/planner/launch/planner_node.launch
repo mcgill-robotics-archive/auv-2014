@@ -1,0 +1,16 @@
+<launch>
+  <!-- launches: just the planner node -->
+  <!-- Written by Alex Reiff, April 28, McGill Robotics -->
+
+  <arg name="starting_task" default="gate"/> 
+
+  <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen">
+  	<param name="xml_files_path" value="$(find planner)/xml"/>
+
+    <param name="starting_task" type="str" value="$(arg starting_task)"/>
+    
+    <param name ="start_task" type="int" value="1"/>
+    
+    <param name ="end_task" type="int" value="1"/>
+  </node>
+</launch>
