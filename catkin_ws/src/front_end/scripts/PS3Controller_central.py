@@ -47,7 +47,6 @@ class PS3Controller(object):
     #Constructor of the ps3Controller. 
     #It basically initialize the joystick so we can fetch data form it.
     def __init__(self):
-        print "[INFO] PS3Controller::__init__"
         pygame.init()
         pygame.joystick.init()
 
@@ -63,21 +62,14 @@ class PS3Controller(object):
         self.fiel_thruster_6 = 0
         
         if pygame.joystick.get_count() == 0:
-            print "The controller is not connected"
-            print "Shutting down the process..."
             self.controller_isPresent = False
         elif pygame.joystick.get_count() == 1:
-            print "One controller is connected"
-            print "All set to go"
             self.controller_isPresent = True
 
             ##The initialized controller
             self.controller = pygame.joystick.Joystick(0)
             self.controller.init()
-            print "The initialized Joystick is: " + self.controller.get_name()
         else:
-            print "There is more than one controller connected. Is this correct?"
-            print "Shutting down the process..."
             self.controller_isPresent = False
 
     ##

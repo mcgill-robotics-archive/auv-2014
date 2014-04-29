@@ -51,13 +51,6 @@ void spinThread() {
 	ros::spin();
 }
 
-void estimatedState_callback(const computer_vision::VisibleObjectData data) {
-	visible_XPos = data.x_distance;
-	visible_YPos = data.y_distance;
-	visible_Pitch = data.pitch_angle;
-	visible_Yaw = data.yaw_angle;
-}
-
 void estimatedDepth_callback(const std_msgs::Float64 msg) {
 	visible_Depth = msg.data;
 }
@@ -246,12 +239,6 @@ void setPosition(std::vector<double> desired) {
 	setPoints(pointControl);
 }
 
-void rosSleep(int length) {
-	ros::Time time = ros::Time::now();
-	ros::Duration d = ros::Duration(length, 0);
-	d.sleep();
-}
-
 void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
 
   ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
@@ -371,7 +358,6 @@ int main(int argc, char **argv) {
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
 
-	//estimatedState_subscriber = n.subscribe("/front_cv_data", 1000, estimatedState_callback);
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
@@ -383,6 +369,10 @@ int main(int argc, char **argv) {
 
 	n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
   n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
+  
+  int start_task; int end_task;
+  n.param<int>("Planner/start_task", start_task, 0);
+	n.param<int>("Planner/end_task", end_task, 0);
 
 std::cout<<starting_task<<std::endl;
 	// Waits until the environment is properly setup until the planner actually starts.
@@ -416,10 +406,10 @@ std::cout<<starting_task<<std::endl;
 					ros::Time(0), ros::Duration(TF_BROADCASTER_TIMOUT_PERIOD));
 			listener.transformPose("/target/gate", emptyPose, relativePose);
 		} catch (tf::TransformException ex) {
-			ROS_INFO("Error thrown in planner TF listener.");
+			ROS_INFO("Planner::Interface - Error thrown in TF listener.");
 			ROS_ERROR("%s", ex.what());
 		}
-		ROS_INFO("Interface::Stuck in setup loop");
+		ROS_INFO("Planner::Interface - waiting for dependencies");
 	}
 
 	ros::Rate loop_rate(10);
@@ -428,13 +418,8 @@ std::cout<<starting_task<<std::endl;
 
 	setRobotInitialPosition(n, get_task_id(starting_task));
 
-	std::cout << "Starting Loader" << std::endl;
-	Loader* loader = new Loader(xmlFilesPath);
-	Invoker* invoker = loader->getInvoker();
-	invoker->StartAt(get_task_id(starting_task));
-	std::cout << "Done Loader" << std::endl;
-
-	//delete loader; //delete invoker;
+	ROS_INFO("Planner::Interface - beginning routine");
+	run_routine(start_task, end_task);
 
 	return 0;
 }
