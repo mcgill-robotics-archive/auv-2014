@@ -20,7 +20,7 @@ def warn(colors, frequency, on):
         rospy.wait_for_service('warning_lights')
 
         # get access to the WarningLights service from the blinky server
-        blinky_proxy = rospy.ServiceProxy('blinky', WarningLights)
+        blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
 
         # call service
         res = blinky_proxy(colors, frequency, on)
