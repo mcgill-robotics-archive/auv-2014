@@ -35,8 +35,11 @@ class KeyMapping(object):
 ##    various parameters and constants
 class misc_vars(object):
     controller_updateFrequency = 50
-    low_battery_threshold = 22.0
+    low_battery_threshold = 21.0
     max_voltage = 24.0
     GUI_UPDATE_PERIOD = 10 #ms
     length_plot = 50
     depth_max = 0
+    max_temp=40
+    CPU_max_temp = 70
+    SSD_max_temp = 68
