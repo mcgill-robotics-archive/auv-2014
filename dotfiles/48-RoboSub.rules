@@ -1,20 +1,20 @@
 # UDEV Rules for Teensy boards, http://www.pjrc.com/teensy/
 #
 # The latest version of this file may be found at:
-#   http://www.pjrc.com/teensy/49-teensy.rules
+# http://www.pjrc.com/teensy/49-teensy.rules
 #
 # This file must be placed at:
 #
-# /etc/udev/rules.d/49-teensy.rules    (preferred location)
-#   or
-# /lib/udev/rules.d/49-teensy.rules    (req'd on some broken systems)
+# /etc/udev/rules.d/49-teensy.rules (preferred location)
+# or
+# /lib/udev/rules.d/49-teensy.rules (req'd on some broken systems)
 #
 # To install, type this command in a terminal:
-#   sudo cp 49-teensy.rules /etc/udev/rules.d/49-teensy.rules
+# sudo cp 49-teensy.rules /etc/udev/rules.d/49-teensy.rules
 #
 # After this file is installed, physically unplug and reconnect Teensy.
 #
-# run the following command to find the info for device 
+# run the following command to find the info for device
 # udevadm info --attribute-walk path -n /dev/blablabla
 #
 
@@ -29,7 +29,7 @@ SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0042", ATTRS{seri
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0001", ATTRS{serial}=="74134373733351906081", SYMLINK+="arduino"
 
 #anass's arduino uno
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0001", ATTRS{serial}=="7413437373335141E191", SYMLINK+="arduino" 
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", ATTRS{serial}=="7413437373335141E191", SYMLINK+="arduino"
 
 #blinklyTape in both modes
 KERNEL=="ttyACM*", SUBSYSTEMS=="usb", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="605e",SYMLINK+="blinkyTape"
@@ -45,9 +45,11 @@ KERNEL=="ttyACM*", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", MODE:=
 #
 # If using USB Serial you get a new device each time (Ubuntu 9.10)
 # eg: /dev/ttyACM0, ttyACM1, ttyACM2, ttyACM3, ttyACM4, etc
-#    apt-get remove --purge modemmanager     (reboot may be necessary)
+# apt-get remove --purge modemmanager (reboot may be necessary)
 #
 # Older modem proding (eg, Ubuntu 9.04) caused very slow serial device detection.
 # To fix, add this near top of /lib/udev/rules.d/77-nm-probe-modem-capabilities.rules
-#   SUBSYSTEMS=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", GOTO="nm_modem_probe_end" 
+# SUBSYSTEMS=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", GOTO="nm_modem_probe_end"
 #
+
+
