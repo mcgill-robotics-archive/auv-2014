@@ -7,8 +7,8 @@
  	<arg name="isUsingSimulation" default="1"/>
 
  	<group if="$(arg isUsingSimulation)">
- 		<!-- Launches front_cv node. -->
-    	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
+ 		<!-- Launches front_cv node in simulation. -->
+    	<node name="cv/front_cv_node" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
     		<param name="is_using_helper_windows" type="bool" value="true" />
     	</node>
     	<!-- Launches Gazebo. -->
@@ -16,8 +16,8 @@
   	</group>
 
   	<group unless="$(arg isUsingSimulation)">
-  		<!-- Launches front_cv node. -->
-    	<node name="cv_Front" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
+  		<!-- Launches front_cv node with real cameras. -->
+    	<node name="cv/front_cv_node" pkg="computer_vision" type="front_cv_node"  respawn="false" output="screen">
     		<param name="image_feed/left" type="str" value="/camera_front_left/camera/image_color" />
     		<param name="is_using_helper_windows" type="bool" value="true" />
     	</node>
