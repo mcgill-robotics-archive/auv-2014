@@ -31,7 +31,7 @@ sensors.init()
 
 
 def update():
-    ''' Updates temperatures '''
+    """ Updates temperatures """
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
         for feature in chip:
@@ -60,7 +60,7 @@ def update():
 
 
 def checkup():
-    ''' Checks if temperatures are above thresholds '''
+    """ Checks if temperatures are above thresholds """
     # COMPARE TO THRESHOLDS
     ok = True
     if temperatures.core_0 > CPU_THRESHOLD:
@@ -82,14 +82,14 @@ def checkup():
 
 
 def publish():
-    ''' Publishes temperatures '''
+    """ Publishes temperatures """
     rospy.logdebug(temperatures)
     temperature_topic.publish(temperatures)
     rate.sleep()
 
 
 def blinky(state):
-    ''' Lights up blinkytape for warnings '''
+    """ Lights up blinkytape for warnings """
     global COLOR, frequency, warning
 
     # INCREASE FREQUENCY

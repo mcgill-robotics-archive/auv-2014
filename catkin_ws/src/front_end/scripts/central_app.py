@@ -14,8 +14,6 @@ from no_imu import *
 from Battery_warning_popup import*
 from PyQt4 import QtCore, QtGui
 
-import psutil
-
 import velocity_publisher  # custom modules for publishing cmd_vel
 import PS3Controller_central  # custom modules for acquiring ps3 input
 
@@ -29,25 +27,37 @@ import pygame  # module top play the alarm
 
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
-from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
 from controls.msg import motorCommands
-
+from geometry_msgs.msg import PoseStamped
+from status.msg import temp
 from blinky.msg import RGB
 from blinky.srv import BlinkyService
 
-## Main window class linking ROS with the UI and controllers
 def reset_controls_speed():
     vel_vars.yaw_velocity = 0
     vel_vars.x_velocity = 0
     vel_vars.y_velocity = 0
 
 
+def lbl_bg_red(thing):
+    """sets a style sheet to the @param thing resulting in a red background"""
+    thing.setStyleSheet('background-color:#ff0000')
+
+
 class CentralUi(QtGui.QMainWindow):
     ##Qt signal for battery empty alarm
-    empty_battery_signal = QtCore.pyqtSignal()
+    empty_battery1_signal = QtCore.pyqtSignal()
+    empty_battery2_signal = QtCore.pyqtSignal()
+    high_ambiant_temp_signal = QtCore.pyqtSignal()
+
+    high_core0_temp_signal = QtCore.pyqtSignal()
+    high_core1_temp_signal = QtCore.pyqtSignal()
+    high_core2_temp_signal = QtCore.pyqtSignal()
+    high_core3_temp_signal = QtCore.pyqtSignal()
+    high_ssd_temp_signal = QtCore.pyqtSignal()
 
     ## constructor of the main window for the ui
     #
@@ -64,6 +74,13 @@ class CentralUi(QtGui.QMainWindow):
         self.ui = Ui_RoboticsMain()
 
         self.ui.setupUi(self)
+
+        #self.style_data = ''
+        #style = open('/home/david/robosub/catkin_ws/src/front_end/scripts/resource/darkorange.stylesheet', 'r')
+        #self.style_data = style.read()
+        #style.close()
+        #self.ui.centralwidget.setStyleSheet(self.style_data)
+
         self.resize_sliders()
         self.ui.label_13.setText("Depth")
         ## variable to enable or disable the keyboard monitoring
@@ -119,15 +136,23 @@ class CentralUi(QtGui.QMainWindow):
         pygame.mixer.init()
 
         # buttons connects
-        # QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
+        QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
 
         QtCore.QObject.connect(self.ui.blinky_red, QtCore.SIGNAL("clicked()"), lambda red = 255, blue = 0, green = 0 : self.send_color_blinky(red,green, blue))
         QtCore.QObject.connect(self.ui.blinky_green, QtCore.SIGNAL("clicked()"), lambda red = 0, blue = 0, green = 255 : self.send_color_blinky(red,green, blue))
         QtCore.QObject.connect(self.ui.blinky_blue, QtCore.SIGNAL("clicked()"), lambda red = 0, blue = 255, green = 0 : self.send_color_blinky(red,green, blue))
         QtCore.QObject.connect(self.ui.blinky_custom, QtCore.SIGNAL("clicked()"), self.custom_color)
-        # low battery connect
-        self.empty_battery_signal.connect(self.open_low_battery_dialog)
+
+        # critical state label changers
+        self.empty_battery1_signal.connect(lambda lbl = self.ui.bat1_lbl: lbl_bg_red(lbl))
+        self.empty_battery2_signal.connect(lambda lbl = self.ui.bat2_lbl: lbl_bg_red(lbl))
+        self.high_ambiant_temp_signal.connect(lambda lbl = self.ui.ambiant_temp_lbl: lbl_bg_red(lbl))
+        self.high_core0_temp_signal.connect(lambda lbl = self.ui.temp_core1: lbl_bg_red(lbl))
+        self.high_core1_temp_signal.connect(lambda lbl = self.ui.temp_core2: lbl_bg_red(lbl))
+        self.high_core2_temp_signal.connect(lambda lbl = self.ui.temp_core3: lbl_bg_red(lbl))
+        self.high_core3_temp_signal.connect(lambda lbl = self.ui.temp_core4: lbl_bg_red(lbl))
+        self.high_ssd_temp_signal.connect(lambda lbl = self.ui.hdd_temp_lbl: lbl_bg_red(lbl))
 
         # controller timer connect
         QtCore.QObject.connect(self.ps3_timer_with_controls, QtCore.SIGNAL("timeout()"), self.controller_update_controls)
@@ -150,6 +175,7 @@ class CentralUi(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.y_bal, QtCore.SIGNAL("valueChanged(int)"), self.y_force)
         QtCore.QObject.connect(self.ui.z_force, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
         QtCore.QObject.connect(self.ui.z_bal, QtCore.SIGNAL("valueChanged(int)"), self.z_force)
+
 
     def custom_color(self):
         col = QtGui.QColorDialog.getColor()
@@ -182,9 +208,27 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('planner/task', String, self.planner_callback)
         rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
         rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
-
+        rospy.Subscriber("/status/tempearture", temp, self.cpu_hdd_temp_callback)
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
+
+    def cpu_hdd_temp_callback(self, temp):
+        self.ui.temp_core1.setText(str(temp.core_0))
+        if temp.core_0 > misc_vars.CPU_max_temp:
+            self.high_core0_temp_signal.emit()
+        self.ui.temp_core2.setText(str(temp.core_1))
+        if temp.core_1 > misc_vars.CPU_max_temp:
+            self.high_core1_temp_signal.emit()
+        self.ui.temp_core3.setText(str(temp.core_2))
+        if temp.core_2 > misc_vars.CPU_max_temp:
+            self.high_core2_temp_signal.emit()
+        self.ui.temp_core4.setText(str(temp.core_3))
+        if temp.core_3 > misc_vars.CPU_max_temp:
+            self.high_core3_temp_signal.emit()
+
+        self.ui.hdd_temp_lbl.setText(str(temp.ssd))
+        if temp.ssd > misc_vars.SSD_max_temp:
+            self.high_ssd_temp_signal.emit()
 
     def send_color_blinky(self, red, green, blue):
         #build message
@@ -221,6 +265,16 @@ class CentralUi(QtGui.QMainWindow):
                 self.ps3_timer_thrusters.start(misc_vars.controller_updateFrequency)
             self.thrust_pub_timer.start(200)
             self.log_debug("Starting thruster command publisher")
+            self.check_imu_vals()
+
+    def check_imu_vals(self):
+        rospy.Subscriber("/electrical_interface/pose", PoseStamped, self.update_imu)
+
+    def update_imu(self, pose):
+        self.ui.imu_x.setText(str(pose.pose.orientation.x))
+        self.ui.imu_y.setText(str(pose.pose.orientation.y))
+        self.ui.imu_z.setText(str(pose.pose.orientation.z))
+        self.ui.imu_w.setText(str(pose.pose.orientation.w))
 
     def controller_update_thrusters(self):
         self.ps3.updateController_for_thrusters()
@@ -263,7 +317,7 @@ class CentralUi(QtGui.QMainWindow):
         vel_pub.publish(msg)
 
     def pressure_callback(self, data):
-        self.ui.pressure_lcd.display(data.data)
+        self.ui.pressure_lbl.setText(str(data.data))
 
     ##resize the sliders to fit the correct range of values
     def resize_sliders(self):
@@ -429,7 +483,9 @@ class CentralUi(QtGui.QMainWindow):
             self.depth_graph.setYRange(0, misc_vars.depth_max)
 
     def temp_callback(self, temp):
-        self.ui.temp_ind.display(temp.data)
+        self.ui.ambiant_temp_lbl.setText(str(temp.data))
+        if temp.data > misc_vars.max_temp:
+            self.high_ambiant_temp_signal.emit()
 
     ##
     #appends the last message recieved from planner to a textbox in screen
@@ -623,13 +679,17 @@ class CentralUi(QtGui.QMainWindow):
     # @param self the object pointer
     # @param voltage_data data received by the subscriber
     def bat_1(self, voltage_data):
-        self.ui.bat_lcd1.display(voltage_data.data)
+        self.ui.bat1_lbl.setText(str(voltage_data.data))
+        if voltage_data.data<misc_vars.low_battery_threshold:
+            self.empty_battery1_signal.emit()
 
     def bat_2(self, voltage_data):
-        self.ui.bat_lcd2.display(voltage_data.data)
+        self.ui.bat2_lbl.setText(str(voltage_data.data))
+        if voltage_data.data<misc_vars.low_battery_threshold:
+            self.empty_battery2_signal.emit()
 
     def check_low_bat(self):
-        if self.ui.bat_lcd1.value() < misc_vars.low_battery_threshold or self.ui.bat_lcd2.value()<misc_vars.low_battery_threshold:
+        if self.ui.bat1_lbl.value() < misc_vars.low_battery_threshold or self.ui.bat2_lbl.value()<misc_vars.low_battery_threshold:
             self.open_low_battery_dialog()
 
     ## launch the popup for the low battery

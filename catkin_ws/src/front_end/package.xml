@@ -2,12 +2,12 @@
 <package>
   <name>front_end</name>
   <version>1.0.0</version>
-  <description>The front_end package</description>
+  <description>Package for teleoperation and remote monitoring of an AUV</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="mathieu.sy.wang@gmail.com">Mathieu Wang</maintainer>
+  <maintainer email="d.lavoie.boutin@me.com">David Lavoie-Boutin</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://ros.org/wiki/front_end</url> -->
+  <url type="website">http://mcgillrobotics.com/wiki/index.php/Front_End</url>
 
 
   <!-- Author tags are optional, mutiple are allowed, one per tag -->
@@ -43,10 +43,15 @@
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>std_msgs</build_depend>
-  <run_depend>roscpp</run_depend>
+
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
-
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>computer_vision</run_depend>
+  <run_depend>controls</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>status</run_depend>
+  <run_depend>blinky</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
