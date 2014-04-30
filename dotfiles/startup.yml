@@ -8,4 +8,4 @@ windows:
       - cmd: "sleep 2 && roslaunch /home/robotics/McGill_RoboSub_2014/catkin_ws/launch/arduino.launch"
       - cmd: "sleep 2 && rosrun blinky Blinky.py"
       - cmd: "glances -yet 5"
-      - cmd: "clear"
+      - cmd: "sleep 2 && roslaunch status status.launch"

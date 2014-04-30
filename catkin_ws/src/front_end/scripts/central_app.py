@@ -28,6 +28,7 @@ import pygame  # module top play the alarm
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
 from std_msgs.msg import Int16
+from std_msgs.msg import Int32
 from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
 from controls.msg import motorCommands
@@ -206,9 +207,9 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
         rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/electrical_interface/pressure", Int16, self.pressure_callback)
+        rospy.Subscriber("/electrical_interface/pressure", Int32, self.pressure_callback)
         rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
-        rospy.Subscriber("/status/tempearture", temp, self.cpu_hdd_temp_callback)
+        rospy.Subscriber("/status/temperature", temp, self.cpu_hdd_temp_callback)
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
 
@@ -317,7 +318,7 @@ class CentralUi(QtGui.QMainWindow):
         vel_pub.publish(msg)
 
     def pressure_callback(self, data):
-        self.ui.pressure_lbl.setText(str(data.data))
+        self.ui.pressure_lbl.setText(str(data.data/1000.0))
 
     ##resize the sliders to fit the correct range of values
     def resize_sliders(self):
@@ -483,8 +484,8 @@ class CentralUi(QtGui.QMainWindow):
             self.depth_graph.setYRange(0, misc_vars.depth_max)
 
     def temp_callback(self, temp):
-        self.ui.ambiant_temp_lbl.setText(str(temp.data))
-        if temp.data > misc_vars.max_temp:
+        self.ui.ambiant_temp_lbl.setText(str(temp.data/10.0))
+        if temp.data/10.0 > misc_vars.max_temp:
             self.high_ambiant_temp_signal.emit()
 
     ##

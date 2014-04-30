@@ -17,7 +17,7 @@ for arg in $@; do
 			command_arguments="$command_arguments electrical_interface/pose"
 			;;
 		'-c' )
-			command_arguments="$command_arguments  "
+			command_arguments="$command_arguments camera_down/camera/camera_info camera_down/camera/image_rect_color camera_down/camera/image_color  "
 			;;
 		'-d' )
 			command_arguments="$command_arguments electrical_interface/depth"
@@ -27,4 +27,5 @@ for arg in $@; do
 	esac
 
 done
-echo rosbag record $command_arguments
+
+rosbag record $command_arguments -O ../../bag-$(date +%s)

@@ -1,0 +1,8 @@
+<launch>
+<!-- temprature -->
+<node name="temprature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
+
+<!-- usb ports -->
+<node name="usb_ports" pkg="status" type="usb_monit.py" respawn="false" output="screen"/>
+
+</launch>
