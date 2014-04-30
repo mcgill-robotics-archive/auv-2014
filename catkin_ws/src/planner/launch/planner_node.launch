@@ -4,7 +4,7 @@
 
   <arg name="starting_task" default="gate"/> 
 
-  <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen">
+  <node name="planner" pkg="planner" type="planner" respawn="false" output="screen">
   	<param name="xml_files_path" value="$(find planner)/xml"/>
 
     <param name="starting_task" type="str" value="$(arg starting_task)"/>

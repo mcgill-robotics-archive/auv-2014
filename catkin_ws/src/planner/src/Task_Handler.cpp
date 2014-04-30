@@ -18,8 +18,8 @@ void run_routine(int start_task, int end_task) {
 				run_buoy();
 			break;
 		}
-  }
-  
+	}
+	
 	ROS_INFO("Planner::Task_Handler - ending routine");
 	end_routine();
 }
@@ -28,7 +28,7 @@ void run_routine(int start_task, int end_task) {
 int run_gate() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
-	
+	std::string frame = "/target/gate";
 	ROS_INFO("%s", "Executing the gate task.");
 
 	weAreHere("Beginning GATE task");
@@ -49,9 +49,9 @@ int run_gate() {
 	//desired = getTransform();
 
 	ROS_INFO("Task_Gate::reached task");
-	while (!areWeThereYet_tf("/target/gate", desired)) {
+	while (!areWeThereYet_tf(frame, desired)) {
 	ROS_INFO("Task_Gate::setPoints published");		
-		setPosition(desired);
+		setPosition(desired, frame);
 
 		loop_rate.sleep();
 	}
@@ -59,7 +59,7 @@ int run_gate() {
 	double motorBoat[4] = {5.0, 0.0, 0.0, 8.8};
 	//setTransform("/target/gate");
 	std::vector<double> motor(motorBoat, motorBoat + sizeof(motorBoat) / sizeof(motorBoat[0]));
-	setVelocity(5,0,0,8.8);
+	setVelocity(5, 0, 0, 8.8, frame);
 	setVisionObj(2);
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 
@@ -77,27 +77,16 @@ int run_buoy() {
 	return 0;
 }
 
-//copy of Task_Kill, will clean up eventually
 int end_routine() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
 
-	std::vector<double> desired_pos;
+	double nullVals[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	setPoints(nullVals, "");
+	loop_rate.sleep();
 	
-	//the section needs to be implemented so that we can resurface and set all 
-	//messages to zero or default
-	/*desired_pos.push_back(0.0);//
-	desired_pos.push_back(0.0);
-	desired_pos.push_back(0.0);
-	desired_pos.push_back(0.0);
-	desired_pos.push_back(0.0); 
-	setPosition(desired_pos);*/
-	setVelocity(0,0,0,8.8); //Sets x,y,yaw speeds all to zero and gives a depth of 0 i.e resurface
-
-	std::cout<<"Mission completed"<<std::endl;
 	weAreHere("RESURFACING");	
 	loop_rate.sleep();
 	
 	return 0;
 }
-

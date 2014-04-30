@@ -1,10 +1,9 @@
-#include "Interface.h"
+#include "planner.h"
 
 //totally going to need to tweak these values at some point
 double maxDepthError = 0.5;
 double maxHeadingError = 0.5;
 
-ros::Subscriber estimatedState_subscriber;
 ros::Subscriber estimatedDepth_subscriber;
 
 ros::ServiceClient btClient;
@@ -18,24 +17,13 @@ ros::Publisher taskPubDown;
 
 geometry_msgs::PoseStamped myPose;
 geometry_msgs::PoseStamped relativePose;
-/**
- * Our current orientation from state estimation
- */
-double visible_XPos;
-double visible_YPos;
-double visible_Depth;
-double visible_Yaw;
-double visible_Pitch;
+
+double ourDepth;
 
 /**
  * The duration of time the planner will wait for the TF broadcaster to setup before timing out. (in seconds I think)
  */
 int const TF_BROADCASTER_TIMOUT_PERIOD = 10;
-
-/**
- * Defines in which folder are stored the XML files.
- */
-std::string xmlFilesPath;
 
 /**
  * Object the we currently want CV to look for
@@ -52,7 +40,7 @@ void spinThread() {
 }
 
 void estimatedDepth_callback(const std_msgs::Float64 msg) {
-	visible_Depth = msg.data;
+	ourDepth = msg.data;
 }
 
 /**
@@ -106,26 +94,6 @@ std::vector<double> getTransform() {
 	//relativeDistance.push_back();
 	//relativeDistance.push_back();
 	return relativeDistance;
-}
-
-bool areWeThereYet(std::vector<double> desired) {
-	//if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
-	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
-	double xError = visible_XPos - desired.at(0);
-	double yError = visible_YPos - desired.at(1);
-	double pitchError = visible_Pitch - desired.at(2);
-	double yawError = visible_Yaw - desired.at(3);
-	double depthError = visible_Depth - desired.at(4);
-
-	/******below will show the errors in case of issues (comment out if needed)
-	 std::cout<<"xError: " << xError <<std::endl;
-	 std::cout<<"yError: " << yError <<std::endl;
-	 std::cout<< "pitchError: " << pitchError <<std::endl;
-	 std::cout<<"yawError: " << yawError <<std::endl;
-	 std::cout<<"depthError: " << depthError << "\n---------------------------------------\n\n"; */
-
-	return (xError < .1 && yError < .1 && pitchError < .1 && yawError < .1
-			&& depthError < .1);
 }
 
 //blame alan
@@ -194,7 +162,7 @@ void weAreHere(std::string task) {
 	checkpoints_pub.publish(msg);
 }
 
-void setPoints(double pointControl[]) {
+void setPoints(double pointControl[], std::string referenceFrame) {
 	planner::setPoints msgControl;
 
 	msgControl.XPos.isActive = pointControl[0];
@@ -221,22 +189,22 @@ void setPoints(double pointControl[]) {
 	msgControl.Depth.isActive = pointControl[14];
 	msgControl.Depth.data = pointControl[15];
 
-	msgControl.Frame = "/target/gate";
+	msgControl.Frame = referenceFrame;
 
 	control_pub.publish(msgControl);
 }
 
-void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth) {
+void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
 	double pointControl[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
 			1, yaw_speed, 1, depth };
-	setPoints(pointControl);
+	setPoints(pointControl, referenceFrame);
 }
 
-void setPosition(std::vector<double> desired) {
+void setPosition(std::vector<double> desired, std::string referenceFrame) {
 	double pointControl[16] =
 			{ 1, desired.at(0), 1, desired.at(1), 0, desired.at(2), 0,
 					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4) };
-	setPoints(pointControl);
+	setPoints(pointControl, referenceFrame);
 }
 
 void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
@@ -354,9 +322,10 @@ int get_task_id(std::string name) {
 }
 
 int main(int argc, char **argv) {
-  std::string starting_task;
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
+
+	std::string starting_task;
 
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
@@ -367,14 +336,13 @@ int main(int argc, char **argv) {
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
-	n.param<std::string>("Planner/xml_files_path", xmlFilesPath, "");
-  n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
+	n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
   
-  int start_task; int end_task;
-  n.param<int>("Planner/start_task", start_task, 0);
+	int start_task; int end_task;
+	n.param<int>("Planner/start_task", start_task, 0);
 	n.param<int>("Planner/end_task", end_task, 0);
 
-std::cout<<starting_task<<std::endl;
+	std::cout<<starting_task<<std::endl;
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
 	while (ready == 0) {

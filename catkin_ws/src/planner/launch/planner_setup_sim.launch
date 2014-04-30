@@ -3,6 +3,9 @@
   <!-- WARNING: DOES NOT START PLANNER -->
   <!-- Written by Alex Reiff, April 2, McGill Robotics -->
 
+<!-- gotta add blinky at some point -->
+
+
   <!--control systems -->
   <include file="$(find controls)/launch/controls4planner.launch" >
     <arg name="useDC" value="0"/>
