@@ -45,13 +45,13 @@ project(planner)
    ${catkin_INCLUDE_DIRS}
  )
 
- add_executable(Planner src/Interface.cpp src/Task_Handler.cpp)
- target_link_libraries(Planner ${catkin_LIBRARIES})
- add_dependencies(Planner ${catkin_EXPORTED_TARGETS})
-add_dependencies(Planner ${PROJECT_NAME}_gencpp)
+ add_executable(planner src/planner.cpp src/Task_Handler.cpp)
+ target_link_libraries(planner ${catkin_LIBRARIES})
+ add_dependencies(planner ${catkin_EXPORTED_TARGETS})
+ add_dependencies(planner ${PROJECT_NAME}_gencpp)
 
  add_executable (CurrentCVTaskPublisher src/CurrentCVTaskPublisher.cpp)
  target_link_libraries(CurrentCVTaskPublisher ${catkin_LIBRARIES})
  add_dependencies(CurrentCVTaskPublisher ${catkin_EXPORTED_TARGETS})
-add_dependencies(CurrentCVTaskPublisher ${PROJECT_NAME}_gencpp)
+ add_dependencies(CurrentCVTaskPublisher ${PROJECT_NAME}_gencpp)
 

@@ -1,5 +1,5 @@
-#ifndef Interface_h
-#define Interface_h
+#ifndef planner_h
+#define planner_h
 
 #include "ros/ros.h"
 #include "Task_Handler.h"
@@ -23,14 +23,11 @@ enum BlinkyColors {RED, GREEN, BLUE, WHITE, BLACK, PURPS};
 
 void spinThread();
 
-
 void estimatedDepth_callback(const std_msgs::Float64 data);
 
 void setTransform (std::string referenceFrame);
 
 std::vector<double> getTransform();
-
-bool areWeThereYet(std::vector<double> desired);
 
 bool areWeThereYet_tf(std::string referenceFrame, std::vector<double> desired);
 
@@ -38,11 +35,11 @@ void setVisionObj (int objIndex);
 
 void weAreHere (std::string task);
 
-void setPoints (double pointControl[]);
+void setPoints (double pointControl[], std::string referenceFrame);
 
-void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth);
+void setVelocity (double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 
-void setPosition (std::vector<double> desired);
+void setPosition (std::vector<double> desired, std::string referenceFrame);
 
 blinky::RGB getColorValues(int myColor);
 
@@ -52,4 +49,4 @@ int get_task_id(std::string name);
 
 int main (int argc, char **argv);
 
-#endif // Interface_h
+#endif
