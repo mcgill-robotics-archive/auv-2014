@@ -1,0 +1,30 @@
+#!/bin/bash
+
+command_arguments=''
+for arg in $@; do
+
+	case $arg in
+		'-a' )
+			command_arguments="all topics"
+			break;;
+		'-i' )
+			command_arguments="$command_arguments electrical_interface/pose"
+			;;
+		'-t' )
+			command_arguments="$command_arguments status/temperature electrical_interface/temperature"
+			;;
+		'-p' )
+			command_arguments="$command_arguments electrical_interface/pose"
+			;;
+		'-c' )
+			command_arguments="$command_arguments  "
+			;;
+		'-d' )
+			command_arguments="$command_arguments electrical_interface/depth"
+			;;
+		* )
+			;;
+	esac
+
+done
+echo rosbag record $command_arguments
