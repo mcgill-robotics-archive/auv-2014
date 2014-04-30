@@ -1010,6 +1010,23 @@
                   </property>
                  </widget>
                 </item>
+                <item row="0" column="4">
+                 <widget class="QLabel" name="label_55">
+                  <property name="text">
+                   <string>HDD Temp</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QLabel" name="hdd_temp_lbl">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -1058,7 +1075,7 @@
                      </size>
                     </property>
                     <property name="text">
-                     <string>Pressure</string>
+                     <string>USB Devices</string>
                     </property>
                    </widget>
                   </item>
@@ -1070,7 +1087,7 @@
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QLabel" name="pressure_lbl">
+                   <widget class="QLabel" name="usb_lbl">
                     <property name="text">
                      <string>0</string>
                     </property>
@@ -1101,23 +1118,6 @@
                   </item>
                   <item row="1" column="4">
                    <widget class="QLabel" name="bat2_lbl">
-                    <property name="text">
-                     <string>0</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_55">
-                    <property name="text">
-                     <string>HDD Temp</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="hdd_temp_lbl">
                     <property name="text">
                      <string>0</string>
                     </property>

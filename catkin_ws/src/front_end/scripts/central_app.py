@@ -33,7 +33,7 @@ from sensor_msgs.msg import Image
 from computer_vision.msg import VisibleObjectData
 from controls.msg import motorCommands
 from geometry_msgs.msg import PoseStamped
-from status.msg import temp
+from status.msg import temp, usb
 from blinky.msg import RGB
 from blinky.srv import BlinkyService
 
@@ -47,12 +47,33 @@ def lbl_bg_red(thing):
     """sets a style sheet to the @param thing resulting in a red background"""
     thing.setStyleSheet('background-color:#ff0000')
 
+def lbl_bg_norm(thing):
+    """sets a style sheet to the @param thing resulting in a red background"""
+    thing.setStyleSheet('background-color:#f2f1f0')
+
 
 class CentralUi(QtGui.QMainWindow):
+    hdd_high = 20
+    c0_high = 20
+    c1_high = 20
+    c2_high = 20
+    c3_high = 20
+    bat1_low = 20
+    bat2_low = 20
+
     ##Qt signal for battery empty alarm
+    ok_battery1_signal = QtCore.pyqtSignal()
+    ok_battery2_signal = QtCore.pyqtSignal()
+
+    ok_core0_temp_signal = QtCore.pyqtSignal()
+    ok_core1_temp_signal = QtCore.pyqtSignal()
+    ok_core2_temp_signal = QtCore.pyqtSignal()
+    ok_core3_temp_signal = QtCore.pyqtSignal()
+    ok_ssd_temp_signal = QtCore.pyqtSignal()
+
+
     empty_battery1_signal = QtCore.pyqtSignal()
     empty_battery2_signal = QtCore.pyqtSignal()
-    high_ambiant_temp_signal = QtCore.pyqtSignal()
 
     high_core0_temp_signal = QtCore.pyqtSignal()
     high_core1_temp_signal = QtCore.pyqtSignal()
@@ -146,9 +167,16 @@ class CentralUi(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.blinky_custom, QtCore.SIGNAL("clicked()"), self.custom_color)
 
         # critical state label changers
+        self.ok_battery1_signal.connect(lambda lbl = self.ui.bat1_lbl: lbl_bg_norm(lbl))
+        self.ok_battery2_signal.connect(lambda lbl = self.ui.bat2_lbl: lbl_bg_norm(lbl))
+        self.ok_core0_temp_signal.connect(lambda lbl = self.ui.temp_core1: lbl_bg_norm(lbl))
+        self.ok_core1_temp_signal.connect(lambda lbl = self.ui.temp_core2: lbl_bg_norm(lbl))
+        self.ok_core2_temp_signal.connect(lambda lbl = self.ui.temp_core3: lbl_bg_norm(lbl))
+        self.ok_core3_temp_signal.connect(lambda lbl = self.ui.temp_core4: lbl_bg_norm(lbl))
+        self.ok_ssd_temp_signal.connect(lambda lbl = self.ui.hdd_temp_lbl: lbl_bg_norm(lbl))
+
         self.empty_battery1_signal.connect(lambda lbl = self.ui.bat1_lbl: lbl_bg_red(lbl))
         self.empty_battery2_signal.connect(lambda lbl = self.ui.bat2_lbl: lbl_bg_red(lbl))
-        self.high_ambiant_temp_signal.connect(lambda lbl = self.ui.ambiant_temp_lbl: lbl_bg_red(lbl))
         self.high_core0_temp_signal.connect(lambda lbl = self.ui.temp_core1: lbl_bg_red(lbl))
         self.high_core1_temp_signal.connect(lambda lbl = self.ui.temp_core2: lbl_bg_red(lbl))
         self.high_core2_temp_signal.connect(lambda lbl = self.ui.temp_core3: lbl_bg_red(lbl))
@@ -207,29 +235,54 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
         rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/electrical_interface/pressure", Int32, self.pressure_callback)
-        rospy.Subscriber("/electrical_interface/temperature", Int16, self.temp_callback)
         rospy.Subscriber("/status/temperature", temp, self.cpu_hdd_temp_callback)
+        rospy.Subscriber("/status/usb", usb, self.usb_callback)
         #subscriber and callback for the 3d viz of pose data
         self.pose_ui.subscribe_topic('/state_estimation/pose')
+
+    def usb_callback(self, msg):
+        self.ui.usb_lbl.setText(str(msg.number))
 
     def cpu_hdd_temp_callback(self, temp):
         self.ui.temp_core1.setText(str(temp.core_0))
         if temp.core_0 > misc_vars.CPU_max_temp:
             self.high_core0_temp_signal.emit()
+            self.c0_high = 0
+        elif self.c0_high == 20:
+            self.ok_core0_temp_signal.emit()
+        self.c0_high+=1
+
         self.ui.temp_core2.setText(str(temp.core_1))
         if temp.core_1 > misc_vars.CPU_max_temp:
             self.high_core1_temp_signal.emit()
+            self.c1_high = 0
+        elif self.c1_high == 20:
+            self.ok_core1_temp_signal.emit()
+        self.c1_high+=1
+
         self.ui.temp_core3.setText(str(temp.core_2))
         if temp.core_2 > misc_vars.CPU_max_temp:
             self.high_core2_temp_signal.emit()
+            self.c2_high = 0
+        elif self.c2_high == 20:
+            self.ok_core2_temp_signal.emit()
+        self.c2_high+=1
+
         self.ui.temp_core4.setText(str(temp.core_3))
         if temp.core_3 > misc_vars.CPU_max_temp:
             self.high_core3_temp_signal.emit()
+            self.c3_high = 0
+        elif self.c3_high == 20:
+            self.ok_core3_temp_signal.emit()
+        self.c3_high+=1
 
         self.ui.hdd_temp_lbl.setText(str(temp.ssd))
         if temp.ssd > misc_vars.SSD_max_temp:
             self.high_ssd_temp_signal.emit()
+            self.hdd_high = 0
+        elif self.hdd_high == 20:
+            self.ok_ssd_temp_signal.emit()
+        self.hdd_high+=1
 
     def send_color_blinky(self, red, green, blue):
         #build message
@@ -316,9 +369,6 @@ class CentralUi(QtGui.QMainWindow):
             msg.cmd_heave_stern = 0
 
         vel_pub.publish(msg)
-
-    def pressure_callback(self, data):
-        self.ui.pressure_lbl.setText(str(data.data/1000.0))
 
     ##resize the sliders to fit the correct range of values
     def resize_sliders(self):
@@ -482,11 +532,6 @@ class CentralUi(QtGui.QMainWindow):
         if data_input > misc_vars.depth_max:
             misc_vars.depth_max = data_input
             self.depth_graph.setYRange(0, misc_vars.depth_max)
-
-    def temp_callback(self, temp):
-        self.ui.ambiant_temp_lbl.setText(str(temp.data/10.0))
-        if temp.data/10.0 > misc_vars.max_temp:
-            self.high_ambiant_temp_signal.emit()
 
     ##
     #appends the last message recieved from planner to a textbox in screen
@@ -683,11 +728,19 @@ class CentralUi(QtGui.QMainWindow):
         self.ui.bat1_lbl.setText(str(voltage_data.data))
         if voltage_data.data<misc_vars.low_battery_threshold:
             self.empty_battery1_signal.emit()
+            self.bat1_low = 0
+        elif self.bat1_low == 20:
+            self.ok_battery1_signal.emit()
+        self.bat1_low+=1
 
     def bat_2(self, voltage_data):
         self.ui.bat2_lbl.setText(str(voltage_data.data))
         if voltage_data.data<misc_vars.low_battery_threshold:
             self.empty_battery2_signal.emit()
+            self.bat2_low = 0
+        elif self.bat2_low == 20:
+            self.ok_battery2_signal.emit()
+        self.bat2_low+=1
 
     def check_low_bat(self):
         if self.ui.bat1_lbl.value() < misc_vars.low_battery_threshold or self.ui.bat2_lbl.value()<misc_vars.low_battery_threshold:
