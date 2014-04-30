@@ -144,8 +144,8 @@ if __name__ == "__main__":
     if options.portname is not None:
         port = options.portname
     else:
-        serialPorts = glob.glob("/dev/ttyACM0")
-        port = serialPorts[0]
+        print 'ERROR: Blinky Tape not found!'
+        exit(1)
 
     bt = BlinkyTape(port)
 
