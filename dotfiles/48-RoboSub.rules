@@ -1,4 +1,4 @@
-74134373733351906081# UDEV Rules for Teensy boards, http://www.pjrc.com/teensy/
+# UDEV Rules for Teensy boards, http://www.pjrc.com/teensy/
 #
 # The latest version of this file may be found at:
 #   http://www.pjrc.com/teensy/49-teensy.rules
@@ -21,10 +21,20 @@
 ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", ENV{ID_MM_DEVICE_IGNORE}="1"
 ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", ENV{MTP_NO_PROBE}="1"
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", MODE:="0666", SYMLINK+="teensy"
+
+#arduino mega
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0042", ATTRS{serial}=="952383433343516171A0", SYMLINK+="arduino"
+
+#arduino uno
 SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0001", ATTRS{serial}=="74134373733351906081", SYMLINK+="arduino"
+
+#anass's arduino uno
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0001", ATTRS{serial}=="7413437373335141E191", SYMLINK+="arduino" 
+
+#blinklyTape in both modes
 KERNEL=="ttyACM*", SUBSYSTEMS=="usb", ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="605e",SYMLINK+="blinkyTape"
 KERNEL=="ttyACM*", SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="8036",SYMLINK+="blinkyTape"
+
 KERNEL=="ttyACM*", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="04[789]?", MODE:="0666"
 #
 # If you share your linux system with other users, or just don't like the

@@ -5,7 +5,10 @@
 ############################
 source /opt/ros/hydro/setup.bash 
 ########## Variables
-sudo cp -f -v 48-RoboSub.rules /etc/udev/rules.d/48-RoboSub.rules
+sudo rm -v ~/startup
+sudo rm -v /etc/udev/rules.d/48-RoboSub.rules
+sudo ln -sfv 48-RoboSub.rules /etc/udev/rules.d/48-RoboSub.rules
+sudo ln -sfv startup ~/startup
 sudo rm -v /etc/udev/rules.d/49-teensy.rules
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                # old dotfiles backup directory
@@ -28,8 +31,10 @@ for file in $files; do
     echo "Moving any existing dotfiles from ~ to $olddir"
     mv ~/.$file ~/dotfiles_old/
     echo "Creating symlink to $file in home directory."
-    ln -s $dir/$file ~/.$file
+    ln -sv $dir/$file ~/.$file
 done
+
+
 
 cd $dir
 cd ..
