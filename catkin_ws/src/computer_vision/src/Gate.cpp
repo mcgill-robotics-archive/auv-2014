@@ -24,7 +24,7 @@ Gate::Gate() {
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: a Gate object was instantiated.").c_str());
 
 	ros::NodeHandle nodeHandle;
-	nodeHandle.param<bool>("is_using_helper_windows", isUsingHelperWindows, false);
+	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
 
 	if (isUsingHelperWindows == 1) {
 		cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);

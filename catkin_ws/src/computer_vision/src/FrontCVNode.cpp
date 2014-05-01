@@ -66,7 +66,10 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	ros::spin();
 
 	// Create a window to display the images received
-	cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
+	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
+	if (isUsingHelperWindows) {
+		cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
+	}
 	numFramesWithoutObject = 0;
 }
 
@@ -78,7 +81,9 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
  */
 FrontCVNode::~FrontCVNode() {
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: destroying FrontCVNode.").c_str());
-	cv::destroyWindow(CAMERA1_CV_TOPIC_NAME);
+	if (isUsingHelperWindows) {
+		cv::destroyWindow(CAMERA1_CV_TOPIC_NAME);
+	}
 }
 
 void FrontCVNode::instanciateAllVisibleObjects() {
@@ -144,12 +149,13 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		currentImage.image           = currentFrame;
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
-		// Display the filtered image
-		cv::imshow(CAMERA1_CV_TOPIC_NAME, currentFrame);
-		cv::waitKey(5);
+		if (isUsingHelperWindows) {
+			// Display the filtered image
+			cv::imshow(CAMERA1_CV_TOPIC_NAME, currentFrame);
+			cv::waitKey(5);
+		}
 	} catch (cv::Exception& e) {
 		ROS_ERROR("cv::imgshow exception: %s", e.what());
 		return;
 	}
 }
-

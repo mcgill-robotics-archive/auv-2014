@@ -32,6 +32,7 @@ class CVNode {
 
 	protected:
 
+	bool isUsingHelperWindows;
 	image_transport::ImageTransport* pImageTransport;
 	image_transport::Publisher frontEndPublisher;
 	ros::Publisher frontEndVisibleObjectDataPublisher;
