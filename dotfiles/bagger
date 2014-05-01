@@ -1,0 +1,31 @@
+#!/bin/bash
+
+command_arguments=''
+for arg in $@; do
+
+	case $arg in
+		'-a' )
+			command_arguments="all topics"
+			break;;
+		'-i' )
+			command_arguments="$command_arguments electrical_interface/pose"
+			;;
+		'-t' )
+			command_arguments="$command_arguments status/temperature electrical_interface/temperature"
+			;;
+		'-p' )
+			command_arguments="$command_arguments electrical_interface/pose"
+			;;
+		'-c' )
+			command_arguments="$command_arguments camera_down/camera/camera_info camera_down/camera/image_rect_color camera_down/camera/image_color  "
+			;;
+		'-d' )
+			command_arguments="$command_arguments electrical_interface/depth"
+			;;
+		* )
+			;;
+	esac
+
+done
+
+rosbag record $command_arguments -O ../../bag-$(date +%s)

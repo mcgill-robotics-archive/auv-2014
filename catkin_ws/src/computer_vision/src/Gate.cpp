@@ -26,28 +26,28 @@ Gate::Gate() {
 	ros::NodeHandle nodeHandle;
 	nodeHandle.param<bool>("is_using_helper_windows", isUsingHelperWindows, false);
 
-if (isUsingHelperWindows == 1) {
-	cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
-	cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
+	if (isUsingHelperWindows == 1) {
+		cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
+		cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
-	cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &start_hsv_hue_threshold, MAX_HSV_VALUE);
-	cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &end_hsv_hue_threshold, MAX_HSV_VALUE);
-	cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &start_hsv_value_threshold, MAX_HSV_VALUE);
-	cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &end_hsv_value_threshold, MAX_HSV_VALUE);
-	cv::createTrackbar("gate_ratio_error", TRACKBARS_WINDOW, &gate_ratio_error, MAX_HSV_VALUE);
-	cv::createTrackbar("max_number_points", TRACKBARS_WINDOW, &max_number_points, MAX_HSV_VALUE);
-	cv::createTrackbar("polygon_approximation_threshold", TRACKBARS_WINDOW, &polygon_approximation_threshold, MAX_HSV_VALUE);
-}
+		cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &start_hsv_hue_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &end_hsv_hue_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &start_hsv_value_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &end_hsv_value_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("gate_ratio_error", TRACKBARS_WINDOW, &gate_ratio_error, MAX_HSV_VALUE);
+		cv::createTrackbar("max_number_points", TRACKBARS_WINDOW, &max_number_points, MAX_HSV_VALUE);
+		cv::createTrackbar("polygon_approximation_threshold", TRACKBARS_WINDOW, &polygon_approximation_threshold, MAX_HSV_VALUE);
+	}
 }
 
 /**
  * Destructor.
  */
 Gate::~Gate() {
-if (isUsingHelperWindows == 1) {
-	cv::destroyWindow(COLOR_THRESH_WINDOW);
-	cv::destroyWindow(TRACKBARS_WINDOW);
-}
+	if (isUsingHelperWindows == 1) {
+		cv::destroyWindow(COLOR_THRESH_WINDOW);
+		cv::destroyWindow(TRACKBARS_WINDOW);
+	}
 }
 
 /**
@@ -61,6 +61,13 @@ if (isUsingHelperWindows == 1) {
 std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Mat& currentFrame) {
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
 	m_isVisible = false;
+
+	std::vector<cv::Mat> channels;
+	cv::split(currentFrame, channels);
+	cv::normalize(channels[0], channels[0], 0, 255, cv::NORM_MINMAX);
+	cv::normalize(channels[1], channels[1], 0, 255, cv::NORM_MINMAX);
+	cv::normalize(channels[2], channels[2], 0, 255, cv::NORM_MINMAX);
+	cv::merge(channels, currentFrame);	
 
 	applyFilter(currentFrame);
 
@@ -83,7 +90,7 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 //	ROS_INFO("%s", ("About to return the ROS message list to the cv node that contains " + boost::lexical_cast<std::string>(messagesToReturn.size()) + " element(s).").c_str());
 
 	return (messagesToReturn);
-}
+}	
 
 /**
  * Function that will apply filter on the image so we can detect the door.
@@ -130,7 +137,9 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 			drawPointsOfContour(currentFrame, contour, RED_BGRX);
 		}
 
-		writePoleCandidateInfo(pole, passesFilter, currentFrame);
+
+		if (passesFilter)
+			writePoleCandidateInfo(pole, currentFrame);
 	}
 
 	int numberOfPotentialMatch = potentialMatchRectangles.size();
@@ -276,10 +285,11 @@ std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Ma
 	// Generates a new Mat object that only contains a certain range of HSV values.
 	// Don't forget that we are not using BGRX, but the HSV color space.
 	cv::inRange(frameInHSV, HSV_STARTING_FILTER_RANGE, HSV_ENDING_FILTER_RANGE, inRangeHSVFrame);
+	cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
 
-if (isUsingHelperWindows == 1) {
-	cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
-}
+	if (isUsingHelperWindows == 1) {
+		cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
+	}
 
 	// Finds the contours in the images.
 	cv::Mat inRangeFrame = inRangeHSVFrame.clone();
@@ -295,18 +305,18 @@ if (isUsingHelperWindows == 1) {
  * Draw information about a pole candidate on the frame.
  *
  */
-void Gate::writePoleCandidateInfo(PoleCandidate& pole, bool passedFilter, cv::Mat& currentFrame) {
+void Gate::writePoleCandidateInfo(PoleCandidate& pole, cv::Mat& currentFrame) {
 
-	if(passedFilter) {
-		putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(pole.dist),
-			cv::Point(pole.center.x, pole.center.y + 30),
-			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-			CV_AA);
-		putText(currentFrame, "ObjectAngle=" + boost::lexical_cast<std::string>(pole.objectAngleRad * 180.0 / 3.141592654),
-			cv::Point(pole.center.x, pole.center.y + 40),
-			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-			CV_AA);
-	}
+
+	putText(currentFrame, "Distance=" + boost::lexical_cast<std::string>(pole.dist),
+		cv::Point(pole.center.x, pole.center.y + 30),
+		cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+		CV_AA);
+	putText(currentFrame, "ObjectAngle=" + boost::lexical_cast<std::string>(pole.objectAngleRad * 180.0 / 3.141592654),
+		cv::Point(pole.center.x, pole.center.y + 40),
+		cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+		CV_AA);
+	
 
 	putText(currentFrame, "Width=" + boost::lexical_cast<std::string>(pole.w),
 		cv::Point(pole.center.x, pole.center.y),
@@ -321,6 +331,7 @@ void Gate::writePoleCandidateInfo(PoleCandidate& pole, bool passedFilter, cv::Ma
 		cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
 		CV_AA);
 
+	
 }
 
 /**
@@ -333,6 +344,6 @@ void Gate::drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, c
 	// Draw each single point that forms the polygon.
 	for (int j = 0; j < contour.size(); j++) {
 		cv::Point singlePoint = contour.at(j);
-		rectangle(frame, singlePoint, singlePoint, COLOR, 8, 8);
+		rectangle(frame, singlePoint, singlePoint, COLOR, 2, 2);
 	}
 }

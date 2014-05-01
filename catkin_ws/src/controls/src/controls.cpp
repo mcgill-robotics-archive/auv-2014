@@ -263,6 +263,7 @@ int main(int argc, char **argv)
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		setPointsIsPublished = 1;		 
 		if (setPoints_subscriber.getNumPublishers() == 0) {setPointsIsPublished = 0;}
+		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
 
 	ROS_INFO("All Subscribers Live. Starting Controller!");

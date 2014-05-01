@@ -4,7 +4,7 @@
 #include "VisibleObject.h"
 
 // Defines the different constants used for the filters of the gate:
-#define SIMULATOR 1
+#define SIMULATOR 0
 
 // Defines the different constants used:
 /**
@@ -37,7 +37,7 @@ const int DESIRED_ANGLE_OF_RECT = 90;
 /**
  * The accepted error for the angle of a rectangle.
  */
-const int ANGLE_RECT_ERROR = 5;
+const int ANGLE_RECT_ERROR = 15;
 
 /**
  * The focal length of the lenses in meters.
@@ -144,7 +144,7 @@ private:
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
 	PoleCandidate findRectangleForContour(std::vector<cv::Point>& contour);
 	void computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight);
-	void writePoleCandidateInfo(PoleCandidate& pole, bool passedFilter, cv::Mat& frame);
+	void writePoleCandidateInfo(PoleCandidate& pole, cv::Mat& frame);
 	void handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame);
 
 	bool m_isVisible;

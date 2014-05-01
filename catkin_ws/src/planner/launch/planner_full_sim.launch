@@ -1,28 +1,10 @@
 <launch>
   <!-- launches: planner node as well as all of its dependencies -->
-  <!-- Written by Alex Reiff, Jan 29, McGill Robotics -->
+  <!-- Written by Alex Reiff, April 29, McGill Robotics -->
 
-  <arg name="starting_task" default="gate"/> 
-  
-  <!--control systems -->
-  <include file="$(find controls)/launch/controls4planner.launch" >
-    <arg name="useDC" value="0"/>
-  </include>
+  <!-- planner -->
+  <include file="$(find planner)/launch/planner_setup_sim.launch" />
 
-  <!-- computer vision -->
-  <include file="$(find computer_vision)/launch/computer_vision.launch" />
+  <include file="$(find planner)/launch/planner_node.launch" />
 
-  <!-- state estimation -->
-  <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
-
-  <!-- Planner -->
-  <node name="Planner" pkg="planner" type="Planner" respawn="false" output="screen">
-  	<param name="xml_files_path" value="$(find planner)/xml"/>
-
-    <param name="starting_task" type="str" value="$(arg starting_task)"/>
-    
-    <param name ="start_task" type="int" value="1"/>
-    
-    <param name ="end_task" type="int" value="1"/>
-  </node>
 </launch>
