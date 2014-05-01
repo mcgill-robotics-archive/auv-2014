@@ -1,0 +1,2 @@
+image_feed/left: simulator/camera1/image_raw
+image_feed/right: simulator/camera2/image_raw

@@ -1,3 +1,1 @@
-image_feed/left: camera_front_left/camera/image_color
-image_feed/right: simulator/camera2/image_raw
 is_using_helper_windows: true

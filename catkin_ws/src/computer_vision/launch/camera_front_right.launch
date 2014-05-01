@@ -5,6 +5,8 @@
       <param name="guid" value="00b09d0100cd1e8d" />
       <param name="video_mode" value="format7_mode0" />
       <param name="frame_id" value="unibrain" />
+      <param name="auto_exposure" value="2" />
+      <!-- The White Balance is set to manual here -->
       <param name="auto_white_balance" value="3" />
       <param name="white_balance_BU" value="1000" />
       <param name="white_balance_RV" value="500" />
