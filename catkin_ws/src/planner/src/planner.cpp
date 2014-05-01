@@ -339,8 +339,8 @@ int main(int argc, char **argv) {
 	n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
   
 	int start_task; int end_task;
-	n.param<int>("Planner/start_task", start_task, 0);
-	n.param<int>("Planner/end_task", end_task, 0);
+	n.param<int>("Planner/start_task", start_task, 1);
+	n.param<int>("Planner/end_task", end_task, 1);
 
 	std::cout<<starting_task<<std::endl;
 	// Waits until the environment is properly setup until the planner actually starts.

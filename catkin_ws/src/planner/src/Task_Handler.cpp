@@ -82,10 +82,10 @@ int end_routine() {
 	loop_rate.sleep();
 
 	double nullVals[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	setPoints(nullVals, "");
+	setPoints(nullVals, "/robot/rotation_center");
 	loop_rate.sleep();
 	
-	weAreHere("RESURFACING");	
+	weAreHere("RESURFACING");
 	loop_rate.sleep();
 	
 	return 0;
