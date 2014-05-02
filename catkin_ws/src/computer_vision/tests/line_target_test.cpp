@@ -16,8 +16,8 @@ bool compareImage(cv::Mat& correctImage, cv::Mat& testImage) {
 }
 
 // Simple test ti demonstrate basic unit testing princinples.
-TEST(LineTarget, adding) {
-	LineTarget* target = new LineTarget();
+TEST(Line, adding) {
+	Line* target = new Line();
 	EXPECT_EQ(5, target->add(2, 3));
 }
 
@@ -45,8 +45,8 @@ TEST(LineTarget, adding) {
 //	EXPECT_TRUE();
 //}
 
-TEST(LineTarget, convertFromPixelsToMetres) {
-	LineTarget* target = new LineTarget();
+TEST(Line, convertFromPixelsToMetres) {
+	Line* target = new Line();
 	EXPECT_EQ(30, (int)target->convertFromPixelsToMetres(100, 4));
 
 }

@@ -4,7 +4,6 @@
 #include "CVNode.h"
 #include "Buoy.h"
 #include "Gate.h"
-#include "LineTarget.h"
 
 // These variables need to be accessible from the main method in FrontCVNode.cpp.
 const std::string FRONT_CV_NODE_NAME = "front_cv";

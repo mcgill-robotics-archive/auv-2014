@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 void DownCVNode::listenToPlanner(planner::CurrentCVTask msg) {
 	this->visibleObjectList.clear();
 	if (msg.currentCVTask == 3) {
-		this->visibleObjectList.push_back(new LineTarget());
+		this->visibleObjectList.push_back(new Line());
 	}
 }
 
@@ -58,7 +58,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	nodeHandle.param<std::string>("cv_down_detect_object", currentObject, "");
 	if (!currentObject.empty()) {
 		if (currentObject.compare("line") == 0) {
-			this->visibleObjectList.push_back(new LineTarget());
+			this->visibleObjectList.push_back(new Line());
 		}
 	} else {
 		ROS_INFO("%s", "The 'cv_down_detect_object' parameter is empty, the CV will be looking for no object.");

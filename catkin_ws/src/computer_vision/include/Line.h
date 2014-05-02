@@ -5,21 +5,21 @@
  *      Author: thuy-anh
  */
 
-#ifndef LINETARGET_H_
-#define LINETARGET_H_
+#ifndef LINE_H
+#define LINE_H
 
 #include "VisibleObject.h"
 
 using namespace cv;
 using namespace std;
 
-class LineTarget : public VisibleObject {
+class Line : public VisibleObject {
 
 	double xDistance;
 	double yDistance;
 	double yaw;
 	public:
-	LineTarget();
+	Line();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 	double convertFromPixelsToMetres(int distance, double longSize);
@@ -31,4 +31,4 @@ class LineTarget : public VisibleObject {
 
 };
 
-#endif /* LINETARGET_H_ */
+#endif /* LINE_H */

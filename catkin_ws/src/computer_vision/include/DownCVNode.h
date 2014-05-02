@@ -1,6 +1,6 @@
 #include "CVNode.h"
 #include "MarkerTarget.h"
-#include "LineTarget.h"
+#include "Line.h"
 
 const std::string DOWN_CV_NODE_NAME = "down_cv_node";
 

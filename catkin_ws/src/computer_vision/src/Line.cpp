@@ -1,12 +1,12 @@
 /*
- * LineTarget.cpp
+ * Line.cpp
  *
  *  Created on: Jan 16, 2014
  *      Author: thuy-anh
         Author: Usman Ehtesham Gul
         Author: Joel Lat
  */
-#include "LineTarget.h"
+#include "Line.h"
 
 int kernelSize = 3;
 Mat src; Mat src_gray;
@@ -25,12 +25,12 @@ double calculateSize (double x1, double x2, double y1, double y2);
 //double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
 
-LineTarget::LineTarget() {
+Line::Line() {
 	xDistance = 0.0;
 	yDistance = 0.0;
 }
 
-std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(cv::Mat& currentFrame) {
+std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(cv::Mat& currentFrame) {
         bool isVisible;
         double yawAngle = -90.0;
         double pitchAngle = 90.0;
@@ -71,7 +71,7 @@ std::vector<computer_vision::VisibleObjectData*> LineTarget::retrieveObjectData(
  * @param image Current frame given from video
  */
 
-void LineTarget::applyFilter(cv::Mat& image){
+void Line::applyFilter(cv::Mat& image){
 		cv::Mat imageHSV;
 	   src = image;
       cv::cvtColor(image, imageHSV,CV_BGR2HSV);
@@ -112,7 +112,7 @@ void LineTarget::applyFilter(cv::Mat& image){
 //        }
 //}
 
-void LineTarget::thresh_callback(int, void* )
+void Line::thresh_callback(int, void* )
 {
   Mat canny_output;
   vector<vector<Point> > contours;
@@ -215,7 +215,7 @@ double calculateSize (double x1, double x2, double y1, double y2){
 	return std::sqrt(std::pow ((x1 - x2), 2) + std::pow ((y1 - y2), 2));
 }
 
-double LineTarget::convertFromPixelsToMetres(int distance, double longSize) {
+double Line::convertFromPixelsToMetres(int distance, double longSize) {
 	//double distanceMetres;
 	//distanceMetres = (distance * 1.2)/ longSize;
 	//return distanceMetres;
@@ -227,7 +227,7 @@ double LineTarget::convertFromPixelsToMetres(int distance, double longSize) {
  * @param line Line found using contours
  * @return Whether line is visible or not
  */
-bool LineTarget::isVisible(cv::RotatedRect line){
+bool Line::isVisible(cv::RotatedRect line){
 	//if (line.size.height != 0 || line.size.width !=0)
 	//	return true;
 	//return false;
@@ -239,7 +239,7 @@ bool LineTarget::isVisible(cv::RotatedRect line){
  * @param line Line found using contours
  * @return Relative yaw between the sub and the line
  */
-double LineTarget::relativeYaw(cv::RotatedRect line){
+double Line::relativeYaw(cv::RotatedRect line){
 	double angle = line.angle;
 	//re-adjust incorrect angles
 	if (line.size.height <  line.size.width)
@@ -250,7 +250,7 @@ double LineTarget::relativeYaw(cv::RotatedRect line){
 	return angle;
 }
 
-int LineTarget::add(int x, int y) {
+int Line::add(int x, int y) {
 	return x+y;
 }
 
