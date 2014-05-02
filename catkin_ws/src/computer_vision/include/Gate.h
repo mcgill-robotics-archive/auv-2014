@@ -42,11 +42,7 @@ const int ANGLE_RECT_ERROR = 15;
 /**
  * The focal length of the lenses in meters.
  */
-#if SIMULATOR
-const float FOCAL_LENGTH = 0.02;
-#else
-const float FOCAL_LENGTH = 0.008;
-#endif
+double camera_focal_length;
 
 /**
  * The height of the gate in meters.
@@ -59,11 +55,8 @@ const float GATE_WIDTH = 3.1262;
 /**
  * The eight of the sensor of the camera in meters.
  */
-#if SIMULATOR
-const float CAMERA_SENSOR_HEIGHT = 0.04;
-#else
-const float CAMERA_SENSOR_HEIGHT = 0.626;
-#endif
+double camera_sensor_height;
+
 /**
  * The escape key's ID.
  */

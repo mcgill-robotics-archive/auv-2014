@@ -262,8 +262,8 @@ Gate::PoleCandidate Gate::findRectangleForContour(std::vector<cv::Point>& contou
  */
 void Gate::computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight) {
 	/* First approximation using the canonical formula */
-	float approximateDistanceWithObject = (FOCAL_LENGTH * DOOR_REAL_HEIGHT * frameHeight) / 
-							(pole.h * CAMERA_SENSOR_HEIGHT);
+	float approximateDistanceWithObject = (camera_focal_length * DOOR_REAL_HEIGHT * frameHeight) / 
+							(pole.h * camera_sensor_height);
 
 	/* We correct this distance, because it is only valid if the object is close to the center of the screen */
 	float mPerPxAtObject = DOOR_REAL_HEIGHT / pole.h;

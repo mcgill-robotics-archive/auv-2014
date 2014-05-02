@@ -65,6 +65,8 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	nodeHandle.param<int>("end_hsv_hue_threshold", end_hsv_hue_threshold, 0);
 	nodeHandle.param<int>("start_hsv_value_threshold", start_hsv_value_threshold, 0);
 	nodeHandle.param<int>("end_hsv_value_threshold", end_hsv_value_threshold, 0);
+	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
+	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
 
 	this->visibleObjectList.push_back(new Gate());
 
