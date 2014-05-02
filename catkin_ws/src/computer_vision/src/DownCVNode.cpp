@@ -54,6 +54,16 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_DOWN_TOPIC_NAME, 1000, &DownCVNode::listenToPlanner, this);
 
+	std::string currentObject;
+	nodeHandle.param<std::string>("cv_down_detect_object", currentObject, "");
+	if (!currentObject.empty()) {
+		if (currentObject.compare("line") == 0) {
+			this->visibleObjectList.push_back(new LineTarget());
+		}
+	} else {
+		ROS_INFO("%s", "The 'cv_down_detect_object' parameter is empty, the CV will be looking for no object.");
+	}
+
 	if (isUsingHelperWindows) {
 		cv::namedWindow(CAMERA3_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	}

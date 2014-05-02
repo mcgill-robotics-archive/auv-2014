@@ -73,10 +73,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 
 	std::string currentObject;
 	nodeHandle.param<std::string>("cv_front_detect_object", currentObject, "");
-
-	ROS_INFO("%s", ("currenObject:" + currentObject).c_str());
 	if (!currentObject.empty()) {
-		ROS_INFO("%s", "it is not empty!");
 		if (currentObject.compare("gate") == 0) {
 			this->visibleObjectList.push_back(new Gate());
 		} else if (currentObject.compare("buoy") == 0) {
