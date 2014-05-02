@@ -21,7 +21,6 @@ int main(int argc, char **argv) {
 
 	nodeHandle.param<std::string>("image_feed/left", imageFeedLeft, "/simulator/camera1/image_raw");
 	nodeHandle.param<std::string>("image_feed/right", imageFeedRight, "/simulator/camera2/image_raw");
-	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
 
 	// Creates a new CVNode object.
 	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, imageFeedLeft, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
@@ -60,6 +59,12 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 
 	// Topics on which the node will be subscribing.
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this);
+
+	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, 0);
+	nodeHandle.param<int>("start_hsv_hue_threshold", start_hsv_hue_threshold, 0);
+	nodeHandle.param<int>("end_hsv_hue_threshold", end_hsv_hue_threshold, 0);
+	nodeHandle.param<int>("start_hsv_value_threshold", start_hsv_value_threshold, 0);
+	nodeHandle.param<int>("end_hsv_value_threshold", end_hsv_value_threshold, 0);
 
 	this->visibleObjectList.push_back(new Gate());
 
