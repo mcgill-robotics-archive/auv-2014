@@ -3,9 +3,6 @@
 
 #include "VisibleObject.h"
 
-// Defines the different constants used for the filters of the gate:
-#define SIMULATOR 0
-
 // Defines the different constants used:
 /**
  * The ratio used in the canny transform to determine shape contours.
@@ -24,6 +21,7 @@ const int KERNEL_SIZE = 3;
  * The real ration is 16:1. If the ratio is less than 4:1, it's probably not the gate.
  */
 const int MIN_GATE_RATIO = 4;
+
 /**
  * The deviation tolerance
  */

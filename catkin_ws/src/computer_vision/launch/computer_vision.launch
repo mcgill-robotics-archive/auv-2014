@@ -21,13 +21,13 @@
   <!-- Launches cv_front node. -->
   <node name="cv_front" pkg="computer_vision" type="cv_front_node"  respawn="false" output="screen">
     <!-- Defines what object will the cv_front_node be searching after the initialization. -->
-    <param name="cv_front_detect_object" type="" value="" />
+    <param name="cv_front_detect_object" type="str" value="" />
   </node>
 
   <!-- Launches the cv_down node. -->
   <node name="cv_down" pkg="computer_vision" type="cv_down_node"  respawn="false" output="screen">
     <!-- Defines what object will the cv_down_node be searching after the initialization. -->
-    <param name="cv_down_detect_object" type="" value="" />
+    <param name="cv_down_detect_object" type="str" value="" />
   </node>
 
 </launch>

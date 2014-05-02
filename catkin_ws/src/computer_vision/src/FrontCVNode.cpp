@@ -60,6 +60,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	// Topics on which the node will be subscribing.
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this);
 
+	// Loads all the variables located in the Parameter Server.
 	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, 0);
 	nodeHandle.param<int>("start_hsv_hue_threshold", start_hsv_hue_threshold, 0);
 	nodeHandle.param<int>("end_hsv_hue_threshold", end_hsv_hue_threshold, 0);
