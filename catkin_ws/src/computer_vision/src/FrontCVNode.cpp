@@ -21,9 +21,11 @@ int main(int argc, char **argv) {
 
 	nodeHandle.param<std::string>("image_feed/left", imageFeedLeft, "/simulator/camera1/image_raw");
 	nodeHandle.param<std::string>("image_feed/right", imageFeedRight, "/simulator/camera2/image_raw");
+	nodeHandle.param<int>("reception_rate", receptionRate, 10);
+	nodeHandle.param<int>("image_subscriber_buffer_size", imageSubscriberBufferSize, 0);
 
 	// Creates a new CVNode object.
-	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, imageFeedLeft, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
+	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, imageFeedLeft, receptionRate, imageSubscriberBufferSize);
 
 	// Start receiving images from the camera node (publisher)
 	pFrontCVNode->receiveImages();
@@ -69,7 +71,20 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
 	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
 
-	this->visibleObjectList.push_back(new Gate());
+	std::string currentObject;
+	nodeHandle.param<std::string>("cv_front_detect_object", currentObject, "");
+
+	ROS_INFO("%s", ("currenObject:" + currentObject).c_str());
+	if (!currentObject.empty()) {
+		ROS_INFO("%s", "it is not empty!");
+		if (currentObject.compare("gate") == 0) {
+			this->visibleObjectList.push_back(new Gate());
+		} else if (currentObject.compare("buoy") == 0) {
+			// TODO: add the Buoy object here when it is completed
+		}
+	} else {
+		ROS_INFO("%s", "The 'cv_front_detect_object' parameter is empty, the CV will be looking for no object.");
+	}
 
 	// Will execute callbacks functions when an event occurs.
 	ros::spin();

@@ -12,9 +12,8 @@ const std::string CAMERA1_CV_TOPIC_NAME = "front_cv/camera1";
 const std::string CAMERA2_CV_TOPIC_NAME = "front_cv/camera2";
 const std::string OUTPUT_DATA_TOPIC_NAME = "front_cv/data";
 const std::string PLANNER_DATA_FRONT_TOPIC_NAME = "currentCVTask_Front";
-const int FRONT_CV_NODE_RECEPTION_RATE = 10;
-const int FRONT_CV_NODE_BUFFER_SIZE = 1;
-bool isUsingHelperWindows;
+int receptionRate = 10;
+int imageSubscriberBufferSize = 1;
 
 class FrontCVNode : public CVNode {
 
@@ -25,6 +24,7 @@ public:
 
 private:
 	int numFramesWithoutObject;
+	bool isUsingHelperWindows;
 
 	void instanciateAllVisibleObjects();
 	void receiveImage(const sensor_msgs::ImageConstPtr& message);
