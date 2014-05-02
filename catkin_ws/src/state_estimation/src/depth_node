@@ -12,6 +12,7 @@ counter = 0
 
 def depthCallBack(sensor_reading):
     global depth
+    global counter
     depth_reading = sensor_reading.data
     
     # Calculations
