@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
 	std::string imageFeedDown;
 
 	nodeHandle.param<std::string>("image_feed/left", imageFeedDown, "/simulator/camera3/image_raw");
+	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
 
 	// Creates a new CVNode object.
 	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, imageFeedDown, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
@@ -53,12 +54,15 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_DOWN_TOPIC_NAME, 1000, &DownCVNode::listenToPlanner, this);
 
-	cv::namedWindow(CAMERA3_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
+	if (isUsingHelperWindows) {
+		cv::namedWindow(CAMERA3_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
+	}
 }
 
 DownCVNode::~DownCVNode() {
-	cv::destroyWindow(CAMERA3_CV_TOPIC_NAME);
-
+	if (isUsingHelperWindows) {
+		cv::destroyWindow(CAMERA3_CV_TOPIC_NAME);
+	}
 	delete pLastImage;
 }
 
@@ -117,9 +121,11 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		currentImage.image = currentFrame;
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
-		// Display the filtered image
-		cv::imshow(CAMERA3_CV_TOPIC_NAME, currentFrame);
-		cv::waitKey(5);
+		if (isUsingHelperWindows) {
+			// Display the filtered image
+			cv::imshow(CAMERA3_CV_TOPIC_NAME, currentFrame);
+			cv::waitKey(5);
+		}
 	} catch (cv::Exception& e) {
 		ROS_ERROR("cv::imgshow exception: %s", e.what());
 		return;

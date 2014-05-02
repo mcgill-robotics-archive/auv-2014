@@ -1,2 +1,6 @@
 image_feed/left: camera_front_left/camera/image_color
 image_feed/right: camera_front_right/camera/image_color
+start_hsv_hue_threshold: 162
+end_hsv_hue_threshold: 180
+start_hsv_value_threshold: 30
+end_hsv_value_threshold: 200

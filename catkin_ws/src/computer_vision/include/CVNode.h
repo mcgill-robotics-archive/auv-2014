@@ -19,6 +19,7 @@
 const std::string VIDEO_FEED_TOPIC_NAME = "camera_feed";
 const std::string FORWARD_CAMERAS_TOPIC_NAME = "forward_cameras_object";
 const int FRAME_VISIBILITY_THRESHOLD = 10;
+bool isUsingHelperWindows;
 
 class CVNode {
 
@@ -32,7 +33,6 @@ class CVNode {
 
 	protected:
 
-	bool isUsingHelperWindows;
 	image_transport::ImageTransport* pImageTransport;
 	image_transport::Publisher frontEndPublisher;
 	ros::Publisher frontEndVisibleObjectDataPublisher;

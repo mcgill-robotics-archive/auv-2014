@@ -84,22 +84,22 @@ int max_number_points = 100;
 /**
  * The start of the threshold for the hue.
  */
-int start_hsv_hue_threshold = 0;
+int start_hsv_hue_threshold = 162;
 
 /**
  * The end of the threshold for the hue.
  */
-int end_hsv_hue_threshold = 20;
+int end_hsv_hue_threshold = 180;
 
 /**
  * The start of the threshold for the value.
  */
-int start_hsv_value_threshold = 40;
+int start_hsv_value_threshold = 30;
 
 /**
  * The end of the threshold for the value.
  */
-int end_hsv_value_threshold = 220;
+int end_hsv_value_threshold = 200;
 
 /**
  * The threshold used for approximating polygons.

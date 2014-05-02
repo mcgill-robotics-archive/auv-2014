@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
 
 	nodeHandle.param<std::string>("image_feed/left", imageFeedLeft, "/simulator/camera1/image_raw");
 	nodeHandle.param<std::string>("image_feed/right", imageFeedRight, "/simulator/camera2/image_raw");
+	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
 
 	// Creates a new CVNode object.
 	FrontCVNode* pFrontCVNode = new FrontCVNode(nodeHandle, imageFeedLeft, FRONT_CV_NODE_RECEPTION_RATE, FRONT_CV_NODE_BUFFER_SIZE);
@@ -66,7 +67,6 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	ros::spin();
 
 	// Create a window to display the images received
-	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
 	if (isUsingHelperWindows) {
 		cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	}

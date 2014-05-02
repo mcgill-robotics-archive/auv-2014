@@ -1,2 +1,6 @@
 image_feed/left: simulator/camera1/image_raw
 image_feed/right: simulator/camera2/image_raw
+start_hsv_hue_threshold: 0
+end_hsv_hue_threshold: 20
+start_hsv_value_threshold: 40
+end_hsv_value_threshold: 220
