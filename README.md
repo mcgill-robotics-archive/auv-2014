@@ -1,7 +1,7 @@
 McGill RoboSub 2013-2014
 ===================
 
-Please go the the wiki to see all the documentation. 
+Please go to the [wiki](http://www.mcgillrobotics.com/wiki/) to see all the documentation. 
 
 
              RRRR                                          RRRR                  

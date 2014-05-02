@@ -1,6 +1,8 @@
 alias maple='/usr/share/maple13/bin/xmaple'
 alias roscereal='rosrun rosserial_python serial_node.py'
 alias bag_temperature='rosbag record -e "/(.*)/temp(.*)"'
+alias asimov='ssh -X robotics@10.0.0.1'
+alias uri='export ROS_MASTER_URI=http://McGill:11311'
 
 source /opt/ros/hydro/setup.bash
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
