@@ -8,6 +8,7 @@ from std_msgs.msg import Float64
 depths = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 WINDOW_WIDTH = 10
 depth = 0.0
+counter = 0
 
 def depthCallBack(sensor_reading):
     global depth
@@ -22,10 +23,13 @@ def depthCallBack(sensor_reading):
     depths_tmp.sort()
     median = (depths_tmp[4] + depths_tmp[5]) / 2.0
     
-    # Apply Filters
-    if abs(current_depth - median) > 0.15 :
-        current_depth = median
-    
+    if counter >= 10:
+        # Apply Filters
+        if abs(current_depth - median) > 0.15 :
+            current_depth = median
+    else
+        counter = counter + 1
+
     depths.append(current_depth)
 	
     depth = depth + (current_depth - depths.pop(0)) / WINDOW_WIDTH
