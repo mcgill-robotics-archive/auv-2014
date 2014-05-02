@@ -9,6 +9,7 @@ source /opt/ros/hydro/setup.bash
 sudo cp -fv 48-RoboSub.rules /etc/udev/rules.d/48-RoboSub.rules
 sudo cp -fv startup ~/startup
 sudo cp -f startup.yml ~/.teamocil/startup.yml
+sudo cp -f temperature.yml ~/.teamocil/temperature.yml
 
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                # old dotfiles backup directory
