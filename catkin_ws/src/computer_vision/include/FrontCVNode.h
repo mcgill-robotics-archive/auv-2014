@@ -14,6 +14,7 @@ const std::string OUTPUT_DATA_TOPIC_NAME = "front_cv/data";
 const std::string PLANNER_DATA_FRONT_TOPIC_NAME = "currentCVTask_Front";
 const int FRONT_CV_NODE_RECEPTION_RATE = 10;
 const int FRONT_CV_NODE_BUFFER_SIZE = 1;
+bool isUsingHelperWindows;
 
 class FrontCVNode : public CVNode {
 

@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 	std::string imageFeedDown;
 
 	nodeHandle.param<std::string>("image_feed/left", imageFeedDown, "/simulator/camera3/image_raw");
-	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
+	nodeHandle.param<bool>("cv_down_using_helper_windows", isUsingHelperWindows, false);
 
 	// Creates a new CVNode object.
 	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, imageFeedDown, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
