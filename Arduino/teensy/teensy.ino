@@ -28,19 +28,24 @@
   #define VOLTAGE_PIN_1 A0
   #define VOLTAGE_PIN_2 A1
   #define DEPTH_SENSOR_PIN A2
-  #define GRABBER_SWTCH_PIN_1 A4
-  #define GRABBER_SWTCH_PIN_2 A5
-  #define TEMPERATURE_PIN_1 A6
-  #define TEMPERATURE_PIN_2 A7
-  #define TEMPERATURE_PIN_3 A8
-  #define TEMPERATURE_PIN_4 A9
+  #define GRABBER_SWTCH_PIN_1 A3
+  #define GRABBER_SWTCH_PIN_2 A4
+  #define TEMPERATURE_PIN_1 A5
+  #define TEMPERATURE_PIN_2 A6
+  #define TEMPERATURE_PIN_3 A7
+  #define TEMPERATURE_PIN_4 A8
+  #define TEMPERATURE_PIN_5 A9 
   
 //TIME INTERVAL(unit microsecond)
   #define MOTOR_TIMEOUT 4000          //amount of no signal required to start to reset motors 
   #define TEMPERATURE_INTERVAL 1000   //amount of delay between each temeperatures read
   #define VOLTAGE_INTERVAL 1000       //amount of delay between each voltages read
   #define DEPTH_INTERVAL 200          //amount of delay between each depth read
-
+  
+  #define TEMP_RATIO 0.322265625
+  #define VOLT_RATIO 0.034179688
+  
+  
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
 std_msgs::Float32 batteryVoltage1_msg;
@@ -49,6 +54,7 @@ std_msgs::Float32 temperature1_msg;
 std_msgs::Float32 temperature2_msg;
 std_msgs::Float32 temperature3_msg;
 std_msgs::Float32 temperature4_msg;
+std_msgs::Float32 temperature5_msg;
 
 Servo myservo[6];
 
@@ -107,6 +113,7 @@ ros::Publisher temperaturePub1("/temperature1", &temperature1_msg);
 ros::Publisher temperaturePub2("/temperature2", &temperature2_msg);
 ros::Publisher temperaturePub3("/temperature3", &temperature3_msg);
 ros::Publisher temperaturePub4("/temperature4", &temperature4_msg);
+ros::Publisher temperaturePub5("/temperature5", &temperature5_msg);
 
 ros::Subscriber<arduino_msgs::solenoid> solenoidSub("/solenoid", &solenoidCb );
 
@@ -141,6 +148,7 @@ void setup(){
   nh.advertise(temperaturePub2);
   nh.advertise(temperaturePub3);
   nh.advertise(temperaturePub4);
+  nh.advertise(temperaturePub5);
   
   //ros subscribe initialization
   nh.subscribe(motorSub);  
@@ -156,14 +164,16 @@ void loop(){
 
   //temperature sensing
   if(temperatureSechedule < currentTime){
-   temperature1_msg.data = analogRead(TEMPERATURE_PIN_1);
+   temperature1_msg.data = analogRead(TEMPERATURE_PIN_1) * TEMP_RATIO -50; 
    temperaturePub1.publish(&temperature1_msg);
-   temperature2_msg.data = analogRead(TEMPERATURE_PIN_2);
+   temperature2_msg.data = analogRead(TEMPERATURE_PIN_2) * TEMP_RATIO -50; 
    temperaturePub2.publish(&temperature2_msg);
-   temperature3_msg.data = analogRead(TEMPERATURE_PIN_3);
+   temperature3_msg.data = analogRead(TEMPERATURE_PIN_3) * TEMP_RATIO -50; 
    temperaturePub3.publish(&temperature3_msg);
-   temperature4_msg.data = analogRead(TEMPERATURE_PIN_4);
+   temperature4_msg.data = analogRead(TEMPERATURE_PIN_4) * TEMP_RATIO -50; 
    temperaturePub4.publish(&temperature4_msg);
+   temperature5_msg.data = analogRead(TEMPERATURE_PIN_5) * TEMP_RATIO -50; 
+   temperaturePub5.publish(&temperature5_msg);
    temperatureSechedule += TEMPERATURE_INTERVAL;
   }
   
@@ -176,8 +186,8 @@ void loop(){
 
   //voltages sensing
   if(batteryVoltageSchedule < currentTime){
-    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1)*0.0341796875;
-    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2)*0.0341796875;
+    batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1) * VOLT_RATIO;
+    batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2) * VOLT_RATIO;
     
     voltagePub1.publish(&batteryVoltage1_msg);
     voltagePub2.publish(&batteryVoltage2_msg);
