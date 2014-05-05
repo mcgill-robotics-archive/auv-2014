@@ -51,10 +51,9 @@ const float DOOR_REAL_HEIGHT = 1.2;
  */
 const float GATE_WIDTH = 3.1262;
 /**
- * The eight of the sensor of the camera in meters.
+ * The height of the sensor of the camera in meters.
  */
 double camera_sensor_height;
-
 /**
  * The escape key's ID.
  */
@@ -129,7 +128,7 @@ private:
 	struct PoleCandidate {
 		float h, w, rectangleAngleDeg, objectAngleRad, dist;
 		cv::Point2f center;
-	};	
+	};
 
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);

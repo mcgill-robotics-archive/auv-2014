@@ -64,9 +64,12 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
 
 	std::vector<cv::Mat> channels;
 	cv::split(currentFrame, channels);
-	cv::normalize(channels[0], channels[0], 0, 255, cv::NORM_MINMAX);
-	cv::normalize(channels[1], channels[1], 0, 255, cv::NORM_MINMAX);
+	cv::normalize(channels[0], channels[0], 0, 192, cv::NORM_MINMAX);
+	cv::normalize(channels[1], channels[1], 0, 224, cv::NORM_MINMAX);
 	cv::normalize(channels[2], channels[2], 0, 255, cv::NORM_MINMAX);
+
+	//cv::Scalar meanBlue = cv::mean(channels[0]);
+	//cv::subtract(channels[0], meanBlue * 0.25, channels[0]);
 	cv::merge(channels, currentFrame);	
 
 	applyFilter(currentFrame);
@@ -137,7 +140,6 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 			drawPointsOfContour(currentFrame, contour, RED_BGRX);
 		}
 
-
 		if (passesFilter)
 			writePoleCandidateInfo(pole, currentFrame);
 	}
@@ -157,7 +159,19 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 					(p1.center.y + p2.center.y) / 2);
 		//Draw the point on-screen
 		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
-		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA); 
+		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA);
+
+		putText(currentFrame, "Distance <x,y,z>=" + boost::lexical_cast<std::string>(m_xDistance) + " " + 
+				boost::lexical_cast<std::string>(m_yDistance) + " " + 
+				boost::lexical_cast<std::string>(m_zDistance),
+				cv::Point(centerPoint.x, centerPoint.y + 35),
+				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+				CV_AA);
+
+		putText(currentFrame, "Yaw=" + boost::lexical_cast<std::string>((180.0/3.141592654) * m_yawAngle),
+				cv::Point(centerPoint.x, centerPoint.y + 45),
+				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+				CV_AA);
 	}
 	
 	//Center of image circle
@@ -169,9 +183,7 @@ void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
 	PoleCandidate& farthest = (p1.dist < p2.dist) ? p2 : p1;
 
-	/* Use law of sines to compute far angle */	
-
-	//If both angles are on the same side of the image, the robot angle is the largest minus the smallest
+	//If both poles are on the same side of the image, the robot angle is the largest minus the smallest
 	float sumAngles = 0.f;
 	if( std::max(p1.center.x, p2.center.x) < centerOfCurrentFrame.x ||
 	    std::min(p1.center.x, p2.center.x) > centerOfCurrentFrame.x )
@@ -180,8 +192,11 @@ void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	else //Otherwise it's the normal sum
 		sumAngles = p1.objectAngleRad + p2.objectAngleRad;
 
-	// 90 - angleFar- farthest.objectAngle
+
+	/* Use law of sines to compute far angle */
 	float sinFar = sin(sumAngles) * closest.dist / GATE_WIDTH;
+
+	// 90 - angleFar- farthest.objectAngle
 	m_yawAngle = (3.141592654 / 2.0) - asin(sinFar) - farthest.objectAngleRad;
 
 	if(closest.center.x < farthest.center.x)
