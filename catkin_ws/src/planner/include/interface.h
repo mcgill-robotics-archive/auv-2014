@@ -1,5 +1,5 @@
-#ifndef planner_h
-#define planner_h
+#ifndef interface_h
+#define interface_h
 
 #include "ros/ros.h"
 #include "Task_Handler.h"
