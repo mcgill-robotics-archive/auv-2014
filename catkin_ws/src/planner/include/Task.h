@@ -9,9 +9,11 @@ class Task{
 		void execute ();
 		Planner* myPlanner;
 		Task(Planner* planner, StatusUpdater* mSU);
+		Task();
+		//~Task();
+		StatusUpdater* myStatusUpdater;
 
 	private:
-		StatusUpdater* myStatusUpdater;
 };
 
 #endif

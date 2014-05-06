@@ -1,5 +1,6 @@
 #include "Planner.h"
 #include "Task.h"
+#include "Task_Gate.h"
 
 //make a getter for this in the planner class
 double ourDepth;
@@ -217,7 +218,10 @@ void Planner::setPosition(std::vector<double> desired, std::string referenceFram
 }
 
 void Planner::switchToTask(Tasks newTask) {
-	currentTask->execute();
+	Task_Gate* newerTask = new Task_Gate(this, myStatusUpdater);
+	//currentTask = (Task* ) newerTask;
+	//currentTask->execute();
+	newerTask->execute();
 }
 
 int main(int argc, char **argv) {

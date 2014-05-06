@@ -45,7 +45,7 @@ project(planner)
    ${catkin_INCLUDE_DIRS}
  )
 
- add_executable(planner src/Planner.cpp src/Task.cpp src/StatusUpdater.cpp)
+ add_executable(planner src/Planner.cpp src/Task.cpp src/StatusUpdater.cpp src/Task_Gate.cpp)
  #add_executable(planner src/planner.cpp src/Task_Handler.cpp)
  target_link_libraries(planner ${catkin_LIBRARIES})
  add_dependencies(planner ${catkin_EXPORTED_TARGETS})
