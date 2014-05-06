@@ -1,13 +1,39 @@
-#include "Planner.h"
-#include "Task.h"
-#include "Task_Gate.h"
+#include "interface.h"
 
-//make a getter for this in the planner class
-double ourDepth;
+//totally going to need to tweak these values at some point
+double maxDepthError = 0.5;
+double maxHeadingError = 0.5;
 
+ros::Subscriber estimatedDepth_subscriber;
+
+ros::ServiceClient btClient;
+
+ros::Publisher wrench_pub;
+ros::Publisher CV_objs_pub;
+ros::Publisher control_pub;
+ros::Publisher checkpoints_pub;
+ros::Publisher taskPubFront;
+ros::Publisher taskPubDown;
+
+geometry_msgs::PoseStamped myPose;
 geometry_msgs::PoseStamped relativePose;
 
-std::string starting_task;
+double ourDepth;
+
+/**
+ * The duration of time the planner will wait for the TF broadcaster to setup before timing out. (in seconds I think)
+ */
+int const TF_BROADCASTER_TIMOUT_PERIOD = 10;
+
+/**
+ * Object the we currently want CV to look for
+ */
+std::string visionObj;
+
+/*
+* Number of individual LEDs on our half of the blinky tape
+*/
+int blinkyLength = 30;
 
 void spinThread() {
 	ros::spin();
@@ -17,14 +43,168 @@ void estimatedDepth_callback(const std_msgs::Float64 msg) {
 	ourDepth = msg.data;
 }
 
-double Planner::getDepth() {
-	return ourDepth;
+/**
+ * determines the position and heading of our robot
+ */
+void setOurPose() {
+	tf::TransformListener listener;
+	geometry_msgs::PoseStamped emptyPose;
+	emptyPose.header.frame_id = "/robot/rotation_center";
+	emptyPose.pose.position.x = 0.0;
+	emptyPose.pose.position.y = 0.0;
+	emptyPose.pose.position.z = 0.0;
+	emptyPose.pose.orientation.x = 0.0;
+	emptyPose.pose.orientation.y = 0.0;
+	emptyPose.pose.orientation.z = 0.0;
+	emptyPose.pose.orientation.w = 1.0;
+	listener.transformPose("/robot/rotation_center", emptyPose, myPose);
 }
 
-int get_task_id(std::string name) {
-	if (name == "gate") return 1;
-	if (name == "lane") return 2;
-	if (name == "buoy") return 3;
+/**
+ * gets the position/heading of robot relative to chosen object
+ */
+void setTransform(std::string referenceFrame) {
+	tf::TransformListener listener;
+	//setOurPose();
+	geometry_msgs::PoseStamped emptyPose;
+	emptyPose.header.frame_id = referenceFrame;
+	emptyPose.pose.position.x = 0.0;
+	emptyPose.pose.position.y = 0.0;
+	emptyPose.pose.position.z = 0.0;
+	emptyPose.pose.orientation.x = 0.0;
+	emptyPose.pose.orientation.y = 0.0;
+	emptyPose.pose.orientation.z = 0.0;
+	emptyPose.pose.orientation.w = 1.0;
+	try {
+		listener.waitForTransform("/robot/rotation_center", emptyPose.header.frame_id,
+				ros::Time(0), ros::Duration(0.4));
+		listener.transformPose("/robot/rotation_center", emptyPose, relativePose);
+	} catch (tf::TransformException ex) {
+		ROS_ERROR("%s", ex.what());
+	}
+}
+
+std::vector<double> getTransform() {
+	std::vector<double> relativeDistance;
+	relativeDistance.push_back(relativePose.pose.position.x);
+	relativeDistance.push_back(relativePose.pose.position.y);
+	relativeDistance.push_back(0.0);
+	relativeDistance.push_back(0.0);
+	relativeDistance.push_back(8.8);
+	//relativeDistance.push_back();
+	//relativeDistance.push_back();
+	return relativeDistance;
+}
+
+//blame alan
+bool areWeThereYet_tf(std::string referenceFrame, std::vector<double> desired) {
+	//if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
+	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
+	setTransform(referenceFrame);
+	//positional bounds
+	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < 1;
+	ROS_INFO("Interface::x %f",relativePose.pose.position.x);
+	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < 1;
+	ROS_INFO("Interface::y %f",relativePose.pose.position.y);
+	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < 2;
+	//rotational bounds
+	double x = relativePose.pose.orientation.x;
+	double y = relativePose.pose.orientation.y;
+	double z = relativePose.pose.orientation.z;
+	double w = relativePose.pose.orientation.w;
+	double pitch = 57.2957795130823f
+			* -atan(
+					(2.0f * (x * z + w * y))
+							/ sqrt(
+									1.0f
+											- pow((2.0f * x * z + 2.0f * w * y),
+													2.0f)));
+	double yaw = 57.2957795130823f
+			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
+	bool pitchBounded = abs(pitch - desired.at(2)) < 5;
+	bool yawBounded = abs(yaw - desired.at(3)) < 5;
+
+	return (xBounded && yBounded);
+}
+
+void setVisionObj(int objIndex) {
+	planner::CurrentCVTask msgFront;
+	planner::CurrentCVTask msgDown;
+
+	msgFront.currentCVTask = msgFront.NOTHING;
+	msgDown.currentCVTask = msgDown.NOTHING;
+	switch (objIndex) {
+	case 0:
+		msgFront.currentCVTask = msgFront.NOTHING;
+		msgDown.currentCVTask = msgFront.NOTHING;
+		break;
+	case 1:
+		msgFront.currentCVTask = msgFront.GATE;
+		msgDown.currentCVTask = msgFront.NOTHING;
+		break;
+	case 2:
+		msgDown.currentCVTask = msgFront.LANE;
+		msgFront.currentCVTask = msgFront.NOTHING;
+		break;
+	case 3:
+		msgFront.currentCVTask = msgFront.BUOY;
+		msgDown.currentCVTask = msgFront.NOTHING;
+		break;
+	}
+
+	taskPubFront.publish(msgFront);
+	taskPubDown.publish(msgDown);
+}
+
+void weAreHere(std::string task) {
+	std_msgs::String msg;
+	msg.data = task;
+	checkpoints_pub.publish(msg);
+}
+
+void setPoints(double pointControl[], std::string referenceFrame) {
+	planner::setPoints msgControl;
+
+	msgControl.XPos.isActive = pointControl[0];
+	msgControl.XPos.data = pointControl[1];
+
+	msgControl.YPos.isActive = pointControl[2];
+	msgControl.YPos.data = pointControl[3];
+
+	msgControl.Yaw.isActive = pointControl[4];
+	msgControl.Yaw.data = pointControl[5];
+
+	msgControl.Pitch.isActive = pointControl[6];
+	msgControl.Pitch.data = pointControl[7];
+
+	msgControl.XSpeed.isActive = pointControl[8];
+	msgControl.XSpeed.data = pointControl[9];
+
+	msgControl.YSpeed.isActive = pointControl[10];
+	msgControl.YSpeed.data = pointControl[11];
+
+	msgControl.YawSpeed.isActive = pointControl[12];
+	msgControl.YawSpeed.data = pointControl[13];
+
+	msgControl.Depth.isActive = pointControl[14];
+	msgControl.Depth.data = pointControl[15];
+
+	msgControl.Frame = referenceFrame;
+
+	control_pub.publish(msgControl);
+}
+
+void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
+	double pointControl[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
+			1, yaw_speed, 1, depth };
+	setPoints(pointControl, referenceFrame);
+}
+
+void setPosition(std::vector<double> desired, std::string referenceFrame) {
+	double pointControl[16] =
+			{ 1, desired.at(0), 1, desired.at(1), 0, desired.at(2), 0,
+					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4) };
+	setPoints(pointControl, referenceFrame);
 }
 
 void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw) {
@@ -89,162 +269,71 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	}
 }
 
-/**
- * gets the position/heading of robot relative to chosen object
- */
-void Planner::setTransform(std::string referenceFrame) {
-	tf::TransformListener listener;
-	//setOurPose();
-	geometry_msgs::PoseStamped emptyPose;
-	emptyPose.header.frame_id = referenceFrame;
-	emptyPose.pose.position.x = 0.0;
-	emptyPose.pose.position.y = 0.0;
-	emptyPose.pose.position.z = 0.0;
-	emptyPose.pose.orientation.x = 0.0;
-	emptyPose.pose.orientation.y = 0.0;
-	emptyPose.pose.orientation.z = 0.0;
-	emptyPose.pose.orientation.w = 1.0;
-	try {
-		listener.waitForTransform("/robot/rotation_center", emptyPose.header.frame_id,
-				ros::Time(0), ros::Duration(0.4));
-		listener.transformPose("/robot/rotation_center", emptyPose, relativePose);
-	} catch (tf::TransformException ex) {
-		ROS_ERROR("%s", ex.what());
+blinky::RGB getColorValues(int myColor) {
+	blinky::RGB color;
+	switch (myColor) {
+		case (0) :
+			color.r = 255;
+			color.g = 0;
+			color.b = 0;
+			break;
+		case (1):
+			color.r = 0;
+			color.g = 255;
+			color.b = 0;
+			break;
+		case (2):
+			color.r = 0;
+			color.g = 0;
+			color.b = 255;
+			break;
+		case (3):
+			color.r = 255;
+			color.g = 255;
+			color.b = 255;
+			break;
+		case (4):
+			color.r = 0;
+			color.g = 0;
+			color.b = 0;
+			break;
+		case (5):
+			color.r = 255;
+			color.g = 0;
+			color.b = 255;
+			break;
+	}
+	return color;
+}
+//30 blinkies
+void updateBlinkyTape(int myColor) {
+	std::vector<blinky::RGB> colors;
+	blinky::RGB color = getColorValues(myColor);
+
+	for(int i = 0; i < blinkyLength; i++) {
+		colors.push_back(color);
+	}
+	//send_colorList(colors);
+	blinky::UpdatePlannerLights srv;
+	srv.request.colors = colors;
+	if(!btClient.call(srv)) {
+		ROS_ERROR("failed to call service UpdatePlannerLights");
 	}
 }
 
-bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desired) {
-	//if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
-	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
-	setTransform(referenceFrame);
-	//positional bounds
-	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < 1;
-	ROS_INFO("Interface::x %f",relativePose.pose.position.x);
-	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < 1;
-	ROS_INFO("Interface::y %f",relativePose.pose.position.y);
-	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < 2;
-	//rotational bounds
-	double x = relativePose.pose.orientation.x;
-	double y = relativePose.pose.orientation.y;
-	double z = relativePose.pose.orientation.z;
-	double w = relativePose.pose.orientation.w;
-	double pitch = 57.2957795130823f
-			* -atan(
-					(2.0f * (x * z + w * y))
-							/ sqrt(
-									1.0f
-											- pow((2.0f * x * z + 2.0f * w * y),
-													2.0f)));
-	double yaw = 57.2957795130823f
-			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
-	bool pitchBounded = abs(pitch - desired.at(2)) < 5;
-	bool yawBounded = abs(yaw - desired.at(3)) < 5;
-
-	return (xBounded && yBounded);
-}
-
-void Planner::setVisionObj(int objIndex) {
-	planner::CurrentCVTask msgFront;
-	planner::CurrentCVTask msgDown;
-
-	msgFront.currentCVTask = msgFront.NOTHING;
-	msgDown.currentCVTask = msgDown.NOTHING;
-	switch (objIndex) {
-	case 0:
-		msgFront.currentCVTask = msgFront.NOTHING;
-		msgDown.currentCVTask = msgFront.NOTHING;
-		break;
-	case 1:
-		msgFront.currentCVTask = msgFront.GATE;
-		msgDown.currentCVTask = msgFront.NOTHING;
-		break;
-	case 2:
-		msgDown.currentCVTask = msgFront.LANE;
-		msgFront.currentCVTask = msgFront.NOTHING;
-		break;
-	case 3:
-		msgFront.currentCVTask = msgFront.BUOY;
-		msgDown.currentCVTask = msgFront.NOTHING;
-		break;
-	}
-
-	taskPubFront.publish(msgFront);
-	taskPubDown.publish(msgDown);
-}
-
-void Planner::setPoints(double pointControl[], std::string referenceFrame) {
-	planner::setPoints msgControl;
-
-	msgControl.XPos.isActive = pointControl[0];
-	msgControl.XPos.data = pointControl[1];
-
-	msgControl.YPos.isActive = pointControl[2];
-	msgControl.YPos.data = pointControl[3];
-
-	msgControl.Yaw.isActive = pointControl[4];
-	msgControl.Yaw.data = pointControl[5];
-
-	msgControl.Pitch.isActive = pointControl[6];
-	msgControl.Pitch.data = pointControl[7];
-
-	msgControl.XSpeed.isActive = pointControl[8];
-	msgControl.XSpeed.data = pointControl[9];
-
-	msgControl.YSpeed.isActive = pointControl[10];
-	msgControl.YSpeed.data = pointControl[11];
-
-	msgControl.YawSpeed.isActive = pointControl[12];
-	msgControl.YawSpeed.data = pointControl[13];
-
-	msgControl.Depth.isActive = pointControl[14];
-	msgControl.Depth.data = pointControl[15];
-
-	msgControl.Frame = referenceFrame;
-
-	control_pub.publish(msgControl);
-}
-
-void Planner::setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
-	double pointControl[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
-			1, yaw_speed, 1, depth };
-	setPoints(pointControl, referenceFrame);
-}
-
-void Planner::setPosition(std::vector<double> desired, std::string referenceFrame) {
-	double pointControl[16] =
-			{ 1, desired.at(0), 1, desired.at(1), 0, desired.at(2), 0,
-					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4) };
-	setPoints(pointControl, referenceFrame);
-}
-
-void Planner::switchToTask(Tasks newTask) {
-	Task_Gate* newerTask = new Task_Gate(this, myStatusUpdater);
-	//currentTask = (Task* ) newerTask;
-	//currentTask->execute();
-	newerTask->execute();
+int get_task_id(std::string name) {
+	if (name == "gate") return 1;
+	if (name == "lane") return 2;
+	if (name == "buoy") return 3;
 }
 
 int main(int argc, char **argv) {
-	ros::init(argc, argv, "planner");
-	ros::NodeHandle nodeHandle;
+	ros::init(argc, argv, "Planner");
+	ros::NodeHandle n;
 
-	ROS_INFO("Initializing planner node");
+	std::string start_task;
+	std::string end_task;
 
-	Planner* plannerNode = new Planner(nodeHandle);
-
-	ros::Rate loop_rate(10);
-	/****This is ros::spin() on a seperate thread*****/
-	boost::thread spin_thread(&spinThread);
-
-	setRobotInitialPosition(nodeHandle, get_task_id(starting_task));
-
-	//start routine
-	plannerNode->switchToTask(plannerNode->Gate);
-
-	return 0;	
-}
-
-Planner::Planner(ros::NodeHandle& n) {
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
@@ -254,15 +343,20 @@ Planner::Planner(ros::NodeHandle& n) {
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
-	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
-	currentTask = new Task(this, myStatusUpdater);
-
-	std::string start_task;
-	std::string end_task;
-
-	n.param<std::string>("Planner/start_task", start_task, "gate");
+	n.param<std::string>("Planner/start_task", start_task, "gate"); //default ""?
 	n.param<std::string>("Planner/end_task", end_task, start_task);
+  
+	int start_task_id;
+	int end_task_id;
 
+	start_task_id = get_task_id(start_task);
+	end_task_id = get_task_id(end_task);
+	//n.param<int>("Planner/end_task_id", end_task_id, get_task_id(start_task));
+
+	ROS_INFO("start_task: %s", start_task.c_str());
+	ROS_INFO("end_task: %s", end_task.c_str());
+	ROS_INFO("start_task_id: %d", start_task_id);
+	ROS_INFO("end_task_id: %d", end_task_id);
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
 	while (ready == 0) {
@@ -300,4 +394,14 @@ Planner::Planner(ros::NodeHandle& n) {
 		ROS_INFO("Planner::Interface - waiting for dependencies");
 	}
 
+	ros::Rate loop_rate(10);
+	/****This is ros::spin() on a seperate thread*****/
+	boost::thread spin_thread(&spinThread);
+
+	setRobotInitialPosition(n, start_task_id);
+
+	ROS_INFO("Planner::Interface - beginning routine");
+	run_routine(start_task_id, end_task_id);
+
+	return 0;
 }
