@@ -207,7 +207,8 @@ void setPosition(std::vector<double> desired, std::string referenceFrame) {
 	setPoints(pointControl, referenceFrame);
 }
 
-void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
+void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw) {
+  //TODO: Convert Euler angles to quaternions (?)
 
   ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
   gazebo_msgs::SetModelState setmodelstate;
@@ -249,16 +250,21 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
       ROS_ERROR("Failed to call service ");
   }
 }
+
+void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
+  setRobotInitialPosition(n, x, y, z, 0, 0 ,0);
+}
+
 void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	switch (task_id) {
-		case (0) :
+		case (1) :
 			setRobotInitialPosition(n, 2.7, -3.5, 1);
 			break;
-		case (1) : //TODO: find starting position for lane task
-			setRobotInitialPosition(n, 2.7, -3.5, 1);
+		case (2) :
+			setRobotInitialPosition(n, 1.735, 0.52, 1);
 			break;
-		case (2) : //TODO: find starting position for buoy task
-			setRobotInitialPosition(n, 2.7, -3.5, 1);
+		case (3) : //TODO: the last parameter is doing nothing for now
+			setRobotInitialPosition(n, -1.38, 3.225, 1, 0, 0, -2.3016);
 			break;	
 	}
 }
@@ -316,16 +322,17 @@ void updateBlinkyTape(int myColor) {
 }
 
 int get_task_id(std::string name) {
-	if (name == "gate") return 0;
-	if (name == "lane") return 1;
-	if (name == "buoy") return 2;
+	if (name == "gate") return 1;
+	if (name == "lane") return 2;
+	if (name == "buoy") return 3;
 }
 
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "Planner");
 	ros::NodeHandle n;
 
-	std::string starting_task;
+	std::string start_task;
+	std::string end_task;
 
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
@@ -336,13 +343,20 @@ int main(int argc, char **argv) {
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
-	n.param<std::string>("Planner/starting_task", starting_task, "gate"); //default ""?
+	n.param<std::string>("Planner/start_task", start_task, "gate"); //default ""?
+	n.param<std::string>("Planner/end_task", end_task, start_task);
   
-	int start_task; int end_task;
-	n.param<int>("Planner/start_task", start_task, 1);
-	n.param<int>("Planner/end_task", end_task, 1);
+	int start_task_id;
+	int end_task_id;
 
-	std::cout<<starting_task<<std::endl;
+	start_task_id = get_task_id(start_task);
+	end_task_id = get_task_id(end_task);
+	//n.param<int>("Planner/end_task_id", end_task_id, get_task_id(start_task));
+
+	ROS_INFO("start_task: %s", start_task.c_str());
+	ROS_INFO("end_task: %s", end_task.c_str());
+	ROS_INFO("start_task_id: %d", start_task_id);
+	ROS_INFO("end_task_id: %d", end_task_id);
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
 	while (ready == 0) {
@@ -384,10 +398,10 @@ int main(int argc, char **argv) {
 	/****This is ros::spin() on a seperate thread*****/
 	boost::thread spin_thread(&spinThread);
 
-	setRobotInitialPosition(n, get_task_id(starting_task));
+	setRobotInitialPosition(n, start_task_id);
 
 	ROS_INFO("Planner::Interface - beginning routine");
-	run_routine(start_task, end_task);
+	run_routine(start_task_id, end_task_id);
 
 	return 0;
 }

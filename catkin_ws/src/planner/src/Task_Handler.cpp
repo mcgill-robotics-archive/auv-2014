@@ -14,7 +14,7 @@ void run_routine(int start_task, int end_task) {
 			break;
 
 			case 3:
-			ROS_INFO("Planner::Task_Handler - beginning lane task");
+			ROS_INFO("Planner::Task_Handler - beginning buoy task");
 				run_buoy();
 			break;
 		}
@@ -33,8 +33,6 @@ int run_gate() {
 
 	weAreHere("Beginning GATE task");
 	loop_rate.sleep();
-
-	ROS_INFO("%s", "Gate Task setting position relative to gate:  setPosition(-1, 0, 0, 0, 8.8)");
 
 	setVisionObj(1);
 	updateBlinkyTape(PURPS);
