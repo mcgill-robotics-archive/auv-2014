@@ -1,4 +1,4 @@
- #include <string>
+#include <string>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <std_msgs/String.h>
@@ -118,7 +118,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.7, 0.0, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.499, -0.029, 0.265)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -131,7 +131,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.7, 1.0, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.499, 0.316, 0.265)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
