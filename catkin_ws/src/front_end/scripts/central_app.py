@@ -35,7 +35,7 @@ from controls.msg import motorCommands
 from geometry_msgs.msg import PoseStamped
 from status.msg import temp, usb
 from blinky.msg import RGB
-from blinky.srv import BlinkyService
+from blinky.srv import *
 
 def reset_controls_speed():
     vel_vars.yaw_velocity = 0
@@ -290,12 +290,17 @@ class CentralUi(QtGui.QMainWindow):
         try:
             self.log_info("Waiting for service")
             rospy.wait_for_service('Blinky', timeout = 2)
-            blinky = rospy.ServiceProxy('Blinky', BlinkyService)
+            bat = rospy.ServiceProxy('Blinky', UpdateBatteryLights)
+            plan = rospy.ServiceProxy('Blinky', UpdatePlannerLights)
             self.log_info("Making service call")
-            res = blinky(color, 1)
+            bat_res = bat(color)
+            plan_res = plan(color)
 
-            if res.success != 0:
-                self.log_warning("Blinky request unsuccessful: %s"%res)
+            if bat_res.success != 0:
+                self.log_warning("Blinky request unsuccessful: %s"%bat_res)
+            elif plan_res.success != 0:
+                self.log_warning("Blinky request unsuccessful: %s"%plan_res)
+
 
         except Exception as e:
             self.log_error("Exception: %s"%e)
