@@ -128,7 +128,7 @@ def analyze():
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
     screen.addstr(0, 0, target)
 
-    header = '\n%s\t%s\t%s\t%s\t\n\n' % (' MIC', 'FREQUENCY', 'MAGNITUDE', 'TDOA (μs)')
+    header = '\n%s\t%s\t%s\t%s\t\n\n' % (' MIC', 'FREQUENCY', 'MAGNITUDE', 'TDOA')
     screen.addstr(header, curses.color_pair(3))
 
     for i in range(NUMBER_OF_MICS):

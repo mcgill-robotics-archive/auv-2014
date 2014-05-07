@@ -41,5 +41,5 @@ class misc_vars(object):
     length_plot = 50
     depth_max = 0
     max_temp=40
-    CPU_max_temp = 70
-    SSD_max_temp = 68
+    CPU_max_temp = 90
+    SSD_max_temp = 60

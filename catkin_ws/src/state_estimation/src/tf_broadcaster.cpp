@@ -1,4 +1,4 @@
- #include <string>
+#include <string>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <std_msgs/String.h>
@@ -25,7 +25,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.5, 0.5, 0.5)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.297, 0.1435, 0.1225)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -35,6 +35,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 
+	// IMU transform not measured because mounting position is not ready
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -51,7 +52,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3( 1.0, 1.0, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.594, 0.321, -0.032)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -64,7 +65,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(1.0, 0.0, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.594, -0.034, -0.032)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -77,7 +78,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(1.0, 0.5, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.594, 0.1435, -0.032)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -90,7 +91,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(.5, 0.5, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.509, 0.1435, 0.245)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -100,6 +101,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 	
+	// Not measured because grabber is not ready
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -116,7 +118,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.7, 0.0, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.499, -0.029, 0.265)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -129,7 +131,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.7, 1.0, 1.0)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.499, 0.316, 0.265)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -142,7 +144,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(2.0, 0.0, 0.5)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.696, -0.0245, 0.016)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -155,7 +157,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(2.0, 1.0, 0.5)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.696, 0.3115, 0.016)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -165,10 +167,11 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 	
+	// Assume torpedo launcher right now
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(2.0, 0.5, 0.5)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.696, 0.3115, 0.016)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
