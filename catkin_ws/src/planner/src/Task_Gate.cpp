@@ -5,15 +5,13 @@ Task_Gate::Task_Gate(Planner* planner, StatusUpdater* mSU){
 	myStatusUpdater = mSU;
 }
 
-//Task_Gate::~Task_Gate(){}
-
 void Task_Gate::execute() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
 	std::string frame = "/target/gate";
 	ROS_INFO("%s", "Executing the gate task.");
 
-	myStatusUpdater->UpdateFrontEnd("Beginning GATE task");
+	myStatusUpdater->updateStatus(myStatusUpdater->startingGate);
 	loop_rate.sleep();
 
 	myPlanner->setVisionObj(1);
@@ -26,11 +24,12 @@ void Task_Gate::execute() {
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 	//desired = getTransform();
 
-	ROS_INFO("Task_Gate::reached task");
+	myStatusUpdater->updateStatus(myStatusUpdater->reachedGate);
+	loop_rate.sleep();
+	
 	while (!myPlanner->areWeThereYet(frame, desired)) {
-	ROS_INFO("Task_Gate::setPoints published");		
+		ROS_INFO("Task_Gate::setPoints published");		
 		myPlanner->setPosition(desired, frame);
-
 		loop_rate.sleep();
 	}
 	ROS_INFO("Task_Gate::reached the front of the gate");
@@ -38,9 +37,14 @@ void Task_Gate::execute() {
 	//setTransform("/target/gate");
 	std::vector<double> motor(motorBoat, motorBoat + sizeof(motorBoat) / sizeof(motorBoat[0]));
 	myPlanner->setVelocity(5, 0, 0, 8.8, frame);
-	myPlanner->setVisionObj(2);
-	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 
-	myStatusUpdater->UpdateFrontEnd("Finishing GATE task");
+	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
+	myStatusUpdater->updateStatus(myStatusUpdater->completedGate);
 	loop_rate.sleep();
+
+	//look for the lane marker
+	myPlanner->setVisionObj(2);
+
+	//next task
+	myPlanner->switchToTask(myPlanner->Kill);
 }

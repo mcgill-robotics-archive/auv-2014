@@ -6,11 +6,10 @@
 
 class Task{
 	public:
-		void execute ();
+		virtual void execute ();
 		Planner* myPlanner;
 		Task(Planner* planner, StatusUpdater* mSU);
 		Task();
-		//~Task();
 		StatusUpdater* myStatusUpdater;
 
 	private:
