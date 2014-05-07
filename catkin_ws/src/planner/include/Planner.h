@@ -37,7 +37,7 @@ class Task;
 class Planner{
 
 	public:
-	enum Tasks {Gate, Lane, Buoy, Hydrophones};
+	enum Tasks {Gate, Lane, Buoy, Hydrophones, Kill};
 	double getDepth();
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);

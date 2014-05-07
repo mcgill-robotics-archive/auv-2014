@@ -7,7 +7,6 @@ Task::Task(Planner* planner, StatusUpdater* mSU) {
 
 Task::Task(){}
 
-//Task::~Task(){}
-
 void Task::execute() {
+	std::cout<<"oops";
 }

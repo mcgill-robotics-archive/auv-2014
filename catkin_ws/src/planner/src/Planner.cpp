@@ -1,6 +1,7 @@
 #include "Planner.h"
 #include "Task.h"
 #include "Task_Gate.h"
+#include "Task_Kill.h"
 
 //make a getter for this in the planner class
 double ourDepth;
@@ -218,17 +219,37 @@ void Planner::setPosition(std::vector<double> desired, std::string referenceFram
 }
 
 void Planner::switchToTask(Tasks newTask) {
-	Task_Gate* newerTask = new Task_Gate(this, myStatusUpdater);
-	//currentTask = (Task* ) newerTask;
-	//currentTask->execute();
-	newerTask->execute();
+	switch(newTask) {
+		case Gate: 
+			delete currentTask;
+			currentTask = (Task*) new Task_Gate(this, myStatusUpdater);
+			break;
+		case Lane: 
+			delete currentTask;
+
+			break;
+		case Buoy: 
+			delete currentTask;
+
+			break;
+		case Hydrophones:
+			delete currentTask;
+
+			break;
+		case Kill: 
+			delete currentTask;
+			currentTask = (Task*) new Task_Kill(this, myStatusUpdater);
+			break;
+	}
+
+	currentTask->execute();
 }
 
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "planner");
 	ros::NodeHandle nodeHandle;
 
-	ROS_INFO("Initializing planner node");
+	ROS_INFO("Planner - Initializing node");
 
 	Planner* plannerNode = new Planner(nodeHandle);
 
