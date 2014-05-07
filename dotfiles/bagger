@@ -40,5 +40,5 @@ for arg in $@; do
 
 done
 
-rosbag record $command_arguments -O ../../bag-$(date +%s)
+rosbag record $command_arguments -O ~/bag-$(date +%s)
 
