@@ -257,7 +257,24 @@ int main(int argc, char **argv) {
 	/****This is ros::spin() on a seperate thread*****/
 	boost::thread spin_thread(&spinThread);
 
-	setRobotInitialPosition(nodeHandle, get_task_id(starting_task));
+	///////////////////////////////FOR TESTING/////////////////////////////
+	std::string start_task;
+	std::string end_task;
+
+	nodeHandle.param<std::string>("planner/start_task", start_task, "gate");
+	nodeHandle.param<std::string>("planner/end_task", end_task, start_task);
+
+	int start_task_id = get_task_id(start_task);
+	int end_task_id = get_task_id(end_task);
+
+	ROS_INFO("start_task: %s", start_task.c_str());
+	ROS_INFO("end_task: %s", end_task.c_str());
+	ROS_INFO("start_task_id: %d", start_task_id);
+	ROS_INFO("end_task_id: %d", end_task_id);
+
+	setRobotInitialPosition(nodeHandle, start_task_id);
+	///////////////////////////////////////////////////////////////////////
+
 
 	//start routine
 	plannerNode->switchToTask(plannerNode->Gate);
@@ -277,12 +294,6 @@ Planner::Planner(ros::NodeHandle& n) {
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater);
-
-	std::string start_task;
-	std::string end_task;
-
-	n.param<std::string>("Planner/start_task", start_task, "gate");
-	n.param<std::string>("Planner/end_task", end_task, start_task);
 
 	// Waits until the environment is properly setup until the planner actually starts.
 	bool ready = 0;
