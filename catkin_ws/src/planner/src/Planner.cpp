@@ -284,6 +284,8 @@ int main(int argc, char **argv) {
 }
 
 Planner::Planner(ros::NodeHandle& n) {
+	go = 0;
+
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
@@ -296,8 +298,9 @@ Planner::Planner(ros::NodeHandle& n) {
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater);
 
+
 	// Waits until the environment is properly setup until the planner actually starts.
-	bool ready = 0;
+	ready = 0;
 	while (ready == 0) {
 		ROS_DEBUG_THROTTLE(2,
 				"Waiting for the environment to be setup properly before starting the planner...");
@@ -333,4 +336,8 @@ Planner::Planner(ros::NodeHandle& n) {
 		ROS_INFO("Planner::Interface - waiting for dependencies");
 	}
 
+	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
+	while (!n.getParam("/go", go) || go != 1) {
+		//TODO: add time-out
+	}
 }
