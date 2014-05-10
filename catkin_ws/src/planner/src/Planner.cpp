@@ -278,6 +278,7 @@ int main(int argc, char **argv) {
 
 	//start routine
 	plannerNode->switchToTask(plannerNode->Gate);
+	plannerNode->switchToTask(plannerNode->Kill);
 
 	return 0;	
 }
