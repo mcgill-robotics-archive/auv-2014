@@ -100,6 +100,7 @@ int polygon_approximation_threshold = 3;
  * The maximum range that the HSV values can take.
  */
 const int MAX_HSV_VALUE = 255;
+const int MAX_HSV_HUE = 179; //In OpenCV, hue can take 180 values (0 to 179)
 
 // Defines the basic colors used in the BGRX color space.
 const cv::Scalar GREEN_BGRX = cv::Scalar(0, 255, 0);

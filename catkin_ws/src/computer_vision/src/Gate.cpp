@@ -30,8 +30,8 @@ Gate::Gate() {
 		cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 		cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
-		cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &start_hsv_hue_threshold, MAX_HSV_VALUE);
-		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &end_hsv_hue_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &start_hsv_hue_threshold, MAX_HSV_HUE);
+		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &end_hsv_hue_threshold, MAX_HSV_HUE);
 		cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &start_hsv_value_threshold, MAX_HSV_VALUE);
 		cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &end_hsv_value_threshold, MAX_HSV_VALUE);
 		cv::createTrackbar("gate_ratio_error", TRACKBARS_WINDOW, &gate_ratio_error, MAX_HSV_VALUE);
