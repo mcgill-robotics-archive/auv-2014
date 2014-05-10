@@ -115,16 +115,10 @@ catkin_package(
 # )
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(XimuPublisher src/XimuPublisher.cpp)
-add_library(XimuReceiver src/XimuReceiver.cpp)
-target_link_libraries(XimuPublisher 
-  ${catkin_LIBRARIES}
-  XimuReceiver
-)
+add_executable(XimuPublisher src/XimuPublisher.cpp src/XimuReceiver.cpp)
+target_link_libraries(XimuPublisher ${catkin_LIBRARIES})
 add_dependencies(XimuPublisher ${catkin_EXPORTED_TARGETS})
-add_dependencies(XimuPublisher 
-  state_estimation_generate_messages_cpp
-)
+add_dependencies(XimuPublisher state_estimation_generate_messages_cpp)
 
 ## Declare a cpp executable
 add_executable(tf_broadcaster src/tf_broadcaster.cpp)
