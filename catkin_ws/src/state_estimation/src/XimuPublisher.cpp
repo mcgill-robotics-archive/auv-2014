@@ -2,6 +2,7 @@
 #include <boost/asio/serial_port.hpp>
 
 #include "XimuReceiver.h"
+#include "XimuPublisher.h"
 
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"

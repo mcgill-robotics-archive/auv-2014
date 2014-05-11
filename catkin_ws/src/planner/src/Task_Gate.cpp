@@ -44,7 +44,4 @@ void Task_Gate::execute() {
 
 	//look for the lane marker
 	myPlanner->setVisionObj(2);
-
-	//next task
-	myPlanner->switchToTask(myPlanner->Kill);
 }
