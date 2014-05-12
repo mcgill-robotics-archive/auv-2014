@@ -7,6 +7,7 @@ project(pose_ukf)
 find_package(catkin 
   REQUIRED 
   roscpp
+  rospy
   std_msgs
   geometry_msgs
   sensor_msgs

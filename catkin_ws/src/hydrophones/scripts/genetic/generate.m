@@ -3,47 +3,73 @@ clear all;
 
 %% INIT
 MAX_MICS = 4;
-MAX_ARRAYS = 1000;
+MAX_ARRAYS = 4;
 SPEED = 1500;
-SIGMA = 3/192e4;
-REPEAT = 100;
+SIGMA = 3/192e5;
+REPEAT = 1000;
 HEIGHT = 0.57;
 WIDTH = 0.29;
-
 START_TIME = cputime;
 
 %% GENERATE POPULATION
-solution = point(19.0,6.0);
+solution = point(-150.0,60.0);
 population = array.empty(MAX_ARRAYS,0);
 for i = 1:MAX_ARRAYS
     population(i) = array(MAX_MICS,SPEED);
     for j = 2:MAX_MICS
-        x = 2*WIDTH*rand()-WIDTH;
-        y = 2*HEIGHT*rand()-HEIGHT;
-        population(i).receivers(j) = receiver(x,y);
+        if MAX_MICS == 4 & i == 1
+            % CENTERED Y SHAPE
+            X = [0 0 -WIDTH/2 WIDTH/2];
+            Y = [0 -HEIGHT/2 HEIGHT/2 HEIGHT/2];
+            population(i).receivers(j) = receiver(X(j),Y(j));
+        elseif MAX_MICS == 4 & i == 2
+            % EQUAL DISTANCE Y SHAPE
+            distance = ((WIDTH / 2)^2 + HEIGHT^2) / (2*HEIGHT);
+            X = [0 0 -WIDTH/2 WIDTH/2];
+            Y = [0 -distance (HEIGHT-distance) (HEIGHT-distance)];
+            population(i).receivers(j) = receiver(X(j),Y(j));
+        elseif MAX_MICS == 4 & i == 3
+            % T SHAPE
+            X = [0 0 -WIDTH/2 WIDTH/2];
+            Y = [0 -HEIGHT 0 0];
+            population(i).receivers(j) = receiver(X(j),Y(j));
+        elseif MAX_MICS == 4 & i == 4
+            % RECTANGLE
+            X = [0 WIDTH WIDTH 0];
+            Y = [0 0 HEIGHT HEIGHT];
+            population(i).receivers(j) = receiver(X(j),Y(j));
+        else
+            % RANDOM
+            x = WIDTH*rand()-WIDTH/2;
+            y = HEIGHT*rand()-HEIGHT/2;
+            population(i).receivers(j) = receiver(x,y);
+        end
     end
-    population(i) = population(i).time_difference(solution);
 end
 
 %% SOLVE
 estimate = zeros(MAX_ARRAYS,REPEAT,2);
 avg = zeros(MAX_ARRAYS,2);
-for i = 1:MAX_ARRAYS
+v = zeros(REPEAT,MAX_MICS);
+for i = 1:REPEAT
     clc
-    fprintf('SIMULATING RECEIVER ARRAY %d OUT OF %d\n',i,MAX_ARRAYS);
+    fprintf('SIMULATION %d OUT OF %d\n',i,REPEAT);
 
     A = zeros(MAX_MICS-2,1);
     B = zeros(MAX_MICS-2,1);
     C = zeros(MAX_MICS-2,1);
 
-    for j = 1:REPEAT
+    v(i,:) = SIGMA.*randn(MAX_MICS,1);
+
+    for j = 1:MAX_ARRAYS
         %% ADD NOISE
+        population(j) = population(j).time_difference(solution);
         for k = 2:MAX_MICS
-            population(i).receivers(k).time = population(i).receivers(k).time + SIGMA.*randn();
+            population(j).receivers(k).time = population(j).receivers(k).time + v(i,k-1);
         end
 
         %% OLS ESTIMATE
-        receivers = population(i).receivers;
+        receivers = population(j).receivers;
         for k = 3:MAX_MICS
             A(k) = 2*receivers(k).pos.x / (SPEED*receivers(k).time) ...
                  - 2*receivers(2).pos.x / (SPEED*receivers(2).time);
@@ -54,12 +80,12 @@ for i = 1:MAX_ARRAYS
                  / (SPEED*receivers(k).time) + ((receivers(2).pos.x)^2 ...
                  + (receivers(2).pos.y)^2) / (SPEED*receivers(2).time);
         end
-        estimate(i,j,:) = -[A B]\C;
+        estimate(j,i,:) = -[A B]\C;
+        
+        avg(j,:) = [mean(estimate(j,:,1)) mean(estimate(j,:,2))];
+        population(j).solution = point(avg(j,1),avg(j,2));
+        population(j) = population(j).compute_error(solution);
     end
-
-    avg(i,:) = [mean(estimate(i,:,1)) mean(estimate(i,:,2))];
-    population(i).solution = point(avg(i,1),avg(i,2));
-    population(i) = population(i).compute_error(solution);
 end
 
 %% FIND OPTIMAL ARRAY
@@ -72,8 +98,8 @@ end
 X = zeros(REPEAT,1);
 Y = zeros(REPEAT,1);
 for i = 1:REPEAT
-    X(i) = estimate(index,i,1) - solution.x;
-    Y(i) = estimate(index,i,2) - solution.y;
+    X(i) = estimate(index,i,1);
+    Y(i) = estimate(index,i,2);
 end
 
 %% PLOT OPTIMAL ARRAY
@@ -94,6 +120,10 @@ set(gca,'Fontsize',14);
 %% PLOT SOLUTIONS
 subplot(2,1,2);
 scatter(X,Y);
+hold on;
+scatter(solution.x, solution.y, 'filled', 'r');
+scatter(0, 0, 'filled', 'w');
+hold off;
 grid on;
 title('Errors of Estimated Solutions of Optimal Array','FontSize',20,'interpreter','latex');
 xlabel('X (m)','FontSize',15,'interpreter','latex');

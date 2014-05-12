@@ -4,8 +4,11 @@ project(state_estimation)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
   message_generation
+  nav_msgs
   std_msgs
   geometry_msgs
   sensor_msgs
@@ -90,6 +93,12 @@ catkin_package(
   CATKIN_DEPENDS
   message_runtime
   computer_vision
+  nav_msgs
+  roscpp
+  rospy
+  sensor_msgs
+  std_msgs
+  geometry_msgs
 #  DEPENDS system_lib
 )
 
@@ -105,6 +114,12 @@ catkin_package(
 # add_library(state_estimation
 #   src/${PROJECT_NAME}/state_estimation.cpp
 # )
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(XimuPublisher src/XimuPublisher.cpp src/XimuReceiver.cpp)
+target_link_libraries(XimuPublisher ${catkin_LIBRARIES})
+add_dependencies(XimuPublisher ${catkin_EXPORTED_TARGETS})
+add_dependencies(XimuPublisher state_estimation_generate_messages_cpp)
 
 ## Declare a cpp executable
 add_executable(tf_broadcaster src/tf_broadcaster.cpp)

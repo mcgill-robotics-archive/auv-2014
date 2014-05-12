@@ -15,5 +15,5 @@
 	<node name="controls" pkg="controls" type="controls"  respawn="false" output="screen"/>   
 
 	<!-- CVNode down -->
-	<node name="CV_Down" pkg="computer_vision" type="DownCVNode"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/>
+	<node name="cv_down_node" pkg="computer_vision" type="cv_down_node"  respawn="false" output="screen" args="/simulator/camera3/image_raw"/>
 </launch>
