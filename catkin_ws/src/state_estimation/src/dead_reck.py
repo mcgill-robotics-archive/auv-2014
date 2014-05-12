@@ -37,8 +37,10 @@ class dead_reck():
             self.yawOfTarget %= (2*math.pi)
             if self.yawOfTarget > math.pi:
                 self.yawOfTarget -= 2*math.pi
-            self.x = self.x*math.cos(headingChange) + self.y*math.sin(headingChange)
-            self.y = self.y*math.cos(headingChange) - self.x*math.sin(headingChange)
+            x = self.x
+            y = self.y
+            self.x = x*math.cos(headingChange) + y*math.sin(headingChange)
+            self.y = y*math.cos(headingChange) - x*math.sin(headingChange)
         self.heading = newHeading
 
     def updateCV(self, hasTarget, targetID, x, y, z, yawOfTarget, pitchOfTarget):
@@ -68,7 +70,7 @@ class dead_reck():
         self.depth = depth
 
     def getState(self):
-        t_change = 0
+        t_change = 0 #This stops any velocity stuff
         #if self.last_time:
         #    t_change = self.ros.get_time() - self.last_time
 
