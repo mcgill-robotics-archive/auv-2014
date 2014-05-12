@@ -4,6 +4,7 @@
 #include <image_transport/camera_subscriber.h>
 #include <image_transport/image_transport.h>
 #include <image_geometry/pinhole_camera_model.h>
+#include <std_msgs/Float64.h>
 
 #include <viso_mono.h>
 
@@ -24,6 +25,7 @@ private:
   VisualOdometryMono::parameters visual_odometer_params_;
 
   image_transport::CameraSubscriber camera_sub_;
+  ros::Subscriber height_sub; 
 
   ros::Publisher info_pub_;
 
@@ -40,11 +42,15 @@ public:
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
     camera_sub_ = it.subscribeCamera("image", 1, &MonoOdometer::imageCallback, this, transport);
+    height_sub = nh.subscribe("'state_estimation/down_distance'", 1, &MonoOdometer::heightCallback, this);
 
     info_pub_ = local_nh.advertise<VisoInfo>("info", 1);
   }
 
 protected:
+  void heightCallback(const std_msgs::Float64ConstPtr& height) {
+    visual_odometer_->param.height = height->data;
+  }
 
   void imageCallback(
       const sensor_msgs::ImageConstPtr& image_msg,
@@ -74,9 +80,6 @@ protected:
     // convert image if necessary
     uint8_t *image_data;
     int step;
-
-    // Update the depth of the robot.
-    visual_odometer_->param.height = 0.0;
 
     cv_bridge::CvImageConstPtr cv_ptr;
     if (image_msg->encoding == sensor_msgs::image_encodings::MONO8)

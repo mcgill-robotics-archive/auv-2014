@@ -255,7 +255,7 @@ int main(int argc, char **argv) {
 
 	ros::Rate loop_rate(10);
 	/****This is ros::spin() on a seperate thread*****/
-	//boost::thread spin_thread(&spinThread);
+	boost::thread spin_thread(&spinThread);
 
 	///////////////////////////////FOR TESTING/////////////////////////////
 	std::string start_task;
