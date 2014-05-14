@@ -2,6 +2,7 @@
 #include "Task.h"
 #include "Task_Gate.h"
 #include "Task_Kill.h"
+#include "Task_Lane.h"
 
 //make a getter for this in the planner class
 double ourDepth;
@@ -153,19 +154,19 @@ void Planner::setVisionObj(int objIndex) {
 	switch (objIndex) {
 	case 0:
 		msgFront.currentCVTask = msgFront.NOTHING;
-		msgDown.currentCVTask = msgFront.NOTHING;
+		msgDown.currentCVTask = msgDown.NOTHING;
 		break;
 	case 1:
 		msgFront.currentCVTask = msgFront.GATE;
-		msgDown.currentCVTask = msgFront.NOTHING;
+		msgDown.currentCVTask = msgDown.NOTHING;
 		break;
 	case 2:
-		msgDown.currentCVTask = msgFront.LANE;
 		msgFront.currentCVTask = msgFront.NOTHING;
+		msgDown.currentCVTask = msgDown.LANE;
 		break;
 	case 3:
 		msgFront.currentCVTask = msgFront.BUOY;
-		msgDown.currentCVTask = msgFront.NOTHING;
+		msgDown.currentCVTask = msgDown.NOTHING;
 		break;
 	}
 
@@ -226,7 +227,7 @@ void Planner::switchToTask(Tasks newTask) {
 			break;
 		case Lane: 
 			delete currentTask;
-
+			currentTask = (Task*) new Task_Lane(this, myStatusUpdater);
 			break;
 		case Buoy: 
 			delete currentTask;
@@ -278,7 +279,6 @@ int main(int argc, char **argv) {
 
 	//start routine
 	plannerNode->switchToTask(plannerNode->Gate);
-	plannerNode->switchToTask(plannerNode->Kill);
 
 	return 0;	
 }
@@ -290,8 +290,8 @@ Planner::Planner(ros::NodeHandle& n) {
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
 
-	taskPubFront = n.advertise<planner::CurrentCVTask>("current_cv_task_front", 1000);
-	taskPubDown = n.advertise<planner::CurrentCVTask>("current_cv_task_down", 1000);
+	taskPubFront = n.advertise<planner::CurrentCVTask>("currentCVTask_Front", 1000);
+	taskPubDown = n.advertise<planner::CurrentCVTask>("currentCVTask_Down", 1000);
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
@@ -337,7 +337,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	}
 
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
-	while (!n.getParam("/go", go) || go != 1) {
+//	while (!n.getParam("/go", go) || go != 1) {
 		//TODO: add time-out
-	}
+//	}
 }

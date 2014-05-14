@@ -33,15 +33,12 @@ void Task_Gate::execute() {
 		loop_rate.sleep();
 	}
 	ROS_INFO("Task_Gate::reached the front of the gate");
-	double motorBoat[4] = {5.0, 0.0, 0.0, 8.8};
-	//setTransform("/target/gate");
-	std::vector<double> motor(motorBoat, motorBoat + sizeof(motorBoat) / sizeof(motorBoat[0]));
-	myPlanner->setVelocity(5, 0, 0, 8.8, frame);
+	myPlanner->setVelocity(2, 0, 0, 8.8, frame);
 
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 	myStatusUpdater->updateStatus(myStatusUpdater->completedGate);
 	loop_rate.sleep();
 
-	//look for the lane marker
-	myPlanner->setVisionObj(2);
+	//next task
+	myPlanner->switchToTask(myPlanner->Lane);
 }
