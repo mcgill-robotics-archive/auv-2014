@@ -73,17 +73,13 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   }
 }
 
-void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z) {
-  setRobotInitialPosition(n, x, y, z, 0, 0 ,0);
-}
-
 void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	switch (task_id) {
 		case (1) :
-			setRobotInitialPosition(n, 2.7, -3.5, 1);
+			setRobotInitialPosition(n, 2.7, -3.5, 1, 0, 0, 0);
 			break;
 		case (2) :
-			setRobotInitialPosition(n, 1.735, 0.52, 1);
+			setRobotInitialPosition(n, 1.735, 0.52, 1, 0, 0, 0);
 			break;
 		case (3) : //TODO: the last parameter is doing nothing for now
 			setRobotInitialPosition(n, -1.38, 3.225, 1, 0, 0, -2.3016);

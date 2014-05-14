@@ -27,8 +27,7 @@ int const TF_BROADCASTER_TIMOUT_PERIOD = 10;
 void spinThread();
 void estimatedDepth_callback(const std_msgs::Float64 msg);
 int get_task_id(std::string name);
-void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw); 
-void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z);
+void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw);
 void setRobotInitialPosition(ros::NodeHandle n, int task_id);
 
 
