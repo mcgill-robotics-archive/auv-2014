@@ -10,14 +10,14 @@ WINDOW_WIDTH = 10
 depth = 0.0
 counter = 0
 
-def depthCallBack(sensor_reading):
+def depth_filter(sensor_reading):
     global depth
     global counter
-    depth_reading = sensor_reading.data
+    depth_reading = sensor_reading
     
     # Calculations
     current_depth = ((depth_reading * max_arduino_voltage / max_analog / resistance - base_current) / current_range) * max_depth - offset
-    current_depth = current_depth / 100.0	# To meters
+    current_depth = current_depth / 100.0   # To meters
     
     # Get depths
     depths_tmp = list(depths)
@@ -32,8 +32,14 @@ def depthCallBack(sensor_reading):
         counter = counter + 1
 
     depths.append(current_depth)
-	
+    
     depth = depth + (current_depth - depths.pop(0)) / WINDOW_WIDTH
+
+    return current_depth, depth
+
+
+def depthCallBack(sensor_reading):
+    current_depth, depth = depth_filter(sensor_reading.data)
 
     # Publish
     pub1.publish(current_depth)

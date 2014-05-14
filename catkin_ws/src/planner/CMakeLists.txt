@@ -50,6 +50,7 @@ project(planner)
  target_link_libraries(planner ${catkin_LIBRARIES})
  add_dependencies(planner ${catkin_EXPORTED_TARGETS})
  add_dependencies(planner ${PROJECT_NAME}_gencpp)
+target_link_libraries(planner boost_thread)  
 
  add_executable (CurrentCVTaskPublisher src/CurrentCVTaskPublisher.cpp)
  target_link_libraries(CurrentCVTaskPublisher ${catkin_LIBRARIES})
