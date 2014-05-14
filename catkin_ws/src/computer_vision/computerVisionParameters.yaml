@@ -1,5 +1,5 @@
-cv_front_using_helper_windows: true
-cv_down_using_helper_windows: false
+cv_front_using_helper_windows: false
+cv_down_using_helper_windows: true
 reception_rate: 10
 image_subscriber_buffer_size: 1
 # This variable is used to indicate that the front cv node should be looking for the specified object.
