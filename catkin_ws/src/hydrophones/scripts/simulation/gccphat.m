@@ -3,8 +3,8 @@ function [x,y,z] = gccphat(a,b,c)
     FS = 192e3;
     BUFFERSIZE = 1024;
     FREQUENCY = 30e3;
-    SIGMA = 1e-1;
-    MAGNITUDE = 1;
+    SIGMA = 1e-2;
+    MAGNITUDE = 5;
     MAX_MICS = 4;
     LENGTH_OF_PULSE = 1.3e-3;
     TIME_SHIFT = 1e-3;
@@ -51,30 +51,20 @@ function [x,y,z] = gccphat(a,b,c)
 
     %% GCC-PHAT
     sol = zeros(MAX_MICS-1);
-    gcc = zeros(MAX_MICS,2,2*BUFFERSIZE);
-    index = zeros(MAX_MICS,2,2*BUFFERSIZE);
+    gcc = zeros(MAX_MICS,2*BUFFERSIZE);
+    index = zeros(MAX_MICS,2*BUFFERSIZE);
     for i = 2:MAX_MICS
         a = y(i,:).*conj(y(1,:));
         b = y(1,:).*conj(y(i,:));
-        gcc(i,1,:) = ifft(a./abs(a));
-        gcc(i,2,:) = ifft(b./abs(b));
-        [top,index(i,1)] = max(abs(gcc(i,1,:)));
-        [top,index(i,2)] = max(abs(gcc(i,2,:)));
-        u = 1;
-        if index(i,1) > BUFFERSIZE/2
-            index(i,1) = -index(i,1);
-            u = -1;
-        end
-        if index(i,2) > BUFFERSIZE/2
-            index(i,2) = -index(i,2);
-        end
-        sol(i-1) = u*(BUFFERSIZE*2 + index(i,1) + index(i,2))/2/FS;
+        gcc(i,:) = ifft(a./abs(a));
+
+        [top,index(i)] = max(abs(gcc(i,:)));
     end
 
     %% PLOT
     color = ['r' 'g' 'b' 'k'];
     names = {'First'; 'Second'; 'Third '; 'Fourth'};
-    for i = 1:MAX_MICS
+    for i = 2:MAX_MICS
         subplot(MAX_MICS,3,3*i-2);
         plot(t,signal(i,:),color(i));
         clear title xlabel ylabel;
@@ -89,15 +79,42 @@ function [x,y,z] = gccphat(a,b,c)
         header = sprintf('Frequency of %s Receiver',names{i});
         title(header);
 
+        positive = 1;
+        bound = [1 1];
+        interval = 5;
+        interpolation = 0.001;
+        if index(i) > BUFFERSIZE
+            positive = -1;
+            if index(i) >= 2*BUFFERSIZE-interval
+                bound(2) = 0;
+            end
+        elseif index(i) <= interval
+            bound(1) = 0;
+        end
+        begin = bound(1)*(index(i)-interval);
+        final = bound(2)*(index(i)+interval) + (1-bound(2))*2*BUFFERSIZE;
+        a = abs(squeeze(gcc(i,begin:final)));
+        s = begin:final;
+        u = begin:interpolation:final;
+        
         subplot(MAX_MICS,3,3*i);
-        plot(abs(squeeze(gcc(i,1,:))),color(i));
+        b = sinc_interp(a,s,u);
+        plot(u,b,color(i));
+        [top,peak] = max(b);
+
+        if positive == 1
+            sol(i) = (peak*interpolation+s(1))/FS;
+        else
+            sol(i) = (peak*interpolation+s(1)-2*BUFFERSIZE)/FS;
+        end
+
         clear title xlabel ylabel;
         xlabel('Time (s)');
         header = sprintf('Time Difference of %s Receiver',names{i});
         title(header);
     end
 
-    x = sol(1);
-    y = sol(2);
-    z = sol(3);
+    x = sol(2);
+    y = sol(3);
+    z = sol(4);
 end

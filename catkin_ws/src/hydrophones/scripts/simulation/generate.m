@@ -6,16 +6,17 @@ format long g;
 MAX_MICS = 4;
 MAX_ARRAYS = 4;
 SPEED = 1500;
-FS = 1/192e6;
-REPEAT = 1;
+REPEAT = 10;
+
 HEIGHT = 1.83;   % 0.5969;
 WIDTH = 0.91;    % 0.2921;
 DEPTH_OF_ROBOT = 2;
 DEPTH_OF_PINGER = 4.2672;
+
 START_TIME = cputime;
 
 %% GENERATE POPULATION
-solution = point(-150.0,60.0,DEPTH_OF_PINGER);
+solution = point(85.00,-62.00,DEPTH_OF_PINGER);
 population(MAX_ARRAYS) = array();
 for i = 1:MAX_ARRAYS
     population(i) = array(MAX_MICS,SPEED);
@@ -127,7 +128,7 @@ set(gca,'Fontsize',14);
 subplot(2,1,2);
 scatter(X,Y);
 hold on;
-scatter(solution.x, solution.y, 'filled', 'r');
+scatter(solution.x,solution.y,'filled','r');
 scatter(0, 0, 'filled', 'w');
 hold off;
 grid on;
@@ -155,8 +156,8 @@ fprintf('REPETITIONS: %d\n\n',REPEAT);
 fprintf('TIME ELAPSED: %4.2f s\n\n',cputime - START_TIME);
 
 %% ORCHESTRA
-load handel;
-for i = 1:3
-    sound(y,Fs);
-    pause(2.1);
-end
+% load handel;
+% for i = 1:3
+%     sound(y,Fs);
+%     pause(2.1);
+% end
