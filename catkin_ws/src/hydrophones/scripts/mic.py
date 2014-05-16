@@ -33,9 +33,9 @@ screen = curses.newwin(height, 100)
 screen.clear()
 curses.start_color()
 curses.use_default_colors()
-curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_RED)   # WARNING
-curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)  # SUCCESS
-curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE) # HEADING
+curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_RED)    # WARNING
+curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)   # SUCCESS
+curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)  # HEADING
 
 
 class mic(object):

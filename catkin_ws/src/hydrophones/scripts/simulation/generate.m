@@ -1,56 +1,59 @@
 clc;
 clear all;
+format long g;
 
 %% INIT
 MAX_MICS = 4;
 MAX_ARRAYS = 4;
 SPEED = 1500;
-SIGMA = 3/192e5;
-REPEAT = 1000;
-HEIGHT = 0.57;
-WIDTH = 0.29;
+FS = 1/192e6;
+REPEAT = 1;
+HEIGHT = 1.83;   % 0.5969;
+WIDTH = 0.91;    % 0.2921;
+DEPTH_OF_ROBOT = 2;
+DEPTH_OF_PINGER = 4.2672;
 START_TIME = cputime;
 
 %% GENERATE POPULATION
-solution = point(-150.0,60.0);
-population = array.empty(MAX_ARRAYS,0);
+solution = point(-150.0,60.0,DEPTH_OF_PINGER);
+population(MAX_ARRAYS) = array();
 for i = 1:MAX_ARRAYS
     population(i) = array(MAX_MICS,SPEED);
-    for j = 2:MAX_MICS
-        if MAX_MICS == 4 & i == 1
+    for j = 1:MAX_MICS
+        if MAX_MICS == 4 && i == 1
             % CENTERED Y SHAPE
             X = [0 0 -WIDTH/2 WIDTH/2];
             Y = [0 -HEIGHT/2 HEIGHT/2 HEIGHT/2];
-            population(i).receivers(j) = receiver(X(j),Y(j));
-        elseif MAX_MICS == 4 & i == 2
+            population(i).receivers(j) = receiver(X(j),Y(j),DEPTH_OF_ROBOT);
+        elseif MAX_MICS == 4 && i == 2
             % EQUAL DISTANCE Y SHAPE
-            distance = ((WIDTH / 2)^2 + HEIGHT^2) / (2*HEIGHT);
+            distance = ((WIDTH/2)^2 + HEIGHT^2) / (2*HEIGHT);
             X = [0 0 -WIDTH/2 WIDTH/2];
             Y = [0 -distance (HEIGHT-distance) (HEIGHT-distance)];
-            population(i).receivers(j) = receiver(X(j),Y(j));
-        elseif MAX_MICS == 4 & i == 3
+            population(i).receivers(j) = receiver(X(j),Y(j),DEPTH_OF_ROBOT);
+        elseif MAX_MICS == 4 && i == 3
             % T SHAPE
             X = [0 0 -WIDTH/2 WIDTH/2];
             Y = [0 -HEIGHT 0 0];
-            population(i).receivers(j) = receiver(X(j),Y(j));
-        elseif MAX_MICS == 4 & i == 4
+            population(i).receivers(j) = receiver(X(j),Y(j),DEPTH_OF_ROBOT);
+        elseif MAX_MICS == 4 && i == 4
             % RECTANGLE
             X = [0 WIDTH WIDTH 0];
             Y = [0 0 HEIGHT HEIGHT];
-            population(i).receivers(j) = receiver(X(j),Y(j));
+            population(i).receivers(j) = receiver(X(j),Y(j),DEPTH_OF_ROBOT);
         else
             % RANDOM
             x = WIDTH*rand()-WIDTH/2;
             y = HEIGHT*rand()-HEIGHT/2;
-            population(i).receivers(j) = receiver(x,y);
+            population(i).receivers(j) = receiver(x,y,DEPTH_OF_ROBOT);
         end
     end
 end
 
 %% SOLVE
 estimate = zeros(MAX_ARRAYS,REPEAT,2);
-avg = zeros(MAX_ARRAYS,2);
-v = zeros(REPEAT,MAX_MICS);
+theta = zeros(REPEAT,MAX_ARRAYS);
+err = zeros(MAX_ARRAYS,1);
 for i = 1:REPEAT
     clc
     fprintf('SIMULATION %d OUT OF %d\n',i,REPEAT);
@@ -59,39 +62,42 @@ for i = 1:REPEAT
     B = zeros(MAX_MICS-2,1);
     C = zeros(MAX_MICS-2,1);
 
-    v(i,:) = SIGMA.*randn(MAX_MICS,1);
-
     for j = 1:MAX_ARRAYS
-        %% ADD NOISE
         population(j) = population(j).time_difference(solution);
-        for k = 2:MAX_MICS
-            population(j).receivers(k).time = population(j).receivers(k).time + v(i,k-1);
-        end
+        receivers = population(j).receivers;
+
+        [t1,t2,t3] = gccphat(receivers(2).time,receivers(3).time,receivers(4).time);
+        receivers(2).time = t1;
+        receivers(3).time = t2;
+        receivers(4).time = t3;
+        t = [t1,t2,t3];
 
         %% OLS ESTIMATE
-        receivers = population(j).receivers;
         for k = 3:MAX_MICS
-            A(k) = 2*receivers(k).pos.x / (SPEED*receivers(k).time) ...
-                 - 2*receivers(2).pos.x / (SPEED*receivers(2).time);
-            B(k) = 2*receivers(k).pos.y / (SPEED*receivers(k).time) ...
-                 - 2*receivers(2).pos.y / (SPEED*receivers(2).time);
-            C(k) = SPEED*(receivers(k).time - receivers(2).time) ...
+            A(k) = 2*receivers(k).pos.x / (SPEED*t(k-1)) ...
+                 - 2*receivers(2).pos.x / (SPEED*t(1));
+            B(k) = 2*receivers(k).pos.y / (SPEED*t(k-1)) ...
+                 - 2*receivers(2).pos.y / (SPEED*t(1));
+            C(k) = SPEED*(t(k-1) - t(1)) ...
                  - ((receivers(k).pos.x)^2 + (receivers(k).pos.y)^2) ...
-                 / (SPEED*receivers(k).time) + ((receivers(2).pos.x)^2 ...
-                 + (receivers(2).pos.y)^2) / (SPEED*receivers(2).time);
+                 / (SPEED*t(k-1)) + ((receivers(2).pos.x)^2 ...
+                 + (receivers(2).pos.y)^2) / (SPEED*t(1));
         end
         estimate(j,i,:) = -[A B]\C;
+        theta(i,j) = atan2(estimate(j,i,2),estimate(j,i,1));
         
-        avg(j,:) = [mean(estimate(j,:,1)) mean(estimate(j,:,2))];
-        population(j).solution = point(avg(j,1),avg(j,2));
+        population(j).solution = point(estimate(j,i,1),estimate(j,i,2));
         population(j) = population(j).compute_error(solution);
+        err(j,i) = population(j).error;
     end
 end
 
 %% FIND OPTIMAL ARRAY
 E = zeros(MAX_ARRAYS,1);
+avg = zeros(MAX_ARRAYS,3);
 for i = 1:MAX_ARRAYS
-    E(i) = population(i).error;
+    avg(i,:) = [mean(estimate(i,:,1)) mean(estimate(i,:,2)) mean(theta(:,i))];
+    E(i) = mean(err(i,:));
 end
 [best, index] = min(E);
 
@@ -134,14 +140,23 @@ set(gca,'Fontsize',14);
 clc;
 fprintf('RECEIVERS SIMULATED: %d\n',MAX_MICS);
 fprintf('ARRAYS SIMULATED: %d\n',MAX_ARRAYS);
-fprintf('DISTANCE FROM SOURCE: %4.2f m\n\n',norm([solution.x solution.y]));
+fprintf('DISTANCE FROM SOURCE: %4.2f m\n\n',norm([solution.x solution.y solution.z]));
 
 fprintf('SOLUTION: (%4.2f, %4.2f) m\n',solution.x,solution.y);
 fprintf('BEST MEAN SOLUTION: (%4.6f, %4.6f) m\n',avg(index,1),avg(index,2));
-fprintf('BEST MEAN ERROR: %3.4f %%\n\n',population(index).error*100);
+fprintf('BEST MEAN ERROR: %3.6f %%\n\n',E(index)*100);
+
+fprintf('AVERAGE DISTANCE ERROR: %3.2f m\n',norm(avg(index,1:2))-norm([solution.x solution.y]));
+fprintf('AVERAGE THETA ERROR: %3.3f%c\n\n',(avg(index,3)-atan2(solution.y,solution.x))*180/pi,char(176));
 
 fprintf('SPEED OF SOUND: %d m/s\n',SPEED);
-fprintf('SIGMA: %d\n',SIGMA);
 fprintf('REPETITIONS: %d\n\n',REPEAT);
 
 fprintf('TIME ELAPSED: %4.2f s\n\n',cputime - START_TIME);
+
+%% ORCHESTRA
+load handel;
+for i = 1:3
+    sound(y,Fs);
+    pause(2.1);
+end
