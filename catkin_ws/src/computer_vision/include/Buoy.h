@@ -2,6 +2,7 @@
 #define CV_BUOY_H
 
 #include "VisibleObject.h"
+#include "CVNode.h"
 //#include <sstream>
 //#include <random>
 
@@ -69,7 +70,7 @@ struct DetectedBuoy {
  */
 class Buoy : public VisibleObject {
 public:
-	Buoy();
+	Buoy(const CVNode& _parent);
 	~Buoy();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 private:

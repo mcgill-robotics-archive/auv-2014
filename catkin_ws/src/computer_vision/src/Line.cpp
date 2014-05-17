@@ -25,7 +25,7 @@ double calculateSize (double x1, double x2, double y1, double y2);
 //double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
 
-Line::Line() {
+Line::Line(const CVNode& _parent) : VisibleObject(_parent) {
 	xDistance = 0.0;
 	yDistance = 0.0;
 }

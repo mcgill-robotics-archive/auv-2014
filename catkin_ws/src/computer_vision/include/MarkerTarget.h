@@ -9,6 +9,7 @@
 #define CV_MARKER_TARGET_H
 
 #include "VisibleObject.h"
+#include "CVNode.h"
 
 /* Marker target: a target (image of some kind) placed in a bin at the bottom of the pool.
  * Two markers are to be dropped, one in the primary and one in the secondary bin. */
@@ -18,7 +19,7 @@ enum ObjectType { UNDEFINED = -1, DOOR, BOEY, GROUND_TARGET_1, GROUND_TARGET_2, 
 class MarkerTarget : public VisibleObject
 {
 public:
-	MarkerTarget();
+	MarkerTarget(const CVNode& _parent);
 	int add(int, int);
 	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 	virtual void applyFilter(cv::Mat& currentFrame);

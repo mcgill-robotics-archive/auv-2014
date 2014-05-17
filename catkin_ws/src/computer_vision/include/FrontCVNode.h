@@ -23,7 +23,6 @@ public:
 
 private:
 	int numFramesWithoutObject;
-	bool isUsingHelperWindows;
 
 	void instanciateAllVisibleObjects();
 	void receiveImage(const sensor_msgs::ImageConstPtr& message);

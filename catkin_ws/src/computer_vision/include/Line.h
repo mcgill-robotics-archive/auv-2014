@@ -9,6 +9,7 @@
 #define LINE_H
 
 #include "VisibleObject.h"
+#include "CVNode.h"
 
 using namespace cv;
 using namespace std;
@@ -19,7 +20,7 @@ class Line : public VisibleObject {
 	double yDistance;
 	double yaw;
 	public:
-	Line();
+	Line(const CVNode& _parent);
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 	double convertFromPixelsToMetres(int distance, double longSize);

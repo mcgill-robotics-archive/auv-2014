@@ -21,7 +21,7 @@
  * The constructor loads the reference images which we will use to compare our candidate markers to.
  * Also initializes the matrix we will use to determine the positions of the objects.
  */
-MarkerTarget::MarkerTarget() {
+MarkerTarget::MarkerTarget(const CVNode& _parent) : VisibleObject(_parent) {
 
 	std::string templatePath = ros::package::getPath("computer_vision") +
 			"/reference_markers/%d.png";

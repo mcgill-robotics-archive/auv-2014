@@ -10,7 +10,6 @@ const std::string PLANNER_DATA_DOWN_TOPIC_NAME = "currentCVTask_Down";
 
 const int DOWN_CV_NODE_RECEPTION_RATE = 10;
 const int DOWN_CV_NODE_BUFFER_SIZE = 1;
-bool isUsingHelperWindows;
 
 class DownCVNode : public CVNode {
 
