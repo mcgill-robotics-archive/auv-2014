@@ -1,8 +1,10 @@
 <launch>
   <!-- launches: the dependencies for planner but not the planner node itself (aka for front end use)-->
   <!-- WARNING: DOES NOT START PLANNER -->
-  <!-- Updated by Alex Reiff, May 17 -->
-  <!-- Written by Alex Reiff, April 2, McGill Robotics -->
+  <!-- Written by Alex Reiff, May 17, McGill Robotics -->
+
+<!-- currently just the same as the sim launch file, will change eventually-->
+
 
   <!--control systems -->
   <include file="$(find controls)/launch/controls4planner.launch" >

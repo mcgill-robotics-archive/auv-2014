@@ -1,3 +1,3 @@
 <launch>
-    <node name="Blinky.py" pkg="blinky" type="Blinky"/>
+    <node name="blinky" pkg="blinky" type="blinky_server.py"/>
 </launch>
