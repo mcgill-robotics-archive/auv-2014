@@ -50,7 +50,6 @@ class Planner{
 	void setTransform(std::string referenceFrame);
 	void setPoints(double pointControl[], std::string referenceFrame);
 
-	int ready;
 	int go;
 	ros::Subscriber estimatedDepth_subscriber;
 

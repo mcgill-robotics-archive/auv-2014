@@ -133,9 +133,8 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	setTransform(referenceFrame);
 	//positional bounds
 	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < xBound;
-	ROS_INFO("Interface::x %f",relativePose.pose.position.x);
 	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < yBound;
-	ROS_INFO("Interface::y %f",relativePose.pose.position.y);
+	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",relativePose.pose.position.x, relativePose.pose.position.y);
 	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
@@ -263,6 +262,7 @@ int main(int argc, char **argv) {
 	ros::NodeHandle nodeHandle;
 
 	ROS_INFO("Planner - Initializing node");
+	nodeHandle.param<int>("planner/inSim", inSim, 0);
 
 	Planner* plannerNode = new Planner(nodeHandle);
 
@@ -276,7 +276,6 @@ int main(int argc, char **argv) {
 
 	nodeHandle.param<std::string>("planner/start_task", start_task, "gate");
 	nodeHandle.param<std::string>("planner/end_task", end_task, start_task);
-	nodeHandle.param<int>("planner/inSim", inSim, 0);
 
 	int start_task_id = get_task_id(start_task);
 	int end_task_id = get_task_id(end_task);
@@ -298,7 +297,7 @@ int main(int argc, char **argv) {
 }
 
 Planner::Planner(ros::NodeHandle& n) {
-	go = 0;
+	go = inSim;
 
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
@@ -312,9 +311,8 @@ Planner::Planner(ros::NodeHandle& n) {
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater);
 
-
 	// Waits until the environment is properly setup until the planner actually starts.
-	ready = 0;
+	int ready = 0;
 	while (ready == 0) {
 		ROS_DEBUG_THROTTLE(2,
 				"Waiting for the environment to be setup properly before starting the planner...");
@@ -344,16 +342,16 @@ Planner::Planner(ros::NodeHandle& n) {
 					ros::Time(0), ros::Duration(TF_BROADCASTER_TIMOUT_PERIOD));
 			listener.transformPose("/target/gate", emptyPose, relativePose);
 		} catch (tf::TransformException ex) {
-			ROS_INFO("Planner::Interface - Error thrown in TF listener.");
+			ROS_DEBUG("Planner - Error thrown in TF listener.");
 			ROS_ERROR("%s", ex.what());
 		}
-		ROS_INFO("Planner::Interface - waiting for dependencies");
+		ROS_DEBUG("Planner - waiting for dependencies");
 	}
 
 	myStatusUpdater->updateStatus(myStatusUpdater->readyToStart);
 
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
-//	while (!n.getParam("/go", go) || go != 1) {
+	while (!n.getParam("/go", go) && go != 1) {
 		//TODO: add time-out
-//	}
+	}
 }

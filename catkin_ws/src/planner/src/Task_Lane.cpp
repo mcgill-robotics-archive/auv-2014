@@ -18,12 +18,13 @@ ROS_INFO("looking for the lane");
 	listener.waitForTransform(frame, "/robot/rotation_center",
 			ros::Time(0), ros::Duration(300));
 myPlanner->setVelocity(0, 0, 0, 8.8, frame);
+ROS_INFO("found the lane");
 	//position above the lane marker
 	double myPoints[5] = {0.0, 0.0, 0.0, 0.0, 8.8};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 
 	while (!myPlanner->areWeThereYet(frame, desired)) {
-		ROS_INFO("Task_Lane::setPoints published");		
+		ROS_DEBUG("Task_Lane::setPoints published");		
 		myPlanner->setPosition(desired, frame);
 		loop_rate.sleep();
 	}

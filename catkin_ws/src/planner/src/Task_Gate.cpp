@@ -28,7 +28,7 @@ void Task_Gate::execute() {
 	loop_rate.sleep();
 	
 	while (!myPlanner->areWeThereYet(frame, desired)) {
-		ROS_INFO("Task_Gate::setPoints published");		
+		ROS_DEBUG("Task_Gate::setPoints published");		
 		myPlanner->setPosition(desired, frame);
 		loop_rate.sleep();
 	}
