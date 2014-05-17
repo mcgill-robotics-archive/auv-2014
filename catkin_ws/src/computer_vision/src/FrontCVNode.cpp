@@ -40,9 +40,9 @@ int main(int argc, char **argv) {
 void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
 	this->visibleObjectList.clear();
 	if (msg.currentCVTask == 1) {
-		this->visibleObjectList.push_back(new Gate());
+		this->visibleObjectList.push_back(new Gate(*(this)));
 	} else if (msg.currentCVTask == 2) {
-		this->visibleObjectList.push_back(new Buoy());
+		this->visibleObjectList.push_back(new Buoy(*(this)));
 	}
 }
 
@@ -62,20 +62,11 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	// Topics on which the node will be subscribing.
 	plannerSubscriber = nodeHandle.subscribe(PLANNER_DATA_FRONT_TOPIC_NAME, 1000, &FrontCVNode::listenToPlanner, this);
 
-	// Loads all the variables located in the Parameter Server.
-	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, 0);
-	nodeHandle.param<int>("start_hsv_hue_threshold", start_hsv_hue_threshold, 0);
-	nodeHandle.param<int>("end_hsv_hue_threshold", end_hsv_hue_threshold, 0);
-	nodeHandle.param<int>("start_hsv_value_threshold", start_hsv_value_threshold, 0);
-	nodeHandle.param<int>("end_hsv_value_threshold", end_hsv_value_threshold, 0);
-	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
-	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
-
 	std::string currentObject;
 	nodeHandle.param<std::string>("cv_front_detect_object", currentObject, "");
 	if (!currentObject.empty()) {
 		if (currentObject.compare("gate") == 0) {
-			this->visibleObjectList.push_back(new Gate());
+			this->visibleObjectList.push_back(new Gate(*(this)));
 		} else if (currentObject.compare("buoy") == 0) {
 			// TODO: add the Buoy object here when it is completed
 		}
@@ -87,7 +78,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	ros::spin();
 
 	// Create a window to display the images received
-	if (isUsingHelperWindows) {
+	if (front_using_helpers) {
 		cv::namedWindow(CAMERA1_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	}
 	numFramesWithoutObject = 0;
@@ -101,7 +92,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
  */
 FrontCVNode::~FrontCVNode() {
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: destroying FrontCVNode.").c_str());
-	if (isUsingHelperWindows) {
+	if (front_using_helpers) {
 		cv::destroyWindow(CAMERA1_CV_TOPIC_NAME);
 	}
 }
@@ -169,7 +160,7 @@ void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		currentImage.image           = currentFrame;
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
-		if (isUsingHelperWindows) {
+		if (front_using_helpers) {
 			// Display the filtered image
 			cv::imshow(CAMERA1_CV_TOPIC_NAME, currentFrame);
 			cv::waitKey(5);

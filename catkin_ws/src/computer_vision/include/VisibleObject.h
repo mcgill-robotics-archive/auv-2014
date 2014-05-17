@@ -12,18 +12,20 @@
 #include <boost/lexical_cast.hpp>
 #include "computer_vision/VisibleObjectData.h"
 
+class CVNode; //Forward-declaration of CVNode, because CVNode.h includes this file
+
 class VisibleObject {
 
 public:
 
+	VisibleObject(const CVNode& _parent);
 	virtual std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame) = 0;
 	cv::Mat convertFromBGRXToHSV(const cv::Mat& currentFrame);
 	virtual ~VisibleObject() = 0;
 
 protected:
 
-	bool isUsingHelperWindows;
-
+	const CVNode& parent;
 	virtual void applyFilter(cv::Mat& currentFrame) = 0;
 };
 

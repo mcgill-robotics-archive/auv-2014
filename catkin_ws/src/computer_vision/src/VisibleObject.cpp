@@ -1,5 +1,9 @@
 #include "VisibleObject.h"
 
+VisibleObject::VisibleObject(const CVNode& _parent) : parent(_parent) {
+	//Initialization of the parent member was done in the init. list.
+}
+
 /**
  * Converts the cv::Mat object passed in parameter and converts it from BGRX to HSV color space.
  *

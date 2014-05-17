@@ -33,6 +33,15 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 		ROS_INFO_THROTTLE(DELAY_BETWEEN_INFOS, (std::string(__PRETTY_FUNCTION__) + ": Waiting for a publisher to start publishing on the topic '" + topicName + "'.").c_str());
 	}
 
+	nodeHandle.param<bool>("cv_front_using_helper_windows", front_using_helpers, 0);
+	nodeHandle.param<bool>("cv_down_using_helper_windows", down_using_helpers, 0);
+	nodeHandle.param<int>("start_hsv_hue_threshold", start_hsv_hue_thresh, 0);
+	nodeHandle.param<int>("end_hsv_hue_threshold", end_hsv_hue_thresh, 0);
+	nodeHandle.param<int>("start_hsv_value_threshold", start_hsv_value_thresh, 0);
+	nodeHandle.param<int>("end_hsv_value_threshold", end_hsv_value_thresh, 0);
+	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
+	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
+
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": CVNode (the parent of FrontCVNode and DownCVNode) has been initialized.").c_str());
 }
 

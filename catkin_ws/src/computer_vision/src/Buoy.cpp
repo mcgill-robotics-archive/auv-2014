@@ -6,7 +6,7 @@
 
 #include "Buoy.h"
 
-Buoy::Buoy() {
+Buoy::Buoy(const CVNode& _parent) : VisibleObject(_parent) {
 	cv::namedWindow("Filter", CV_WINDOW_KEEPRATIO);
 	cv::namedWindow("Threshold", CV_WINDOW_KEEPRATIO);
 	cv::namedWindow("Drawing", CV_WINDOW_KEEPRATIO);

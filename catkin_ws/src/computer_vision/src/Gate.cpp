@@ -19,21 +19,25 @@ cv::Point centerOfCurrentFrame;
 /**
  * Constructor.
  */
-Gate::Gate() {
+Gate::Gate(const CVNode& _parent) : VisibleObject(_parent) {
 
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: a Gate object was instantiated.").c_str());
 
 	ros::NodeHandle nodeHandle;
-	nodeHandle.param<bool>("cv_front_using_helper_windows", isUsingHelperWindows, false);
 
-	if (isUsingHelperWindows == 1) {
+	trackbar_start_hue_threshold = parent.get_start_hsv_hue_thresh();
+	trackbar_end_hue_threshold = parent.get_end_hsv_hue_thresh();
+	trackbar_start_val_threshold = parent.get_start_hsv_value_thresh();
+	trackbar_end_val_threshold = parent.get_end_hsv_value_thresh();
+
+	if (parent.get_front_using_helpers()) {
 		cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 		cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
-		cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &start_hsv_hue_threshold, MAX_HSV_HUE);
-		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &end_hsv_hue_threshold, MAX_HSV_HUE);
-		cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &start_hsv_value_threshold, MAX_HSV_VALUE);
-		cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &end_hsv_value_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &trackbar_start_hue_threshold, MAX_HSV_HUE);
+		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &trackbar_end_hue_threshold, MAX_HSV_HUE);
+		cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &trackbar_start_val_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &trackbar_end_val_threshold, MAX_HSV_VALUE);
 		cv::createTrackbar("gate_ratio_error", TRACKBARS_WINDOW, &gate_ratio_error, MAX_HSV_VALUE);
 		cv::createTrackbar("max_number_points", TRACKBARS_WINDOW, &max_number_points, MAX_HSV_VALUE);
 		cv::createTrackbar("polygon_approximation_threshold", TRACKBARS_WINDOW, &polygon_approximation_threshold, MAX_HSV_VALUE);
@@ -44,7 +48,7 @@ Gate::Gate() {
  * Destructor.
  */
 Gate::~Gate() {
-	if (isUsingHelperWindows == 1) {
+	if (parent.get_front_using_helpers()) {
 		cv::destroyWindow(COLOR_THRESH_WINDOW);
 		cv::destroyWindow(TRACKBARS_WINDOW);
 	}
@@ -101,8 +105,8 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
  * @param currentFrame The frame to which we need to apply the filters.
  */
 void Gate::applyFilter(cv::Mat& currentFrame) {
-	HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_hsv_value_threshold);
-	HSV_STARTING_FILTER_RANGE = cv::Scalar(start_hsv_hue_threshold, 0, start_hsv_value_threshold);
+	cv::Scalar hsv_ending(trackbar_end_hue_threshold, 255, trackbar_end_val_threshold);
+	cv::Scalar hsv_starting(trackbar_start_hue_threshold, 0, trackbar_start_val_threshold);
 
 	std::vector<PoleCandidate> potentialMatchRectangles;
 	centerOfCurrentFrame.x = currentFrame.cols/2;
@@ -116,7 +120,7 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 	cv::GaussianBlur(currentFrameInHSV, currentFrameInHSV, cv::Size(KERNEL_SIZE, KERNEL_SIZE), 0, 0);
 
 	// Finds all the contours in the image and store them in a vector containing vectors of points.
-	std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV);
+	std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV, hsv_starting, hsv_ending);
 
 	// Goes through all the identified shapes for a first filtering.
 	for (int rectangleID = 0; rectangleID < detectedContours.size(); rectangleID++) {
@@ -277,8 +281,8 @@ Gate::PoleCandidate Gate::findRectangleForContour(std::vector<cv::Point>& contou
  */
 void Gate::computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight) {
 	/* First approximation using the canonical formula */
-	float approximateDistanceWithObject = (camera_focal_length * DOOR_REAL_HEIGHT * frameHeight) / 
-							(pole.h * camera_sensor_height);
+	float approximateDistanceWithObject = (parent.get_camera_focal_length() * DOOR_REAL_HEIGHT * frameHeight) / 
+							(pole.h * parent.get_camera_sensor_height());
 
 	/* We correct this distance, because it is only valid if the object is close to the center of the screen */
 	float mPerPxAtObject = DOOR_REAL_HEIGHT / pole.h;
@@ -293,16 +297,16 @@ void Gate::computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, f
  * @param frameInHSV The frame in HSV color space.
  * @return The std::vector of std::vector of points containing the clouds of all contours in the image.
  */
-std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV) {
+std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV, cv::Scalar start, cv::Scalar end) {
 
 	// Creates the Mat object that will contain the filtered image (inRange HSV).
 	cv::Mat inRangeHSVFrame;
 	// Generates a new Mat object that only contains a certain range of HSV values.
 	// Don't forget that we are not using BGRX, but the HSV color space.
-	cv::inRange(frameInHSV, HSV_STARTING_FILTER_RANGE, HSV_ENDING_FILTER_RANGE, inRangeHSVFrame);
+	cv::inRange(frameInHSV, start, end, inRangeHSVFrame);
 	cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
 
-	if (isUsingHelperWindows == 1) {
+	if (parent.get_front_using_helpers()) {
 		cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
 	}
 

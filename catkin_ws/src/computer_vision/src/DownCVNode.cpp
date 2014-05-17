@@ -17,7 +17,6 @@ int main(int argc, char **argv) {
 	std::string imageFeedDown;
 
 	nodeHandle.param<std::string>("image_feed/down", imageFeedDown, "/simulator/camera3/image_raw");
-	nodeHandle.param<bool>("cv_down_using_helper_windows", isUsingHelperWindows, false);
 
 	// Creates a new CVNode object.
 	DownCVNode* pDownCVNode = new DownCVNode(nodeHandle, imageFeedDown, DOWN_CV_NODE_RECEPTION_RATE, DOWN_CV_NODE_BUFFER_SIZE);
@@ -35,7 +34,7 @@ int main(int argc, char **argv) {
 void DownCVNode::listenToPlanner(planner::CurrentCVTask msg) {
 	this->visibleObjectList.clear();
 	if (msg.currentCVTask == 3) {
-		this->visibleObjectList.push_back(new Line());
+		this->visibleObjectList.push_back(new Line(*(this)));
 	}
 }
 
@@ -58,19 +57,20 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	nodeHandle.param<std::string>("cv_down_detect_object", currentObject, "");
 	if (!currentObject.empty()) {
 		if (currentObject.compare("line") == 0) {
-			this->visibleObjectList.push_back(new Line());
+			this->visibleObjectList.push_back(new Line(*(this)));
 		}
 	} else {
 		ROS_INFO("%s", "The 'cv_down_detect_object' parameter is empty, the CV will be looking for no object.");
 	}
 
-	if (isUsingHelperWindows) {
+	if (down_using_helpers) {
 		cv::namedWindow(CAMERA3_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	}
 }
 
+
 DownCVNode::~DownCVNode() {
-	if (isUsingHelperWindows) {
+	if (down_using_helpers) {
 		cv::destroyWindow(CAMERA3_CV_TOPIC_NAME);
 	}
 	delete pLastImage;
@@ -131,7 +131,7 @@ void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
 		currentImage.image = currentFrame;
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
-		if (isUsingHelperWindows) {
+		if (down_using_helpers) {
 			// Display the filtered image
 			cv::imshow(CAMERA3_CV_TOPIC_NAME, currentFrame);
 			cv::waitKey(5);

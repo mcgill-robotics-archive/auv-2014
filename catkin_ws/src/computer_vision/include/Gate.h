@@ -2,6 +2,7 @@
 #define CV_GATE_H
 
 #include "VisibleObject.h"
+#include "CVNode.h"
 
 // Defines the different constants used:
 /**
@@ -38,11 +39,6 @@ const int DESIRED_ANGLE_OF_RECT = 90;
 const int ANGLE_RECT_ERROR = 15;
 
 /**
- * The focal length of the lenses in meters.
- */
-double camera_focal_length;
-
-/**
  * The height of the gate in meters.
  */
 const float DOOR_REAL_HEIGHT = 1.2;
@@ -50,10 +46,7 @@ const float DOOR_REAL_HEIGHT = 1.2;
  * The distance between the cylinders' centers in meters.
  */
 const float GATE_WIDTH = 3.1262;
-/**
- * The height of the sensor of the camera in meters.
- */
-double camera_sensor_height;
+
 /**
  * The escape key's ID.
  */
@@ -72,26 +65,6 @@ const int MIN_NUMBER_POINTS = 4;
 int max_number_points = 100;
 
 /**
- * The start of the threshold for the hue.
- */
-int start_hsv_hue_threshold;
-
-/**
- * The end of the threshold for the hue.
- */
-int end_hsv_hue_threshold;
-
-/**
- * The start of the threshold for the value.
- */
-int start_hsv_value_threshold;
-
-/**
- * The end of the threshold for the value.
- */
-int end_hsv_value_threshold;
-
-/**
  * The threshold used for approximating polygons.
  */
 int polygon_approximation_threshold = 3;
@@ -108,8 +81,6 @@ const cv::Scalar BLUE_BGRX = cv::Scalar(255, 0, 0);
 const cv::Scalar RED_BGRX = cv::Scalar(0, 0, 255);
 const cv::Scalar WHITE_BGRX = cv::Scalar(255, 255, 255);
 const cv::Scalar MAUVE_BGRX = cv::Scalar(212, 115, 212);
-cv::Scalar HSV_STARTING_FILTER_RANGE = cv::Scalar(0, 0, start_hsv_value_threshold);
-cv::Scalar HSV_ENDING_FILTER_RANGE = cv::Scalar(end_hsv_hue_threshold, 255, end_hsv_value_threshold);
 
 // TO BE REMOVED (FOR DESIGN PROJECT PRESENTATION ONLY)
 const char* FILTERED_WINDOW = "Filtered Feed";
@@ -121,7 +92,7 @@ class Gate : public VisibleObject {
 
 public:
 
-	Gate();
+	Gate(const CVNode& _parent);
 	~Gate();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
@@ -131,7 +102,7 @@ private:
 		cv::Point2f center;
 	};
 
-	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
+	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV, cv::Scalar start, cv::Scalar end);
 	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
 	PoleCandidate findRectangleForContour(std::vector<cv::Point>& contour);
 	void computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight);
@@ -143,6 +114,11 @@ private:
 	double m_xDistance;
 	double m_yDistance;
 	double m_zDistance;
+
+	int trackbar_start_hue_threshold;
+	int trackbar_end_hue_threshold;
+	int trackbar_start_val_threshold;
+	int trackbar_end_val_threshold;
 
 protected:
 
