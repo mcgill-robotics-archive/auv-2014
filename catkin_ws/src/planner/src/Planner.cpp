@@ -7,6 +7,8 @@
 //make a getter for this in the planner class
 double ourDepth;
 
+int inSim;
+
 geometry_msgs::PoseStamped relativePose;
 
 std::string starting_task;
@@ -112,15 +114,29 @@ void Planner::setTransform(std::string referenceFrame) {
 }
 
 bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desired) {
-	//if (estimatedDepth_subscriber.getNumPublishers() == 0) {return false;}
-	//if (estimatedState_subscriber.getNumPublishers() == 0) {return false;}
+	//has two sets of bound, one set for the simulator, one for real life
+		//both sets still need to be experimentally determined
+	if(inSim) {
+		xBound = 1;
+		yBound = 1;
+		zBound = 2;
+		yawBound = 5;
+		pitchBound = 5;
+	}
+	else {
+		xBound = 1;
+		yBound = 1;
+		zBound = 2;
+		yawBound = 5;
+		pitchBound = 5;
+	}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < 1;
+	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < xBound;
 	ROS_INFO("Interface::x %f",relativePose.pose.position.x);
-	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < 1;
+	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < yBound;
 	ROS_INFO("Interface::y %f",relativePose.pose.position.y);
-	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < 2;
+	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
@@ -135,8 +151,8 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 													2.0f)));
 	double yaw = 57.2957795130823f
 			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
-	bool pitchBounded = abs(pitch - desired.at(2)) < 5;
-	bool yawBounded = abs(yaw - desired.at(3)) < 5;
+	bool pitchBounded = abs(pitch - desired.at(2)) < pitchBound;
+	bool yawBounded = abs(yaw - desired.at(3)) < yawBound;
 
 	return (xBounded && yBounded);
 }
@@ -260,6 +276,7 @@ int main(int argc, char **argv) {
 
 	nodeHandle.param<std::string>("planner/start_task", start_task, "gate");
 	nodeHandle.param<std::string>("planner/end_task", end_task, start_task);
+	nodeHandle.param<int>("planner/inSim", inSim, 0);
 
 	int start_task_id = get_task_id(start_task);
 	int end_task_id = get_task_id(end_task);
@@ -269,9 +286,10 @@ int main(int argc, char **argv) {
 	ROS_INFO("start_task_id: %d", start_task_id);
 	ROS_INFO("end_task_id: %d", end_task_id);
 
-	setRobotInitialPosition(nodeHandle, start_task_id);
+	if(inSim) {
+		setRobotInitialPosition(nodeHandle, start_task_id);
+	}
 	///////////////////////////////////////////////////////////////////////
-
 
 	//start routine
 	plannerNode->switchToTask(plannerNode->Gate);
@@ -331,6 +349,8 @@ Planner::Planner(ros::NodeHandle& n) {
 		}
 		ROS_INFO("Planner::Interface - waiting for dependencies");
 	}
+
+	myStatusUpdater->updateStatus(myStatusUpdater->readyToStart);
 
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
 //	while (!n.getParam("/go", go) || go != 1) {

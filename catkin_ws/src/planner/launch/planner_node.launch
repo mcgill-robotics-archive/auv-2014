@@ -4,14 +4,13 @@
 
   <arg name="start_task" default="gate"/>
   <arg name="end_task" default="gate"/>
+  <arg name="isInSim" default="1"/>
 
   <node name="planner" pkg="planner" type="planner" respawn="false" output="screen">
-  	<param name="xml_files_path" value="$(find planner)/xml"/>
 
     <param name="start_task" type="str" value="$(arg start_task)"/>
     <param name="end_task" type="str" value="$(arg end_task)"/>
-    
-    <!--<param name ="start_task" type="int" value="1"/>-->
-    <!--<param name ="end_task" type="int" value="1"/>-->
+    <param name="inSim" type="int" value="$(arg isInSim)"/>
+
   </node>
 </launch>
