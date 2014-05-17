@@ -313,7 +313,7 @@
 	
 	<!-- line1 -->
     <model name="line1">
-      <pose>0 2 0 1.5707963 0 -.7</pose>
+      <pose>1 2 0 1.5707963 0 -.7</pose>
       <static>false</static>
       <link name="body">
 
