@@ -12,7 +12,7 @@ sudo cp -f startup.yml ~/.teamocil/startup.yml
 sudo cp -f temperature.yml ~/.teamocil/temperature.yml
 
 dir=$PWD   # dotfiles directory
-olddir=~/dotfiles_old                # old dotfiles backup directory
+olddir=~/dotfiles_old                 # old dotfiles backup directory
 files="vimrc tmux.conf roboticrc"    # list of files/folders to symlink in homedir
 
 ##########
@@ -35,11 +35,10 @@ for file in $files; do
     ln -sv $dir/$file ~/.$file
 done
 
-
-
 cd $dir
 cd ..
 
+# Makes sure that the environment variables are in the ~./bashrc file.
 if [[ `grep "export ROBOTIC_PATH" ~/.bashrc | wc -l` -eq 0 ]]; then
     echo 'ROBOTIC_PATH does not existe in bashrc, adding...'
     echo "export ROBOTIC_PATH=$PWD" >> ~/.bashrc
@@ -49,11 +48,3 @@ if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
     echo 'roboticrc does not existe in bashrc, adding...'
     echo "source ~/.roboticrc" >> ~/.bashrc
 fi 
-
-#cd $dir
-#cd ..
-#cd catkin_ws
-#catkin_make
-
-
-

@@ -7,4 +7,3 @@ TEAMOCIL_PATH=/home/robotics/McGill_RoboSub_2014/dotfiles/
 
 # START HERE
 tmux new -d 'teamocil startup'
-

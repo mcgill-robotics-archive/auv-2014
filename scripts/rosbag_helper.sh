@@ -1,4 +1,5 @@
 #!/bin/bash
+
 usage() {
     echo USAGE: bagger OPTION
     echo "options: -a : all topics"  
