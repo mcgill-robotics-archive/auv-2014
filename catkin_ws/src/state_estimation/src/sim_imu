@@ -3,48 +3,42 @@
 import rospy
 from geometry_msgs.msg import PoseStamped
 from gazebo_msgs.msg import ModelStates
+from tf import transformations
+import numpy
 import roslib; roslib.load_manifest('state_estimation')
 from state_estimation.srv import *
 
 time = None
-setInitialPoseFlag = True
+resetInitialPoseFlag = True
 initialPose = None
 
 def inverseQuaternion(quat):
-    inverse = quat
-    inverse.pose.orientation.x = inverse.pose.orientation.x * -1.0
-    inverse.pose.orientation.y = inverse.pose.orientation.y * -1.0
-    inverse.pose.orientation.z = inverse.pose.orientation.z * -1.0
-    return inverse
+    inverse = transformations.quaternion_inverse(numpy.array((quat.pose.orientation.x, quat.pose.orientation.y, quat.pose.orientation.z, quat.pose.orientation.w), dtype=numpy.float64))
+    
+    result = quat
+    result.pose.orientation.x = inverse[0]
+    result.pose.orientation.y = inverse[1]
+    result.pose.orientation.z = inverse[2]
+    result.pose.orientation.w = inverse[3]
+    return result
 
 def multQuaternion(quat1, quat2):
-    product = quat1
-    product.pose.orientation.w = quat1.pose.orientation.w * quat2.pose.orientation.w \
-				    - quat1.pose.orientation.x * quat2.pose.orientation.x \
-                                    - quat1.pose.orientation.y * quat2.pose.orientation.y \
-                                    - quat1.pose.orientation.z * quat2.pose.orientation.z
-    product.pose.orientation.x = quat1.pose.orientation.w * quat2.pose.orientation.x \
-				    + quat1.pose.orientation.x * quat2.pose.orientation.w \
-                                    + quat1.pose.orientation.y * quat2.pose.orientation.z \
-                                    - quat1.pose.orientation.z * quat2.pose.orientation.y
-    product.pose.orientation.y = quat1.pose.orientation.w * quat2.pose.orientation.y \
-				    - quat1.pose.orientation.x * quat2.pose.orientation.z \
-                                    + quat1.pose.orientation.y * quat2.pose.orientation.w \
-                                    + quat1.pose.orientation.z * quat2.pose.orientation.x
-    product.pose.orientation.z = quat1.pose.orientation.w * quat2.pose.orientation.z \
-				    + quat1.pose.orientation.x * quat2.pose.orientation.y \
-                                    - quat1.pose.orientation.y * quat2.pose.orientation.x \
-                                    + quat1.pose.orientation.z * quat2.pose.orientation.w
+    product = transformations.quaternion_multiply(numpy.array((quat1.pose.orientation.x, quat1.pose.orientation.y, quat1.pose.orientation.z, quat1.pose.orientation.w), dtype=numpy.float64), numpy.array((quat2.pose.orientation.x, quat2.pose.orientation.y, quat2.pose.orientation.z, quat2.pose.orientation.w), dtype=numpy.float64))
 
-    return product
+    quatProduct = quat1
+    quatProduct.pose.orientation.x = product[0]
+    quatProduct.pose.orientation.y = product[1]
+    quatProduct.pose.orientation.z = product[2]
+    quatProduct.pose.orientation.w = product[3]
+    return quatProduct
 
 def handle_set_initial_pose(req):
-    global setInitialPoseFlag
-    setInitialPoseFlag = True
+    global resetInitialPoseFlag
+    resetInitialPoseFlag = True
 
 def callback(modelStates):
     global time
-    global setInitialPoseFlag
+    global resetInitialPoseFlag
     global initialPose
     if time:
         if (rospy.get_time() - time) > 0.03:
@@ -55,14 +49,15 @@ def callback(modelStates):
             poseStamped.pose.position.y = 0
             poseStamped.pose.position.z = 0
             
-            # Reset the initial pose
-            if setInitialPoseFlag == True:
-		initialPose = poseStamped
+	    # Reset the initial pose
+            if resetInitialPoseFlag == True:
+                initialPose = PoseStamped(poseStamped.header, poseStamped.pose)
+                resetInitialPoseFlag = False
 	    
             # Relative orientation relative to the initial pose
-            poseStamped = multQuaternion(inverse(intialPose), poseStamped)
+            relativePose = multQuaternion(poseStamped, inverseQuaternion(poseStamped))
 
-            pub.publish(poseStamped)
+            pub.publish(relativePose)
             time = rospy.get_time()
     else:
         time = rospy.get_time()
