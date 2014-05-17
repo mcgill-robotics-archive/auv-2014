@@ -20,7 +20,7 @@ ledCount = 30
 # blinky tape class handle (accesses 2 segments)
 # change first argument with usb serial port
 # where the tape is found
-blt = bt.BlinkyTape("/dev/ttyACM0", 2 * ledCount)
+blt = bt.BlinkyTape("/dev/blinkyTape", 2 * ledCount)
 
 # The two blinky tape segments
 planner_colorList = []
