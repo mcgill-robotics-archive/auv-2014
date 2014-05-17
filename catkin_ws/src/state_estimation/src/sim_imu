@@ -3,11 +3,49 @@
 import rospy
 from geometry_msgs.msg import PoseStamped
 from gazebo_msgs.msg import ModelStates
+import roslib; roslib.load_manifest('state_estimation')
+from state_estimation.srv import *
 
 time = None
+setInitialPoseFlag = True
+initialPose = None
+
+def inverseQuaternion(quat):
+    inverse = quat
+    inverse.pose.orientation.x = inverse.pose.orientation.x * -1.0
+    inverse.pose.orientation.y = inverse.pose.orientation.y * -1.0
+    inverse.pose.orientation.z = inverse.pose.orientation.z * -1.0
+    return inverse
+
+def multQuaternion(quat1, quat2):
+    product = quat1
+    product.pose.orientation.w = quat1.pose.orientation.w * quat2.pose.orientation.w \
+				    - quat1.pose.orientation.x * quat2.pose.orientation.x \
+                                    - quat1.pose.orientation.y * quat2.pose.orientation.y \
+                                    - quat1.pose.orientation.z * quat2.pose.orientation.z
+    product.pose.orientation.x = quat1.pose.orientation.w * quat2.pose.orientation.x \
+				    + quat1.pose.orientation.x * quat2.pose.orientation.w \
+                                    + quat1.pose.orientation.y * quat2.pose.orientation.z \
+                                    - quat1.pose.orientation.z * quat2.pose.orientation.y
+    product.pose.orientation.y = quat1.pose.orientation.w * quat2.pose.orientation.y \
+				    - quat1.pose.orientation.x * quat2.pose.orientation.z \
+                                    + quat1.pose.orientation.y * quat2.pose.orientation.w \
+                                    + quat1.pose.orientation.z * quat2.pose.orientation.x
+    product.pose.orientation.z = quat1.pose.orientation.w * quat2.pose.orientation.z \
+				    + quat1.pose.orientation.x * quat2.pose.orientation.y \
+                                    - quat1.pose.orientation.y * quat2.pose.orientation.x \
+                                    + quat1.pose.orientation.z * quat2.pose.orientation.w
+
+    return product
+
+def handle_set_initial_pose(req):
+    global setInitialPoseFlag
+    setInitialPoseFlag = True
 
 def callback(modelStates):
     global time
+    global setInitialPoseFlag
+    global initialPose
     if time:
         if (rospy.get_time() - time) > 0.03:
             index = modelStates.name.index('robot')
@@ -16,6 +54,14 @@ def callback(modelStates):
             poseStamped.pose.position.x = 0
             poseStamped.pose.position.y = 0
             poseStamped.pose.position.z = 0
+            
+            # Reset the initial pose
+            if setInitialPoseFlag == True:
+		initialPose = poseStamped
+	    
+            # Relative orientation relative to the initial pose
+            poseStamped = multQuaternion(inverse(intialPose), poseStamped)
+
             pub.publish(poseStamped)
             time = rospy.get_time()
     else:
@@ -27,6 +73,8 @@ def init():
     global pub
     rospy.init_node('sim_imu')
 
+    # Service that resets initial pose whenever the service is called
+    srv = rospy.Service('set_initial_pose', setInitialPose, handle_set_initial_pose)
     # Subscribe to different inputing topics
     rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
 
