@@ -15,6 +15,7 @@
 #include "planner/CurrentCVTask.h"
 #include "blinky/RGB.h"
 #include "blinky/UpdatePlannerLights.h"
+#include "state_estimation/setInitialPose.h"
 #include <vector>
 #include <cmath>
 #include <boost/thread.hpp>
@@ -56,7 +57,6 @@ class Planner{
 	ros::ServiceClient btClient;
 
 	ros::Publisher wrench_pub;
-	ros::Publisher CV_objs_pub;
 	ros::Publisher control_pub;
 	ros::Publisher checkpoints_pub;
 	ros::Publisher taskPubFront;

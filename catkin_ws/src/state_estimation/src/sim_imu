@@ -36,6 +36,8 @@ def handle_set_initial_pose(req):
     global resetInitialPoseFlag
     resetInitialPoseFlag = True
 
+    return True
+
 def callback(modelStates):
     global time
     global resetInitialPoseFlag
@@ -69,7 +71,7 @@ def init():
     rospy.init_node('sim_imu')
 
     # Service that resets initial pose whenever the service is called
-    srv = rospy.Service('set_initial_pose', setInitialPose, handle_set_initial_pose)
+    srv = rospy.Service('/state_estimation/set_initial_pose', setInitialPose, handle_set_initial_pose)
     # Subscribe to different inputing topics
     rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
 

@@ -35,8 +35,10 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   //TODO: Convert Euler angles to quaternions (?)
 
   ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
+  ros::ServiceClient seClient = n.serviceClient<state_estimation::setInitialPose>("/state_estimation/set_initial_pose");
   gazebo_msgs::SetModelState setmodelstate;
   gazebo_msgs::ModelState modelstate;
+  state_estimation::setInitialPose setPose;
 
   geometry_msgs::Pose start_pose;
   start_pose.position.x = x;
@@ -55,6 +57,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   start_twist.angular.y = 0.0;
   start_twist.angular.z = 0.0;
 
+  setPose.request.a = 1;
  
   modelstate.model_name = (std::string) "robot";
   modelstate.reference_frame = (std::string) "world";
@@ -73,6 +76,14 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
     {
       ROS_ERROR("Failed to call service ");
   }
+  if(seClient.call(setPose))
+  {
+      ROS_INFO("notified state estimation: Success");
+  }
+  	else
+  	{
+  		ROS_ERROR("Failed to call state estimation service");
+  	}
 }
 
 void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
