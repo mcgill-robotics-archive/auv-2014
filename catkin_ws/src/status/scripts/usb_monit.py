@@ -31,7 +31,7 @@ if __name__ == '__main__':
     try:
         if not rospy.is_shutdown():
             rospy.init_node('USB_monitor')
-            usb_topic = rospy.Publisher('status/usb', usb)
+            usb_topic = rospy.Publisher('usb', usb)
             rate = rospy.Rate(1)
 
             while True:

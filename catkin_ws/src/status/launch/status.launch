@@ -1,8 +1,9 @@
 <launch>
-<!-- temprature -->
-<node name="temprature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
+    <group ns="status">
+        <!-- temprature -->
+        <node name="temprature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
 
-<!-- usb ports -->
-<node name="usb_ports" pkg="status" type="usb_monit.py" respawn="false" output="screen"/>
-
+        <!-- usb ports -->
+        <node name="usb" pkg="status" type="usb_monit.py" respawn="false" output="screen"/>
+    </group>
 </launch>
