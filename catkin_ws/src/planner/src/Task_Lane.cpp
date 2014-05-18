@@ -1,8 +1,9 @@
 #include "Task_Lane.h"
 
-Task_Lane::Task_Lane(Planner* planner, StatusUpdater* mSU){
+Task_Lane::Task_Lane(Planner* planner, StatusUpdater* mSU, int newPhase){
 	myPlanner = planner;
 	myStatusUpdater = mSU;
+	phase = newPhase;
 }
 
 void Task_Lane::execute() {
