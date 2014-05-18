@@ -11,6 +11,7 @@
       <param name="white_balance_BU" value="1000" />
       <param name="white_balance_RV" value="500" />
       <param name="bayer_pattern" value="gbrg" />
+      <param name="bayer_method" value="DownSample" />
       <param name="format7_color_coding" value="raw8"/>
     </node>
 
