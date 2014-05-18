@@ -30,8 +30,8 @@ handleInputParameters() {
 				command_arguments="${command_arguments} electrical_interface/pose"
 				command_arguments="${command_arguments} electrical_interface/depth"
 				command_arguments="${command_arguments} status/temperature electrical_interface/temperature"
-				command_arguments="${command_arguments} camera_down/camera/camera_info camera_down/camera/image_rect_color camera_down/camera/image_color"
-				command_arguments="${command_arguments} camera_front_left/camera/camera_info camera_front_left/camera/image_rect_color camera_front_left/camera/image_color"
+				command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/camera_out/image_raw camera_front_left/camera_out/camera_info camera_front_left/camera_out/image_raw"
+
 				startRosBagWithParameters
 				;;
 			'-i' )
@@ -44,9 +44,9 @@ handleInputParameters() {
 				;;
 			'-c' )
 				#down camera:
-	            command_arguments="${command_arguments} camera_down/camera/camera_info camera_down/camera/image_rect_color camera_down/camera/image_color  "
+				command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/camera_out/image_raw"
 				#front camera
-	            command_arguments="${command_arguments} camera_front_left/camera/camera_info camera_front_left/camera/image_rect_color camera_front_left/camera/image_color  "
+				command_arguments="${command_arguments} camera_front_left/camera_out/camera_info camera_front_left/camera_out/image_raw"
 	            startRosBagWithParameters
 	            ;;
 			'-d' )
