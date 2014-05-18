@@ -19,6 +19,7 @@ Created by Nick Speal Jan 10.
 	double setPoint_XSpeed = 0;
 	double setPoint_YSpeed = 0;
 	double setPoint_YawSpeed = 0;
+	double setPoint_DepthSpeed = 0;
 
 	int8_t isActive_XPos = 0;	
 	int8_t isActive_YPos = 0;
@@ -28,6 +29,7 @@ Created by Nick Speal Jan 10.
 	int8_t isActive_XSpeed = 0;
 	int8_t isActive_YSpeed = 0;
 	int8_t isActive_YawSpeed = 0;
+	int8_t isActive_DepthSpeed = 0;
 
 	std::string frame = "target/gate"; //default
 
@@ -58,6 +60,13 @@ Created by Nick Speal Jan 10.
 	double YAW_MAX;
 	double PITCH_MAX;
 
+	bool killed = false;
+
+void soft_kill_callback(const std_msgs::Bool data)
+{
+	killed = data.data;
+}
+
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	double currentTime = ros::Time::now().toSec();
@@ -71,6 +80,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	setPoint_XSpeed = setPointsMsg.XSpeed.data;
 	setPoint_YSpeed = setPointsMsg.YSpeed.data;
 	setPoint_YawSpeed = setPointsMsg.YawSpeed.data;
+	setPoint_DepthSpeed = setPointsMsg.DepthSpeed.data;
 
 	isActive_XPos = setPointsMsg.XPos.isActive;
 	isActive_YPos = setPointsMsg.YPos.isActive;
@@ -80,7 +90,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	isActive_XSpeed = setPointsMsg.XSpeed.isActive;
 	isActive_YSpeed = setPointsMsg.YSpeed.isActive;
 	isActive_YawSpeed = setPointsMsg.YawSpeed.isActive;
-
+	isActive_DepthSpeed = setPointsMsg.DepthSpeed.isActive;
 	frame = setPointsMsg.Frame;
 
 }
@@ -206,6 +216,7 @@ int main(int argc, char **argv)
 
 	    double OL_coef_x;	//set later in the controller
 	    double OL_coef_y;
+	    double OL_coef_depth;
 	    double OL_coef_yaw;
 	    double OL_coef_balance; // used to balance surge thrusters, given as a whole number percent, off of evenly balanced
 	   
@@ -244,6 +255,7 @@ int main(int argc, char **argv)
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
 	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
+	ros::Subscriber softKill_subscriber = n.subscribe("/controls/softKill", 1000, soft_kill_callback);
 	//TO DO: add clock subscription
 
 	//ROS Publisher setup
@@ -251,6 +263,7 @@ int main(int argc, char **argv)
 	geometry_msgs::Wrench wrenchMsg; //define variable to publish
 	ros::Publisher debug_publisher = n.advertise<controls::DebugControls>("/controls/debug", 100); // debug publisher with custom debug msg
 	controls::DebugControls debugMsg;
+
 
 	ros::Rate loop_rate(1/dt); 
 	
@@ -324,6 +337,7 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
 		    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
 		    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
+		    n.param<double>("gains/OL_coef_depth", OL_coef_depth, 0.0);
 		    n.param<double>("gains/OL_coef_balance", OL_coef_balance, 0.0); // used to balance surge thrusters
 
 
@@ -423,6 +437,14 @@ int main(int argc, char **argv)
 			}
 		}
 
+		if (isActive_DepthSpeed)
+		{
+        	Fz = OL_coef_depth*setPoint_DepthSpeed; //no saturation because it's not worth it
+		}	
+
+
+
+
 		//Pitch
 		if (isActive_Pitch)
 		{
@@ -455,6 +477,12 @@ int main(int argc, char **argv)
 			Fz=saturate(Fz, F_MAX, "Force: Z");
 			Ty=saturate(Ty, T_MAX, "Torque: Y");
 			Tz=saturate(Tz, T_MAX, "Torque: Z");
+
+			if (killed == 1)
+			{
+				Fx = 0; Fy = 0; Fz = 0; Ty = 0; Tz = 0;
+				ROS_INFO("Controls Soft Kill Received - Publishing Zero Wrench");
+			}
 
 		// Assemble Wrench Message
 			wrenchMsg.force.x = Fx;
