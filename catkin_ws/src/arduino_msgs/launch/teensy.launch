@@ -1,0 +1,11 @@
+<launch>
+	<group ns="electrical_interface">
+	<node pkg="rosserial_python" type="serial_node.py" name="teensy" args="/dev/teensy" respawn="true">
+                <remap from="/temperature1" to="/electrical_interface/temperature1"/>
+		<remap from="/temperature2" to="/electrical_interface/temperature2"/>
+		<remap from="/temperature3" to="/electrical_interface/temperature3"/>        
+		<remap from="/temperature4" to="/electrical_interface/temperature4"/>
+		<remap from="/temperature5" to="/electrical_interface/temperature5"/> 
+	</node>
+	</group>
+</launch>

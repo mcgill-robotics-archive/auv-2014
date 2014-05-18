@@ -25,6 +25,7 @@ gains/kd_Yaw: 1
 gains/OL_coef_x: 5
 gains/OL_coef_y: 5
 gains/OL_coef_yaw: 1
+gains/OL_coef_balance: -2
 
 setPoints/XPos/value: 0.5
 setPoints/XSpeed/value: 0

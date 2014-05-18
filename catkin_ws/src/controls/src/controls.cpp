@@ -207,6 +207,7 @@ int main(int argc, char **argv)
 	    double OL_coef_x;	//set later in the controller
 	    double OL_coef_y;
 	    double OL_coef_yaw;
+	    double OL_coef_balance; // used to balance surge thrusters, given as a whole number percent, off of evenly balanced
 	   
 	//define and initialize error variables
 	
@@ -323,6 +324,8 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
 		    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
 		    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
+		    n.param<double>("gains/OL_coef_balance", OL_coef_balance, 0.0); // used to balance surge thrusters
+
 
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
 
@@ -370,6 +373,7 @@ int main(int argc, char **argv)
         {
            	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
+        	Tz = OL_coef_balance*.01*setPoint_XSpeed; // add a small torque to balance surge thrusters
         	//ROS_INFO("controlling xspeed");
         }
 
