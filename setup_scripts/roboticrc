@@ -2,7 +2,15 @@ alias maple='/usr/share/maple13/bin/xmaple'
 alias roscereal='rosrun rosserial_python serial_node.py'
 alias bag_temperature='rosbag record -e "/(.*)/temp(.*)"'
 alias asimov='ssh -X robotics@10.0.0.1'
+alias asimosh='mosh robotics@10.0.0.1'
 alias uri='export ROS_MASTER_URI=http://McGill:11311'
+alias monitor_temperatures='teamocil temperature'
+alias motor_stop='rostopic pub /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
+alias motor_positive='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 200, cmd_surge_port: 200, cmd_sway_bow: 200, cmd_sway_stern: 200, cmd_heave_bow: 200, cmd_heave_stern: 200}"'
+alias motor_negative='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: -200, cmd_surge_port: -200, cmd_sway_bow: -200, cmd_sway_stern: -200, cmd_heave_bow: -200, cmd_heave_stern: -200}"'
+alias motor_forward='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 200, cmd_surge_port: 200, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
+alias motor_right='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: -200, cmd_sway_stern: 200, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
+alias motor_left='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 200, cmd_sway_stern: -200, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
 
 source /opt/ros/hydro/setup.bash
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
