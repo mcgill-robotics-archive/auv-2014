@@ -103,11 +103,13 @@ private:
 	};
 
 	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV, cv::Scalar start, cv::Scalar end);
-	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
 	PoleCandidate findRectangleForContour(std::vector<cv::Point>& contour);
 	void computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight);
+	bool handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame);
+
 	void writePoleCandidateInfo(PoleCandidate& pole, cv::Mat& frame);
-	void handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame);
+	void drawPointsOfContour(cv::Mat& frame, std::vector<cv::Point> contour, cv::Scalar COLOR);
+	void drawGateInfo(cv::Mat& frame, PoleCandidate& p1, PoleCandidate& p2);
 
 	bool m_isVisible;
 	double m_yawAngle;
