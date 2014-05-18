@@ -149,40 +149,34 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 	}
 
 	int numberOfPotentialMatch = potentialMatchRectangles.size();
-	//  Here I assume that the two rectangles that I have are the orange cylinders of the gate.
-	if (numberOfPotentialMatch == 2) {
-		m_isVisible = true;
 
-		PoleCandidate& p1 = potentialMatchRectangles[0];
-		PoleCandidate& p2 = potentialMatchRectangles[1];
+	if (numberOfPotentialMatch > 1) {
+		int ip1, ip2;
+		for(int i = 0 ; i < numberOfPotentialMatch - 1 && !m_isVisible ; i++) {
+			PoleCandidate& p1 = potentialMatchRectangles[i];
 
-		handleTwoVisiblePoles(p1, p2, centerOfCurrentFrame);
-		
+			for(int j = i + 1 ; j < numberOfPotentialMatch && !m_isVisible ; j++) {
+				PoleCandidate& p2 = potentialMatchRectangles[j];
+				m_isVisible = handleTwoVisiblePoles(p1, p2, centerOfCurrentFrame);
+				if(m_isVisible) {
+					ip1 = i;
+					ip2 = j;
+				}
+			}
+		}
 
-		cv::Point centerPoint((p1.center.x + p2.center.x) / 2,
-					(p1.center.y + p2.center.y) / 2);
-		//Draw the point on-screen
-		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
-		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA);
-
-		putText(currentFrame, "Distance <x,y,z>=" + boost::lexical_cast<std::string>(m_xDistance) + " " + 
-				boost::lexical_cast<std::string>(m_yDistance) + " " + 
-				boost::lexical_cast<std::string>(m_zDistance),
-				cv::Point(centerPoint.x, centerPoint.y + 35),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
-
-		putText(currentFrame, "Yaw=" + boost::lexical_cast<std::string>((180.0/3.141592654) * m_yawAngle),
-				cv::Point(centerPoint.x, centerPoint.y + 45),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
+		if(m_isVisible) {
+			PoleCandidate& p1 = potentialMatchRectangles[ip1];
+			PoleCandidate& p2 = potentialMatchRectangles[ip2];
+			drawGateInfo(currentFrame, p1, p2);
+		}	
 	}
 	
 	//Center of image circle
 	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
 }
 
-void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame) {
+bool Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame) {
 	
 	PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
 	PoleCandidate& farthest = (p1.dist < p2.dist) ? p2 : p1;
@@ -351,6 +345,26 @@ void Gate::writePoleCandidateInfo(PoleCandidate& pole, cv::Mat& currentFrame) {
 		CV_AA);
 
 	
+}
+
+void Gate::drawGateInfo(cv::Mat& frame, PoleCandidate& p1, PoleCandidate& p2) {
+
+	cv::Point centerPoint((p1.center.x + p2.center.x) / 2, (p1.center.y + p2.center.y) / 2);
+	//Draw the point on-screen
+	cv::circle(frame, centerPoint, 30, GREEN_BGRX, 2, 5);
+	cv::line(frame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA);
+
+	putText(frame, "Distance <x,y,z>=" + boost::lexical_cast<std::string>(m_xDistance) + " " + 
+			boost::lexical_cast<std::string>(m_yDistance) + " " + 
+			boost::lexical_cast<std::string>(m_zDistance),
+			cv::Point(centerPoint.x, centerPoint.y + 35),
+			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+			CV_AA);
+
+	putText(frame, "Yaw=" + boost::lexical_cast<std::string>((180.0/3.141592654) * m_yawAngle),
+			cv::Point(centerPoint.x, centerPoint.y + 45),
+			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+			CV_AA);
 }
 
 /**
