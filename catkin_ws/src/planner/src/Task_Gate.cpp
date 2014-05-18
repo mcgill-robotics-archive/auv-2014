@@ -1,37 +1,50 @@
 #include "Task_Gate.h"
 
-Task_Gate::Task_Gate(Planner* planner, StatusUpdater* mSU){
+Task_Gate::Task_Gate(Planner* planner, StatusUpdater* mSU, int newPhase){
 	myPlanner = planner;
 	myStatusUpdater = mSU;
+	phase = newPhase;
 }
 
 void Task_Gate::execute() {
-	ros::Rate loop_rate(50);
-	loop_rate.sleep();
-	std::string frame = "/target/gate";
+	//setup stuff that should always run
+	frame = "/target/gate";
 	ROS_INFO("%s", "Executing the gate task.");
 
+	if(phase <= 1) {
+		phase1();
+	}
+	if(phase <= 2) {
+		phase2();
+	}
+	//etc
+}
+
+void Task_Gate::phase1() {
+	ros::Rate loop_rate(50);
+	loop_rate.sleep();
 	myStatusUpdater->updateStatus(myStatusUpdater->startingGate);
 	loop_rate.sleep();
 
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
-	//std::vector<double> desired =  (1.0, 0.0, 0.0, 0.0, 8.8);
-	//double myPoints[] = {-1.0, 0.0, 0.0, 0.0, 8.8};
-	//std::vector<double> desired (myPoints, myPoints + sizeof(myPoints) / sizeof(double) );
 	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
-	//desired = getTransform();
-
-	myStatusUpdater->updateStatus(myStatusUpdater->reachedGate);
-	loop_rate.sleep();
 	
 	while (!myPlanner->areWeThereYet(frame, desired)) {
 		ROS_DEBUG("Task_Gate::setPoints published");		
 		myPlanner->setPosition(desired, frame);
 		loop_rate.sleep();
-	}
+	}	
+}
+
+void Task_Gate::phase2() {
+	ros::Rate loop_rate(50);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->reachedGate);
+	loop_rate.sleep();
+
 	ROS_INFO("Task_Gate::reached the front of the gate");
 	myPlanner->setVelocity(2, 0, 0, 8.8, frame);
 

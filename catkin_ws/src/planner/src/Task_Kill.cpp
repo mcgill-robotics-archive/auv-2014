@@ -1,8 +1,9 @@
 #include "Task_Kill.h"
 
-Task_Kill::Task_Kill(Planner* planner, StatusUpdater* mSU){
+Task_Kill::Task_Kill(Planner* planner, StatusUpdater* mSU, int newPhase){
 	myPlanner = planner;
 	myStatusUpdater = mSU;
+	phase = newPhase;
 }
 
 void Task_Kill::execute() {

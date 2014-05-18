@@ -4,9 +4,9 @@
 #include "Task.h"
 
 class Task_Kill: public Task{
-public:
-	Task_Kill(Planner* planner, StatusUpdater* mSU);
-	void execute();
+	public:
+		Task_Kill(Planner* planner, StatusUpdater* mSU, int newPhase);
+		void execute();
 };
 
 #endif

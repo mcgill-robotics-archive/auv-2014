@@ -4,9 +4,13 @@
 #include "Task.h"
 
 class Task_Gate: public Task{
-public:
-	Task_Gate(Planner* planner, StatusUpdater* mSU);
-	void execute();
+	public:
+		Task_Gate(Planner* planner, StatusUpdater* mSU, int newPhase);
+		void execute();
+	private:
+		void phase1();
+		void phase2();
+		std::string frame;
 };
 
 #endif

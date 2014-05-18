@@ -7,10 +7,11 @@
 class Task{
 	public:
 		virtual void execute ();
-		Planner* myPlanner;
-		Task(Planner* planner, StatusUpdater* mSU);
+		Task(Planner* planner, StatusUpdater* mSU, int newPhase);
 		Task();
 		StatusUpdater* myStatusUpdater;
+		Planner* myPlanner;
+		int phase;
 
 	private:
 };
