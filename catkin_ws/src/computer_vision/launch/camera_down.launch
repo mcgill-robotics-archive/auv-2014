@@ -9,10 +9,7 @@
       <param name="white_balance_BU" value="1000" />
       <param name="white_balance_RV" value="500" />
       <param name="bayer_pattern" value="gbrg" />
-      <param name="binning_x" value="2" />
-      <param name="binning_y" value="2" />
       <param name="format7_color_coding" value="raw8"/>
-      <param name="bayer_method" value="DownSample" />
     </node>
 
     <!-- Launches the node that will rectify the image based on the calibration .yaml file. -->
