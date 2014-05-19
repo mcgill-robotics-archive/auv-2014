@@ -42,6 +42,16 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
 	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
 
+	//Gate parameters
+	nodeHandle.param<int>("gate_min_number_points_contour", gp.min_number_points_contour, 0);
+	nodeHandle.param<int>("gate_pole_desired_angle_deg", gp.pole_desired_angle_deg, 0);
+	nodeHandle.param<int>("gate_pole_angle_error_deg", gp.pole_angle_error_deg, 0);
+	ROS_INFO("%s", "DESIRED ANGLE: ");	
+	ROS_INFO("%d", gp.pole_desired_angle_deg);
+	nodeHandle.param<int>("gate_min_pole_ratio", gp.min_pole_ratio, 0);
+	nodeHandle.param<int>("gate_height_m", gp.gate_height_m, 0);
+	nodeHandle.param<int>("gate_width_m", gp.gate_width_m, 0);
+
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": CVNode (the parent of FrontCVNode and DownCVNode) has been initialized.").c_str());
 }
 

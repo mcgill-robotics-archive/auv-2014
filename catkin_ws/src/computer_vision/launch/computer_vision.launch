@@ -2,20 +2,22 @@
 	<!-- Starts the two computer vision nodes (front and down) -->
 
   <!-- Loads the appropriate parameters used by the computer vision package -->
-  <rosparam command="load" file="$(find computer_vision)/computerVisionParameters.yaml"/>
+  <rosparam command="load" file="$(find computer_vision)/config/cvBase.yaml"/>
+
+  <rosparam command="load" file="$(find computer_vision)/config/gate.yaml"/>
 
   <arg name="isUsingSimulation" default="1"/>
 
   <!-- When we want to run the computer vision in the simulation environment. -->
   <group if="$(arg isUsingSimulation)">
     <!-- Loads parameters that are specific to the simulation environment -->
-    <rosparam command="load" file="$(find computer_vision)/simulationEnvironmentSpecificParameters.yaml"/>
+    <rosparam command="load" file="$(find computer_vision)/config/simulationSpecific.yaml"/>
   </group>
 
   <!-- When we don't want to run the computer vision in the simulation environment. -->
   <group unless="$(arg isUsingSimulation)">
     <!-- Loads parameters that are specific to the camera nodes and the competition-->
-    <rosparam command="load" file="$(find computer_vision)/cameraNodeSpecificParameters.yaml"/>
+    <rosparam command="load" file="$(find computer_vision)/config/realitySpecific.yaml"/>
   </group>
 
   <!-- Launches cv_front node. -->
