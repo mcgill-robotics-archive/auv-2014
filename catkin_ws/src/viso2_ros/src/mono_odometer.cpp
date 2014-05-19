@@ -42,7 +42,7 @@ public:
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
     camera_sub_ = it.subscribeCamera("image", 1, &MonoOdometer::imageCallback, this, transport);
-    height_sub = nh.subscribe("'state_estimation/down_distance'", 1, &MonoOdometer::heightCallback, this);
+    height_sub = nh.subscribe("state_estimation/down_distance", 1, &MonoOdometer::heightCallback, this);
 
     info_pub_ = local_nh.advertise<VisoInfo>("info", 1);
   }
