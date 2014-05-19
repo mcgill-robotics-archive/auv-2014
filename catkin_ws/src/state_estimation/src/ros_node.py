@@ -2,6 +2,7 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Vector3Stamped
 from std_msgs.msg import Float64
+from std_msgs.msg import Int16
 from computer_vision.msg import VisibleObjectData
 from state_estimation.msg import AUVState
 import dead_reck
@@ -73,7 +74,6 @@ def init():
     rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('state_estimation/pose', PoseStamped, imuCallback)
     rospy.Subscriber('state_estimation/depth', Float64, depthCallback)
-
     # Publish the filtered data to a topic
     pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     down_distance_pub = rospy.Publisher('state_estimation/down_distance', Float64)

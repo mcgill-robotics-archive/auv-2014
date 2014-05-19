@@ -1,6 +1,6 @@
 <launch>
 	<node pkg="viso2_ros" type="mono_odometer" name="mono_odometer" output="screen">
-		<remap from="image" to="/camera_out/image_raw"/>
+		<remap from="image" to="/camera_down/camera_out/image_raw"/>
 
 		<!-- Mono params -->
 		<param name="camera_height" value="0.7366" />
