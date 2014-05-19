@@ -63,6 +63,21 @@ class CVNode {
 	inline bool get_down_using_helpers() const { return down_using_helpers; }
 	inline bool get_front_using_helpers() const { return front_using_helpers; }
 
+	struct GateParameters {
+		int min_number_points_contour;
+
+		int pole_desired_angle_deg;		
+		int pole_angle_error_deg;
+
+		int min_pole_ratio;
+
+		int gate_height_m;
+		int gate_width_m;
+	};
+
+	protected:
+	GateParameters gp;
+
 	private:
 
 	virtual void receiveImage(const sensor_msgs::ImageConstPtr& message) = 0;
