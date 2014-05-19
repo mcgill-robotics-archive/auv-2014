@@ -48,7 +48,7 @@ def imuCallback(poseStamped):
     #print "%3f %3f %3f"%(Q[1],Q[2],Q[3])
 
     sin = math.sqrt(Q[1]*Q[1] + Q[2]*Q[2] + Q[3]*Q[3])
-    if sin != 0:
+    if sin != 0 and Q[3] != 0:
         sin *= Q[3]/math.fabs(Q[3])
     cos = Q[0]
     angle = 2*math.atan2(sin,cos)
