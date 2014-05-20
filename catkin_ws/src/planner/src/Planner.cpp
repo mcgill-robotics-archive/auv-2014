@@ -85,7 +85,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 			setRobotInitialPosition(n, 2.7, -3.5, 1, 0, 0, 0);
 			break;
 		case (2) :
-			setRobotInitialPosition(n, 1.735, 0.52, 1, 0, 0, 0);
+			setRobotInitialPosition(n, 1.102, 2.15, 1, 0, 0, 0);
 			break;
 		case (3) : //TODO: the last parameter is doing nothing for now
 			setRobotInitialPosition(n, -1.38, 3.225, 1, 0, 0, -2.3016);
