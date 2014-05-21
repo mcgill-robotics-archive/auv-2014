@@ -1,0 +1,57 @@
+<launch>
+    <arg name="CAMERA_NAME" />
+    <arg name="CAMERA_ID" />
+  <group ns="$(arg CAMERA_NAME)" >
+    <node pkg="camera1394" type="camera1394_node" name="camera1394_node" >
+      <param name="guid" value="$(arg CAMERA_ID)" />
+      <param name="video_mode" value="format7_mode0" />
+      <param name="frame_id" value="unibrain" />
+
+      <!-- The White Balance is set to manual here -->
+      
+      <param name="auto_white_balance" value="3" />
+      <param name="white_balance_BU" value="1000" />
+      <param name="white_balance_RV" value="500" />
+      <param name="bayer_pattern" value="gbrg" />
+      <param name="format7_color_coding" value="raw8"/>
+    </node>
+
+    <!-- Launches the node that will rectify the image based on the calibration .yaml file. -->
+    <arg name="HD" default="0" />
+    <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" if="$(arg HD)"/>
+    
+    <group unless="$(arg HD)">
+
+        <!-- node to reduce the size of raw camera image -->
+        <node pkg="nodelet" type="nodelet" 
+        args="standalone image_proc/crop_decimate" 
+        name="decimator">
+
+            <param name="decimation_x" type="int" value="2" />
+            <param name="decimation_y" type="int" value="2" />
+
+            <remap from="camera_out/image_raw" to="camera/image_color" />
+            <remap from="camera_out/camera_info" to="camera/cemera_info_crop" />
+    
+        </node>
+
+        <node pkg="nodelet" type="nodelet"
+            args="standalone image_proc/rectify"
+            name="rectifier">
+
+            <remap from="image_mono" to="camera/image_color" />
+            <remap from="camera_info" to="camera/camera_info_crop" />
+            <remap from="image_rect" to="camera/image_rect" />
+        </node>
+    </group>
+    <!-- Launches the image viewer if the parameter 'viewFeed' is set to 1 -->
+    <arg name="viewFeed" default="0"/>
+    <group if="$(arg viewFeed)">
+      <node pkg="image_view" type="image_view" name="image_view" >
+        <remap from="image" to="camera/image_" />
+      </node>
+    </group>
+    
+  </group>
+
+</launch>
