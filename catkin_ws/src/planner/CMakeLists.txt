@@ -8,6 +8,7 @@ project(planner)
    simulator
    message_generation
    blinky
+   robosub_msg
  )
 
 ################################################
@@ -15,12 +16,12 @@ project(planner)
 ################################################
 
 ## Generate messages in the 'msg' folder
- add_message_files (
-   FILES
-   setPoints.msg
-   ValueControl.msg
-   CurrentCVTask.msg
- )
+# add_message_files (
+#   FILES
+#   setPoints.msg
+#   ValueControl.msg
+#   CurrentCVTask.msg
+# )
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages (

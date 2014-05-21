@@ -5,7 +5,7 @@
 #include "gazebo_msgs/ModelStates.h"
 #include "computer_vision/VisibleObjectData.h"
 #include "std_msgs/String.h"
-#include "planner/currentCVTask.h"
+#include "robosub_msg/currentCVTask.h"
 
 
 class distanceCalculator {

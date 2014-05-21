@@ -10,7 +10,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <list>
 #include "computer_vision/VisibleObjectData.h"
-#include "planner/CurrentCVTask.h"
+#include "robosub_msg/CurrentCVTask.h"
 #include "VisibleObject.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
