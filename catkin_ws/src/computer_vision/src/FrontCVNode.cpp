@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 	ros::shutdown();
 }
 
-void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
+void FrontCVNode::listenToPlanner(robosub_msg::CurrentCVTask msg) {
 	this->visibleObjectList.clear();
 	if (msg.currentCVTask == 1) {
 		this->visibleObjectList.push_back(new Gate(*(this), gp));

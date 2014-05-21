@@ -4,7 +4,7 @@
 */
 
 #include "ros/ros.h"
-#include "planner/setPoints.h"
+#include "robosub_msg/setPoints.h"
 #include "std_msgs/Float64.h"
 
 int main(int argc, char **argv)

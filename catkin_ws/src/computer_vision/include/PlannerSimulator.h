@@ -2,7 +2,7 @@
 #define PLANNER_SIMULATOR_H
 
 #include <ros/ros.h>
-#include "planner/CurrentCVTask.h"
+#include "robosub_msg/CurrentCVTask.h"
 
 // These variables need to be accessible from the main method in FrontCVNode.cpp.
 const std::string PLANNER_DATA_FRONT_TOPIC_NAME = "currentCVTask_Front";

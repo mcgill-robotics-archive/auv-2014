@@ -161,8 +161,8 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 }
 
 void Planner::setVisionObj(int objIndex) {
-	planner::CurrentCVTask msgFront;
-	planner::CurrentCVTask msgDown;
+	robosub_msg::CurrentCVTask msgFront;
+	robosub_msg::CurrentCVTask msgDown;
 
 	msgFront.currentCVTask = msgFront.NOTHING;
 	msgDown.currentCVTask = msgDown.NOTHING;
@@ -190,7 +190,7 @@ void Planner::setVisionObj(int objIndex) {
 }
 
 void Planner::setPoints(double pointControl[], std::string referenceFrame) {
-	planner::setPoints msgControl;
+	robosub_msg::setPoints msgControl;
 
 	msgControl.XPos.isActive = pointControl[0];
 	msgControl.XPos.data = pointControl[1];
@@ -334,10 +334,10 @@ Planner::Planner(ros::NodeHandle& n) {
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
 
-	taskPubFront = n.advertise<planner::CurrentCVTask>("currentCVTask_Front", 1000);
-	taskPubDown = n.advertise<planner::CurrentCVTask>("currentCVTask_Down", 1000);
+	taskPubFront = n.advertise<robosub_msg::CurrentCVTask>("currentCVTask_Front", 1000);
+	taskPubDown = n.advertise<robosub_msg::CurrentCVTask>("currentCVTask_Down", 1000);
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
-	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
+	control_pub = n.advertise<robosub_msg::setPoints>("setPoints", 1000);
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater, 0);

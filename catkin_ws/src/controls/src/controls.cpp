@@ -67,7 +67,7 @@ void soft_kill_callback(const std_msgs::Bool data)
 	killed = data.data;
 }
 
-void setPoints_callback(const planner::setPoints setPointsMsg)
+void setPoints_callback(const robosub_msg::setPoints setPointsMsg)
 {
 	double currentTime = ros::Time::now().toSec();
 	ROS_INFO("received setPoints - currentTime: %f", currentTime);

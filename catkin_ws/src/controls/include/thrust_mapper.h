@@ -7,7 +7,7 @@
 #include "geometry_msgs/Pose.h"
 #include "geometry_msgs/Wrench.h"
 #include "std_msgs/Float64.h"
-#include "planner/setPoints.h"	
+#include "robosub_msg/setPoints.h"	
 #include "computer_vision/VisibleObjectData.h"
 #include "controls/DebugControls.h"
 #include "gazebo_msgs/ModelStates.h"
