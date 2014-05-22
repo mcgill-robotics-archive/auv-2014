@@ -24,10 +24,10 @@ project(planner)
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages (
-   DEPENDENCIES
-   std_msgs
- )
+# generate_messages (
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ###################################
 ## catkin specific configuration ##

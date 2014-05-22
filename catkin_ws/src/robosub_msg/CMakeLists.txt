@@ -20,6 +20,9 @@ find_package(catkin REQUIRED COMPONENTS
    setPoints.msg
    ValueControl.msg
    CurrentCVTask.msg
+   motor.msg
+   solenoid.msg
+
  )
 
 ## Generate services in the 'srv' folder
@@ -30,9 +33,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages (
-#   DEPENDENCIES
-# )
+ generate_messages (
+   DEPENDENCIES
+   std_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##

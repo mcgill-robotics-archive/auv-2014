@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   cv_bridge
   message_generation
-  planner
+  robosub_msg
   tf
 )
 
@@ -47,7 +47,7 @@ generate_messages(
 catkin_package(
    INCLUDE_DIRS include
 #  LIBRARIES controls
-  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs planner message_runtime
+  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs robosub_msg message_runtime
 )
 
 ###########
@@ -85,7 +85,6 @@ add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
 add_dependencies(controls ${catkin_EXPORTED_TARGETS})
 add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})
 add_dependencies(gui_controls ${catkin_EXPORTED_TARGETS})
-
 
 
 #add_dependencies(controls ${PROJECT_NAME}_gencpp)
