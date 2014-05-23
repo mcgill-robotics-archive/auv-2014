@@ -41,6 +41,12 @@ lin = audio.open(format=pyaudio.paFloat32, channels=2,
                  frames_per_buffer=BUFFERSIZE)
 
 
+def close():
+    ''' Closes audio streams '''
+    audio.close(mic)
+    audio.close(lin)
+
+
 def read():
     ''' Reads time domain from microphones and updates objects '''
     data_mic = np.fromstring(mic.read(BUFFERSIZE), dtype=np.float32)
@@ -59,3 +65,5 @@ if __name__ == '__main__':
             read()
     except rospy.ROSInterruptException:
         pass
+    
+    close()

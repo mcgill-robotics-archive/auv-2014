@@ -7,6 +7,6 @@ windows:
       - cmd: "clear && roscore"
       - cmd: "sleep 10 && roslaunch ~/McGill_RoboSub_2014/catkin_ws/launch/startup.launch"
       - cmd: "sleep 10 && roslaunch status status.launch"
-      - cmd: "glances -yet 5"
+      - cmd: "clear"
       - cmd: "clear"
 
