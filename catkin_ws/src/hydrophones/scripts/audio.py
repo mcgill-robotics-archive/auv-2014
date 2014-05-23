@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 
+# TODO: MAKE SURE LINE IN AND MIC WORK AS EXPECTED
+
 # IMPORTS
 from ctypes import *
-import rospy
 import pyaudio
 import numpy as np
-import sys
-sys.path.append("../")
-import param
+import rospy
 import roslib
 from hydrophones.msg import *
-
-param.set()
+import param
 
 # PARAMETERS
 NUMBER_OF_MICS = param.get_number_of_mics()
@@ -55,5 +53,9 @@ def read():
 
     audio_topic.publish(signal)
 
-while True:
-    read()
+if __name__ == '__main__':
+    try:
+        while not rospy.is_shutdown():
+            read()
+    except rospy.ROSInterruptException:
+        pass

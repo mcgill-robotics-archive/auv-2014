@@ -4,10 +4,10 @@
 import rospy
 
 ### PARAMETERS
-BUFFERSIZE = 1024           # SIZE OF FFT BUFFER
+BUFFERSIZE = 128            # SIZE OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
-TARGET_FREQUENCY = 30e3     # FREQUENCY OF PINGER           Hz
+TARGET_FREQUENCY = 1000     # FREQUENCY OF PINGER           Hz
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
@@ -67,7 +67,7 @@ def get_mic_positions():
     return pos
 
 
-def set():
+def set_parameters():
     """ Creates and sets ROS parameters """
     rospy.set_param('/hydrophones/buffersize',BUFFERSIZE)
     rospy.set_param('/hydrophones/number_of_mics',NUMBER_OF_MICS)
@@ -86,3 +86,7 @@ def set():
 
     rospy.set_param('/hydrophones/pos/3/x',0)
     rospy.set_param('/hydrophones/pos/3/y',HEIGHT)
+
+
+if __name__ == '__main__':
+    set_parameters()
