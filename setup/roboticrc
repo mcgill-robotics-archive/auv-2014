@@ -8,6 +8,10 @@ alias uri='export ROS_MASTER_URI=http://McGill:11311'
 alias softkill='rostopic pub /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub /controls/softKill std_msgs/Bool "data: false"'
 
+function stop_warning {
+    rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"
+}
+
 alias motor_stop='rostopic pub /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
 alias motor_positive='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 200, cmd_surge_port: 200, cmd_sway_bow: 200, cmd_sway_stern: 200, cmd_heave_bow: 200, cmd_heave_stern: 200}"'
 

@@ -42,7 +42,7 @@ def initialize_blinkies():
     colors = []
 	
     for i in range(ledCount):
-    	colors.append(RGB(139,69,19)) # Brown (!!!)
+    	colors.append(RGB(0,255,255)) # Cyan (!!!)
 
     # store the initial states
     planner_colorList = colors
