@@ -81,10 +81,10 @@ target_link_libraries(thrust_mapper ${catkin_LIBRARIES})
 target_link_libraries(gui_controls ${catkin_LIBRARIES})
 
 
-add_dependencies(depthController ${catkin_EXPORTED_TARGETS})
-add_dependencies(controls ${catkin_EXPORTED_TARGETS})
-add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS})
-add_dependencies(gui_controls ${catkin_EXPORTED_TARGETS})
+add_dependencies(depthController ${catkin_EXPORTED_TARGETS} controls_generate_messages_cpp)
+add_dependencies(controls ${catkin_EXPORTED_TARGETS} controls_generate_messages_cpp)
+add_dependencies(thrust_mapper ${catkin_EXPORTED_TARGETS}  controls_generate_messages_cpp)
+add_dependencies(gui_controls ${catkin_EXPORTED_TARGETS}  controls_generate_messages_cpp)
 
 
 
