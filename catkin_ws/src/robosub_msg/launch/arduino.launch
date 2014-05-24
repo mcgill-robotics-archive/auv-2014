@@ -1,6 +1,6 @@
 <launch>
 	<group ns="electrical_interface" >
-		<node pkg="rosserial_python" type="serial_node.py" name="arduino" args="/dev/arduino" respawn="false" output="screen">
+		<node pkg="rosserial_python" type="serial_node.py" name="arduino" args="/dev/arduino" respawn="true" output="screen">
 			<remap from="/motor" to="/electrical_interface/motor"/>     
 			<remap from="/temperature" to="/electrical_interface/temperature"/>   
 			<remap from="/solenoid" to="/electrical_interface/solenoid"/>   
