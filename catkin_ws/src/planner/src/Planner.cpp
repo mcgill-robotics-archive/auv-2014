@@ -157,7 +157,7 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	bool pitchBounded = abs(pitch - desired.at(2)) < pitchBound;
 	bool yawBounded = abs(yaw - desired.at(3)) < yawBound;
 
-	return (xBounded && yBounded);
+	return (xBounded && yBounded && yawBounded && pitchBounded);
 }
 
 void Planner::setVisionObj(int objIndex) {
@@ -216,21 +216,24 @@ void Planner::setPoints(double pointControl[], std::string referenceFrame) {
 	msgControl.Depth.isActive = pointControl[14];
 	msgControl.Depth.data = pointControl[15];
 
+	msgControl.DepthSpeed.isActive = pointControl[16];
+	msgControl.DepthSpeed.data = pointControl[17];
+
 	msgControl.Frame = referenceFrame;
 
 	control_pub.publish(msgControl);
 }
 
 void Planner::setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
-	double pointControl[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
-			1, yaw_speed, 1, depth };
+	double pointControl[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
+			1, yaw_speed, 1, depth, 0, 0};
 	setPoints(pointControl, referenceFrame);
 }
 
 void Planner::setPosition(std::vector<double> desired, std::string referenceFrame) {
-	double pointControl[16] =
-			{ 1, desired.at(0), 1, desired.at(1), 0, desired.at(2), 0,
-					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4) };
+	double pointControl[18] =
+			{ 1, desired.at(0), 1, desired.at(1), 1, desired.at(2), 1,
+					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4), 0, 0 };
 	setPoints(pointControl, referenceFrame);
 }
 
