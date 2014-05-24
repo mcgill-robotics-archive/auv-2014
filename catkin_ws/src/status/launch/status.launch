@@ -1,4 +1,7 @@
 <launch>
+    <!-- blinky -->
+    <node name="blinky" pkg="blinky" type="blinky_server.py"/>
+
     <!-- temperature -->
     <node name="temperature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
 
