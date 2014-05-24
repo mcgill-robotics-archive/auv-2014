@@ -60,9 +60,9 @@ const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pit
 	    if (isUsingControlTrackbarWindow_xPos) {
 	    	// Instantiates the window object used for the trackbars.
 	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_XPOS, CV_WINDOW_KEEPRATIO);
-	    	ROS_INFO("Controls::The trackbars window was created.");
+	    	ROS_DEBUG("Controls::The trackbars window was created.");
 
-	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	ROS_DEBUG("Controls::Adding trackbars to the trackbar window.");
 	    	cv::createTrackbar("kp_xPos_dec", CONTROL_TRACKBARS_WINDOW_XPOS, &kp_xPos_dec, 10);
 	    	cv::createTrackbar("kp_xPos_int", CONTROL_TRACKBARS_WINDOW_XPOS, &kp_xPos_int, 25);
 	    	cv::createTrackbar("ki_xPos_dec", CONTROL_TRACKBARS_WINDOW_XPOS, &ki_xPos_dec, 10);
@@ -75,9 +75,9 @@ const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pit
 		if (isUsingControlTrackbarWindow_yPos) {
 	    	// Instantiates the window object used for the trackbars.
 	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_YPOS, CV_WINDOW_KEEPRATIO);
-	    	ROS_INFO("Controls::The trackbars window was created.");
+	    	ROS_DEBUG("Controls::The trackbars window was created.");
 
-	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	ROS_DEBUG("Controls::Adding trackbars to the trackbar window.");
 	    	cv::createTrackbar("kp_yPos_dec", CONTROL_TRACKBARS_WINDOW_YPOS, &kp_yPos_dec, 10);
 	    	cv::createTrackbar("kp_yPos_int", CONTROL_TRACKBARS_WINDOW_YPOS, &kp_yPos_int, 25);
 	    	cv::createTrackbar("ki_yPos_dec", CONTROL_TRACKBARS_WINDOW_YPOS, &ki_yPos_dec, 10);
@@ -90,9 +90,9 @@ const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pit
 	    if (isUsingControlTrackbarWindow_Depth) {
 	    	// Instantiates the window object used for the trackbars.
 	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_DEPTH, CV_WINDOW_KEEPRATIO);
-	    	ROS_INFO("Controls::The trackbars window was created.");
+	    	ROS_DEBUG("Controls::The trackbars window was created.");
 
-	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	ROS_DEBUG("Controls::Adding trackbars to the trackbar window.");
 	    	cv::createTrackbar("kp_Depth_dec", CONTROL_TRACKBARS_WINDOW_DEPTH, &kp_Depth_dec, 10);
 	    	cv::createTrackbar("kp_Depth_int", CONTROL_TRACKBARS_WINDOW_DEPTH, &kp_Depth_int, 25);
 	    	cv::createTrackbar("ki_Depth_dec", CONTROL_TRACKBARS_WINDOW_DEPTH, &ki_Depth_dec, 10);
@@ -105,9 +105,9 @@ const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pit
 	    if (isUsingControlTrackbarWindow_Yaw) {
 	    	// Instantiates the window object used for the trackbars.
 	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_YAW, CV_WINDOW_KEEPRATIO);
-	    	ROS_INFO("Controls::The trackbars window was created.");
+	    	ROS_DEBUG("Controls::The trackbars window was created.");
 
-	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	ROS_DEBUG("Controls::Adding trackbars to the trackbar window.");
 	    	cv::createTrackbar("kp_Yaw_dec", CONTROL_TRACKBARS_WINDOW_YAW, &kp_Yaw_dec, 10);
 	    	cv::createTrackbar("kp_Yaw_int", CONTROL_TRACKBARS_WINDOW_YAW, &kp_Yaw_int, 25);
 	    	cv::createTrackbar("ki_Yaw_dec", CONTROL_TRACKBARS_WINDOW_YAW, &ki_Yaw_dec, 10);
@@ -120,9 +120,9 @@ const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pit
 	    if (isUsingControlTrackbarWindow_Pitch) {
 	    	// Instantiates the window object used for the trackbars.
 	    	cv::namedWindow(CONTROL_TRACKBARS_WINDOW_PITCH, CV_WINDOW_KEEPRATIO);
-	    	ROS_INFO("Controls::The trackbars window was created.");
+	    	ROS_DEBUG("Controls::The trackbars window was created.");
 
-	    	ROS_INFO("Controls::Adding trackbars to the trackbar window.");
+	    	ROS_DEBUG("Controls::Adding trackbars to the trackbar window.");
 	    	cv::createTrackbar("kp_Pitch_dec", CONTROL_TRACKBARS_WINDOW_PITCH, &kp_Pitch_dec, 10);
 	    	cv::createTrackbar("kp_Pitch_int", CONTROL_TRACKBARS_WINDOW_PITCH, &kp_Pitch_int, 25);
 	    	cv::createTrackbar("ki_Pitch_dec", CONTROL_TRACKBARS_WINDOW_PITCH, &ki_Pitch_dec, 10);
@@ -131,36 +131,36 @@ const std::string CONTROL_TRACKBARS_WINDOW_PITCH = "control_trackbars_window_pit
 	    	cv::createTrackbar("kd_Pitch_int", CONTROL_TRACKBARS_WINDOW_PITCH, &kd_Pitch_int, 25);
 
 	    }
-	    ROS_INFO("Controls::The window should be instantiated.");
+	    ROS_DEBUG("Controls::The window should be instantiated.");
 
 	}
 
 	if (isUsingControlTrackbarWindow_xPos) {
-		ROS_INFO("Freeing memory used by the trackbar window.");
+		ROS_DEBUG("Freeing memory used by the trackbar window.");
 		// Frees the memory used by the instantiated window.
 		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_XPOS);
 	}
 
 	if (isUsingControlTrackbarWindow_yPos) {
-		ROS_INFO("Freeing memory used by the trackbar window.");
+		ROS_DEBUG("Freeing memory used by the trackbar window.");
 		// Frees the memory used by the instantiated window.
 		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YPOS);
 	}
 
 	if (isUsingControlTrackbarWindow_Depth) {
-		ROS_INFO("Freeing memory used by the trackbar window.");
+		ROS_DEBUG("Freeing memory used by the trackbar window.");
 		// Frees the memory used by the instantiated window.
 		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_DEPTH);
 	}
 
 	if (isUsingControlTrackbarWindow_Yaw) {
-		ROS_INFO("Freeing memory used by the trackbar window.");
+		ROS_DEBUG("Freeing memory used by the trackbar window.");
 		// Frees the memory used by the instantiated window.
 		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_YAW);
 	}
 
 	if (isUsingControlTrackbarWindow_Pitch) {
-		ROS_INFO("Freeing memory used by the trackbar window.");
+		ROS_DEBUG("Freeing memory used by the trackbar window.");
 		// Frees the memory used by the instantiated window.
 		cv::destroyWindow(CONTROL_TRACKBARS_WINDOW_PITCH);
 	}

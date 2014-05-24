@@ -70,7 +70,7 @@ void soft_kill_callback(const std_msgs::Bool data)
 void setPoints_callback(const robosub_msg::setPoints setPointsMsg)
 {
 	double currentTime = ros::Time::now().toSec();
-	ROS_INFO("received setPoints - currentTime: %f", currentTime);
+	ROS_DEBUG("received setPoints - currentTime: %f", currentTime);
 
 	setPoint_XPos = setPointsMsg.XPos.data;
 	setPoint_YPos = setPointsMsg.YPos.data;
@@ -99,7 +99,7 @@ void depth_callback(const std_msgs::Float64 data)
 {
 	depth = data.data;
 	double currentTime = ros::Time::now().toSec();
-	ROS_INFO("Received depth - currentTime: %f", currentTime);
+	ROS_DEBUG("Received depth - currentTime: %f", currentTime);
 }
 
 float output_limit_check(float value, float min, float max, char* value_name ){ //can this be deleted?
@@ -117,12 +117,12 @@ float output_limit_check(float value, float min, float max, char* value_name ){ 
 float saturate(float value, float max, char* value_name) {
 	//saturates if out of range
 	if (value > max) {
-		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
+		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
 		value=max;
 	}
 	else if (value < -1*max)
 	{
-		ROS_INFO("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
+		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
 		value=-1*max;
 	}
 
@@ -145,10 +145,10 @@ void getStateFromTF()
 	try
 	{
 	double currentTime = ros::Time::now().toSec();
-	ROS_INFO("waiting for transform- currentTime: %f", currentTime);
+	ROS_DEBUG("waiting for transform- currentTime: %f", currentTime);
 	tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
 	currentTime = ros::Time::now().toSec();
-	ROS_INFO("done waiting for transform - currentTime: %f", currentTime);
+	ROS_DEBUG("done waiting for transform - currentTime: %f", currentTime);
 	tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
 	}
 	catch (tf::TransformException ex){
@@ -170,7 +170,7 @@ void getStateFromTF()
 	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
 	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
-	//ROS_INFO("RPY: %f %f %f %f %f %f", roll, estimated_Pitch, estimated_Yaw, r2, p2, y2); //debug output}
+	//ROS_DEBUG("RPY: %f %f %f %f %f %f", roll, estimated_Pitch, estimated_Yaw, r2, p2, y2); //debug output}
 }
 int main(int argc, char **argv)
 {
@@ -271,7 +271,7 @@ int main(int argc, char **argv)
 	bool estimatedStateIsPublished = 1; //Hardcoded cuz I'm lazy TODO fix
 	bool depthIsPublished = 0;
 
-	ROS_INFO("controls node waiting for setPoints to be published...");
+	ROS_DEBUG("controls node waiting for setPoints to be published...");
 	while (setPointsIsPublished == 0)
 	{
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
@@ -280,7 +280,7 @@ int main(int argc, char **argv)
 		ros::Duration(5).sleep(); //sleep for this many seconds
 	}
 
-	ROS_INFO("All Subscribers Live. Starting Controller!");
+	ROS_DEBUG("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
 
@@ -344,7 +344,7 @@ int main(int argc, char **argv)
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
 
 		double currentTime = ros::Time::now().toSec();
-		ROS_INFO("\n--\nTop of main loop - currentTime: %f", currentTime);
+		ROS_DEBUG("\n--\nTop of main loop - currentTime: %f", currentTime);
 		ros::spinOnce();	//Updates all variables
 		getStateFromTF();
 		currentTime = ros::Time::now().toSec();
@@ -374,8 +374,8 @@ int main(int argc, char **argv)
 				ed_XPos = saturate(ed_XPos, MAX_ERROR_X_D, "X Derivative Error");
 				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
 				Fx *= -1; //flip direction to account for relative coordinate system
-				//ROS_INFO("controlling xpos");
-				//ROS_INFO("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
+				//ROS_DEBUG("controlling xpos");
+				//ROS_DEBUG("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 			}
 			else
 			{
@@ -388,7 +388,7 @@ int main(int argc, char **argv)
            	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	Tz = OL_coef_balance*.01*setPoint_XSpeed; // add a small torque to balance surge thrusters
-        	//ROS_INFO("controlling xspeed");
+        	//ROS_DEBUG("controlling xspeed");
         }
 
         //Y 
@@ -421,7 +421,7 @@ int main(int argc, char **argv)
 		{
 			if (depthIsPublished)
 			{
-				//ROS_INFO("setPointDepth: %f | estimatedDepth: %f", setPoint_Depth, depth);
+				//ROS_DEBUG("setPointDepth: %f | estimatedDepth: %f", setPoint_Depth, depth);
 				ep_Depth_prev = ep_Depth;
 				ep_Depth = setPoint_Depth - depth;
 				ei_Depth += ep_Depth*dt;
@@ -481,7 +481,7 @@ int main(int argc, char **argv)
 			if (killed == 1)
 			{
 				Fx = 0; Fy = 0; Fz = 0; Ty = 0; Tz = 0;
-				ROS_INFO("Controls Soft Kill Received - Publishing Zero Wrench");
+				ROS_DEBUG("Controls Soft Kill Received - Publishing Zero Wrench");
 			}
 
 		// Assemble Wrench Message
