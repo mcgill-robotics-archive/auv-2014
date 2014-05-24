@@ -31,7 +31,7 @@
             <param name="decimation_y" type="int" value="2" />
 
             <remap from="camera_out/image_raw" to="camera/image_color" />
-            <remap from="camera_out/camera_info" to="camera/cemera_info_crop" />
+            <remap from="camera_out/camera_info" to="camera/camera_info_crop" />
     
         </node>
 
@@ -44,11 +44,12 @@
             <remap from="image_rect" to="camera/image_rect" />
         </node>
     </group>
+
     <!-- Launches the image viewer if the parameter 'viewFeed' is set to 1 -->
     <arg name="viewFeed" default="0"/>
     <group if="$(arg viewFeed)">
       <node pkg="image_view" type="image_view" name="image_view" >
-        <remap from="image" to="camera/image_" />
+        <remap from="image" to="camera/image_color" />
       </node>
     </group>
     
