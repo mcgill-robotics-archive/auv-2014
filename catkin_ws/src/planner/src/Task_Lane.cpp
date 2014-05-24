@@ -7,7 +7,7 @@ Task_Lane::Task_Lane(Planner* planner, StatusUpdater* mSU, int newPhase){
 }
 
 void Task_Lane::execute() {
-	std::string frame = "/target/guideline";
+	std::string frame = "/target/lane";
 
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
@@ -18,7 +18,10 @@ ROS_INFO("looking for the lane");
 	tf::TransformListener listener;
 	listener.waitForTransform(frame, "/robot/rotation_center",
 			ros::Time(0), ros::Duration(300));
-myPlanner->setVelocity(0, 0, 0, 8.8, frame);
+//stops moving
+	double myPoints0[5] = {0.0, 0.0, 0.0, 0.0, 8.8};
+	std::vector<double> desired0(myPoints0, myPoints0 + sizeof(myPoints0) / sizeof(myPoints0[0]));
+	myPlanner->setPosition(desired0, "/robot/rotation_center");
 ROS_INFO("found the lane");
 	//position above the lane marker
 	double myPoints[5] = {0.0, 0.0, 0.0, 0.0, 8.8};

@@ -44,14 +44,13 @@ namespace ros
   /* downsize our buffers */
   typedef NodeHandle_<ArduinoHardware, 6, 6, 150, 150> NodeHandle;
 
-#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32u4__)
+#elif defined(__AVR_ATmega328P__)
 
-  // changed buffer size to reduce the memory impact 
-  typedef NodeHandle_<ArduinoHardware, 25, 25, 100, 100> NodeHandle;
+  typedef NodeHandle_<ArduinoHardware, 25, 25,100,100> NodeHandle;
 
 #else
 
-  typedef NodeHandle_<ArduinoHardware, 25, 25, 100, 100> NodeHandle;
+  typedef NodeHandle_<ArduinoHardware> NodeHandle;
 
 #endif   
 }

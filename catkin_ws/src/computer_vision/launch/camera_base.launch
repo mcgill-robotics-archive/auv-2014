@@ -17,10 +17,10 @@
     </node>
 
     <!-- Launches the node that will rectify the image based on the calibration .yaml file. -->
-    <arg name="HD" default="0" />
-    <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" if="$(arg HD)"/>
+    <arg name="hd" default="0" />
+    <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" if="$(arg hd)"/>
     
-    <group unless="$(arg HD)">
+    <group unless="$(arg hd)">
 
         <!-- node to reduce the size of raw camera image -->
         <node pkg="nodelet" type="nodelet" 

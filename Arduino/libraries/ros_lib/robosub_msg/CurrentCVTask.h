@@ -1,12 +1,12 @@
-#ifndef _ROS_planner_CurrentCVTask_h
-#define _ROS_planner_CurrentCVTask_h
+#ifndef _ROS_robosub_msg_CurrentCVTask_h
+#define _ROS_robosub_msg_CurrentCVTask_h
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
 
-namespace planner
+namespace robosub_msg
 {
 
   class CurrentCVTask : public ros::Msg
@@ -34,7 +34,7 @@ namespace planner
      return offset;
     }
 
-    const char * getType(){ return "planner/CurrentCVTask"; };
+    const char * getType(){ return "robosub_msg/CurrentCVTask"; };
     const char * getMD5(){ return "726aab749cdee4d65593abb754b07e92"; };
 
   };

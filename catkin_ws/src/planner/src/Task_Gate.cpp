@@ -23,10 +23,18 @@ void Task_Gate::execute() {
 void Task_Gate::phase1() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
+	myPlanner->setVisionObj(0);
+	loop_rate.sleep();
+	myPlanner->setVisionObj(1);
+	loop_rate.sleep();
 	myStatusUpdater->updateStatus(myStatusUpdater->startingGate);
 	loop_rate.sleep();
-
-	myPlanner->setVisionObj(1);
+		myPlanner->setVelocity(2, 0, 0, 8.8, frame);
+		loop_rate.sleep();
+		tf::TransformListener listener;
+	listener.waitForTransform(frame, "/robot/rotation_center",
+			ros::Time(0), ros::Duration(300));
+ROS_INFO("we found it");
 	loop_rate.sleep();
 	
 	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};

@@ -12,9 +12,9 @@ void StatusUpdater::updateLED(BlinkyStates newState) {
 	switch(newState) {
 		case openLoop:
 			//purple
-			color1.r = 255;
-			color1.g = 0;
-			color1.b = 255;
+			color1.r = 161;
+			color1.g = 15;
+			color1.b = 127;
 			color2 = color1;
 			break;
 		case closedLoop:
