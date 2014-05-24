@@ -16,6 +16,6 @@ void Task_Kill::execute() {
 	myPlanner->setPosition(desired, "/robot/rotation_center");
 	loop_rate.sleep();
 	
-	myStatusUpdater->updateStatus(myStatusUpdater->endRoutine);
+	myStatusUpdater->updateStatus(myStatusUpdater->end);
 	loop_rate.sleep();
 }

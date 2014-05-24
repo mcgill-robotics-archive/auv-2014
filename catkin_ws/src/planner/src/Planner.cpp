@@ -381,7 +381,7 @@ Planner::Planner(ros::NodeHandle& n) {
 		ROS_DEBUG("Planner - waiting for dependencies");
 	}
 
-	myStatusUpdater->updateStatus(myStatusUpdater->readyToStart);
+	myStatusUpdater->updateStatus(myStatusUpdater->ready);
 
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
 	while (!n.getParam("/go", go) && go != 1) {
