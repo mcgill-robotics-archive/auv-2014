@@ -140,6 +140,11 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",
 		relativePose.pose.position.x, relativePose.pose.position.y);
 	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
+
+	ROS_INFO("POSITIONAL BOUNDS:");
+	ROS_INFO("Current x: %f    Desired x: %f", relativePose.pose.position.x, desired.at(0));
+	ROS_INFO("Current y: %f    Desired y: %f", relativePose.pose.position.y, desired.at(1));
+
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
@@ -156,6 +161,10 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
 	bool pitchBounded = abs(pitch - desired.at(2)) < pitchBound;
 	bool yawBounded = abs(yaw - desired.at(3)) < yawBound;
+
+	ROS_INFO("ROTATIONAL BOUNDS:");
+	ROS_INFO("Current pitch: %f    Desired pitch: %f", pitch, desired.at(2));
+	ROS_INFO("Current yaw: %f    Desired yaw: %f", yaw, desired.at(2));
 
 	return (xBounded && yBounded && yawBounded && pitchBounded);
 }

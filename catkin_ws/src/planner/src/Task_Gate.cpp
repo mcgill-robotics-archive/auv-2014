@@ -53,7 +53,7 @@ void Task_Gate::phase2() {
 	loop_rate.sleep();
 
 	ROS_INFO("Task_Gate::reached the front of the gate");
-	myPlanner->setVelocity(2, 0, 0, 8.8, frame);
+	myPlanner->setVelocity(0.1, 0, 0, 8.8, frame);
 
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 	myStatusUpdater->updateStatus(myStatusUpdater->gate3);
