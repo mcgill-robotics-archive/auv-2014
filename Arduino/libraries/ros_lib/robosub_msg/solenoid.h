@@ -1,5 +1,5 @@
-#ifndef _ROS_arduino_msgs_solenoid_h
-#define _ROS_arduino_msgs_solenoid_h
+#ifndef _ROS_robosub_msg_solenoid_h
+#define _ROS_robosub_msg_solenoid_h
 
 #include <stdint.h>
 #include <string.h>
@@ -7,7 +7,7 @@
 #include "ros/msg.h"
 #include "std_msgs/Bool.h"
 
-namespace arduino_msgs
+namespace robosub_msg
 {
 
   class solenoid : public ros::Msg
@@ -44,7 +44,7 @@ namespace arduino_msgs
      return offset;
     }
 
-    const char * getType(){ return "arduino_msgs/solenoid"; };
+    const char * getType(){ return "robosub_msg/solenoid"; };
     const char * getMD5(){ return "7049a6757f9d71e7c5c744e407a6083a"; };
 
   };

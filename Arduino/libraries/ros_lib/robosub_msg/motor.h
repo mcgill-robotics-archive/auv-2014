@@ -1,12 +1,12 @@
-#ifndef _ROS_arduino_msgs_motor_h
-#define _ROS_arduino_msgs_motor_h
+#ifndef _ROS_robosub_msg_motor_h
+#define _ROS_robosub_msg_motor_h
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
 
-namespace arduino_msgs
+namespace robosub_msg
 {
 
   class motor : public ros::Msg
@@ -133,7 +133,7 @@ namespace arduino_msgs
      return offset;
     }
 
-    const char * getType(){ return "arduino_msgs/motor"; };
+    const char * getType(){ return "robosub_msg/motor"; };
     const char * getMD5(){ return "a9af555f873ba8cd2535c14c35157934"; };
 
   };

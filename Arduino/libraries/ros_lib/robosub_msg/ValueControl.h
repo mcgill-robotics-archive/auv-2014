@@ -1,12 +1,12 @@
-#ifndef _ROS_planner_ValueControl_h
-#define _ROS_planner_ValueControl_h
+#ifndef _ROS_robosub_msg_ValueControl_h
+#define _ROS_robosub_msg_ValueControl_h
 
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include "ros/msg.h"
 
-namespace planner
+namespace robosub_msg
 {
 
   class ValueControl : public ros::Msg
@@ -67,7 +67,7 @@ namespace planner
      return offset;
     }
 
-    const char * getType(){ return "planner/ValueControl"; };
+    const char * getType(){ return "robosub_msg/ValueControl"; };
     const char * getMD5(){ return "f1008d73418aa9a0553f339b2fc4c189"; };
 
   };
