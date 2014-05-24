@@ -176,7 +176,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			// from
 			"base_link",
 			// to
-			"/extremeties/contact_bouy"
+			"/extremeties/contact_buoy"
 		)
 	);		
 }
