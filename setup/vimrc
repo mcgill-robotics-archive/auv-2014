@@ -19,7 +19,7 @@ nmap <silent> ,sv :so $MYVIMRC<cr>
 " can be called correctly.
 set shellslash
 
-if filereadable(".vim/bundle/Vundle.vim/autoload/vundle.vim")
+if filereadable($HOME.'/.vim/bundle/Vundle.vim/autoload/vundle.vim')
     filetype off
     " set the runtime path to include Vundle and initialize
     set rtp+=~/.vim/bundle/Vundle.vim
