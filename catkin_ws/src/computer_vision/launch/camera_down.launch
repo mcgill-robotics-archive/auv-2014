@@ -1,4 +1,4 @@
-<aunch>
+<launch>
     <include file="$(find computer_vision)/launch/camera_base.launch">
         <arg name="CAMERA_NAME" value="camera_down" />
         <arg name="CAMERA_ID" value="00b09d0100cd1e8c" />
