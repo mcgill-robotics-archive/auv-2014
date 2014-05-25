@@ -1,8 +1,8 @@
 <aunch>
-    <include file="$(find computer_vision)/launch/camera_base">
-        <arg name="CAMERA_NAME" type="camera_down" />
+    <include file="$(find computer_vision)/launch/camera_base.launch">
+        <arg name="CAMERA_NAME" value="camera_down" />
         <arg name="CAMERA_ID" value="00b09d0100cd1e8c" />
-        <arg name="viewFeed" />
-        <arg name="hd" />
+        <arg name="viewFeed" default="0"/>
+        <arg name="hd" default="0"/>
     </include>
 </launch>

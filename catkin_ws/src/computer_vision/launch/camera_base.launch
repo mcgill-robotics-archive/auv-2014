@@ -1,6 +1,8 @@
 <launch>
     <arg name="CAMERA_NAME" />
     <arg name="CAMERA_ID" />
+    <arg name="viewFeed" />
+    <arg name="hd" />
   <group ns="$(arg CAMERA_NAME)" >
     <node pkg="camera1394" type="camera1394_node" name="camera1394_node" >
       <param name="guid" value="$(arg CAMERA_ID)" />
@@ -8,7 +10,6 @@
       <param name="frame_id" value="unibrain" />
 
       <!-- The White Balance is set to manual here -->
-      
       <param name="auto_white_balance" value="3" />
       <param name="white_balance_BU" value="1000" />
       <param name="white_balance_RV" value="500" />
@@ -17,7 +18,7 @@
     </node>
 
     <!-- Launches the node that will rectify the image based on the calibration .yaml file. -->
-    <arg name="hd" default="0" />
+    <!--<arg name="hd" default="0" />-->
     <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" if="$(arg hd)"/>
     
     <group unless="$(arg hd)">
@@ -46,7 +47,7 @@
     </group>
 
     <!-- Launches the image viewer if the parameter 'viewFeed' is set to 1 -->
-    <arg name="viewFeed" default="0"/>
+    <!--<arg name="viewFeed" default="0"/>-->
     <group if="$(arg viewFeed)">
       <node pkg="image_view" type="image_view" name="image_view" >
         <remap from="image" to="camera/image_color" />

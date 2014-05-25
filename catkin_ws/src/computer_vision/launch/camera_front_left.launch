@@ -2,7 +2,7 @@
     <include file="$(find computer_vision)/launch/camera_base.launch" >
         <arg name="CAMERA_NAME" value="camera_front_left" />
         <arg name="CAMERA_ID" value="00b09d0100cd1e8a" />
-        <arg name="viewFeed" />
-        <arg name="hd" />
+        <arg name="viewFeed" default="0"/>
+        <arg name="hd" default="0"/>
     </include>
 </launch>

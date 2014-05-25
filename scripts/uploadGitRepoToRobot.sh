@@ -32,4 +32,5 @@ uploadRepository() {
 uploadRepository
 
 echo "The execution of this script is now complete."
-exit
+
+return
