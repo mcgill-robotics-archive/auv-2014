@@ -99,6 +99,7 @@ class PS3Controller(object):
                     vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
                     vel_vars.yaw_velocity = -vel_vars.MAX_YAW_VEL*self.controller.get_axis(2)  # right left/right axis
 
+
     def updateController_for_thrusters(self):
         """Fetches the values of the ps3 controller axies and parses them to be published as voltage
          command for the arduino node directly.  """

@@ -12,8 +12,9 @@ class vel_vars(object):
     yaw_velocity = 0
     x_velocity = 0
     y_velocity = 0
-    z_position = 9
-    z_position_step = 0.2
+    depth_vel = 0
+    z_position = 0
+    z_position_step = 0.5
 
     MAX_YAW_VEL = 10
     MAX_LINEAR_VEL = 10

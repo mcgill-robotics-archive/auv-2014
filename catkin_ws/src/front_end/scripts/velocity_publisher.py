@@ -18,7 +18,7 @@ from VARIABLES import vel_vars
 #@param yaw_vel angular velocity for yaw float 64-bits
 #@param ros_topic the topic name to which you publish float 64-bits
 #@param set_null if set to 0, sends all controls NOT active
-def velocity_publisher(y_vel, ros_topic, set_null):
+def velocity_publisher(y_vel, ros_topic, set_null, depth_speed_control):
     vel_pub = rospy.Publisher(ros_topic, setPoints)
 
     msg = setPoints()
@@ -30,12 +30,20 @@ def velocity_publisher(y_vel, ros_topic, set_null):
         
         msg.XSpeed.data = vel_vars.x_velocity
         msg.YSpeed.data = y_vel
-        #msg.Depth.data = vel_vars.z_position
+
+        if depth_speed_control:
+            msg.DepthSpeed.data = vel_vars.z_position
+            msg.DepthSpeed.isActive = 1
+            msg.Depth.isActive = 0
+        else:
+            msg.Depth.data = vel_vars.z_position
+            msg.Depth.isActive = 1
+            msg.DepthSpeed.isActive = 0
+
         msg.YawSpeed.data = vel_vars.yaw_velocity
 
         msg.XPos.isActive = 0
         msg.YPos.isActive = 0
-        msg.Depth.isActive = 0
         msg.Yaw.isActive = 0
         msg.Pitch.isActive = 0
         msg.XSpeed.isActive = 1
@@ -59,6 +67,6 @@ def velocity_publisher(y_vel, ros_topic, set_null):
         msg.XSpeed.isActive = 0
         msg.YSpeed.isActive = 0
         msg.YawSpeed.isActive = 0
-
+        msg.DepthSpeed.isActive = 0
         vel_pub.publish(msg)
 

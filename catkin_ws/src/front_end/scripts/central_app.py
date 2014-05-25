@@ -103,7 +103,6 @@ class CentralUi(QtGui.QMainWindow):
         #style.close()
         #self.ui.centralwidget.setStyleSheet(self.style_data)
 
-        self.resize_sliders()
         self.ui.label_13.setText("Depth")
         ## variable to enable or disable the keyboard monitoring
         self.keyboard_control = False
@@ -375,12 +374,6 @@ class CentralUi(QtGui.QMainWindow):
 
         vel_pub.publish(msg)
 
-    ##resize the sliders to fit the correct range of values
-    def resize_sliders(self):
-        self.ui.angularHorizantal.setRange(-1000*vel_vars.MAX_YAW_VEL, 1000*vel_vars.MAX_YAW_VEL)
-        self.ui.linearVertical.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
-        self.ui.linearHorizantal.setRange(-1000*vel_vars.MAX_LINEAR_VEL, 1000*vel_vars.MAX_LINEAR_VEL)
-
     ## customisation of the key press class of the QWidget
     #  on key press,
     #  increments the variables contained in VARIABLES.py
@@ -484,18 +477,17 @@ class CentralUi(QtGui.QMainWindow):
     #   @param self the object pointer
     def keyboard_update(self):
         # set ui
-        self.ui.linearVertical.setValue(1000*vel_vars.x_velocity)
-        self.ui.linearHorizantal.setValue(1000*vel_vars.y_velocity)
-        self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
-
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
-        self.ui.linearZ.setText(str(vel_vars.z_position))
-        self.ui.angularX.setText(str(0))
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
 
+        if self.ui.spee_control_depth.isChecked():
+            self.ui.depth_speed.setText(str(vel_vars.z_position))
+        else:
+            self.ui.z_pos.setText(str(vel_vars.z_position))
+
         # publish to ros topic
-        velocity_publisher.velocity_publisher(vel_vars.y_velocity,  "/setPoints", 1)
+        velocity_publisher.velocity_publisher(vel_vars.y_velocity,  "/setPoints", 1, self.ui.spee_control_depth.isChecked())
 
     ## Method for the ps3 control
     #
@@ -512,18 +504,15 @@ class CentralUi(QtGui.QMainWindow):
         self.ps3.updateController_for_controls_systems()
 
         # set ui
-        self.ui.linearVertical.setValue(1000*vel_vars.y_velocity)
-        self.ui.linearHorizantal.setValue(1000*vel_vars.x_velocity)
-        self.ui.angularHorizantal.setValue(1000*vel_vars.yaw_velocity)
-
         self.ui.linearX.setText(str(vel_vars.x_velocity))
         self.ui.linearY.setText(str(vel_vars.y_velocity))
-        self.ui.linearZ.setText(str(vel_vars.z_position))
-        self.ui.angularX.setText(str(0))
         self.ui.angularZ.setText(str(vel_vars.yaw_velocity))
-
+        if self.ui.spee_control_depth.isChecked():
+            self.ui.depth_speed.setText(str(vel_vars.z_position))
+        else:
+            self.ui.z_pos.setText(str(vel_vars.z_position))
         # publish to ros topic
-        velocity_publisher.velocity_publisher(-vel_vars.y_velocity, "/setPoints", 1)
+        velocity_publisher.velocity_publisher(-vel_vars.y_velocity, "/setPoints", 1, self.ui.spee_control_depth.isChecked())
 
     ## updates the data displayed by the depth graph
     #
