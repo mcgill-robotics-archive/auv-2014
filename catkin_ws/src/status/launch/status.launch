@@ -1,9 +1,10 @@
 <launch>
-    <group ns="status">
-        <!-- temprature -->
-        <node name="temprature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
+    <!-- blinky -->
+    <node name="blinky" pkg="blinky" type="blinky_server.py"/>
 
-        <!-- usb ports -->
-        <node name="usb" pkg="status" type="usb_monit.py" respawn="false" output="screen"/>
-    </group>
+    <!-- temperature -->
+    <node name="temperature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
+
+    <!-- usb ports -->
+    <node name="usb" pkg="status" type="usb_monit.py" respawn="false" output="screen"/>
 </launch>

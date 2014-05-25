@@ -4,9 +4,9 @@
 #include "Task.h"
 
 class Task_Lane: public Task{
-public:
-	Task_Lane(Planner* planner, StatusUpdater* mSU);
-	void execute();
+	public:
+		Task_Lane(Planner* planner, StatusUpdater* mSU, int newPhase);
+		void execute();
 };
 
 #endif

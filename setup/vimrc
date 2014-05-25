@@ -65,6 +65,7 @@ set wrap
 map j gj
 map k gk
 
+set number
 set t_Co=256
 "set background=dark
 "colorscheme distinguished

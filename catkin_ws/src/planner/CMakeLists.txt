@@ -8,6 +8,7 @@ project(planner)
    simulator
    message_generation
    blinky
+   robosub_msg
  )
 
 ################################################
@@ -15,18 +16,18 @@ project(planner)
 ################################################
 
 ## Generate messages in the 'msg' folder
- add_message_files (
-   FILES
-   setPoints.msg
-   ValueControl.msg
-   CurrentCVTask.msg
- )
+# add_message_files (
+#   FILES
+#   setPoints.msg
+#   ValueControl.msg
+#   CurrentCVTask.msg
+# )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages (
-   DEPENDENCIES
-   std_msgs
- )
+# generate_messages (
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ###################################
 ## catkin specific configuration ##
@@ -45,7 +46,7 @@ project(planner)
    ${catkin_INCLUDE_DIRS}
  )
 
- add_executable(planner src/Planner.cpp src/Task.cpp src/StatusUpdater.cpp src/Task_Gate.cpp src/Task_Lane.cpp src/Task_Kill.cpp)
+ add_executable(planner src/Planner.cpp src/Task.cpp src/StatusUpdater.cpp src/Task_Gate.cpp src/Lost_Gate.cpp src/Task_Lane.cpp src/Task_Kill.cpp)
  #add_executable(planner src/planner.cpp src/Task_Handler.cpp)
  target_link_libraries(planner ${catkin_LIBRARIES})
  add_dependencies(planner ${catkin_EXPORTED_TARGETS})

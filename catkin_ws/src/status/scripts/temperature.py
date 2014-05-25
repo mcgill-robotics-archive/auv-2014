@@ -15,7 +15,7 @@ temperatures = temp()       # MESSAGE TO PUBLISH
 warning = False             # STORES WHETHER WARNING OR NOT
 
 # CONSTANTS
-COLOR = [RGB(255, 255, 0)]  # COLOR TO FLASH            YELLOW
+COLOR = [RGB(255, 0, 0)]    # COLOR TO FLASH               RED
 HOST = ('127.0.0.1', 7634)  # HDDTEMP DAEMON SOCKET
 CPU_THRESHOLD = 90          # THRESHOLD FOR CPU CORES        C
 SSD_THRESHOLD = 65          # THRESHOLD FOR SSD              C
@@ -23,7 +23,7 @@ BLINKING_CAP = 5.0          # MAX BLINKING FREQUENCY        Hz
 
 # SET UP NODE AND TOPIC
 rospy.init_node('status')
-temperature_topic = rospy.Publisher('temperature', temp)
+temperature_topic = rospy.Publisher('status/temperature', temp)
 rate = rospy.Rate(1)
 
 # SET UP SENSORS

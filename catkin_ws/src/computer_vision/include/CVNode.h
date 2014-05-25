@@ -10,7 +10,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <list>
 #include "computer_vision/VisibleObjectData.h"
-#include "planner/CurrentCVTask.h"
+#include "robosub_msg/CurrentCVTask.h"
 #include "VisibleObject.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
@@ -62,6 +62,21 @@ class CVNode {
 	inline double get_camera_focal_length() const { return camera_focal_length; }
 	inline bool get_down_using_helpers() const { return down_using_helpers; }
 	inline bool get_front_using_helpers() const { return front_using_helpers; }
+
+	struct GateParameters {
+		int min_number_points_contour;
+
+		int pole_desired_angle_deg;		
+		int pole_angle_error_deg;
+
+		int min_pole_ratio;
+
+		int gate_height_m;
+		int gate_width_m;
+	};
+
+	protected:
+	GateParameters gp;
 
 	private:
 

@@ -37,10 +37,10 @@ int main(int argc, char **argv) {
 	ros::shutdown();
 }
 
-void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
+void FrontCVNode::listenToPlanner(robosub_msg::CurrentCVTask msg) {
 	this->visibleObjectList.clear();
 	if (msg.currentCVTask == 1) {
-		this->visibleObjectList.push_back(new Gate(*(this)));
+		this->visibleObjectList.push_back(new Gate(*(this), gp));
 	} else if (msg.currentCVTask == 2) {
 		this->visibleObjectList.push_back(new Buoy(*(this)));
 	}
@@ -66,7 +66,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	nodeHandle.param<std::string>("cv_front_detect_object", currentObject, "");
 	if (!currentObject.empty()) {
 		if (currentObject.compare("gate") == 0) {
-			this->visibleObjectList.push_back(new Gate(*(this)));
+			this->visibleObjectList.push_back(new Gate(*(this), gp));
 		} else if (currentObject.compare("buoy") == 0) {
 			// TODO: add the Buoy object here when it is completed
 		}

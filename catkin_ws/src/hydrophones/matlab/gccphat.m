@@ -43,7 +43,6 @@ function [x,y,z] = gccphat(a,b,c)
     end
     f = (-n/2:n/2-1)*(FS/n);
     power = y.*conj(y)/n;
-    theta = atan2(imag(y),real(y));
 
     %% FIND PEAK
     [top,index1] = max(y(1,:));

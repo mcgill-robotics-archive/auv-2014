@@ -11,8 +11,8 @@
 #include "gazebo_msgs/ModelState.h"
 #include "gazebo_msgs/SetModelState.h"
 #include "tf/transform_listener.h"
-#include "planner/setPoints.h"
-#include "planner/CurrentCVTask.h"
+#include "robosub_msg/setPoints.h"
+#include "robosub_msg/CurrentCVTask.h"
 #include "blinky/RGB.h"
 #include "blinky/UpdatePlannerLights.h"
 #include "state_estimation/setInitialPose.h"
@@ -38,12 +38,14 @@ class Planner{
 
 	public:
 	enum Tasks {Gate, Lane, Buoy, Hydrophones, Kill};
+	enum LostStates {Gate_A, Gate_B, Lane_A, Buoy_A, Hydrophones_A};
 	double getDepth();
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
+	void weAreLost(LostStates newTask);
 	Planner(ros::NodeHandle& nodeHandle);
 	//~Planner();
 

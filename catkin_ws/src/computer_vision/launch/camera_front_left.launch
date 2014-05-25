@@ -1,44 +1,8 @@
 <launch>
-
-  <group ns="camera_front_left" >
-    <node pkg="camera1394" type="camera1394_node" name="camera1394_node" >
-      <param name="guid" value="00b09d0100cd1e8a" />
-      <param name="video_mode" value="format7_mode0" />
-      <param name="frame_id" value="unibrain" />
-      <!-- The White Balance is set to manual here -->
-      <param name="auto_white_balance" value="3" />
-      <param name="white_balance_BU" value="1000" />
-      <param name="white_balance_RV" value="500" />
-      <param name="bayer_pattern" value="gbrg" />
-      <param name="format7_color_coding" value="raw8"/>
-    </node>
-
-    <!-- Launches the node that will rectify the image based on the calibration .yaml file. -->
-    <!-- <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc" /> -->
-    <node pkg="nodelet" type="nodelet"
-        args="standalone image_proc/crop_decimate"
-        name="my_decimator">
-
-        <param name="decimation_x" type="int" value="2" />
-        <param name="decimation_y" type="int" value="2" />
-    </node>
-
-    <node pkg="nodelet" type="nodelet"
-        args="standalone image_proc/rectify"
-        name="my_rectify">
-
-        <remap from="image_mono" to="camera_out/image_raw" />
-        <remap from="camera_info" to="camera_out/camera_info" />
-    </node>
-
-    <!-- Launches the image viewer if the parameter 'viewFeed' is set to 1 -->
-    <arg name="viewFeed" default="0"/>
-    <group if="$(arg viewFeed)">
-      <node pkg="image_view" type="image_view" name="image_view" >
-        <remap from="image" to="camera/image_color" />
-      </node>
-    </group>
-    
-  </group>
-
+    <include file="$(find computer_vision)/launch/camera_base.launch" >
+        <arg name="CAMERA_NAME" value="camera_front_left" />
+        <arg name="CAMERA_ID" value="00b09d0100cd1e8a" />
+        <arg name="viewFeed" />
+        <arg name="hd" />
+    </include>
 </launch>

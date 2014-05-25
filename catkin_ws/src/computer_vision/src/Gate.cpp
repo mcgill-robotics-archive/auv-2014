@@ -9,21 +9,19 @@
 
 #include "Gate.h"
 
-const std::string COLOR_THRESH_WINDOW = "color_thresh_window";
-const std::string TRACKBARS_WINDOW = "trackbars_window";
-
 float centimetersPerPixel;
 
 cv::Point centerOfCurrentFrame;
 
+const std::string COLOR_THRESH_WINDOW = "color_thresh_window";
+const std::string TRACKBARS_WINDOW = "trackbars_window";
+
 /**
  * Constructor.
  */
-Gate::Gate(const CVNode& _parent) : VisibleObject(_parent) {
+Gate::Gate(const CVNode& _parent, const CVNode::GateParameters& _params) : VisibleObject(_parent), params(_params) {
 
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: a Gate object was instantiated.").c_str());
-
-	ros::NodeHandle nodeHandle;
 
 	trackbar_start_hue_threshold = parent.get_start_hsv_hue_thresh();
 	trackbar_end_hue_threshold = parent.get_end_hsv_hue_thresh();
@@ -38,9 +36,6 @@ Gate::Gate(const CVNode& _parent) : VisibleObject(_parent) {
 		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &trackbar_end_hue_threshold, MAX_HSV_HUE);
 		cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &trackbar_start_val_threshold, MAX_HSV_VALUE);
 		cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &trackbar_end_val_threshold, MAX_HSV_VALUE);
-		cv::createTrackbar("gate_ratio_error", TRACKBARS_WINDOW, &gate_ratio_error, MAX_HSV_VALUE);
-		cv::createTrackbar("max_number_points", TRACKBARS_WINDOW, &max_number_points, MAX_HSV_VALUE);
-		cv::createTrackbar("polygon_approximation_threshold", TRACKBARS_WINDOW, &polygon_approximation_threshold, MAX_HSV_VALUE);
 	}
 }
 
@@ -131,8 +126,8 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 
 		bool passesFilter = false;
 		// Filter the rectangles based on several parameters (acceptable ratio, angle error, etc.)
-		if ((pole.h / pole.w) > MIN_GATE_RATIO && contour.size() >= 4 &&
-			std::abs(pole.rectangleAngleDeg - DESIRED_ANGLE_OF_RECT) < ANGLE_RECT_ERROR ) {
+		if ((pole.h / pole.w) > params.min_pole_ratio && contour.size() >= params.min_number_points_contour &&
+			std::abs(pole.rectangleAngleDeg - params.pole_desired_angle_deg) < params.pole_angle_error_deg ) {
 
 			passesFilter = true;
 			computePolarCoordinates(pole, centerOfCurrentFrame, currentFrame.size().height);
@@ -149,40 +144,34 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 	}
 
 	int numberOfPotentialMatch = potentialMatchRectangles.size();
-	//  Here I assume that the two rectangles that I have are the orange cylinders of the gate.
-	if (numberOfPotentialMatch == 2) {
-		m_isVisible = true;
 
-		PoleCandidate& p1 = potentialMatchRectangles[0];
-		PoleCandidate& p2 = potentialMatchRectangles[1];
+	if (numberOfPotentialMatch > 1) {
+		int ip1, ip2;
+		for(int i = 0 ; i < numberOfPotentialMatch - 1 && !m_isVisible ; i++) {
+			PoleCandidate& p1 = potentialMatchRectangles[i];
 
-		handleTwoVisiblePoles(p1, p2, centerOfCurrentFrame);
-		
+			for(int j = i + 1 ; j < numberOfPotentialMatch && !m_isVisible ; j++) {
+				PoleCandidate& p2 = potentialMatchRectangles[j];
+				m_isVisible = handleTwoVisiblePoles(p1, p2, centerOfCurrentFrame);
+				if(m_isVisible) {
+					ip1 = i;
+					ip2 = j;
+				}
+			}
+		}
 
-		cv::Point centerPoint((p1.center.x + p2.center.x) / 2,
-					(p1.center.y + p2.center.y) / 2);
-		//Draw the point on-screen
-		cv::circle(currentFrame, centerPoint, 30, GREEN_BGRX, 2, 5);
-		cv::line(currentFrame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA);
-
-		putText(currentFrame, "Distance <x,y,z>=" + boost::lexical_cast<std::string>(m_xDistance) + " " + 
-				boost::lexical_cast<std::string>(m_yDistance) + " " + 
-				boost::lexical_cast<std::string>(m_zDistance),
-				cv::Point(centerPoint.x, centerPoint.y + 35),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
-
-		putText(currentFrame, "Yaw=" + boost::lexical_cast<std::string>((180.0/3.141592654) * m_yawAngle),
-				cv::Point(centerPoint.x, centerPoint.y + 45),
-				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
-				CV_AA);
+		if(m_isVisible) {
+			PoleCandidate& p1 = potentialMatchRectangles[ip1];
+			PoleCandidate& p2 = potentialMatchRectangles[ip2];
+			drawGateInfo(currentFrame, p1, p2);
+		}	
 	}
 	
 	//Center of image circle
 	cv::circle(currentFrame, centerOfCurrentFrame, 5, MAUVE_BGRX, 2, 5);
 }
 
-void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame) {
+bool Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame) {
 	
 	PoleCandidate& closest = (p1.dist < p2.dist) ? p1 : p2;
 	PoleCandidate& farthest = (p1.dist < p2.dist) ? p2 : p1;
@@ -198,7 +187,7 @@ void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 
 
 	/* Use law of sines to compute far angle */
-	float sinFar = sin(sumAngles) * closest.dist / GATE_WIDTH;
+	float sinFar = sin(sumAngles) * closest.dist / params.gate_width_m;
 
 	// 90 - angleFar- farthest.objectAngle
 	m_yawAngle = (3.141592654 / 2.0) - asin(sinFar) - farthest.objectAngleRad;
@@ -220,7 +209,7 @@ void Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	m_yDistance = (y1 + y2) / 2.0;
 
 	int centerY = (p1.center.y + p2.center.y) / 2;
-	float avgMPerPx = ((DOOR_REAL_HEIGHT / p1.h) + (DOOR_REAL_HEIGHT / p2.h)) / 2.0;
+	float avgMPerPx = ((params.gate_height_m / p1.h) + (params.gate_height_m / p2.h)) / 2.0;
 	m_zDistance = (centerY - centerOfCurrentFrame.y) * avgMPerPx;
 
 //	std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " <<
@@ -281,11 +270,11 @@ Gate::PoleCandidate Gate::findRectangleForContour(std::vector<cv::Point>& contou
  */
 void Gate::computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight) {
 	/* First approximation using the canonical formula */
-	float approximateDistanceWithObject = (parent.get_camera_focal_length() * DOOR_REAL_HEIGHT * frameHeight) / 
+	float approximateDistanceWithObject = (parent.get_camera_focal_length() * params.gate_height_m * frameHeight) / 
 							(pole.h * parent.get_camera_sensor_height());
 
 	/* We correct this distance, because it is only valid if the object is close to the center of the screen */
-	float mPerPxAtObject = DOOR_REAL_HEIGHT / pole.h;
+	float mPerPxAtObject = params.gate_height_m / pole.h;
 	float yMOffset = std::abs(frameCenter.x - pole.center.x) * mPerPxAtObject;
 	pole.objectAngleRad = atan(yMOffset / approximateDistanceWithObject);
 	pole.dist = approximateDistanceWithObject / cos(pole.objectAngleRad);
@@ -351,6 +340,26 @@ void Gate::writePoleCandidateInfo(PoleCandidate& pole, cv::Mat& currentFrame) {
 		CV_AA);
 
 	
+}
+
+void Gate::drawGateInfo(cv::Mat& frame, PoleCandidate& p1, PoleCandidate& p2) {
+
+	cv::Point centerPoint((p1.center.x + p2.center.x) / 2, (p1.center.y + p2.center.y) / 2);
+	//Draw the point on-screen
+	cv::circle(frame, centerPoint, 30, GREEN_BGRX, 2, 5);
+	cv::line(frame, p1.center, p2.center, WHITE_BGRX, 1, CV_AA);
+
+	putText(frame, "Distance <x,y,z>=" + boost::lexical_cast<std::string>(m_xDistance) + " " + 
+			boost::lexical_cast<std::string>(m_yDistance) + " " + 
+			boost::lexical_cast<std::string>(m_zDistance),
+			cv::Point(centerPoint.x, centerPoint.y + 35),
+			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+			CV_AA);
+
+	putText(frame, "Yaw=" + boost::lexical_cast<std::string>((180.0/3.141592654) * m_yawAngle),
+			cv::Point(centerPoint.x, centerPoint.y + 45),
+			cv::FONT_HERSHEY_COMPLEX_SMALL, 0.4, WHITE_BGRX, 1,
+			CV_AA);
 }
 
 /**

@@ -4,13 +4,13 @@
 */
 
 #include "ros/ros.h"
-#include "planner/setPoints.h"
+#include "robosub_msg/setPoints.h"
 #include "std_msgs/Float64.h"
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "testControls");
-	ROS_INFO("Initialized testControls Node");
+	ROS_DEBUG("Initialized testControls Node");
 	ros::NodeHandle n;
 
 	ros::Publisher setPointsPublisher = n.advertise<planner::setPoints>("setPoints", 1000);
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		//parameters
 
 		//n.param<std::float>("testParam", test_param, 99);
-		//ROS_INFO("printing...");
+		//ROS_DEBUG("printing...");
 		setPointsPublisher.publish(msg);
 		ros::spinOnce();
 		loop_rate.sleep();

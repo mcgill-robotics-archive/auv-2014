@@ -1,16 +1,14 @@
 #include "Planner.h"
 #include "Task.h"
+//when you create a new task, include its header file here to prevent circular dependencies
 #include "Task_Gate.h"
+#include "Lost_Gate.h"
 #include "Task_Kill.h"
 #include "Task_Lane.h"
 
-//make a getter for this in the planner class
 double ourDepth;
-
 int inSim;
-
 geometry_msgs::PoseStamped relativePose;
-
 std::string starting_task;
 
 void spinThread() {
@@ -68,22 +66,17 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   //client.call(setmodelstate);
 
   ros::service::waitForService("/gazebo/set_model_state", -1);
-  if(client.call(setmodelstate))
-    { 
-      ROS_INFO("Set robot's position: Success");
-    }
-    else
-    {
-      ROS_ERROR("Failed to call service ");
+  if(client.call(setmodelstate)) { 
+    ROS_INFO("Set robot's position: Success");
+  } else {
+    ROS_ERROR("Failed to call service ");
   }
-  if(seClient.call(setPose))
-  {
-      ROS_INFO("notified state estimation: Success");
+
+  if(seClient.call(setPose)) {
+    ROS_INFO("notified state estimation: Success");
+  } else {
+  	ROS_ERROR("Failed to call state estimation service");
   }
-  	else
-  	{
-  		ROS_ERROR("Failed to call state estimation service");
-  	}
 }
 
 void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
@@ -92,7 +85,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 			setRobotInitialPosition(n, 2.7, -3.5, 1, 0, 0, 0);
 			break;
 		case (2) :
-			setRobotInitialPosition(n, 1.735, 0.52, 1, 0, 0, 0);
+			setRobotInitialPosition(n, 1.102, 2.15, 1, 0, 0, 0);
 			break;
 		case (3) : //TODO: the last parameter is doing nothing for now
 			setRobotInitialPosition(n, -1.38, 3.225, 1, 0, 0, -2.3016);
@@ -105,7 +98,6 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
  */
 void Planner::setTransform(std::string referenceFrame) {
 	tf::TransformListener listener;
-	//setOurPose();
 	geometry_msgs::PoseStamped emptyPose;
 	emptyPose.header.frame_id = referenceFrame;
 	emptyPose.pose.position.x = 0.0;
@@ -145,7 +137,8 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	//positional bounds
 	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < xBound;
 	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < yBound;
-	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",relativePose.pose.position.x, relativePose.pose.position.y);
+	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",
+		relativePose.pose.position.x, relativePose.pose.position.y);
 	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
@@ -164,12 +157,12 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	bool pitchBounded = abs(pitch - desired.at(2)) < pitchBound;
 	bool yawBounded = abs(yaw - desired.at(3)) < yawBound;
 
-	return (xBounded && yBounded);
+	return (xBounded && yBounded && yawBounded && pitchBounded);
 }
 
 void Planner::setVisionObj(int objIndex) {
-	planner::CurrentCVTask msgFront;
-	planner::CurrentCVTask msgDown;
+	robosub_msg::CurrentCVTask msgFront;
+	robosub_msg::CurrentCVTask msgDown;
 
 	msgFront.currentCVTask = msgFront.NOTHING;
 	msgDown.currentCVTask = msgDown.NOTHING;
@@ -197,7 +190,7 @@ void Planner::setVisionObj(int objIndex) {
 }
 
 void Planner::setPoints(double pointControl[], std::string referenceFrame) {
-	planner::setPoints msgControl;
+	robosub_msg::setPoints msgControl;
 
 	msgControl.XPos.isActive = pointControl[0];
 	msgControl.XPos.data = pointControl[1];
@@ -223,21 +216,24 @@ void Planner::setPoints(double pointControl[], std::string referenceFrame) {
 	msgControl.Depth.isActive = pointControl[14];
 	msgControl.Depth.data = pointControl[15];
 
+	msgControl.DepthSpeed.isActive = pointControl[16];
+	msgControl.DepthSpeed.data = pointControl[17];
+
 	msgControl.Frame = referenceFrame;
 
 	control_pub.publish(msgControl);
 }
 
 void Planner::setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
-	double pointControl[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
-			1, yaw_speed, 1, depth };
+	double pointControl[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
+			1, yaw_speed, 1, depth, 0, 0};
 	setPoints(pointControl, referenceFrame);
 }
 
 void Planner::setPosition(std::vector<double> desired, std::string referenceFrame) {
-	double pointControl[16] =
-			{ 1, desired.at(0), 1, desired.at(1), 0, desired.at(2), 0,
-					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4) };
+	double pointControl[18] =
+			{ 1, desired.at(0), 1, desired.at(1), 1, desired.at(2), 1,
+					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4), 0, 0 };
 	setPoints(pointControl, referenceFrame);
 }
 
@@ -245,23 +241,50 @@ void Planner::switchToTask(Tasks newTask) {
 	switch(newTask) {
 		case Gate: 
 			delete currentTask;
-			currentTask = (Task*) new Task_Gate(this, myStatusUpdater);
+			currentTask = (Task*) new Task_Gate(this, myStatusUpdater, 0);
 			break;
 		case Lane: 
 			delete currentTask;
-			currentTask = (Task*) new Task_Lane(this, myStatusUpdater);
+			currentTask = (Task*) new Task_Lane(this, myStatusUpdater, 0);
 			break;
 		case Buoy: 
 			delete currentTask;
-
+			//
 			break;
 		case Hydrophones:
 			delete currentTask;
-
+			//
 			break;
 		case Kill: 
 			delete currentTask;
-			currentTask = (Task*) new Task_Kill(this, myStatusUpdater);
+			currentTask = (Task*) new Task_Kill(this, myStatusUpdater, 0);
+			break;
+	}
+
+	currentTask->execute();
+}
+
+void Planner::weAreLost(LostStates newTask) {
+	switch(newTask) {
+		case Gate_A: 
+			delete currentTask;
+			currentTask = (Task*) new Lost_Gate(this, myStatusUpdater, 0);
+			break;
+		case Gate_B: 
+			delete currentTask;
+			//
+			break;
+		case Lane_A: 
+			delete currentTask;
+			//
+			break;
+		case Buoy_A: 
+			delete currentTask;
+			//
+			break;
+		case Hydrophones_A:
+			delete currentTask;
+			//
 			break;
 	}
 
@@ -314,13 +337,13 @@ Planner::Planner(ros::NodeHandle& n) {
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
 
-	taskPubFront = n.advertise<planner::CurrentCVTask>("currentCVTask_Front", 1000);
-	taskPubDown = n.advertise<planner::CurrentCVTask>("currentCVTask_Down", 1000);
+	taskPubFront = n.advertise<robosub_msg::CurrentCVTask>("currentCVTask_Front", 1000);
+	taskPubDown = n.advertise<robosub_msg::CurrentCVTask>("currentCVTask_Down", 1000);
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
-	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
+	control_pub = n.advertise<robosub_msg::setPoints>("setPoints", 1000);
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
-	currentTask = new Task(this, myStatusUpdater);
+	currentTask = new Task(this, myStatusUpdater, 0);
 
 	// Waits until the environment is properly setup until the planner actually starts.
 	int ready = 0;
@@ -332,7 +355,6 @@ Planner::Planner(ros::NodeHandle& n) {
 			// We need to wait for the publishers to be publishing their data.
 			ready = 0;
 		} else {
-			ROS_DEBUG_THROTTLE(2, "Here ye Heare ye");
 			ready = 1;
 		}
 
@@ -359,7 +381,7 @@ Planner::Planner(ros::NodeHandle& n) {
 		ROS_DEBUG("Planner - waiting for dependencies");
 	}
 
-	myStatusUpdater->updateStatus(myStatusUpdater->readyToStart);
+	myStatusUpdater->updateStatus(myStatusUpdater->ready);
 
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
 	while (!n.getParam("/go", go) && go != 1) {
