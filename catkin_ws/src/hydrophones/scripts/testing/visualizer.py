@@ -14,8 +14,7 @@ NUMBER_OF_MICS = 4          # MICROPHONES CONNECTED
 BUFFERSIZE = 1024           # BUFFERSIZE FOR FFT
 SAMPLING_FREQUENCY = 192000 # SAMPLING FREQUENCY            Hz
 TARGET_FREQUENCY = 1000     # FREQUENCY TO ACT UPON         Hz
-FREQUENCY_RANGE = 300       # RANGE OFF TARGET TO MONITOR   Hz
-SPEED = 343                 # SPEED OF SOUND IN AIR         m/s
+FREQUENCY_RANGE = 100       # RANGE OFF TARGET TO MONITOR   Hz
 MIC_INDEX = -1              # MIC PORT INDEX
 LIN_INDEX = -2              # LINE IN PORT INDEX
 
@@ -35,9 +34,12 @@ screen = curses.newwin(height, 100)
 screen.clear()
 curses.start_color()
 curses.use_default_colors()
-curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_RED)    # WARNING
-curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)   # SUCCESS
-curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)  # HEADING
+# WARNING
+curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_RED)
+# SUCCESS
+curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLUE)
+# HEADING
+curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
 
 class mic(object):
@@ -73,7 +75,8 @@ mics = [mic(i) for i in range(NUMBER_OF_MICS)]
 def py_error_handler(filename, line, function, err, fmt):
     pass
 
-ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
+ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int,
+                               c_char_p, c_int, c_char_p)
 c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
 asound = cdll.LoadLibrary('libasound.so')
 asound.snd_lib_error_set_handler(c_error_handler)
@@ -85,10 +88,13 @@ try:
     os.system('clear')
     mic = audio.open(format=pyaudio.paFloat32, channels=2,
                      rate=SAMPLING_FREQUENCY, input=True,
-                     input_device_index = MIC_INDEX, frames_per_buffer=BUFFERSIZE)
+                     input_device_index = MIC_INDEX,
+                     frames_per_buffer=BUFFERSIZE)
     lin = audio.open(format=pyaudio.paFloat32, channels=2,
                      rate=SAMPLING_FREQUENCY, input=True,
-                     input_device_index = LIN_INDEX, frames_per_buffer=BUFFERSIZE)
+                     input_device_index = LIN_INDEX,
+                     frames_per_buffer=BUFFERSIZE)
+
 except Exception as e:
     screen.addstr('\n %s \n\n' % e, curses.color_pair(1))
     screen.refresh()
@@ -99,9 +105,11 @@ except Exception as e:
 
 
 def read():
-    ''' Reads time domain from microphones and updates objects '''
-    data_mic = np.fromstring(mic.read(BUFFERSIZE), dtype=np.float32)
-    data_lin = np.fromstring(lin.read(BUFFERSIZE), dtype=np.float32)
+    ''' Reads signal from microphones '''
+    data_mic = np.fromstring(mic.read(BUFFERSIZE),
+                             dtype=np.float32)
+    data_lin = np.fromstring(lin.read(BUFFERSIZE),
+                             dtype=np.float32)
 
     mics[0].time = data_mic[::2]
     mics[1].time = data_mic[1::2]
@@ -110,13 +118,12 @@ def read():
 
 
 def process():
-    ''' FFTs the time domain and computes its magnitude and phase '''
+    ''' FFTs time domain and computes magnitude '''
     for i in range(NUMBER_OF_MICS):
         mics[i].compute_fft()
         mics[i].compute_magnitude()
 
 
-# LOOK AT RELEVANT FREQUENCY
 def analyze():
     ''' Monitors target frequency and prints table '''
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
@@ -126,7 +133,8 @@ def analyze():
     screen.addstr(header, curses.color_pair(3))
 
     for i in range(NUMBER_OF_MICS):
-        for j in range(TARGET_INDEX - RANGE, TARGET_INDEX + RANGE + 1):
+        for j in range(TARGET_INDEX - RANGE,
+                       TARGET_INDEX + RANGE + 1):
             value = '%s\t%5d Hz\t%+4.2f\tdB\n' % \
                     (' ' + mics[i].label,
                      j * FREQUENCY_PER_INDEX,
@@ -143,7 +151,8 @@ def maximize():
         max = np.argmax(mics[i].magn)
 
         state = 0
-        if max >= TARGET_INDEX - RANGE and max <= TARGET_INDEX + RANGE:
+        if ((max >= TARGET_INDEX - RANGE) and
+            (max <= TARGET_INDEX + RANGE)):
             state = 2
 
         value = '%s\t%5d Hz\t%+4.2f\tdB\n' % \

@@ -17,6 +17,7 @@ NUMBER_OF_MICS = param.get_number_of_mics()
 SAMPLING_FREQUENCY = param.get_sampling_frequency()
 TARGET_FREQUENCY = param.get_target_frequency()
 
+# USEFUL CONSTANTS
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 THRESHOLD = 0.1
@@ -35,6 +36,7 @@ def analyze():
     global target_acquired
     freq = [np.zeros(BUFFERSIZE/2+1,np.float)
             for i in range(NUMBER_OF_MICS)]
+
     freq[0] = np.fft.rfft(signal[0].channel_0)
     freq[1] = np.fft.rfft(signal[0].channel_1)
     freq[2] = np.fft.rfft(signal[0].channel_2)
@@ -46,7 +48,7 @@ def analyze():
             target_acquired = True
 
 
-def callback(data):
+def parse(data):
     """ Deals with subscribed audio data """
     global crunching, target_acquired, counter
     if not crunching:
@@ -75,9 +77,6 @@ def callback(data):
 
 def interpolate(x,s,u):
     """ Interpolate x with a sinc function """
-    if len(x) != len(s):
-        raise Exception, 'x and s must be the same length (%d) (%d)' % (len(x), len(s))
-
     T = s[1] - s[0]
     sincM = np.tile(u, (len(s), 1)) - \
             np.tile(s[:, np.newaxis], (1, len(u)))
@@ -136,7 +135,7 @@ if __name__ == '__main__':
     try:
         rospy.init_node('tdoa')
         tdoa_topic = rospy.Publisher('time_difference',tdoa)
-        rospy.Subscriber('/hydrophones/channels',channels,callback)
+        rospy.Subscriber('/hydrophones/channels',channels,parse)
         while not rospy.is_shutdown():
             pass
     except rospy.ROSInterruptException:
