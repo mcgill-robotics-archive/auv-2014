@@ -47,7 +47,7 @@ if filereadable($HOME.'/.vim/bundle/Vundle.vim/autoload/vundle.vim')
     Plugin 'davidhalter/jedi-vim'
     Plugin 'terryma/vim-multiple-cursors'
     Plugin 'bling/vim-airline'
-    Plugin 'edkolev/tmuxline.vim'
+    "Plugin 'edkolev/tmuxline.vim'
     Plugin 'scrooloose/syntastic'
     Plugin 'LaTeX-Box-Team/LaTeX-Box'
     Plugin 'coot/atp_vim'
