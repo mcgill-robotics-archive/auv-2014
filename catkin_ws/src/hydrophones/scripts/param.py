@@ -8,9 +8,12 @@ BUFFERSIZE = 128            # SIZE OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
 TARGET_FREQUENCY = 1000     # FREQUENCY OF PINGER           Hz
+DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
+PINGER_X = 169.2
+PINGER_Y = 54.8
 
 
 def get_buffersize():
@@ -53,6 +56,14 @@ def get_target_frequency():
     return int(rospy.get_param('/hydrophones/target'))
 
 
+def get_depth_of_pinger():
+    """ Returns depth of the pinger from the surface in m """
+    while not rospy.has_param('/hydrophones/depth'):
+        pass
+
+    return rospy.get_param('/hydrophones/depth')
+
+
 def get_mic_positions():
     """ Returns (x,y) coordinates of every hydrophone """
     while not rospy.has_param('/hydrophones/pos/'):
@@ -67,13 +78,31 @@ def get_mic_positions():
     return pos
 
 
+def get_simulation_solution():
+    """ Returns (x,y) coordinates of the simulated pinger """
+    while not rospy.has_param('/hydrophones/simulation'):
+        pass
+
+    x = rospy.get_param('/hydrophones/simulation/x')
+    y = rospy.get_param('/hydrophones/simulation/y')
+
+    return (x,y)
+
+
+def set_simulation_parameters():
+    """ Creates and sets ROS simulation parameters """
+    rospy.set_param('/hydrophones/simulation/x',PINGER_X)
+    rospy.set_param('/hydrophones/simulation/y',PINGER_Y)
+
+
 def set_parameters():
-    """ Creates and sets ROS parameters """
+    """ Creates and sets default ROS parameters """
     rospy.set_param('/hydrophones/buffersize',BUFFERSIZE)
     rospy.set_param('/hydrophones/number_of_mics',NUMBER_OF_MICS)
     rospy.set_param('/hydrophones/speed',SPEED)
     rospy.set_param('/hydrophones/fs',SAMPLING_FREQUENCY)
     rospy.set_param('/hydrophones/target',TARGET_FREQUENCY)
+    rospy.set_param('/hydrophones/depth',DEPTH_OF_PINGER)
 
     rospy.set_param('/hydrophones/pos/0/x',0)
     rospy.set_param('/hydrophones/pos/0/y',0)
