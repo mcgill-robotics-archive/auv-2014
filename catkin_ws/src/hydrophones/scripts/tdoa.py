@@ -107,6 +107,7 @@ def gccphat():
     dt.tdoa_1 = diff[1]
     dt.tdoa_2 = diff[2]
     dt.tdoa_3 = diff[3]
+    dt.target = True
     tdoa_topic.publish(dt)
 
 

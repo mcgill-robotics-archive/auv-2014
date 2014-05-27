@@ -34,6 +34,7 @@ def compute_tdoa():
     dt.tdoa_1 = times[1] - times[0]
     dt.tdoa_2 = times[2] - times[0]
     dt.tdoa_3 = times[3] - times[0]
+    dt.target = True
     tdoa_topic.publish(dt)
 
 
