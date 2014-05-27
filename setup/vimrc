@@ -46,7 +46,7 @@ if filereadable($HOME.'/.vim/bundle/Vundle.vim/autoload/vundle.vim')
     Plugin 'ervandew/supertab'
     Plugin 'davidhalter/jedi-vim'
     Plugin 'terryma/vim-multiple-cursors'
-    Plugin 'bling/vim-airline'
+    "Plugin 'bling/vim-airline'
     "Plugin 'edkolev/tmuxline.vim'
     Plugin 'scrooloose/syntastic'
     Plugin 'LaTeX-Box-Team/LaTeX-Box'
@@ -137,13 +137,13 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
 
 " airline
-let g:airline_theme='ubaryd'
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-   let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
-let g:airline#extensions#tabline#enabled = 1
+"let g:airline_theme='ubaryd'
+"let g:airline_powerline_fonts = 1
+"if !exists('g:airline_symbols')
+"   let g:airline_symbols = {}
+"endif
+"let g:airline_symbols.space = "\ua0"
+"let g:airline#extensions#tabline#enabled = 1
 
 " LaTeX
 let g:tex_flavor='latex'
