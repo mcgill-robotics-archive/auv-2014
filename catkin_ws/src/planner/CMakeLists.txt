@@ -16,18 +16,18 @@ project(planner)
 ################################################
 
 ## Generate messages in the 'msg' folder
-# add_message_files (
-#   FILES
-#   setPoints.msg
-#   ValueControl.msg
-#   CurrentCVTask.msg
-# )
+add_message_files (
+  FILES
+  setPoints.msg
+  ValueControl.msg
+  CurrentCVTask.msg
+)
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages (
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages (
+  DEPENDENCIES
+  std_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -57,5 +57,5 @@ target_link_libraries(planner boost_thread)
  add_executable (CurrentCVTaskPublisher src/CurrentCVTaskPublisher.cpp)
  target_link_libraries(CurrentCVTaskPublisher ${catkin_LIBRARIES})
  add_dependencies(CurrentCVTaskPublisher ${catkin_EXPORTED_TARGETS})
- add_dependencies(CurrentCVTaskPublisher ${PROJECT_NAME}_generate_messages_cpp)
+ add_dependencies(CurrentCVTaskPublisher planner_generate_messages_cpp)
 

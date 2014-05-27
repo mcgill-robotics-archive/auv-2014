@@ -26,7 +26,7 @@ private:
 
 	void instanciateAllVisibleObjects();
 	void receiveImage(const sensor_msgs::ImageConstPtr& message);
-	void listenToPlanner(robosub_msg::CurrentCVTask msg);
+	void listenToPlanner(planner::CurrentCVTask msg);
 };
 
 #endif

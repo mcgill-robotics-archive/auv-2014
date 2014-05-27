@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
 }
 
 PlannerSimulator::PlannerSimulator(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize) {
-	plannerPublisherFront = nodeHandle.advertise<robosub_msg::CurrentCVTask>(PLANNER_DATA_FRONT_TOPIC_NAME , 1000); 
-	plannerPublisherDown = nodeHandle.advertise<robosub_msg::CurrentCVTask>(PLANNER_DATA_DOWN_TOPIC_NAME , 1000); 
-	robosub_msg::CurrentCVTask msgFront;
-	robosub_msg::CurrentCVTask msgDown;
+	plannerPublisherFront = nodeHandle.advertise<planner::CurrentCVTask>(PLANNER_DATA_FRONT_TOPIC_NAME , 1000); 
+	plannerPublisherDown = nodeHandle.advertise<planner::CurrentCVTask>(PLANNER_DATA_DOWN_TOPIC_NAME , 1000); 
+	planner::CurrentCVTask msgFront;
+	planner::CurrentCVTask msgDown;
 	while(1) {
 		msgFront.currentCVTask = 1;
 		plannerPublisherFront.publish(msgFront);

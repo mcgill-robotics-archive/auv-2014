@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   message_generation
   robosub_msg
+  planner
   tf
 )
 
@@ -47,7 +48,7 @@ generate_messages(
 catkin_package(
    INCLUDE_DIRS include
 #  LIBRARIES controls
-  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs robosub_msg message_runtime
+  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs robosub_msg message_runtime planner
 )
 
 ###########
