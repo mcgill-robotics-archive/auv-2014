@@ -3,7 +3,7 @@
 # IMPORTS
 import rospy
 
-# PARAMETERS
+# DEFAULT PARAMETERS
 BUFFERSIZE = 128            # SIZE OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
@@ -12,8 +12,9 @@ DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
-PINGER_X = 169.2
-PINGER_Y = 54.8
+
+# SIMULATION PARAMETERS
+PINGER = (169, 54)          # PINGER COORDINATES            m
 
 
 def get_buffersize():
@@ -91,8 +92,8 @@ def get_simulation_solution():
 
 def set_simulation_parameters():
     """ Creates and sets ROS simulation parameters """
-    rospy.set_param('/hydrophones/simulation/x',PINGER_X)
-    rospy.set_param('/hydrophones/simulation/y',PINGER_Y)
+    rospy.set_param('/hydrophones/simulation/x',PINGER[0])
+    rospy.set_param('/hydrophones/simulation/y',PINGER[1])
 
 
 def set_parameters():

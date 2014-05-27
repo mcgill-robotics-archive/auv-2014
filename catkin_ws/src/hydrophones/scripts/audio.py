@@ -62,6 +62,7 @@ def read():
 
     audio_topic.publish(signal)
 
+
 if __name__ == '__main__':
     try:
         while not rospy.is_shutdown():

@@ -17,6 +17,11 @@ SPEED = param.get_speed()
 POS = param.get_mic_positions()
 DEPTH_OF_PINGER = param.get_depth_of_pinger()
 
+# SET UP NODE AND TOPIC
+rospy.init_node('solver')
+solver_topic = rospy.Publisher('/hydrophones/solution',Point)
+sol = Point()
+
 
 def solve(data):
     """ Solve by multilateration """
@@ -42,7 +47,6 @@ def solve(data):
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
     # PUBLISH
-    sol = Point()
     sol.x = x
     sol.y = y
     sol.z = DEPTH_OF_PINGER
@@ -51,8 +55,6 @@ def solve(data):
 
 if __name__ == '__main__':
     try:
-        rospy.init_node('solver')
-        solver_topic = rospy.Publisher('/hydrophones/solution',Point)
         rospy.Subscriber('/hydrophones/time_difference',tdoa,solve)
         while not rospy.is_shutdown():
             pass

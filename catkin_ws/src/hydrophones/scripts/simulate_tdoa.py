@@ -15,10 +15,12 @@ SPEED = param.get_speed()
 POS = param.get_mic_positions()
 DEPTH_OF_PINGER = param.get_depth_of_pinger()
 
+# SET UP NODE AND TOPIC
 rospy.init_node('tdoa')
 tdoa_topic = rospy.Publisher('/hydrophones/time_difference',tdoa)
 rate = rospy.Rate(0.5)
 dt = tdoa()
+
 
 def compute_tdoa():
     ''' Computes and publishes expected TDOA '''
@@ -33,6 +35,7 @@ def compute_tdoa():
     dt.tdoa_2 = times[2] - times[0]
     dt.tdoa_3 = times[3] - times[0]
     tdoa_topic.publish(dt)
+
 
 if __name__ == '__main__':
     try:
