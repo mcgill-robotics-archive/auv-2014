@@ -8,5 +8,8 @@
 
         <!-- tdoa -->
         <node name="tdoa" pkg="hydrophones" type="tdoa.py" respawn="false" output="screen"/>
+
+        <!-- solver -->
+        <node name="solver" pkg="hydrophones" type="multilateration.py" respawn="false" output="screen"/>
     </group>
 </launch>
