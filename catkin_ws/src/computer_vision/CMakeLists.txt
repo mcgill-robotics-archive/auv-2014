@@ -55,7 +55,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(VisibleObject src/VisibleObject.cpp)
 target_link_libraries(VisibleObject ${catkin_LIBRARIES})
-add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS})
+add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS} computer_vision_generate_messages_cpp)
 
 add_library(CVNode src/CVNode.cpp)
 target_link_libraries(CVNode ${catkin_LIBRARIES})
@@ -112,6 +112,6 @@ add_executable (distanceCalculator src/distanceCalculator.cpp)
 target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
 
 # This makes sure message headers are generated before being used
-add_dependencies(CVNode computer_vision_gencpp)
-add_dependencies(CVTestNode computer_vision_gencpp)
+add_dependencies(CVNode computer_vision_generate_messages_cpp)
+add_dependencies(CVTestNode computer_vision_generate_messages_cpp)
 add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})

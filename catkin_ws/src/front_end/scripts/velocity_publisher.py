@@ -7,7 +7,7 @@
 #@author David Lavoie-Boutin
 
 import rospy
-from planner.msg import setPoints
+from robosub_msg.msg import setPoints
 from VARIABLES import vel_vars
 
 ##
