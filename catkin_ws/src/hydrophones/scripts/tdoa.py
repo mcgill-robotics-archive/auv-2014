@@ -2,6 +2,7 @@
 
 # TODO: TEST WITH KNOWN TIME DIFFERENCES
 #       IMPLEMENT BANDPASS FILTER
+#       DISTINGUISH PRACTICE FROM COMPETITION
 
 # IMPORTS
 import numpy as np
@@ -23,56 +24,38 @@ TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 THRESHOLD = 0.1
 
 # VARIABLES
-max_counter = 1024/BUFFERSIZE
-counter = 0
-target_acquired = False
 crunching = False
-signal = [channels() for i in range(max_counter)]
+signal = channels()
 dt = tdoa()
 
 
-def analyze():
+def acquire_target():
     """ Searches for target frequency in signal """
-    global target_acquired
     freq = [np.zeros(BUFFERSIZE/2+1,np.float)
             for i in range(NUMBER_OF_MICS)]
 
-    freq[0] = np.fft.rfft(signal[0].channel_0)
-    freq[1] = np.fft.rfft(signal[0].channel_1)
-    freq[2] = np.fft.rfft(signal[0].channel_2)
-    freq[3] = np.fft.rfft(signal[0].channel_3)
+    freq[0] = np.fft.rfft(signal.channel_0)
+    freq[1] = np.fft.rfft(signal.channel_1)
+    freq[2] = np.fft.rfft(signal.channel_2)
+    freq[3] = np.fft.rfft(signal.channel_3)
 
     for i in range(NUMBER_OF_MICS):
-        magn = np.absolute(freq[i][TARGET_INDEX])
-        if magn > THRESHOLD:
-            target_acquired = True
+        magnitude = np.absolute(freq[i][TARGET_INDEX])
+        if magnitude > THRESHOLD:
+            return True
+
+    return False
 
 
 def parse(data):
     """ Deals with subscribed audio data """
-    global crunching, target_acquired, counter
+    global crunching, signal
     if not crunching:
-        if not target_acquired:
-            if counter == 0:
-                signal[0] = data
-                counter = 1
-            else:
-                signal[1] = data
-                analyze()
-                if not target_acquired:
-                    counter = 0
-                else:
-                    counter = 2
-        else:
-            if counter < max_counter:
-                signal[counter] = data
-                counter += 1
-            else:
-                crunching = True
-                gccphat()
-                counter = 0
-                target_acquired = False
-                crunching = False
+        signal = data
+        if acquire_target():
+            crunching = True
+            gccphat()
+            crunching = False
 
 
 def interpolate(x,s,u):
@@ -84,15 +67,12 @@ def interpolate(x,s,u):
 
     return y
 
+
 def gccphat():
     """ Compute Time Difference of Arrival """
-    # MAKE FULL BUFFERSIZE
-    time = [[] for i in range(NUMBER_OF_MICS)]
-    for i in range(max_counter):
-        time[0] += signal[i].channel_0
-        time[1] += signal[i].channel_1
-        time[2] += signal[i].channel_2
-        time[3] += signal[i].channel_3
+    # PARSE
+    time = [signal.channel_0, signal.channel_1,
+            signal.channel_2, signal.channel_3]
 
     # FFT
     freq = [[] for i in range(NUMBER_OF_MICS)]
@@ -100,7 +80,6 @@ def gccphat():
         freq[i] = np.fft.fft(time[i])
 
     # COMPUTE TDOA
-    desired_buffersize = max_counter*BUFFERSIZE
     diff = [0 for i in range(NUMBER_OF_MICS)]
     for i in range(1,NUMBER_OF_MICS):
         # ORDINARY GCC-PHAT
@@ -111,17 +90,17 @@ def gccphat():
 
         # INTERPOLATION
         begin = max(0,index-5)
-        end = min(index+5,desired_buffersize)
+        end = min(index+5,BUFFERSIZE)
         s = np.arange(begin,end)
         u = np.arange(begin,end,INTERPOLATION)
         phat_interp = interpolate(phat[begin:end],s,u)
         top = np.argmax(phat_interp)
 
         # TIME DIFFERENCE
-        if index < (desired_buffersize)/2:
+        if index < (BUFFERSIZE)/2:
             diff[i] = (index + u[top]) / SAMPLING_FREQUENCY
         else:
-            diff[i] = (index + u[top] - desired_buffersize) / \
+            diff[i] = (index + u[top] - BUFFERSIZE) / \
                       SAMPLING_FREQUENCY
 
     # PUBLISH
