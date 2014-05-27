@@ -5,7 +5,7 @@ import sys
 from PyQt4 import QtGui, QtCore
 from pneumatics_ui import *
 import rospy  # ros module for subscribing to topics
-from arduino_msgs.msg import solenoid
+from robosub_msg.msg import solenoid
 
 
 class CentralUi(QtGui.QMainWindow):
