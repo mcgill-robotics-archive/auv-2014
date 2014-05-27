@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE FROM COMPETITION
-#       
+# TODO: DISTINGUISH PRACTICE FROM COMPETITION 
 
 # IMPORTS
 from ctypes import *
