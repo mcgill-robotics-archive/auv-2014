@@ -5,7 +5,6 @@ import numpy as np
 import rospy
 import roslib
 from hydrophones.msg import *
-import time
 import param
 
 # PARAMETERS
@@ -17,13 +16,13 @@ DEPTH_OF_PINGER = param.get_depth_of_pinger()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('tdoa')
-tdoa_topic = rospy.Publisher('/hydrophones/time_difference',tdoa)
+tdoa_topic = rospy.Publisher('/hydrophones/simulation/tdoa',tdoa)
 rate = rospy.Rate(0.5)
 dt = tdoa()
 
 
 def compute_tdoa():
-    ''' Computes and publishes expected TDOA '''
+    """ Computes and publishes expected TDOA """
     (x,y) = param.get_simulation_solution()
 
     times = []

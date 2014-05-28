@@ -18,7 +18,7 @@ SAMPLING_FREQUENCY = param.get_sampling_frequency()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
-audio_topic = rospy.Publisher('channels', channels)
+audio_topic = rospy.Publisher('/hydrophones/channels', channels)
 signal = channels()
 
 

@@ -3,8 +3,12 @@
         <!-- parameters -->
         <node name="param" pkg="hydrophones" type="param.py" respawn="false" output="screen"/>
 
+        <!-- audio -->
+        <node name="audio" pkg="hydrophones" type="simulate_audio.py" respawn="false" output="screen"/>
+
         <!-- tdoa -->
-        <node name="tdoa" pkg="hydrophones" type="simulate_tdoa.py" respawn="false" output="screen"/>
+        <node name="simulation_tdoa" pkg="hydrophones" type="simulate_tdoa.py" respawn="false" output="screen"/>
+        <node name="tdoa" pkg="hydrophones" type="tdoa.py" respawn="false" output="screen"/>
 
         <!-- solver -->
         <node name="solver" pkg="hydrophones" type="multilateration.py" respawn="false" output="screen"/>
