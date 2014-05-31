@@ -22,6 +22,39 @@ const int FRAME_VISIBILITY_THRESHOLD = 10;
 
 class CVNode {
 
+	public:
+	
+	CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize);
+	virtual ~CVNode();
+	void receiveImages();
+
+	inline double get_camera_sensor_height() const { return camera_sensor_height; }
+	inline double get_camera_focal_length() const { return camera_focal_length; }
+	inline bool get_down_using_helpers() const { return down_using_helpers; }
+	inline bool get_front_using_helpers() const { return front_using_helpers; }
+
+	struct GateParameters {
+		int min_number_points_contour;
+
+		int pole_desired_angle_deg;		
+		int pole_angle_error_deg;
+
+		int min_pole_ratio;
+
+		double min_convexity_ratio;
+
+		int gate_height_m;
+		int gate_width_m;
+
+		int value_range_begin;
+		int value_range_end;
+
+		int hue_range1_begin;
+		int hue_range1_end;
+		int hue_range2_begin;
+		int hue_range2_end;
+	};
+
 	private:
 	
 	/**
@@ -39,43 +72,11 @@ class CVNode {
 	std::list<VisibleObject*> visibleObjectList;
 	int numFramesWithoutObject;
 
-	int start_hsv_hue_thresh;
-	int end_hsv_hue_thresh;
-	int start_hsv_value_thresh;
-	int end_hsv_value_thresh;
 	double camera_sensor_height;
 	double camera_focal_length;
 	bool down_using_helpers;
 	bool front_using_helpers;
-	
-	public:
-	
-	CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int receptionRate, int bufferSize);
-	virtual ~CVNode();
-	void receiveImages();
 
-	inline int get_start_hsv_hue_thresh() const { return start_hsv_hue_thresh; }
-	inline int get_end_hsv_hue_thresh() const { return end_hsv_hue_thresh; }
-	inline int get_start_hsv_value_thresh() const { return start_hsv_value_thresh; }
-	inline int get_end_hsv_value_thresh() const { return end_hsv_value_thresh; }
-	inline double get_camera_sensor_height() const { return camera_sensor_height; }
-	inline double get_camera_focal_length() const { return camera_focal_length; }
-	inline bool get_down_using_helpers() const { return down_using_helpers; }
-	inline bool get_front_using_helpers() const { return front_using_helpers; }
-
-	struct GateParameters {
-		int min_number_points_contour;
-
-		int pole_desired_angle_deg;		
-		int pole_angle_error_deg;
-
-		int min_pole_ratio;
-
-		int gate_height_m;
-		int gate_width_m;
-	};
-
-	protected:
 	GateParameters gp;
 
 	private:

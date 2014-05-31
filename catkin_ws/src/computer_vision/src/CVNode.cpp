@@ -35,10 +35,6 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 
 	nodeHandle.param<bool>("cv_front_using_helper_windows", front_using_helpers, 0);
 	nodeHandle.param<bool>("cv_down_using_helper_windows", down_using_helpers, 0);
-	nodeHandle.param<int>("start_hsv_hue_threshold", start_hsv_hue_thresh, 0);
-	nodeHandle.param<int>("end_hsv_hue_threshold", end_hsv_hue_thresh, 0);
-	nodeHandle.param<int>("start_hsv_value_threshold", start_hsv_value_thresh, 0);
-	nodeHandle.param<int>("end_hsv_value_threshold", end_hsv_value_thresh, 0);
 	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
 	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
 
@@ -46,11 +42,17 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 	nodeHandle.param<int>("gate_min_number_points_contour", gp.min_number_points_contour, 0);
 	nodeHandle.param<int>("gate_pole_desired_angle_deg", gp.pole_desired_angle_deg, 0);
 	nodeHandle.param<int>("gate_pole_angle_error_deg", gp.pole_angle_error_deg, 0);
-	ROS_INFO("%s", "DESIRED ANGLE: ");	
-	ROS_INFO("%d", gp.pole_desired_angle_deg);
 	nodeHandle.param<int>("gate_min_pole_ratio", gp.min_pole_ratio, 0);
+	nodeHandle.param<double>("gate_min_convexity_ratio", gp.min_convexity_ratio, 0.0);
 	nodeHandle.param<int>("gate_height_m", gp.gate_height_m, 0);
 	nodeHandle.param<int>("gate_width_m", gp.gate_width_m, 0);
+
+	nodeHandle.param<int>("gate_hue_range1_start", gp.hue_range1_begin, 0);
+	nodeHandle.param<int>("gate_hue_range1_end", gp.hue_range1_end, 0);
+	nodeHandle.param<int>("gate_hue_range2_start", gp.hue_range2_begin, 0);
+	nodeHandle.param<int>("gate_hue_range2_end", gp.hue_range2_end, 0);
+	nodeHandle.param<int>("gate_value_start", gp.value_range_begin, 0);
+	nodeHandle.param<int>("gate_value_end", gp.value_range_end, 0);
 
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": CVNode (the parent of FrontCVNode and DownCVNode) has been initialized.").c_str());
 }
