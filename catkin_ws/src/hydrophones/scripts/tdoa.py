@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-# TODO: FIX BUG, DOES NOT WORK :(
-#       IMPLEMENT BANDPASS FILTER
+# TODO: IMPLEMENT BANDPASS FILTER
 #       DISTINGUISH PRACTICE FROM COMPETITION
 
 # IMPORTS
@@ -98,10 +97,9 @@ def gccphat():
 
         # TIME DIFFERENCE
         if index < (BUFFERSIZE)/2:
-            diff[i] = (index + u[top]) / SAMPLING_FREQUENCY
+            diff[i] = -u[top] / SAMPLING_FREQUENCY
         else:
-            diff[i] = (index + u[top] - BUFFERSIZE) / \
-                      SAMPLING_FREQUENCY
+            diff[i] = (BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
 
     # PUBLISH
     dt.tdoa_1 = diff[1]

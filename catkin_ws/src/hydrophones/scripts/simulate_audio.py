@@ -58,13 +58,12 @@ def compute_tdoa():
 def simulate():
     ''' Simulate microphone signals '''
     dt = compute_tdoa()
-    print dt
     signal = channels()
 
     signal.channel_0 = create_signal(dt[0])
     signal.channel_1 = create_signal(dt[1])
     signal.channel_2 = create_signal(dt[2])
-    signal.channel_3 = create_signal(dt[3]) 
+    signal.channel_3 = create_signal(dt[3])
 
     audio_topic.publish(signal)
 
