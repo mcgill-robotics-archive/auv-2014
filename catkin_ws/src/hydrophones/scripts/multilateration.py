@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE FROM COMPETITION 
+# TODO: DISTINGUISH PRACTICE FROM COMPETITION
 
 # IMPORTS
 from ctypes import *
@@ -19,8 +19,10 @@ DEPTH_OF_PINGER = param.get_depth_of_pinger()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('solver')
-solver_topic = rospy.Publisher('/hydrophones/solution',Point)
-sol = Point()
+cartesian_topic = rospy.Publisher('/hydrophones/solution/cartesian',Point)
+cylindrical_topic = rospy.Publisher('/hydrophones/solution/cylindrical',cylindrical)
+cartesian = Point()
+cylindrical = cylindrical()
 
 
 def solve(data):
@@ -46,12 +48,18 @@ def solve(data):
     # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
-    # PUBLISH
-    sol.x = x
-    sol.y = y
-    sol.z = DEPTH_OF_PINGER
-    solver_topic.publish(sol)
-    
+    # PUBLISH CARTESIAN COORDINATES
+    cartesian.x = x
+    cartesian.y = y
+    cartesian.z = DEPTH_OF_PINGER
+    cartesian_topic.publish(cartesian)
+
+    # PUBLISH CYLINDRICAL COORDINATES
+    cylindrical.r = np.sqrt(x**2 + y**2)
+    cylindrical.theta = np.degrees(np.arctan2(y,x))
+    cylindrical.z = DEPTH_OF_PINGER
+    cylindrical_topic.publish(cylindrical)
+
 
 if __name__ == '__main__':
     try:
