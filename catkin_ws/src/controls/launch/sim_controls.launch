@@ -15,5 +15,4 @@
 	    <node name="distanceCalculator" pkg="computer_vision" type="distanceCalculator"  respawn="false" output="screen"/>
 	  </group>
 
-
   </launch>
