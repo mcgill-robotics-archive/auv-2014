@@ -1,4 +1,27 @@
 <launch>
+	<!-- DEPRECATED - OLD AND OBSOLETE - DO NOT USE!!!!! - NICK May 19 2014 -->
+	<!-- roslaunch sim_controls.launch or controls.launch instead. -->
+
+	DEPRECATED LAUNCH FILE - THIS SHOULD THROW AN ERROR AT RUNTIME BECAUSE YOU ARE USING THE WRONG LAUNCH FILE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<!-- launches simulator, controls, and distanceCalculator: everything the planner should need. -->
 
   <include file="$(find simulator)/launch/simulator.launch" />
