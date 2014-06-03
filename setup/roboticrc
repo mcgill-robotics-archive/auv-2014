@@ -1,21 +1,48 @@
-alias maple='/usr/share/maple13/bin/xmaple'
+alias go='rosparam set /go 1'
+alias planner_pls='rosparam set /go 1'
+alias main='tmux attach -t main'
 alias roscereal='rosrun rosserial_python serial_node.py'
-alias bag_temperature='rosbag record -e "/(.*)/temp(.*)"'
 alias asimov='ssh -X robotics@10.0.0.1'
 alias asimosh='mosh robotics@10.0.0.1'
-alias uri='export ROS_MASTER_URI=http://McGill:11311'
-alias monitor_temperatures='teamocil temperature'
+alias uri='export ROS_MASTER_URI=http://10.0.0.1:11311'
 alias softkill='rostopic pub /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub /controls/softKill std_msgs/Bool "data: false"'
 
-alias motor_stop='rostopic pub /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
-alias motor_positive='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 200, cmd_surge_port: 200, cmd_sway_bow: 200, cmd_sway_stern: 200, cmd_heave_bow: 200, cmd_heave_stern: 200}"'
-alias motor_negative='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: -200, cmd_surge_port: -200, cmd_sway_bow: -200, cmd_sway_stern: -200, cmd_heave_bow: -200, cmd_heave_stern: -200}"'
-alias motor_forward='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 200, cmd_surge_port: 200, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
-alias motor_right='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: -200, cmd_sway_stern: 200, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
-alias motor_left='rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 200, cmd_sway_stern: -200, cmd_heave_bow: 0, cmd_heave_stern: 0}"'
+function stop_warning {
+    rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"
+}
 
-source /opt/ros/hydro/setup.bash
+function motor {
+    if [ $# -eq 6 ]; then
+        echo surge-starboard: $1
+        echo surge-port: $2
+        echo sway-bow: $3
+        echo sway-stern: $4
+        echo heave-bow: $5
+        echo heave-stern: $6
+        echo -e '\nrotating motors...'
+        rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $2, cmd_sway_bow: $3, cmd_sway_stern: $4, cmd_heave_bow: $5, cmd_heave_stern: $6}"
+    else
+        echo 'usage: motor [surge-starboard] [surge-port] [sway-bow] [sway-stern] [heave-bow] [heave-stern]'
+        echo 'all arguments are values between -500 and 500'
+        echo -e '\nstopping motors...'
+        rostopic pub -1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"
+    fi
+}
+
+alias motor_stop='motor 0 0 0 0 0 0'
+alias motor_positive='motor 200 200 200 200 200 200'
+
+alias rosecho='rostopic echo'
+alias roscamera='roslaunch computer_vision'
+
+if [ -f /opt/ros/hydro/setup.bash ];
+then
+    source /opt/ros/hydro/setup.bash
+else
+    source /opt/ros/indigo/setup.bash
+fi
+
 source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
 export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
 export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws

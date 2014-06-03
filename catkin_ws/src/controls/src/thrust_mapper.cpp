@@ -114,7 +114,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	{
 		voltage[i] = thrust_voltage(thrust[i]);
 		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
-		//ROS_INFO("Voltage %i: %f",i,voltage[i]);
+		//ROS_DEBUG("Voltage %i: %f",i,voltage[i]);
 	}	
 
 	//map voltages to motor commands
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
 	voltage_publisher = n.advertise<controls::motorCommands>("/electrical_interface/motor", 100); 
 	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); 
 
-	ROS_INFO("Thrust_mapper initialized. Listening for wrench.");
+	ROS_DEBUG("Thrust_mapper initialized. Listening for wrench.");
 	ros::spin();
 	return 0;
 }

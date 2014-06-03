@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   tf
   planner
+  robosub_msg
 )
 
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
@@ -36,7 +37,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES computer_vision
-  CATKIN_DEPENDS roscpp std_msgs message_runtime planner
+  CATKIN_DEPENDS roscpp std_msgs message_runtime robosub_msg planner
 )
 
 ###########
@@ -55,7 +56,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(VisibleObject src/VisibleObject.cpp)
 target_link_libraries(VisibleObject ${catkin_LIBRARIES})
-add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS})
+add_dependencies(VisibleObject ${catkin_EXPORTED_TARGETS} computer_vision_generate_messages_cpp)
 
 add_library(CVNode src/CVNode.cpp)
 target_link_libraries(CVNode ${catkin_LIBRARIES})
@@ -67,6 +68,7 @@ target_link_libraries(Gate ${catkin_LIBRARIES})
 add_library(Buoy src/Buoy.cpp)
 target_link_libraries(Buoy VisibleObject)
 target_link_libraries(Buoy ${catkin_LIBRARIES})
+add_dependencies(Buoy ${catkin_EXPORTED_TARGETS} planner_generate_messages_cpp)
 rosbuild_add_compile_flags(Buoy -std=c++0x)
 
 add_library(MarkerTarget src/MarkerTarget.cpp)
@@ -112,6 +114,6 @@ add_executable (distanceCalculator src/distanceCalculator.cpp)
 target_link_libraries(distanceCalculator ${catkin_LIBRARIES})
 
 # This makes sure message headers are generated before being used
-add_dependencies(CVNode computer_vision_gencpp)
-add_dependencies(CVTestNode computer_vision_gencpp)
+add_dependencies(CVNode computer_vision_generate_messages_cpp)
+add_dependencies(CVTestNode computer_vision_generate_messages_cpp)
 add_dependencies(distanceCalculator ${catkin_EXPORTED_TARGETS})

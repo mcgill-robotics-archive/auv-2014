@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 	ros::Rate loop_rate(1/dt); //100 hz??
 	
 	bool ready = 0;
-	ROS_INFO("DepthController waiting for all subscribers to have content...");
+	ROS_DEBUG("DepthController waiting for all subscribers to have content...");
 	while (ready == 0)
 	{
 	       
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 		else {ROS_DEBUG_THROTTLE(2,"got pose");}
 	}
 
-	ROS_INFO("All Subscribers Live. Starting Controller!");
+	ROS_DEBUG("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
 		ros::spinOnce();	//is it a problem to have this at the top not the bottom?

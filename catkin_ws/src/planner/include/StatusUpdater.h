@@ -8,16 +8,19 @@
 
 class StatusUpdater {
 	public:
-		enum PossibleStates {readyToStart, startingGate, reachedGate, completedGate, endRoutine, etc};
-		enum BlinkyStates {openLoop, closedLoop, taskAction, taskComplete, cleanFinish, error, readyToGo};
-		void updateFrontEnd(std::string currentStatus);
-		void updateLED(BlinkyStates newState);
+		enum PossibleStates {ready, gate1, gate2, gate3, lane1, lane2, lane3, buoy1, buoy2, buoy3, hydro1, hydro2, hydro3, error, end};
 		void updateStatus(PossibleStates newState);
 		StatusUpdater(ros::Publisher frontEndPub, ros::ServiceClient btClient);
 
 	private:
 		ros::Publisher frontEndPublisher;
 		ros::ServiceClient blinkyClient;
+		blinky::RGB base;
+		blinky::RGB off;
+		blinky::RGB gate;
+		blinky::RGB lane;
+		blinky::RGB buoy;
+		blinky::RGB hydro;
 };
 
 #endif

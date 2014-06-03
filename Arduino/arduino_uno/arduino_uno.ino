@@ -5,7 +5,7 @@
 #include <std_msgs/String.h>
 #include <controls/motorCommands.h>
 #include <std_msgs/Float32.h>
-#include <arduino_msgs/solenoid.h>
+#include <robosub_msg/solenoid.h>
 
 //Pin definitions 
 
@@ -35,7 +35,7 @@
   #define MOTOR_TIMEOUT 4000    //amount of no signal required to start to reset motors 
   #define VOLTAGE_INTERVAL 1000 //amount of delay between each voltage
   #define PRESSURE_INTERVAL 1000 
-  #define DEPTH_INTERVAL 200
+  #define DEPTH_INTERVAL 20
 
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
@@ -46,11 +46,10 @@ std_msgs::Int32 pressure_msg;
 
 Servo myservo[6];
 
-unsigned long depthSensorSchedule;
-unsigned long batteryVoltageSchedule;
-unsigned long temperaturePressureSechedule;
-unsigned long lastMotorCommand;
-boolean availabilityBMP085 = false;
+unsigned long depthSensorSchedule=0;
+unsigned long batteryVoltageSchedule=0;
+unsigned long temperaturePressureSechedule=0;
+unsigned long lastMotorCommand=0;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -83,7 +82,7 @@ void resetMotor(){
 
 
 
-void solenoidCb( const arduino_msgs::solenoid& msg){
+void solenoidCb( const robosub_msg::solenoid& msg){
   digitalWrite(SOLENOID_PIN_T_1,msg.torpedo1.data);
   digitalWrite(SOLENOID_PIN_T_2,msg.torpedo2.data);
   digitalWrite(SOLENOID_PIN_G_1,msg.grabber1.data);
@@ -98,7 +97,7 @@ ros::Publisher voltagePub1("/batteryVoltage1", &batteryVoltage1_msg);
 ros::Publisher voltagePub2("/batteryVoltage2", &batteryVoltage2_msg);
 ros::Publisher temperaturePub("/temperature", &temperature_msg);
 ros::Publisher pressurePub("/pressure", &pressure_msg);
-ros::Subscriber<arduino_msgs::solenoid> solenoidSub("/solenoid", &solenoidCb );
+ros::Subscriber<robosub_msg::solenoid> solenoidSub("/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motorSub("/motor", &motorCb );
 void setup(){
   myservo[0].attach(MOTOR_PIN_X_1);
@@ -107,6 +106,7 @@ void setup(){
   myservo[3].attach(MOTOR_PIN_Y_2);
   myservo[4].attach(MOTOR_PIN_Z_1);
   myservo[5].attach(MOTOR_PIN_Z_2);
+  resetMotor();
   
   pinMode(SOLENOID_PIN_T_1,OUTPUT);
   pinMode(SOLENOID_PIN_T_2,OUTPUT);
@@ -130,10 +130,7 @@ void setup(){
   nh.subscribe(motorSub);  
   nh.subscribe(solenoidSub);
 
-  //BMP085 Setup
-  availabilityBMP085 = !bmp085Calibration(); // make sure that BMP085 is connected;
   resetMotor();
-
 }
 
 void loop(){

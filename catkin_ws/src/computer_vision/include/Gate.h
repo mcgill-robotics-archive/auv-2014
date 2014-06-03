@@ -30,12 +30,12 @@ class Gate : public VisibleObject {
 
 public:
 
-	Gate(const CVNode& _parent, const CVNode::GateParameters& _params);
+	Gate(const CVNode& _parent, CVNode::GateParameters& _params);
 	~Gate();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 private:
-	const CVNode::GateParameters params;
+	CVNode::GateParameters params;
 
 	struct PoleCandidate {
 		float h, w, rectangleAngleDeg, objectAngleRad, dist;
@@ -43,7 +43,7 @@ private:
 	};
 
 	// Computation functions
-	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV, cv::Scalar start, cv::Scalar end);
+	std::vector<std::vector<cv::Point> > findContoursFromHSVFrame(const cv::Mat& frameInHSV);
 	PoleCandidate findRectangleForContour(std::vector<cv::Point>& contour);
 	void computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, float frameHeight);
 	bool handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point centerOfCurrentFrame);
@@ -59,12 +59,6 @@ private:
 	double m_xDistance;
 	double m_yDistance;
 	double m_zDistance;
-
-	// Trackbar-accessible variables
-	int trackbar_start_hue_threshold;
-	int trackbar_end_hue_threshold;
-	int trackbar_start_val_threshold;
-	int trackbar_end_val_threshold;
 
 protected:
 

@@ -5,8 +5,8 @@ windows:
     layout: "4c9b,205x57,0,0[205x28,0,0{64x28,0,0,75x28,65,0,64x28,141,0},205x28,0,29{95x28,0,29,109x28,96,29}]"
     panes:
       - cmd: "clear && roscore"
-      - cmd: "sleep 10 && roslaunch ~/McGill_RoboSub_2014/catkin_ws/launch/startup.launch"
-      - cmd: "sleep 10 && roslaunch status status.launch"
-      - cmd: "glances -yet 5"
+      - cmd: "sleep 20 && roslaunch ~/McGill_RoboSub_2014/catkin_ws/launch/startup.launch"
+      - cmd: "sleep 25 && roslaunch status status.launch"
+      - cmd: "clear"
       - cmd: "clear"
 

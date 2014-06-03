@@ -4,3 +4,4 @@ gate_pole_angle_error_deg: 15
 gate_min_pole_ratio: 4
 gate_height_m: 1.2
 gate_width_m: 3.1262
+gate_min_convexity_ratio: 0.8

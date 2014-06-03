@@ -15,7 +15,8 @@ initialPose = None
 def inverseQuaternion(quat):
     inverse = transformations.quaternion_inverse(numpy.array((quat.pose.orientation.x, quat.pose.orientation.y, quat.pose.orientation.z, quat.pose.orientation.w), dtype=numpy.float64))
     
-    result = quat
+    result = PoseStamped()
+    result.header = quat.header
     result.pose.orientation.x = inverse[0]
     result.pose.orientation.y = inverse[1]
     result.pose.orientation.z = inverse[2]
@@ -25,7 +26,8 @@ def inverseQuaternion(quat):
 def multQuaternion(quat1, quat2):
     product = transformations.quaternion_multiply(numpy.array((quat1.pose.orientation.x, quat1.pose.orientation.y, quat1.pose.orientation.z, quat1.pose.orientation.w), dtype=numpy.float64), numpy.array((quat2.pose.orientation.x, quat2.pose.orientation.y, quat2.pose.orientation.z, quat2.pose.orientation.w), dtype=numpy.float64))
 
-    quatProduct = quat1
+    quatProduct = PoseStamped()
+    quatProduct.header = quat1.header
     quatProduct.pose.orientation.x = product[0]
     quatProduct.pose.orientation.y = product[1]
     quatProduct.pose.orientation.z = product[2]
@@ -53,11 +55,13 @@ def callback(modelStates):
             
 	    # Reset the initial pose
             if resetInitialPoseFlag == True:
-                initialPose = PoseStamped(poseStamped.header, poseStamped.pose)
+                initialPose = PoseStamped()
+                initialPose.header = poseStamped.header
+                initialPose.pose = poseStamped.pose
                 resetInitialPoseFlag = False
 	    
             # Relative orientation relative to the initial pose
-            relativePose = multQuaternion(poseStamped, inverseQuaternion(poseStamped))
+            relativePose = multQuaternion(initialPose, inverseQuaternion(poseStamped))
 
             pub.publish(relativePose)
             time = rospy.get_time()

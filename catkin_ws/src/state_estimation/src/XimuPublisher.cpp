@@ -96,7 +96,7 @@ if (receiver.isQuaternionGetReady()) {
 }
 
 int main(int argc, char** argv) {
-printf("Starting XimuPublisher\n");
+	printf("Starting XimuPublisher\n");
 	ros::init(argc, argv, "x_imu_pose");
 	ros::NodeHandle node;
 

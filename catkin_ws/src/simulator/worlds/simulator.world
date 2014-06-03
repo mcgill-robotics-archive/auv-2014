@@ -221,7 +221,7 @@
       </joint>
 
       <link name='camera3_link'>
-	<pose>0 .2 -.2 0 1.5 0</pose>
+	<pose>0 .2 -.2 0 1.5 1.57079632679</pose>
 
 	<collision name='collision'>
 	  <geometry>

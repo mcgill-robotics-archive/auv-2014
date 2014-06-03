@@ -11,9 +11,11 @@ void Task_Kill::execute() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
 
-	myPlanner->setVelocity(0,0,0,0,"/robot/rotation_center");
+	double myPoints[5] = {0.0, 0.0, 0.0, 0.0, 8.8};
+	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
+	myPlanner->setPosition(desired, "/robot/rotation_center");
 	loop_rate.sleep();
 	
-	myStatusUpdater->updateStatus(myStatusUpdater->endRoutine);
+	myStatusUpdater->updateStatus(myStatusUpdater->end);
 	loop_rate.sleep();
 }
