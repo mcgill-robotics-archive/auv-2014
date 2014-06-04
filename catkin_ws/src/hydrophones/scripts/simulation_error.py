@@ -9,13 +9,16 @@ import param
 
 # SET UP NODE AND TOPIC
 rospy.init_node('error')
-error_topic = rospy.Publisher('/hydrophones/simulation/error',solution)
+error_topic = rospy.Publisher('/hydrophones/sim/error',solution)
 err = solution()
 
 
 def compute_error(data):
     """ Computes and publishes error """
-    (x,y) = param.get_simulation_solution()
+    if data.target:
+        (x,y) = param.get_simulation_target()
+    else:
+        (x,y) = param.get_simulation_dummy()
 
     err.cartesian.x = x - data.cartesian.x
     err.cartesian.y = y - data.cartesian.y
@@ -27,7 +30,7 @@ def compute_error(data):
 
 if __name__ == '__main__':
     try:
-        rospy.Subscriber('/hydrophones/solution',solution,compute_error)
+        rospy.Subscriber('/hydrophones/sol',solution,compute_error)
         while not rospy.is_shutdown():
             pass
     except rospy.ROSInterruptException:

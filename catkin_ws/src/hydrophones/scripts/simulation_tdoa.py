@@ -10,20 +10,19 @@ import param
 # PARAMETERS
 param.set_simulation_parameters()
 NUMBER_OF_MICS = param.get_number_of_mics()
-SPEED = param.get_speed()
 POS = param.get_mic_positions()
-DEPTH_OF_PINGER = param.get_depth_of_pinger()
+SPEED = param.get_speed()
 
 # SET UP NODE AND TOPIC
-rospy.init_node('tdoa')
-tdoa_topic = rospy.Publisher('/hydrophones/simulation/tdoa',tdoa)
+rospy.init_node('tdoa_sim')
+tdoa_topic = rospy.Publisher('/hydrophones/sim/tdoa',tdoa)
 rate = rospy.Rate(0.5)
 dt = tdoa()
 
 
 def compute_tdoa():
     """ Computes and publishes expected TDOA """
-    (x,y) = param.get_simulation_solution()
+    (x,y) = param.get_simulation_target()
 
     times = []
     for i in range(NUMBER_OF_MICS):

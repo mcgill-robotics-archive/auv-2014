@@ -17,7 +17,8 @@ HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
 
 # SIMULATION PARAMETERS
-PINGER = (169, 54)          # PINGER COORDINATES            m
+TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
+DUMMY_PINGER = (-69, 83)    # DUMMY PINGER COORDINATES      m
 SNR = 20                    # SIGNAL TO NOISE RATIO         dB
 
 
@@ -91,30 +92,43 @@ def get_mic_positions():
     return pos
 
 
-def get_simulation_solution():
-    """ Returns (x,y) coordinates of the simulated pinger """
-    while not rospy.has_param('/hydrophones/simulation'):
+def get_simulation_target():
+    """ Returns (x,y) coordinates of the simulated target pinger """
+    while not rospy.has_param('/hydrophones/sim/target'):
         pass
 
-    x = rospy.get_param('/hydrophones/simulation/x')
-    y = rospy.get_param('/hydrophones/simulation/y')
+    x = rospy.get_param('/hydrophones/sim/target/x')
+    y = rospy.get_param('/hydrophones/sim/target/y')
+
+    return (x,y)
+
+
+def get_simulation_dummy():
+    """ Returns (x,y) coordinates of the simulated dummy pinger """
+    while not rospy.has_param('/hydrophones/sim/dummy'):
+        pass
+
+    x = rospy.get_param('/hydrophones/sim/dummy/x')
+    y = rospy.get_param('/hydrophones/sim/dummy/y')
 
     return (x,y)
 
 
 def get_snr():
     """ Returns (x,y) coordinates of the simulated pinger """
-    while not rospy.has_param('/hydrophones/simulation'):
+    while not rospy.has_param('/hydrophones/sim'):
         pass
 
-    return rospy.get_param('/hydrophones/simulation/SNR')
+    return rospy.get_param('/hydrophones/sim/SNR')
 
 
 def set_simulation_parameters():
     """ Creates and sets ROS simulation parameters """
-    rospy.set_param('/hydrophones/simulation/x',PINGER[0])
-    rospy.set_param('/hydrophones/simulation/y',PINGER[1])
-    rospy.set_param('/hydrophones/simulation/SNR',SNR)
+    rospy.set_param('/hydrophones/sim/target/x',TARGET_PINGER[0])
+    rospy.set_param('/hydrophones/sim/target/y',TARGET_PINGER[1])
+    rospy.set_param('/hydrophones/sim/dummy/x',DUMMY_PINGER[0])
+    rospy.set_param('/hydrophones/sim/dummy/y',DUMMY_PINGER[1])
+    rospy.set_param('/hydrophones/sim/SNR',SNR)
 
 
 def set_parameters():

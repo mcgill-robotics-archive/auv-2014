@@ -12,13 +12,12 @@ import param
 
 # PARAMETERS
 NUMBER_OF_MICS = param.get_number_of_mics()
-SPEED = param.get_speed()
 POS = param.get_mic_positions()
-DEPTH_OF_PINGER = param.get_depth_of_pinger()
+SPEED = param.get_speed()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('solver')
-solver_topic = rospy.Publisher('/hydrophones/solution',solution)
+solver_topic = rospy.Publisher('/hydrophones/sol',solution)
 sol = solution()
 
 
@@ -56,7 +55,7 @@ def solve(data):
 
 if __name__ == '__main__':
     try:
-        rospy.Subscriber('/hydrophones/time_difference',tdoa,solve)
+        rospy.Subscriber('/hydrophones/tdoa',tdoa,solve)
         while not rospy.is_shutdown():
             pass
     except rospy.ROSInterruptException:

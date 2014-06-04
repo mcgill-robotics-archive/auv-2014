@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-# TODO: MOVE TO PEAK DETECTION INSTEAD OF THRESHOLD
+# TODO: FIX NOT WORKING WITH TARGET OTHER THAN 30kHz
+#       MOVE TO PEAK DETECTION INSTEAD OF THRESHOLD
 #       MAKE SURE SIGNAL ALWAYS WITHIN BUFFERSIZE
 #       IMPLEMENT BANDPASS FILTER
 #       DISTINGUISH PRACTICE FROM COMPETITION
@@ -13,7 +14,6 @@ from hydrophones.msg import *
 import param
 
 # PARAMETERS
-INTERPOLATION = 0.001
 BUFFERSIZE = param.get_buffersize()
 NUMBER_OF_MICS = param.get_number_of_mics()
 SAMPLING_FREQUENCY = param.get_sampling_frequency()
@@ -22,10 +22,13 @@ TARGET_FREQUENCY = param.get_target_frequency()
 # USEFUL CONSTANTS
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
+INTERPOLATION = 0.001
 THRESHOLD = 0.1
 
 # VARIABLES
 crunching = False
+rospy.init_node('tdoa')
+tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
 signal = channels()
 dt = tdoa()
 
@@ -98,7 +101,7 @@ def gccphat():
         top = np.argmax(phat_interp)
 
         # TIME DIFFERENCE
-        if index < (BUFFERSIZE)/2:
+        if index < BUFFERSIZE/4:
             diff[i] = -u[top] / SAMPLING_FREQUENCY
         else:
             diff[i] = (BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
@@ -113,9 +116,7 @@ def gccphat():
 
 if __name__ == '__main__':
     try:
-        rospy.init_node('tdoa')
-        tdoa_topic = rospy.Publisher('time_difference',tdoa)
-        rospy.Subscriber('/hydrophones/channels',channels,parse)
+        rospy.Subscriber('/hydrophones/audio',channels,parse)
         while not rospy.is_shutdown():
             pass
     except rospy.ROSInterruptException:

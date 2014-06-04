@@ -14,18 +14,18 @@ import param
 
 # PARAMETERS
 param.set_simulation_parameters()
-NUMBER_OF_MICS = param.get_number_of_mics()
 BUFFERSIZE = param.get_buffersize()
-SAMPLING_FREQUENCY = param.get_sampling_frequency()
-TARGET_FREQUENCY = param.get_target_frequency()
-SPEED = param.get_speed()
-POS = param.get_mic_positions()
 LENGTH_OF_PULSE = param.get_pulse_length()
+NUMBER_OF_MICS = param.get_number_of_mics()
+POS = param.get_mic_positions()
+SAMPLING_FREQUENCY = param.get_sampling_frequency()
 SNR = param.get_snr()
+SPEED = param.get_speed()
+TARGET_FREQUENCY = param.get_target_frequency()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
-audio_topic = rospy.Publisher('/hydrophones/channels', channels)
+audio_topic = rospy.Publisher('/hydrophones/audio', channels)
 signal = channels()
 rate = rospy.Rate(0.5)
 
@@ -39,14 +39,14 @@ def create_signal(dt):
     signal = np.zeros(BUFFERSIZE,np.float32)
     for i in range(int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))):
         t = time[i+delta] - dt
-        signal[i+delta+300] = SNR*np.sin(2*np.pi*TARGET_FREQUENCY*t)
+        signal[i+delta+200] = SNR*np.sin(2*np.pi*TARGET_FREQUENCY*t)
 
     return signal
 
 
 def compute_tdoa():
     """ Computes expected TDOA """
-    (x,y) = param.get_simulation_solution()
+    (x,y) = param.get_simulation_target()
 
     times = []
     for i in range(NUMBER_OF_MICS):

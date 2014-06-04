@@ -12,13 +12,13 @@ from hydrophones.msg import *
 import param
 
 # PARAMETERS
-NUMBER_OF_MICS = param.get_number_of_mics()
 BUFFERSIZE = param.get_buffersize()
+NUMBER_OF_MICS = param.get_number_of_mics()
 SAMPLING_FREQUENCY = param.get_sampling_frequency()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
-audio_topic = rospy.Publisher('/hydrophones/channels', channels)
+audio_topic = rospy.Publisher('/hydrophones/audio', channels)
 signal = channels()
 
 
