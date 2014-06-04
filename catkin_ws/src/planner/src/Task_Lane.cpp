@@ -24,7 +24,7 @@ ROS_INFO("looking for the lane");
 //	double myPoints0[5] = {0.0, 0.0, 0.0, 0.0, 8.8};
 //	std::vector<double> desired0(myPoints0, myPoints0 + sizeof(myPoints0) / sizeof(myPoints0[0]));
 //	myPlanner->setPosition(desired0, "/robot/rotation_center");
-	myPlanner->setVelocity(0, 0, 0, 8.8, frame);
+//	myPlanner->setVelocity(0, 0, 0, 8.8, frame);
 ROS_INFO("found the lane");
 	myStatusUpdater->updateStatus(myStatusUpdater->lane2);
 	loop_rate.sleep();
