@@ -47,8 +47,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
+  cartesian.msg
   channels.msg
-  cylindrical.msg
+  polar.msg
+  solution.msg
   tdoa.msg
 )
 

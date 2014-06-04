@@ -8,7 +8,6 @@ import numpy as np
 import rospy
 import roslib
 from hydrophones.msg import *
-from geometry_msgs.msg import Point
 import param
 
 # PARAMETERS
@@ -19,10 +18,8 @@ DEPTH_OF_PINGER = param.get_depth_of_pinger()
 
 # SET UP NODE AND TOPIC
 rospy.init_node('solver')
-cartesian_topic = rospy.Publisher('/hydrophones/solution/cartesian',Point)
-cylindrical_topic = rospy.Publisher('/hydrophones/solution/cylindrical',cylindrical)
-cartesian = Point()
-cylindrical = cylindrical()
+solver_topic = rospy.Publisher('/hydrophones/solution',solution)
+sol = solution()
 
 
 def solve(data):
@@ -48,17 +45,13 @@ def solve(data):
     # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
-    # PUBLISH CARTESIAN COORDINATES
-    cartesian.x = x
-    cartesian.y = y
-    cartesian.z = DEPTH_OF_PINGER
-    cartesian_topic.publish(cartesian)
-
-    # PUBLISH CYLINDRICAL COORDINATES
-    cylindrical.r = np.sqrt(x**2 + y**2)
-    cylindrical.theta = np.degrees(np.arctan2(y,x))
-    cylindrical.z = DEPTH_OF_PINGER
-    cylindrical_topic.publish(cylindrical)
+    # PUBLISH COORDINATES
+    sol.cartesian.x = x
+    sol.cartesian.y = y
+    sol.polar.r = np.sqrt(x**2 + y**2)
+    sol.polar.theta = np.degrees(np.arctan2(y,x))
+    sol.target = True
+    solver_topic.publish(sol)
 
 
 if __name__ == '__main__':
