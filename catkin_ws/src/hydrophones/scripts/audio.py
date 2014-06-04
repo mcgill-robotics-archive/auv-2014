@@ -69,5 +69,5 @@ if __name__ == '__main__':
             read()
     except rospy.ROSInterruptException:
         pass
-    
+
     close()
