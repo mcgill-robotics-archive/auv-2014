@@ -63,7 +63,7 @@ def parse(data):
 
 
 def interpolate(x,s,u):
-    """ Interpolate x with a sinc function """
+    """ Interpolates x with a sinc function """
     T = s[1] - s[0]
     sincM = np.tile(u, (len(s), 1)) - \
             np.tile(s[:, np.newaxis], (1, len(u)))
@@ -73,7 +73,7 @@ def interpolate(x,s,u):
 
 
 def gccphat():
-    """ Compute Time Difference of Arrival """
+    """ Computes Time Difference of Arrival """
     # PARSE
     time = [signal.channel_0, signal.channel_1,
             signal.channel_2, signal.channel_3]

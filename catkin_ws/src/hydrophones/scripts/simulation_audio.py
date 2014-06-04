@@ -34,7 +34,7 @@ time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 
 def create_signal(dt):
-    """ Create time shifted signal """
+    """ Creates time shifted signal """
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
     signal = np.zeros(BUFFERSIZE,np.float32)
     for i in range(int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))):
@@ -61,7 +61,7 @@ def compute_tdoa():
 
 
 def simulate():
-    ''' Simulate microphone signals '''
+    ''' Simulates microphone signals '''
     dt = compute_tdoa()
     signal = channels()
 

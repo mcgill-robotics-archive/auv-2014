@@ -115,7 +115,7 @@ def get_simulation_dummy():
 
 
 def get_snr():
-    """ Returns (x,y) coordinates of the simulated pinger """
+    """ Returns signal-to-noise ratio """
     while not rospy.has_param('/hydrophones/sim'):
         pass
 

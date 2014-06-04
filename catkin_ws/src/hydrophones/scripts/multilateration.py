@@ -22,7 +22,7 @@ sol = solution()
 
 
 def solve(data):
-    """ Solve by multilateration """
+    """ Solves by multilateration """
     # PARSE TDOA
     dt = [0,data.tdoa_1,data.tdoa_2,data.tdoa_3]
 
@@ -44,7 +44,7 @@ def solve(data):
     # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
-    # PUBLISH COORDINATES
+    # PUBLISH
     sol.cartesian.x = x
     sol.cartesian.y = y
     sol.polar.r = np.sqrt(x**2 + y**2)

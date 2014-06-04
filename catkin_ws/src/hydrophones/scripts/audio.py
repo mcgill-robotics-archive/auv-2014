@@ -42,12 +42,6 @@ lin = audio.open(format=pyaudio.paFloat32, channels=2,
                  frames_per_buffer=BUFFERSIZE)
 
 
-def close():
-    ''' Closes audio streams '''
-    audio.close(mic)
-    audio.close(lin)
-
-
 def read():
     ''' Reads signal from microphones '''
     data_mic = np.fromstring(mic.read(BUFFERSIZE),
@@ -61,6 +55,12 @@ def read():
     signal.channel_3 = data_lin[1::2]
 
     audio_topic.publish(signal)
+
+
+def close():
+    ''' Closes audio streams '''
+    audio.close(mic)
+    audio.close(lin)
 
 
 if __name__ == '__main__':
