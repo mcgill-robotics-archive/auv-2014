@@ -12,5 +12,8 @@
 
         <!-- solver -->
         <node name="solver" pkg="hydrophones" type="multilateration.py" respawn="false" output="screen"/>
+
+        <!-- error -->
+        <node name="error" pkg="hydrophones" type="simulation_error.py" respawn="false" output="screen"/>
     </group>
 </launch>
