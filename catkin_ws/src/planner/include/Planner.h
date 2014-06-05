@@ -45,7 +45,7 @@ class Planner{
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
-	void weAreLost(LostStates newTask);
+	void weAreLost(LostStates newTask, int lostPhase);
 	Planner(ros::NodeHandle& nodeHandle);
 	//~Planner();
 

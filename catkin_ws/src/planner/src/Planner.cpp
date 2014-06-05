@@ -273,11 +273,11 @@ void Planner::switchToTask(Tasks newTask) {
 	currentTask->execute();
 }
 
-void Planner::weAreLost(LostStates newTask) {
+void Planner::weAreLost(LostStates newTask, int lostPhase) {
 	switch(newTask) {
 		case Gate_A: 
 			delete currentTask;
-			currentTask = (Task*) new Lost_Gate(this, myStatusUpdater, 0);
+			currentTask = (Task*) new Lost_Gate(this, myStatusUpdater, lostPhase);
 			break;
 		case Gate_B: 
 			delete currentTask;
