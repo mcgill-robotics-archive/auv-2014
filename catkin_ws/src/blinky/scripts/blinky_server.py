@@ -7,6 +7,9 @@ import threading
 # To measure elapsed time during warning displays
 import time
 
+# math import
+from math import floor
+
 # Get access to the blinky services and messages
 from std_msgs.msg import Float32
 from blinky.msg import *
@@ -66,12 +69,23 @@ def initialize_blinkies():
 
 # Update Planner segment
 # req.colors: list of RGB colors to display
+
+# Doesn't quite work
 def update_planner(req):
     global planner_colorList
+    planner_colorList = []
     lock = threading.Lock()
 
     with lock:
-        planner_colorList = req.colors
+        segments = len(req.colors)
+        seg_size = int(floor(15/segments))
+        for s in req.colors:
+            for i in range(seg_size):
+                planner_colorList.append(s)
+            planner_colorList.append(RGB(0,0,0))    
+        del(planner_colorList[-1])    
+        for j in range(len(planner_colorList),15):
+            planner_colorList.append(req.colors[-1])
 
     return UpdatePlannerLightsResponse(0)
 
