@@ -140,7 +140,7 @@ void getStateFromTF()
 
 	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	const std::string originalFrame = frame; //gate_center_sim
+	const std::string originalFrame = frame; //specified on the setPoints topic
 	
 	try
 	{
@@ -170,7 +170,7 @@ void getStateFromTF()
 	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
 	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
-	//ROS_DEBUG("RPY: %f %f %f %f %f %f", roll, estimated_Pitch, estimated_Yaw, r2, p2, y2); //debug output}
+	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
 }
 int main(int argc, char **argv)
 {
@@ -277,7 +277,7 @@ int main(int argc, char **argv)
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		setPointsIsPublished = 1;		 
 		if (setPoints_subscriber.getNumPublishers() == 0) {setPointsIsPublished = 0;}
-		ros::Duration(5).sleep(); //sleep for this many seconds
+		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
 
 	ROS_DEBUG("All Subscribers Live. Starting Controller!");
@@ -464,7 +464,8 @@ int main(int argc, char **argv)
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
 			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
-			Tz *= -1; //yaw sign convenction
+			//Tz *= -1; //yaw sign convenction
+			//ROS_INFO("Calculating Errors, SP: %f, est_yaw: %f, ep = %f, Tz: %f", setPoint_Yaw, estimated_Yaw, ep_Yaw, Tz);
 		}
 
 		if (isActive_YawSpeed)

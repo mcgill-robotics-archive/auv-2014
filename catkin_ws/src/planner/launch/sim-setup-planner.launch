@@ -6,9 +6,6 @@
 
   <!-- Written by Alex Reiff, April 2, McGill Robotics -->
 
-  <!-- Simulator -->
-  <include file="$(find simulator)/launch/simulator.launch" />
-
   <!--control systems -->
   <include file="$(find controls)/launch/sim_controls.launch" />
 

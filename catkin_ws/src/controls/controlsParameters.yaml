@@ -23,8 +23,6 @@ coefs/gravity: 9.81
 coefs/dt: 0.5
 
 
-
-
 #thrust_mapper parameters
 voltage/min: -20 
 voltage/max: 20
@@ -33,23 +31,8 @@ motorCommands/max: 500
 force/max: 30
 torque/max: 100
 
-Yaw/max: 1.5708 # pi/2
+Yaw/max: 3.14159 # pi # maximum setpoint 
 Pitch/max: 0.7853 # pi/4
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

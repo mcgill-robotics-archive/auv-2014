@@ -33,7 +33,7 @@ void Task_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
-	myPlanner->setVelocity(2, 0, 0, 8.8, frame);
+	myPlanner->setVelocity(.1, 0, 0, 8.8, frame);
 	loop_rate.sleep();
 	tf::TransformListener listener;
 	try {
@@ -53,7 +53,7 @@ void Task_Gate::phase2() {
 	myStatusUpdater->updateStatus(myStatusUpdater->gate2);
 	loop_rate.sleep();
 	
-	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};
+	double myPoints[5] = {2.5, 0.0, 0.0, 0.0, 8.8};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 	
 	while (!myPlanner->areWeThereYet(frame, desired)) {
@@ -72,7 +72,7 @@ void Task_Gate::phase3() {
 	loop_rate.sleep();
 
 	ROS_INFO("Task_Gate::reached the front of the gate");
-	myPlanner->setVelocity(0.1, 0, 0, 8.8, frame);
+	myPlanner->setVelocity(0.05, 0, 0, 8.8, frame);
 
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 	loop_rate.sleep();

@@ -120,23 +120,23 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	//has two sets of bound, one set for the simulator, one for real life
 		//both sets still need to be experimentally determined
 	if(inSim) {
-		xBound = 1;
-		yBound = 1;
-		zBound = 2;
-		yawBound = 5;
-		pitchBound = 5;
+		xBound = .1;
+		yBound = .1;
+		zBound = 2; //not used june 6
+		yawBound = .1;
+		pitchBound = .1;
 	}
 	else {
-		xBound = 1;
-		yBound = 1;
+		xBound = .1;
+		yBound = .1;
 		zBound = 2;
-		yawBound = 5;
-		pitchBound = 5;
+		yawBound = .1;
+		pitchBound = .1;
 	}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < xBound;
-	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < yBound;
+	bool xBounded = fabs(relativePose.pose.position.x - desired.at(0)) < xBound;
+	bool yBounded = fabs(relativePose.pose.position.y - desired.at(1)) < yBound;
 	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",
 		relativePose.pose.position.x, relativePose.pose.position.y);
 	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
@@ -150,23 +150,36 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	double y = relativePose.pose.orientation.y;
 	double z = relativePose.pose.orientation.z;
 	double w = relativePose.pose.orientation.w;
-	double pitch = 57.2957795130823f
+	double pitch = 1
 			* -atan(
 					(2.0f * (x * z + w * y))
 							/ sqrt(
 									1.0f
 											- pow((2.0f * x * z + 2.0f * w * y),
-													2.0f)));
-	double yaw = 57.2957795130823f
+													2.0f))); // multiply by 57.2957795130823f to convert to degrees
+	double yaw = 1
 			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
-	bool pitchBounded = abs(pitch - desired.at(2)) < pitchBound;
-	bool yawBounded = abs(yaw - desired.at(3)) < yawBound;
+	bool pitchBounded = fabs(pitch - desired.at(2)) < pitchBound;
+	bool yawBounded = fabs(yaw - desired.at(3)) < yawBound;
 
 	ROS_INFO("ROTATIONAL BOUNDS:");
 	ROS_INFO("Current pitch: %f    Desired pitch: %f", pitch, desired.at(2));
 	ROS_INFO("Current yaw: %f    Desired yaw: %f", yaw, desired.at(2));
-
+	ROS_INFO("Variables bounded: x: %i, y: %i, yaw: %i, pitch: %i ", xBounded, yBounded, yawBounded, pitchBounded);
 	return (xBounded && yBounded && yawBounded && pitchBounded);
+
+
+	/*
+	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
+	tf::Matrix3x3 m(q); //convert quaternion to matrix
+
+	double roll; //unused, but needs to be sent to getRPY method
+
+
+	
+	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
+	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sig
+	*/
 }
 
 void Planner::setVisionObj(int objIndex) {

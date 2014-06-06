@@ -67,11 +67,11 @@ class Planner{
 	Task* currentTask;
 	StatusUpdater* myStatusUpdater;
 
-	int xBound;
-	int yBound;
-	int zBound;
-	int yawBound;
-	int pitchBound;
+	double xBound;
+	double yBound;
+	double zBound;
+	double yawBound;
+	double pitchBound;
 };
 
 #endif
