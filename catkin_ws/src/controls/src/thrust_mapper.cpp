@@ -4,6 +4,7 @@ Maps voltage to motor command
 */
 
 #include "thrust_mapper.h"
+#include <math.h>
 
 //global vars
 ros::Publisher voltage_publisher;
@@ -36,19 +37,22 @@ float thrust_voltage(float thrust){
 	*/
 
 	float voltage;	
-		if (thrust<=-1.05){
-	        voltage = 1.09*thrust - 3.1542;
-	    }
-	    else if (thrust>-1.05 & thrust<=0){
-	        voltage = -4.3968*(-1*thrust)^0.4534;
-	    }
-	    else if (thrust>0 & thrust<=1.25){
-	        voltage = 4.3968*thrust^0.4534;
-	    }
-	    else if (thrust > 1.25){
-	        voltage = thrust + 3.6857;
-	    }
-	    
+	if (thrust<=-1.05){
+        voltage = 1.09*thrust - 3.1542;
+    }
+    else if (thrust>-1.05 & thrust<=0){
+        //voltage = -4.3968*(-1*thrust)^0.4534;
+        voltage = -4.3968*pow(-1*thrust, 0.4534);
+    }
+    else if (thrust>0 & thrust<=1.25){
+        //voltage = 4.3968*thrust^0.4534;
+        voltage = 4.3968*pow(thrust, 0.4534);
+    }
+    else if (thrust > 1.25){
+        voltage = thrust + 3.6857;
+    }
+
+	return voltage;
 
 	/* Matt's old code
 	    if (thrust<0.4641 & thrust>-0.01095 ) {
