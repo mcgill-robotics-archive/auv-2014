@@ -4,21 +4,26 @@
 from ctypes import *
 import pyaudio
 import numpy as np
+import rospy
+import roslib
+from hydrophones.msg import *
 import curses
 import os
 import time
 import sys
+import param
 
-# VARIABLES
-NUMBER_OF_MICS = 4          # MICROPHONES CONNECTED
-BUFFERSIZE = 1024           # BUFFERSIZE FOR FFT
-SAMPLING_FREQUENCY = 192000 # SAMPLING FREQUENCY            Hz
-TARGET_FREQUENCY = 1000     # FREQUENCY TO ACT UPON         Hz
+# PARAMETERS
+param.set_parameters()
+NUMBER_OF_MICS = param.get_number_of_mics()
+BUFFERSIZE = param.get_buffersize()
+SAMPLING_FREQUENCY = param.get_sampling_frequency()
+TARGET_FREQUENCY = param.get_target_frequency()
+
+# USEFUL CONSTANTS
 FREQUENCY_RANGE = 100       # RANGE OFF TARGET TO MONITOR   Hz
 MIC_INDEX = -1              # MIC PORT INDEX
 LIN_INDEX = -2              # LINE IN PORT INDEX
-
-# USEFUL CONSTANTS
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TIME_PER_INDEX = 1 / SAMPLING_FREQUENCY
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
@@ -63,7 +68,7 @@ class mic(object):
 
     def compute_magnitude(self):
         ''' Computes magnitude '''
-        np.seterr(divide='ignore') 
+        np.seterr(divide='ignore')
         self.magn = 20*np.log10(np.abs(self.freq))
 
 

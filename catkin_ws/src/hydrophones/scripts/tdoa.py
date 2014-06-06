@@ -117,7 +117,6 @@ def gccphat():
 if __name__ == '__main__':
     try:
         rospy.Subscriber('/hydrophones/audio',channels,parse)
-        while not rospy.is_shutdown():
-            pass
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass

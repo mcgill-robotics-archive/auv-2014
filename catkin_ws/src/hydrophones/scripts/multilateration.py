@@ -56,7 +56,6 @@ def solve(data):
 if __name__ == '__main__':
     try:
         rospy.Subscriber('/hydrophones/tdoa',tdoa,solve)
-        while not rospy.is_shutdown():
-            pass
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
