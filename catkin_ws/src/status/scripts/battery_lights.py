@@ -13,16 +13,16 @@ ledCount = 30
 def Battery_sendColors(colors):
     try:
         # wait for the battery_update_lights service
-        rospy.wait_for_service('battery_update_lights')
+        rospy.wait_for_service('update_battery_lights')
 
-        # get access to the BatteryUpdateLights service from the blinky server
-        blinky_proxy = rospy.ServiceProxy('blinky', BatteryUpdateLights)
+        # get access to the UpdateBatteryLights service from the blinky server
+        blinky_proxy = rospy.ServiceProxy('update_battery_lights', UpdateBatteryLights)
 
         # call service
         res = blinky_proxy(colors)
 
         if res.success != 0:
-            print "BatteryUpdateLights request unsuccessful: %s"%res
+            print "UpdateBatteryLights request unsuccessful: %s"%res
 
     except Exception as e:
         print "Exception: %s"%e
