@@ -155,6 +155,9 @@ def BlinkyTapeServer():
     ub1l = rospy.Service('update_battery1_lights', UpdateBattery1Lights, update_battery1)
     ub2l = rospy.Service('update_battery2_lights', UpdateBattery2Lights, update_battery2)
     wl = rospy.Service('warning_lights', WarningLights, warn_lights)
+    pub_planner = rospy.Publisher('planner_colors', RGBArray)
+    pub_battery = rospy.Publisher('battery_colors', RGBArray)
+    pub_warning = rospy.Publisher('warning_colors', RGBArray)
 
     lock = threading.Lock()
     edge_time = time.time()
@@ -174,6 +177,11 @@ def BlinkyTapeServer():
             warning_on_copy = warning_on
             warning_freq_copy = warning_freq
             warning_colorList_copy = warning_colorList
+
+        # publish all color lists
+        pub_planner.publish(planner_colorList_copy)
+        pub_battery.publish(battery_colorList_copy)
+        pub_warning.publish(warning_colorList_copy)
 
         # if warnings are on, alternate between planner/battery colors
         # and warning colors, after measuring the time period.
