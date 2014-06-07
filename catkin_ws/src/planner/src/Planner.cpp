@@ -31,12 +31,9 @@ int get_task_id(std::string name) {
 
 void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw) {
   //TODO: Convert Euler angles to quaternions (?)
-
   ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
-  ros::ServiceClient seClient = n.serviceClient<state_estimation::setInitialPose>("/state_estimation/set_initial_pose");
   gazebo_msgs::SetModelState setmodelstate;
   gazebo_msgs::ModelState modelstate;
-  state_estimation::setInitialPose setPose;
 
   geometry_msgs::Pose start_pose;
   start_pose.position.x = x;
@@ -55,8 +52,6 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   start_twist.angular.y = 0.0;
   start_twist.angular.z = 0.0;
 
-  setPose.request.a = 1;
- 
   modelstate.model_name = (std::string) "robot";
   modelstate.reference_frame = (std::string) "world";
   modelstate.pose = start_pose;
@@ -70,12 +65,6 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
     ROS_INFO("Set robot's position: Success");
   } else {
     ROS_ERROR("Failed to call service ");
-  }
-
-  if(seClient.call(setPose)) {
-    ROS_INFO("notified state estimation: Success");
-  } else {
-  	ROS_ERROR("Failed to call state estimation service");
   }
 }
 
@@ -313,6 +302,19 @@ void Planner::weAreLost(LostStates newTask, int lostPhase) {
 	currentTask->execute();
 }
 
+void Planner::resetIMU() {
+	ros::ServiceClient seClient = nodeHandle.serviceClient<state_estimation::setInitialPose>("/state_estimation/set_initial_pose");
+  	state_estimation::setInitialPose setPose;
+
+	setPose.request.a = 1;
+ 
+	if(seClient.call(setPose)) {
+    	ROS_INFO("notified state estimation: Success");
+  	} else {
+  		ROS_ERROR("Failed to call state estimation service");
+  	}
+}
+
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "planner");
 	ros::NodeHandle nodeHandle;
@@ -347,6 +349,7 @@ int main(int argc, char **argv) {
 	///////////////////////////////////////////////////////////////////////
 
 	//start routine
+	plannerNode->resetIMU();
 	plannerNode->switchToTask(plannerNode->Gate);
 
 	return 0;	
@@ -354,7 +357,7 @@ int main(int argc, char **argv) {
 
 Planner::Planner(ros::NodeHandle& n) {
 	go = inSim;
-
+	nodeHandle = n;
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");

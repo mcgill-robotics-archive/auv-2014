@@ -46,6 +46,7 @@ class Planner{
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
+	void resetIMU();
 	Planner(ros::NodeHandle& nodeHandle);
 	//~Planner();
 
@@ -53,6 +54,7 @@ class Planner{
 	void setTransform(std::string referenceFrame);
 	void setPoints(double pointControl[], std::string referenceFrame);
 
+	ros::NodeHandle nodeHandle;
 	int go;
 	ros::Subscriber estimatedDepth_subscriber;
 
