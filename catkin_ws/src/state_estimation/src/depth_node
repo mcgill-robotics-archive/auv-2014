@@ -19,24 +19,25 @@ def depth_filter(sensor_reading):
     # Calculations
     current_depth = ((depth_reading * max_arduino_voltage / max_analog / resistance - base_current) / current_range) * max_depth - offset
     current_depth = current_depth / 100.0   # To meters
-    
+    clipped_depth = current_depth
+
     # Get depths
     depths_tmp = list(depths)
     depths_tmp.sort()
     median = (depths_tmp[WINDOW_WIDTH/2] + depths_tmp[(WINDOW_WIDTH+1)/2]) / 2.0
-    
+
     if counter >= WINDOW_WIDTH:
         # Apply Filters
         if abs(current_depth - median) > THRESHOLD :
-            current_depth = median
+            clipped_depth = median
     else:
         counter = counter + 1
 
-    depths.append(current_depth)
+    depths.append(clipped_depth)
     
-    depth = depth + (current_depth - depths.pop(0)) / WINDOW_WIDTH
+    depth = depth + (clipped_depth - depths.pop(0)) / WINDOW_WIDTH
 
-    return current_depth, depth
+    return clipped_depth, depth
 
 
 def depthCallBack(sensor_reading):
