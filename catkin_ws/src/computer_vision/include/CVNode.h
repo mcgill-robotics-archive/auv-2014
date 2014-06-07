@@ -39,6 +39,8 @@ class CVNode {
 		int pole_desired_angle_deg;		
 		int pole_angle_error_deg;
 
+		double gate_width_error_mSqr;
+
 		int min_pole_ratio;
 
 		double min_convexity_ratio;
