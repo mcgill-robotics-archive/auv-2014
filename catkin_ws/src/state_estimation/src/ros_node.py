@@ -3,6 +3,7 @@ from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Vector3Stamped
 from std_msgs.msg import Float64
 from std_msgs.msg import Int16
+from std_msgs.msg import Bool
 from computer_vision.msg import VisibleObjectData
 from state_estimation.msg import AUVState
 import dead_reck
@@ -10,6 +11,7 @@ import math
 
 
 POOL_DEPTH = 6
+SEE_OBJ = False
 
 def publish():
     state = estimator.getState()
@@ -30,9 +32,14 @@ def publish():
     #Todo: velocity, pitch, yaw
 
     pub.publish(state_msg)
+    see_obj_pub.publish(SEE_OBJ)
+
+    if SEE_OBJ == True:
+        SEE_OBJ = False
 
 # Callbacks
 def cvCallback(visObject):
+    SEE_OBJ = True
     hasTarget = visObject.object_type != VisibleObjectData.CANNOT_DETERMINE_OBJECT
     #TODO: remove conversion to angle once CV publishes in radians
     estimator.updateCV(hasTarget, visObject.object_type,
@@ -65,7 +72,7 @@ def depthCallback(depth):
 # Init the ros node, subscribers and publishers
 # And run the node
 def init():
-    global estimator, pub, down_distance_pub
+    global estimator, pub, down_distance_pub, see_obj_pub
 
     rospy.init_node('state_estimation')
     estimator = dead_reck.dead_reck(rospy)
@@ -74,6 +81,8 @@ def init():
     rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('state_estimation/pose', PoseStamped, imuCallback)
     rospy.Subscriber('state_estimation/depth', Float64, depthCallback)
+    # See object
+    see_obj_pub = rospy.Publisher('state_estimation/see_object', Bool)
     # Publish the filtered data to a topic
     pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     down_distance_pub = rospy.Publisher('state_estimation/down_distance', Float64)

@@ -61,7 +61,8 @@ def callback(modelStates):
                 resetInitialPoseFlag = False
 	    
             # Relative orientation relative to the initial pose
-            relativePose = multQuaternion(initialPose, inverseQuaternion(poseStamped))
+            # relativePose = multQuaternion(initialPose, inverseQuaternion(poseStamped))
+            relativePose = multQuaternion(poseStamped, inverseQuaternion(initialPose))
 
             pub.publish(relativePose)
             time = rospy.get_time()
