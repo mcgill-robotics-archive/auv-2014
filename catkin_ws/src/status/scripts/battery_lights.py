@@ -7,7 +7,7 @@ from blinky.msg import *
 from blinky.srv import *
 
 CYAN = RGB(0,255,255)
-ORANGE = RGB(255,100,0)
+ORANGE = RGB(255,105,0)
 
 # Minimum and maximum battery voltage values in volts
 # Ask power section for accurate values
