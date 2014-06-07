@@ -17,7 +17,7 @@ def generate_colors(n):
     colors = []
     t = n
 
-    for i in range(30):
+    for i in range(15):
 	if n % 2 == 0:
 	    colors.append(RGB(0,0,0))
 	else:
@@ -29,25 +29,43 @@ def generate_colors(n):
 
 # Handles the ROS-specific communication with the service
 # colors: array of RGB
-def Battery_sendColors(colors):
+def Battery1_sendColors(colors):
     try:
-        # wait for the battery_update_lights service
-        rospy.wait_for_service('update_battery_lights')
+        # wait for the update_battery1_lights service
+        rospy.wait_for_service('update_battery1_lights')
 
-        # get access to the BatteryUpdateLights service from the blinky server
-        blinky_proxy = rospy.ServiceProxy('update_battery_lights', UpdateBatteryLights)
+        # get access to the UpdateBattery1Lights service from the blinky server
+        blinky_proxy = rospy.ServiceProxy('update_battery1_lights', UpdateBattery1Lights)
 
         # call service
         res = blinky_proxy(colors)
 
         if res.success != 0:
-            print "UpdateBatteryLights request unsuccessful: %s"%res
+            print "UpdateBattery1Lights request unsuccessful: %s"%res
+
+    except Exception as e:
+        print "Exception: %s"%e
+
+def Battery2_sendColors(colors):
+    try:
+        # wait for the update_battery2_lights service
+        rospy.wait_for_service('update_battery2_lights')
+
+        # get access to the UpdateBattery2Lights service from the blinky server
+        blinky_proxy = rospy.ServiceProxy('update_battery2_lights', UpdateBattery2Lights)
+
+        # call service
+        res = blinky_proxy(colors)
+
+        if res.success != 0:
+            print "UpdateBattery2Lights request unsuccessful: %s"%res
 
     except Exception as e:
         print "Exception: %s"%e
 
 a = 0
 while True:	
-    Battery_sendColors(generate_colors(a))
+    Battery1_sendColors(generate_colors(a))
+    Battery2_sendColors(generate_colors(a))
     time.sleep(0.1)
     a = a + 1

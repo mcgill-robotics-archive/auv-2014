@@ -44,13 +44,11 @@ def initialize_blinkies():
     global battery_colorList	# across function calls
     colors = []
 	
-    for i in range(ledCount):
-    	colors.append(RGB(0,255,255)) # Cyan (!!!)
-
     # store the initial states
-    planner_colorList = colors
-    battery_colorList = colors
-
+    for i in range(ledCount):
+    	planner_colorList.append(RGB(0,255,255)) # Cyan (!!!)
+        battery_colorList.append(RGB(0,255,255))
+        
     # set all leds off
     for i in range(2 * ledCount):
     	blt.sendPixel(0,0,0)
@@ -93,24 +91,45 @@ def update_planner(req):
         colors.append(req.colors[-1])
 
     # reverse the colors on the second half of 15 leds
-    for j in range(1,15):
-        colors.append(colors[15-j])
+    for j in range(15):
+        colors.append(colors[14-j])
 
     with lock:
         planner_colorList = colors
 
     return UpdatePlannerLightsResponse(0)
 
-# Update Battery segment
+# Update Battery1 segment
 # req.colors: list of RGB colors to display
-def update_battery(req):
+def update_battery1(req):
     global battery_colorList
     lock = threading.Lock()
 
-    with lock:
-        battery_colorList = req.colors
+    if len(req.colors) != 15:
+        return UpdateBattery1LightsResponse(1)
 
-    return UpdateBatteryLightsResponse(0)
+    with lock:
+        for i in range(15):
+            battery_colorList[i] = req.colors[i]
+
+    print planner_colorList
+    return UpdateBattery1LightsResponse(0)
+
+# Update Battery2 segment
+# The colors are reversed.
+def update_battery2(req):
+    global battery_colorList
+    lock = threading.Lock()
+
+    if len(req.colors) != 15:
+        return UpdateBattery2LightsResponse(1)
+
+    with lock:
+        for i in range(15):
+            battery_colorList[29-i] = req.colors[i]
+
+    print planner_colorList
+    return UpdateBattery2LightsResponse(0)
 
 # Display a warning on the planner and battery segments
 # req.colors: list of colors to display
@@ -133,7 +152,8 @@ def BlinkyTapeServer():
     initialize_blinkies()
     rospy.init_node('blinky')
     upl = rospy.Service('update_planner_lights', UpdatePlannerLights, update_planner)
-    ubl = rospy.Service('update_battery_lights', UpdateBatteryLights, update_battery)
+    ub1l = rospy.Service('update_battery1_lights', UpdateBattery1Lights, update_battery1)
+    ub2l = rospy.Service('update_battery2_lights', UpdateBattery2Lights, update_battery2)
     wl = rospy.Service('warning_lights', WarningLights, warn_lights)
 
     lock = threading.Lock()
