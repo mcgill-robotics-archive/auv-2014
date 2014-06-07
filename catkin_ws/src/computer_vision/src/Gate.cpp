@@ -202,6 +202,13 @@ bool Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	if(p2.center.x - centerOfCurrentFrame.x < 0)
 		y2 = -y2;
 
+	//If the error of the gate's width is too large, reject it.
+	float dx = x2 - x1, dy = y2 - y1;
+	float detectedWidthSqr = dx * dx + dy * dy;
+	float widthErr = std::abs((params.gate_width_m * params.gate_width_m) - detectedWidthSqr);
+	if(widthErr > params.gate_width_error_mSqr) //TODO Parametrize this
+		return false;
+
 	m_xDistance = (x1 + x2) / 2.0;
 	m_yDistance = (y1 + y2) / 2.0;
 
@@ -209,8 +216,7 @@ bool Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	float avgMPerPx = ((params.gate_height_m / p1.h) + (params.gate_height_m / p2.h)) / 2.0;
 	m_zDistance = (centerY - centerOfCurrentFrame.y) * avgMPerPx;
 
-//	std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " <<
-//			m_yawAngle * 180.0 / 3.141592654 << std::endl;
+	return true;
 }
 
 /**

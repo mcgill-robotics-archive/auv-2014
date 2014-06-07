@@ -42,6 +42,7 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 	nodeHandle.param<int>("gate_min_number_points_contour", gp.min_number_points_contour, 0);
 	nodeHandle.param<int>("gate_pole_desired_angle_deg", gp.pole_desired_angle_deg, 0);
 	nodeHandle.param<int>("gate_pole_angle_error_deg", gp.pole_angle_error_deg, 0);
+	nodeHandle.param<double>("gate_width_error", gp.gate_width_error_mSqr, 0.0);
 	nodeHandle.param<int>("gate_min_pole_ratio", gp.min_pole_ratio, 0);
 	nodeHandle.param<double>("gate_min_convexity_ratio", gp.min_convexity_ratio, 0.0);
 	nodeHandle.param<int>("gate_height_m", gp.gate_height_m, 0);

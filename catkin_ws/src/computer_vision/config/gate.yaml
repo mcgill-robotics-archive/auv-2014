@@ -1,6 +1,7 @@
 gate_min_number_points_contour: 4
 gate_pole_desired_angle_deg: 90
 gate_pole_angle_error_deg: 15
+gate_width_error: 4.0
 gate_min_pole_ratio: 4
 gate_height_m: 1.2
 gate_width_m: 3.1262
