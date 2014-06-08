@@ -14,6 +14,7 @@ POOL_DEPTH = 6
 SEE_OBJ = False
 
 def publish():
+    global SEE_OBJ
     state = estimator.getState()
 
     state_msg = AUVState()

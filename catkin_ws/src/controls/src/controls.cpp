@@ -271,16 +271,16 @@ int main(int argc, char **argv)
 	bool estimatedStateIsPublished = 1; //Hardcoded cuz I'm lazy TODO fix
 	bool depthIsPublished = 0;
 
-	ROS_DEBUG("controls node waiting for setPoints to be published...");
+	ROS_INFO("\n----\n Controls node initialized. Waiting for setPoints to be published... \n----");
 	while (setPointsIsPublished == 0)
 	{
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
-		setPointsIsPublished = 1;		 
+		setPointsIsPublished = 1;
 		if (setPoints_subscriber.getNumPublishers() == 0) {setPointsIsPublished = 0;}
 		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
 
-	ROS_DEBUG("All Subscribers Live. Starting Controller!");
+	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
 
@@ -373,7 +373,7 @@ int main(int argc, char **argv)
 				ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 				ed_XPos = saturate(ed_XPos, MAX_ERROR_X_D, "X Derivative Error");
 				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
-				Fx *= -1; //flip direction to account for relative coordinate system
+				//Fx *= -1; //flip direction to account for relative coordinate system
 				//ROS_DEBUG("controlling xpos");
 				//ROS_DEBUG("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 			}
@@ -402,7 +402,7 @@ int main(int argc, char **argv)
 				ei_YPos += ep_YPos*dt;
 				ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 				Fy = kp_yPos*ep_YPos + ki_yPos*ei_YPos + kd_yPos*ed_YPos;
-				Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV }
+				//Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV }
 			}
 			else
 			{
@@ -427,9 +427,9 @@ int main(int argc, char **argv)
 				ei_Depth += ep_Depth*dt;
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
-				//Fz *= -1; //flip direction to account for relative coordinate system - don't have to do this because depth isnt relative like the others
-				//Fz = 0; // workaround temp
 				//Fz += buoyancy*m*g; //Account for positive buoyancy bias
+				Fz*=-1; //Depth is different from all the other coordinates. Positive force should push the water upwards, 
+				
 			}
 			else
 			{

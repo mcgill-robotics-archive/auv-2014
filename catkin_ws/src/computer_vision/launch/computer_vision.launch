@@ -8,13 +8,11 @@
 
   <arg name="isUsingSimulation" default="1"/>
 
-  <!-- When we want to run the computer vision in the simulation environment. -->
   <group if="$(arg isUsingSimulation)">
     <!-- Loads parameters that are specific to the simulation environment -->
     <rosparam command="load" file="$(find computer_vision)/config/simulationSpecific.yaml"/>
   </group>
 
-  <!-- When we don't want to run the computer vision in the simulation environment. -->
   <group unless="$(arg isUsingSimulation)">
     <!-- Loads parameters that are specific to the camera nodes and the competition-->
     <rosparam command="load" file="$(find computer_vision)/config/realitySpecific.yaml"/>
