@@ -14,7 +14,7 @@ import param
 BUFFERSIZE = param.get_buffersize()
 NUMBER_OF_MICS = param.get_number_of_mics()
 SAMPLING_FREQUENCY = param.get_sampling_frequency()
-PERIOD = 32
+PERIOD = 512
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
@@ -38,16 +38,14 @@ def setup():
 
 def read():
     """ Reads and parses audio streams """
-    stream = []
+    stream = [[] for channel in range(NUMBER_OF_MICS)]
     for counter in range(BUFFERSIZE/PERIOD):
         current_stream = []
         for card in inputs:
             data = np.fromstring(inputs[card].read()[1],dtype=np.float32)
             current_stream.extend([data[::2],data[1::2]])
-        if counter != 0:
-            stream.append(current_stream)
-        else:
-            np.append(stream,current_stream,1)
+        for channel in range(NUMBER_OF_MICS):
+            stream[channel].extend(current_stream[channel])
 
     signal.channel_0 = stream[0]
     signal.channel_1 = stream[1]
