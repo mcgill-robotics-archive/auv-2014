@@ -2,6 +2,9 @@
     <!-- blinky -->
     <node name="blinky" pkg="blinky" type="blinky_server.py"/>
 
+    <!-- battery -->
+    <node name="battery" pkg="status" type="battery_lights.py"/>
+
     <!-- temperature -->
     <node name="temperature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
 

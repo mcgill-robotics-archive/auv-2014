@@ -56,7 +56,7 @@ def Battery2_sendColors(colors):
 # Units are in volts, in floating point.
 def process_voltage1(voltage):
     volts = voltage.data
-    
+
     charge_level = (int)(((volts - MIN_VOLTAGE)/(MAX_VOLTAGE - MIN_VOLTAGE))*15)
     colors = []
 
@@ -70,12 +70,12 @@ def process_voltage1(voltage):
             colors.append(CYAN)
         else:
             colors.append(ORANGE)
-            
+
     Battery1_sendColors(colors)
 
 def process_voltage2(voltage):
     volts = voltage.data
-    
+
     charge_level = (int)(((volts - MIN_VOLTAGE)/(MAX_VOLTAGE - MIN_VOLTAGE))*15)
     colors = []
 
@@ -94,8 +94,8 @@ def process_voltage2(voltage):
 
 def BatteryListener():
     rospy.init_node('battery_lights')
-    rospy.Subscriber("electrical_interface/battery1_voltage", Float32, process_voltage1)
-    rospy.Subscriber("electrical_interface/battery2_voltage", Float32, process_voltage2)
+    rospy.Subscriber("electrical_interface/batteryVoltage1", Float32, process_voltage1)
+    rospy.Subscriber("electrical_interface/batteryVoltage2", Float32, process_voltage2)
     rospy.spin()
 
 if __name__ == "__main__":
