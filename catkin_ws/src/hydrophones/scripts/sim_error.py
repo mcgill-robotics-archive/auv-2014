@@ -31,7 +31,6 @@ def compute_error(data):
 if __name__ == '__main__':
     try:
         rospy.Subscriber('/hydrophones/sol',solution,compute_error)
-        while not rospy.is_shutdown():
-            pass
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
