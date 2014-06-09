@@ -9,6 +9,9 @@
         <!-- tdoa -->
         <node name="tdoa" pkg="hydrophones" type="tdoa.py" respawn="false" output="screen"/>
 
+        <!-- analyzer -->
+        <node name="analyzer" pkg="hydrophones" type="analyzer.py" respawn="false" output="screen"/>
+
         <!-- solver -->
         <node name="solver" pkg="hydrophones" type="multilateration.py" respawn="false" output="screen"/>
     </group>
