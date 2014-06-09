@@ -41,5 +41,6 @@ if __name__ == '__main__':
         while not rospy.is_shutdown():
             compute_tdoa()
             rate.sleep()
+
     except rospy.ROSInterruptException:
         pass
