@@ -29,7 +29,9 @@ THRESHOLD = 0.1
 crunching = False
 rospy.init_node('tdoa')
 tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
+freq_topic = rospy.Publisher('/hydrophones/freq',freq)
 signal = channels()
+frequencies = freq()
 dt = tdoa()
 
 
@@ -38,11 +40,24 @@ def acquire_target():
     freq = [np.zeros(BUFFERSIZE/2+1,np.float)
             for i in range(NUMBER_OF_MICS)]
 
+    # FFT
     freq[0] = np.fft.rfft(signal.channel_0)
     freq[1] = np.fft.rfft(signal.channel_1)
     freq[2] = np.fft.rfft(signal.channel_2)
     freq[3] = np.fft.rfft(signal.channel_3)
 
+    # PUBLISH
+    frequencies.channel_0.real = np.real(freq[0])
+    frequencies.channel_0.imag = np.imag(freq[0])
+    frequencies.channel_1.real = np.real(freq[1])
+    frequencies.channel_1.imag = np.imag(freq[1])
+    frequencies.channel_2.real = np.real(freq[2])
+    frequencies.channel_2.imag = np.imag(freq[2])
+    frequencies.channel_3.real = np.real(freq[3])
+    frequencies.channel_3.imag = np.imag(freq[3])
+    freq_topic.publish(frequencies)
+
+    # DETERMINE IF TARGET FREQUENCY APPEARS
     for i in range(NUMBER_OF_MICS):
         magnitude = np.absolute(freq[i][TARGET_INDEX])
         if magnitude > THRESHOLD:

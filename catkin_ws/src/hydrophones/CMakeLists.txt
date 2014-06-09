@@ -49,6 +49,9 @@ add_message_files(
   FILES
   cartesian.msg
   channels.msg
+  complex.msg
+  freq.msg
+  peaks.msg
   polar.msg
   solution.msg
   tdoa.msg
