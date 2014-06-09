@@ -35,7 +35,7 @@ asound.snd_lib_error_set_handler(c_error_handler)
 
 def setup():
     """ Sets up audio streams """
-    global auudio, inputs
+    global audio, mic, lin, inputs
     audio = pyaudio.PyAudio()
     mic = audio.open(format=pyaudio.paFloat32, channels=2,
                      rate=SAMPLING_FREQUENCY, input=True,
