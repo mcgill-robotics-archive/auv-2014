@@ -1,3 +1,4 @@
+alias glances='glances -yet 5'
 alias go='rosparam set /go 1'
 alias planner_pls='rosparam set /go 1'
 alias main='tmux attach -t main'
@@ -47,4 +48,4 @@ source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
 export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
 export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 #export ROS_MASTER_URI=http://mcgill:11311
-alias bag='$ROBOTIC_PATH/dotfiles/bagger' 
+alias bag='$ROBOTIC_PATH/dotfiles/bagger'
