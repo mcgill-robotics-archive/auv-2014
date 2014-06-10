@@ -99,7 +99,7 @@ set wrap
 map j gj
 map k gk
 
-set relativenumber
+"set relativenumber
 set number
 set t_Co=256
 "set background=dark
