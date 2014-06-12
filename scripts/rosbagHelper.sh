@@ -34,7 +34,7 @@ addTemperatureTopics() {
 }
 
 addCameraTopics() {
-	command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect camera_front_left/camera_out/camera_info camera_front_left/image_rect"
+	command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect camera_front_right/camera_out/camera_info camera_front_right/image_rect  camera_front_left/camera_out/camera_info camera_front_left/image_rect"
 }
 
 addDepthTopic() {
@@ -56,10 +56,11 @@ handleInputParameters() {
 			'-a' )
 				command_arguments="${command_arguments} status/usb electrical_interface/batteryVoltage1 electrical_interface/batteryVoltage2 electrical_interface/pressure electrical_interface/motor electrical_interface/solenoid state_estimation/raw"
 				command_arguments="${command_arguments} state_estimation/pose"
-				command_arguments="${command_arguments} electrical_interface/depth"
+				command_arguments="${command_arguments} electrical_interface/depth state_estimation/filterDepth"
 				command_arguments="${command_arguments} status/temperature electrical_interface/temperature electrical_interface/temperature1 electrical_interface/temperature2 electrical_interface/temperature3 electrical_interface/temperature4 electrical_interface/temperature5"
 				command_arguments="${command_arguments} status/temperature electrical_interface/temperature"
-				command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect camera_front_left/camera_out/camera_info camera_front_left/image_rect"
+                                command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect camera_front_right/camera_out/camera_info camera_front_right/image_rect  camera_front_left/camera_out/camera_info camera_front_left/image_rect"
+}
 				;;
 			'-i' )
 				command_arguments="${command_arguments} state_estimation/pose"

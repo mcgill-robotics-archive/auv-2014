@@ -4,7 +4,7 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Float32.h>
 #include <controls/motorCommands.h>
-#include <arduino_msgs/solenoid.h>
+#include <robosub_msg/solenoid.h>
 
 //Pin definitions 
 
@@ -94,7 +94,7 @@ void resetMotor(){
 
 
 
-void solenoidCb( const arduino_msgs::solenoid& msg){
+void solenoidCb( const robosub_msg::solenoid& msg){
   digitalWrite(SOLENOID_PIN_T_1,msg.torpedo1.data);
   digitalWrite(SOLENOID_PIN_T_2,msg.torpedo2.data);
   digitalWrite(SOLENOID_PIN_G_1,msg.grabber1.data);
@@ -104,20 +104,20 @@ void solenoidCb( const arduino_msgs::solenoid& msg){
 }
 
 
-ros::Publisher depthPub("/depth", &depth_msg);  // Publish the depth topic
+ros::Publisher depthPub("/electrical_interface/depth", &depth_msg);  // Publish the depth topic
 
-ros::Publisher voltagePub1("/batteryVoltage1", &batteryVoltage1_msg);
-ros::Publisher voltagePub2("/batteryVoltage2", &batteryVoltage2_msg);
+ros::Publisher voltagePub1("/electrical_interface/batteryVoltage1", &batteryVoltage1_msg);
+ros::Publisher voltagePub2("/electrical_interface/batteryVoltage2", &batteryVoltage2_msg);
 
-ros::Publisher temperaturePub1("/temperature1", &temperature1_msg);
-ros::Publisher temperaturePub2("/temperature2", &temperature2_msg);
-ros::Publisher temperaturePub3("/temperature3", &temperature3_msg);
-ros::Publisher temperaturePub4("/temperature4", &temperature4_msg);
-ros::Publisher temperaturePub5("/temperature5", &temperature5_msg);
+ros::Publisher temperaturePub1("/electrical_interface/temperature1", &temperature1_msg);
+ros::Publisher temperaturePub2("/electrical_interface/temperature2", &temperature2_msg);
+ros::Publisher temperaturePub3("/electrical_interface/temperature3", &temperature3_msg);
+ros::Publisher temperaturePub4("/electrical_interface/temperature4", &temperature4_msg);
+ros::Publisher temperaturePub5("/electrical_interface/temperature5", &temperature5_msg);
 
-ros::Subscriber<arduino_msgs::solenoid> solenoidSub("/solenoid", &solenoidCb );
+ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
 
-ros::Subscriber<controls::motorCommands> motorSub("/motor", &motorCb );
+ros::Subscriber<controls::motorCommands> motorSub("/electrical_interface/motor", &motorCb );
 
 
 void setup(){
