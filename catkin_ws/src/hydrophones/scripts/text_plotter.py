@@ -18,7 +18,7 @@ FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 DIVISION = 5
 
 # SET UP NODE
-rospy.init_node('vizualizer')
+rospy.init_node('plotter')
 rate = rospy.Rate(SAMPLING_FREQUENCY/BUFFERSIZE)
 peak = [0 for channel in range(NUMBER_OF_MICS)]
 data = [[] for channel in range(NUMBER_OF_MICS)]
