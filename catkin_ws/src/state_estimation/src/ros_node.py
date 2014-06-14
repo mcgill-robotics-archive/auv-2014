@@ -44,8 +44,8 @@ def publish():
 # Callbacks
 def cvCallback(visObject):
     global SEE_OBJ, COUNTER
-    has_target = (visObject.object_type != VisibleObjectData.CANNOT_DETERMINE_OBJECT)
-    SEE_OBJ = has_target
+    hasTarget = (visObject.object_type != VisibleObjectData.CANNOT_DETERMINE_OBJECT)
+    SEE_OBJ = hasTarget
     COUNTER = time.time()
     estimator.updateCV(hasTarget, visObject.object_type,
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
