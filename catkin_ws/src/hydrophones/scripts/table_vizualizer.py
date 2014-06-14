@@ -2,7 +2,6 @@
 
 # IMPORTS
 from ctypes import *
-import pyaudio
 import numpy as np
 import rospy
 import roslib
@@ -22,14 +21,15 @@ TARGET_FREQUENCY = param.get_target_frequency()
 
 # USEFUL CONSTANTS
 FREQUENCY_RANGE = 100       # RANGE OFF TARGET TO MONITOR   Hz
-MIC_INDEX = -1              # MIC PORT INDEX
-LIN_INDEX = -2              # LINE IN PORT INDEX
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TIME_PER_INDEX = 1 / SAMPLING_FREQUENCY
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 RANGE = int(round(FREQUENCY_RANGE / FREQUENCY_PER_INDEX))
 RFFT_LENGTH = BUFFERSIZE / 2 + 1
 LABELS = ['I', 'II', 'III', 'IV']
+
+# SET UP NODE AND TOPIC
+rospy.init_node('table')
 
 # SET UP CURSES
 curses.initscr()
@@ -76,50 +76,12 @@ class mic(object):
 mics = [mic(i) for i in range(NUMBER_OF_MICS)]
 
 
-# SET UP ERROR HANDLER TO FILTER OUT PYAUDIO MESSAGES
-def py_error_handler(filename, line, function, err, fmt):
-    pass
-
-ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int,
-                               c_char_p, c_int, c_char_p)
-c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
-asound = cdll.LoadLibrary('libasound.so')
-asound.snd_lib_error_set_handler(c_error_handler)
-
-
-# SET UP SOUND INPUT
-try:
-    audio = pyaudio.PyAudio()
-    os.system('clear')
-    mic = audio.open(format=pyaudio.paFloat32, channels=2,
-                     rate=SAMPLING_FREQUENCY, input=True,
-                     input_device_index = MIC_INDEX,
-                     frames_per_buffer=BUFFERSIZE)
-    lin = audio.open(format=pyaudio.paFloat32, channels=2,
-                     rate=SAMPLING_FREQUENCY, input=True,
-                     input_device_index = LIN_INDEX,
-                     frames_per_buffer=BUFFERSIZE)
-
-except Exception as e:
-    screen.addstr('\n %s \n\n' % e, curses.color_pair(1))
-    screen.refresh()
-    time.sleep(1)
-    curses.endwin()
-    print e
-    exit(1)
-
-
-def read():
+def read(data):
     ''' Reads signal from microphones '''
-    data_mic = np.fromstring(mic.read(BUFFERSIZE),
-                             dtype=np.float32)
-    data_lin = np.fromstring(lin.read(BUFFERSIZE),
-                             dtype=np.float32)
-
-    mics[0].time = data_mic[::2]
-    mics[1].time = data_mic[1::2]
-    mics[2].time = data_lin[::2]
-    mics[3].time = data_lin[1::2]
+    mics[0].time = data.channel_0
+    mics[1].time = data.channel_1
+    mics[2].time = data.channel_2
+    mics[3].time = data.channel_3
 
 
 def process():
@@ -167,28 +129,26 @@ def maximize():
         screen.addstr(value, curses.color_pair(state))
 
 
-def close():
-    ''' Closes audio streams '''
-    audio.close(mic)
-    audio.close(lin)
+def update(data):
+    """ Updates vizualization """
+    read(data)
+    process()
+    analyze()
+    maximize()
+    screen.refresh()
 
 
 if __name__ == '__main__':
     # MAIN
-    while True:
-        try:
-            read()
-            process()
-            analyze()
-            maximize()
-            screen.refresh()
+    try:
+        rospy.Subscriber('/hydrophones/audio',channels,update)
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
 
-        except:
-            break
 
     # QUIT PEACEFULLY
     try:
-        close()
         screen.addstr('\n GOODBYE \n\n', curses.color_pair(1))
         screen.refresh()
         time.sleep(1)
