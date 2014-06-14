@@ -21,9 +21,10 @@ ROS_INFO("looking for the lane");
 	listener.waitForTransform(frame, "/robot/rotation_center",
 			ros::Time(0), ros::Duration(300));
 //stops moving
-	double myPoints0[5] = {0.0, 0.0, 0.0, 0.0, 8.8};
-	std::vector<double> desired0(myPoints0, myPoints0 + sizeof(myPoints0) / sizeof(myPoints0[0]));
-	myPlanner->setPosition(desired0, "/robot/rotation_center");
+//	double myPoints0[5] = {0.0, 0.0, 0.0, 0.0, 8.8};
+//	std::vector<double> desired0(myPoints0, myPoints0 + sizeof(myPoints0) / sizeof(myPoints0[0]));
+//	myPlanner->setPosition(desired0, "/robot/rotation_center");
+//	myPlanner->setVelocity(0, 0, 0, 8.8, frame);
 ROS_INFO("found the lane");
 	myStatusUpdater->updateStatus(myStatusUpdater->lane2);
 	loop_rate.sleep();
@@ -32,6 +33,7 @@ ROS_INFO("found the lane");
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 
 	while (!myPlanner->areWeThereYet(frame, desired)) {
+		ROS_INFO("NOT THERE YET!!!!");
 		ROS_DEBUG("Task_Lane::setPoints published");		
 		myPlanner->setPosition(desired, frame);
 		loop_rate.sleep();

@@ -46,8 +46,8 @@ if filereadable($HOME.'/.vim/bundle/Vundle.vim/autoload/vundle.vim')
     Plugin 'ervandew/supertab'
     Plugin 'davidhalter/jedi-vim'
     Plugin 'terryma/vim-multiple-cursors'
-    Plugin 'bling/vim-airline'
-    Plugin 'edkolev/tmuxline.vim'
+    "Plugin 'bling/vim-airline'
+    "Plugin 'edkolev/tmuxline.vim'
     Plugin 'scrooloose/syntastic'
     Plugin 'LaTeX-Box-Team/LaTeX-Box'
     Plugin 'coot/atp_vim'
@@ -99,7 +99,7 @@ set wrap
 map j gj
 map k gk
 
-set relativenumber 
+"set relativenumber
 set number
 set t_Co=256
 "set background=dark
@@ -135,21 +135,3 @@ let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
-
-" airline
-let g:airline_theme='ubaryd'
-let g:airline_powerline_fonts = 1
-if !exists('g:airline_symbols')
-   let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
-let g:airline#extensions#tabline#enabled = 1
-
-" LaTeX
-let g:tex_flavor='latex'
-let g:Tex_TreatMacViewerAsUNIX = 1
-let g:Tex_ExecuteUNIXViewerInForeground = 1
-let g:Tex_ViewRule_ps = 'open -a Skim'
-let g:Tex_ViewRule_pdf = 'open -a /Applications/Skim.app'
-let g:Tex_ViewRule_dvi = 'open -a /Applications/texniscope.app'
-autocmd FileType tex call Tex_SetTeXCompilerTarget('View','pdf')

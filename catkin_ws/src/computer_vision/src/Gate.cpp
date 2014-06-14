@@ -19,23 +19,20 @@ const std::string TRACKBARS_WINDOW = "trackbars_window";
 /**
  * Constructor.
  */
-Gate::Gate(const CVNode& _parent, const CVNode::GateParameters& _params) : VisibleObject(_parent), params(_params) {
+Gate::Gate(const CVNode& _parent, CVNode::GateParameters& _params) : VisibleObject(_parent), params(_params) {
 
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ":: a Gate object was instantiated.").c_str());
-
-	trackbar_start_hue_threshold = parent.get_start_hsv_hue_thresh();
-	trackbar_end_hue_threshold = parent.get_end_hsv_hue_thresh();
-	trackbar_start_val_threshold = parent.get_start_hsv_value_thresh();
-	trackbar_end_val_threshold = parent.get_end_hsv_value_thresh();
 
 	if (parent.get_front_using_helpers()) {
 		cv::namedWindow(COLOR_THRESH_WINDOW, CV_WINDOW_KEEPRATIO);
 		cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
 
-		cv::createTrackbar("start_hsv_hue_threshold", TRACKBARS_WINDOW, &trackbar_start_hue_threshold, MAX_HSV_HUE);
-		cv::createTrackbar("end_hsv_hue_threshold", TRACKBARS_WINDOW, &trackbar_end_hue_threshold, MAX_HSV_HUE);
-		cv::createTrackbar("start_hsv_value_threshold", TRACKBARS_WINDOW, &trackbar_start_val_threshold, MAX_HSV_VALUE);
-		cv::createTrackbar("end_hsv_value_threshold", TRACKBARS_WINDOW, &trackbar_end_val_threshold, MAX_HSV_VALUE);
+		cv::createTrackbar("Hue range 1 begin", TRACKBARS_WINDOW, &(params.hue_range1_begin), MAX_HSV_HUE);
+		cv::createTrackbar("Hue range 1 end", TRACKBARS_WINDOW, &(params.hue_range1_end), MAX_HSV_HUE);
+		cv::createTrackbar("Hue range 2 begin", TRACKBARS_WINDOW, &(params.hue_range2_begin), MAX_HSV_HUE);
+		cv::createTrackbar("Hue range 2 end", TRACKBARS_WINDOW, &(params.hue_range2_end), MAX_HSV_HUE);
+		cv::createTrackbar("Value begin", TRACKBARS_WINDOW, &(params.value_range_begin), MAX_HSV_VALUE);
+		cv::createTrackbar("Value end", TRACKBARS_WINDOW, &(params.value_range_begin), MAX_HSV_VALUE);
 	}
 }
 
@@ -55,7 +52,7 @@ Gate::~Gate() {
  * @param currentFrame Current camera frame
  * @return If the door is present, it returns a pointer to an ObjectData
  *  which contains the information gathered on the door. If the door is
- *  not present in the current frame, it returns the zero pointer (NULL).
+ *  not present in thel current frame, it returns the zero pointer (NULL).
  */
 std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Mat& currentFrame) {
 	std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
@@ -100,9 +97,6 @@ std::vector<computer_vision::VisibleObjectData*> Gate::retrieveObjectData(cv::Ma
  * @param currentFrame The frame to which we need to apply the filters.
  */
 void Gate::applyFilter(cv::Mat& currentFrame) {
-	cv::Scalar hsv_ending(trackbar_end_hue_threshold, 255, trackbar_end_val_threshold);
-	cv::Scalar hsv_starting(trackbar_start_hue_threshold, 0, trackbar_start_val_threshold);
-
 	std::vector<PoleCandidate> potentialMatchRectangles;
 	centerOfCurrentFrame.x = currentFrame.cols/2;
 	centerOfCurrentFrame.y = currentFrame.rows/2;
@@ -115,7 +109,7 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 	cv::GaussianBlur(currentFrameInHSV, currentFrameInHSV, cv::Size(KERNEL_SIZE, KERNEL_SIZE), 0, 0);
 
 	// Finds all the contours in the image and store them in a vector containing vectors of points.
-	std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV, hsv_starting, hsv_ending);
+	std::vector<std::vector<cv::Point> > detectedContours = findContoursFromHSVFrame(currentFrameInHSV);
 
 	// Goes through all the identified shapes for a first filtering.
 	for (int rectangleID = 0; rectangleID < detectedContours.size(); rectangleID++) {
@@ -125,16 +119,18 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 		PoleCandidate pole = findRectangleForContour(contour);
 
 		bool passesFilter = false;
-		// Filter the rectangles based on several parameters (acceptable ratio, angle error, etc.)
-		if ((pole.h / pole.w) > params.min_pole_ratio && contour.size() >= params.min_number_points_contour &&
-			std::abs(pole.rectangleAngleDeg - params.pole_desired_angle_deg) < params.pole_angle_error_deg ) {
+		// Filter the rectangles based on several parameters
+		if ((pole.h / pole.w) > params.min_pole_ratio && // Low ratios look like a square, not a pole
+			contour.size() >= params.min_number_points_contour && // Contours with too few points are most likely not right
+			std::abs(pole.rectangleAngleDeg - params.pole_desired_angle_deg) < params.pole_angle_error_deg && // Angle error
+			cv::contourArea(contour) / (double) (pole.h * pole.w) > params.min_convexity_ratio // Reject non-convex contours
+			) {
+				passesFilter = true;
+				computePolarCoordinates(pole, centerOfCurrentFrame, currentFrame.size().height);
+				potentialMatchRectangles.push_back(pole);
 
-			passesFilter = true;
-			computePolarCoordinates(pole, centerOfCurrentFrame, currentFrame.size().height);
-			potentialMatchRectangles.push_back(pole);
-
-			//Draw contour points
-			drawPointsOfContour(currentFrame, contour, GREEN_BGRX);			
+				//Draw contour points
+				drawPointsOfContour(currentFrame, contour, GREEN_BGRX);
 		} else {
 			drawPointsOfContour(currentFrame, contour, RED_BGRX);
 		}
@@ -146,6 +142,7 @@ void Gate::applyFilter(cv::Mat& currentFrame) {
 	int numberOfPotentialMatch = potentialMatchRectangles.size();
 
 	if (numberOfPotentialMatch > 1) {
+		//Note: This is a very expensive way of checking all possible combinations!		
 		int ip1, ip2;
 		for(int i = 0 ; i < numberOfPotentialMatch - 1 && !m_isVisible ; i++) {
 			PoleCandidate& p1 = potentialMatchRectangles[i];
@@ -205,6 +202,13 @@ bool Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	if(p2.center.x - centerOfCurrentFrame.x < 0)
 		y2 = -y2;
 
+	//If the error of the gate's width is too large, reject it.
+	float dx = x2 - x1, dy = y2 - y1;
+	float detectedWidthSqr = dx * dx + dy * dy;
+	float widthErr = std::abs((params.gate_width_m * params.gate_width_m) - detectedWidthSqr);
+	if(widthErr > params.gate_width_error_mSqr) //TODO Parametrize this
+		return false;
+
 	m_xDistance = (x1 + x2) / 2.0;
 	m_yDistance = (y1 + y2) / 2.0;
 
@@ -212,8 +216,7 @@ bool Gate::handleTwoVisiblePoles(PoleCandidate& p1, PoleCandidate& p2, cv::Point
 	float avgMPerPx = ((params.gate_height_m / p1.h) + (params.gate_height_m / p2.h)) / 2.0;
 	m_zDistance = (centerY - centerOfCurrentFrame.y) * avgMPerPx;
 
-//	std::cout << "[DEBUG] Gate found: <" << m_xDistance << "," << m_yDistance << "," << m_zDistance << "> yaw " <<
-//			m_yawAngle * 180.0 / 3.141592654 << std::endl;
+	return true;
 }
 
 /**
@@ -286,13 +289,32 @@ void Gate::computePolarCoordinates(PoleCandidate& pole, cv::Point frameCenter, f
  * @param frameInHSV The frame in HSV color space.
  * @return The std::vector of std::vector of points containing the clouds of all contours in the image.
  */
-std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV, cv::Scalar start, cv::Scalar end) {
+std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Mat& frameInHSV) {
+	cv::Scalar end(params.hue_range1_end, 255, params.value_range_end);
+	cv::Scalar start(params.hue_range1_begin, 0, params.value_range_begin);
 
+
+	//cv::Mat inRangeHSVFrame;
 	// Creates the Mat object that will contain the filtered image (inRange HSV).
-	cv::Mat inRangeHSVFrame;
+	cv::Mat inRangeHSVFrame(frameInHSV.rows, frameInHSV.cols, CV_8UC1);
 	// Generates a new Mat object that only contains a certain range of HSV values.
 	// Don't forget that we are not using BGRX, but the HSV color space.
-	cv::inRange(frameInHSV, start, end, inRangeHSVFrame);
+
+	uchar* src = frameInHSV.data;
+	uchar* dst = inRangeHSVFrame.data;
+	int lim = frameInHSV.total();
+	for(int i = 0 ; i < lim * 3 ; i += 3, dst++) {
+		
+		// (Hue in 1st range OR Hue in 2nd range) AND Value in range
+		if( ((src[i] >= params.hue_range1_begin && src[i] <= params.hue_range1_end) ||
+			(src[i] >= params.hue_range2_begin && src[i] <= params.hue_range2_end)) &&
+			(src[i + 2] >= params.value_range_begin && src[i + 2] <= params.value_range_end) ) {
+			*dst = 255;
+		}
+	}
+
+
+	//cv::inRange(frameInHSV, start, end, inRangeHSVFrame);
 	cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
 
 	if (parent.get_front_using_helpers()) {

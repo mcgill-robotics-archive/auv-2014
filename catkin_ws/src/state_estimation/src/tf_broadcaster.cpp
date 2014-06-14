@@ -100,6 +100,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 	
+	/*	
 	// Not measured because grabber is not ready
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
@@ -113,6 +114,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/extremeties/grabber"
 		)
 	);
+	*/
 	
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors

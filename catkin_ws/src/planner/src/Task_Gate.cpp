@@ -17,28 +17,43 @@ void Task_Gate::execute() {
 	if(phase <= 2) {
 		phase2();
 	}
-	//etc
+	if(phase <= 3) {
+		phase3();
+	}
 }
 
+//approach the gate area while looking for it
 void Task_Gate::phase1() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
-	myPlanner->setVisionObj(0);
-	loop_rate.sleep();
-	myPlanner->setVisionObj(1);
-	loop_rate.sleep();
+
 	myStatusUpdater->updateStatus(myStatusUpdater->gate1);
 	loop_rate.sleep();
-		myPlanner->setVelocity(2, 0, 0, 8.8, frame);
-		loop_rate.sleep();
-		tf::TransformListener listener;
-	listener.waitForTransform(frame, "/robot/rotation_center",
-			ros::Time(0), ros::Duration(300));
-ROS_INFO("we found it");
+
+	myPlanner->setVisionObj(1);
+	loop_rate.sleep();
+	
+	myPlanner->setVelocity(.1, 0, 0, 8.8, frame);
+	loop_rate.sleep();
+	tf::TransformListener listener;
+	try {
+		listener.waitForTransform(frame, "/robot/rotation_center",
+			ros::Time(0), ros::Duration(10));
+	} catch (tf::TransformException ex) {
+		myPlanner->weAreLost(myPlanner->Gate_A, 1);
+	}
+	ROS_INFO("we found it");
+}
+
+//after finding the gate, approach it even more
+void Task_Gate::phase2() {	
+	ros::Rate loop_rate(50);
+	loop_rate.sleep();
+	
 	myStatusUpdater->updateStatus(myStatusUpdater->gate2);
 	loop_rate.sleep();
 	
-	double myPoints[5] = {1.0, 0.0, 0.0, 0.0, 8.8};
+	double myPoints[5] = {2.5, 0.0, 0.0, 0.0, 8.8};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 	
 	while (!myPlanner->areWeThereYet(frame, desired)) {
@@ -48,15 +63,18 @@ ROS_INFO("we found it");
 	}	
 }
 
-void Task_Gate::phase2() {
+//move through the gate
+void Task_Gate::phase3() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
 
+	myStatusUpdater->updateStatus(myStatusUpdater->gate3);
+	loop_rate.sleep();
+
 	ROS_INFO("Task_Gate::reached the front of the gate");
-	myPlanner->setVelocity(2, 0, 0, 8.8, frame);
+	myPlanner->setVelocity(0.05, 0, 0, 8.8, frame);
 
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
-	myStatusUpdater->updateStatus(myStatusUpdater->gate3);
 	loop_rate.sleep();
 
 	//next task

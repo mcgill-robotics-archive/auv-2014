@@ -62,6 +62,8 @@ def callback(modelStates):
 	    
             # Relative orientation relative to the initial pose
             relativePose = multQuaternion(initialPose, inverseQuaternion(poseStamped))
+            relativePose.pose.orientation.z = relativePose.pose.orientation.z * -1.0
+            # relativePose = multQuaternion(poseStamped, inverseQuaternion(initialPose))
 
             pub.publish(relativePose)
             time = rospy.get_time()

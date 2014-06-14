@@ -46,11 +46,10 @@ std_msgs::Int32 pressure_msg;
 
 Servo myservo[6];
 
-unsigned long depthSensorSchedule;
-unsigned long batteryVoltageSchedule;
-unsigned long temperaturePressureSechedule;
-unsigned long lastMotorCommand;
-boolean availabilityBMP085 = false;
+unsigned long depthSensorSchedule=0;
+unsigned long batteryVoltageSchedule=0;
+unsigned long temperaturePressureSechedule=0;
+unsigned long lastMotorCommand=0;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -107,6 +106,7 @@ void setup(){
   myservo[3].attach(MOTOR_PIN_Y_2);
   myservo[4].attach(MOTOR_PIN_Z_1);
   myservo[5].attach(MOTOR_PIN_Z_2);
+  resetMotor();
   
   pinMode(SOLENOID_PIN_T_1,OUTPUT);
   pinMode(SOLENOID_PIN_T_2,OUTPUT);
@@ -130,10 +130,7 @@ void setup(){
   nh.subscribe(motorSub);  
   nh.subscribe(solenoidSub);
 
-  //BMP085 Setup
-  availabilityBMP085 = !bmp085Calibration(); // make sure that BMP085 is connected;
   resetMotor();
-
 }
 
 void loop(){

@@ -31,12 +31,9 @@ int get_task_id(std::string name) {
 
 void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw) {
   //TODO: Convert Euler angles to quaternions (?)
-
   ros::ServiceClient client = n.serviceClient<gazebo_msgs::SetModelState>("/gazebo/set_model_state");
-  ros::ServiceClient seClient = n.serviceClient<state_estimation::setInitialPose>("/state_estimation/set_initial_pose");
   gazebo_msgs::SetModelState setmodelstate;
   gazebo_msgs::ModelState modelstate;
-  state_estimation::setInitialPose setPose;
 
   geometry_msgs::Pose start_pose;
   start_pose.position.x = x;
@@ -55,8 +52,6 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   start_twist.angular.y = 0.0;
   start_twist.angular.z = 0.0;
 
-  setPose.request.a = 1;
- 
   modelstate.model_name = (std::string) "robot";
   modelstate.reference_frame = (std::string) "world";
   modelstate.pose = start_pose;
@@ -70,12 +65,6 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
     ROS_INFO("Set robot's position: Success");
   } else {
     ROS_ERROR("Failed to call service ");
-  }
-
-  if(seClient.call(setPose)) {
-    ROS_INFO("notified state estimation: Success");
-  } else {
-  	ROS_ERROR("Failed to call state estimation service");
   }
 }
 
@@ -120,49 +109,71 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	//has two sets of bound, one set for the simulator, one for real life
 		//both sets still need to be experimentally determined
 	if(inSim) {
-		xBound = 1;
-		yBound = 1;
-		zBound = 2;
-		yawBound = 5;
-		pitchBound = 5;
+		xBound = .1;
+		yBound = .1;
+		zBound = 2; //not used june 6
+		yawBound = .1;
+		pitchBound = .1;
 	}
 	else {
-		xBound = 1;
-		yBound = 1;
+		xBound = .1;
+		yBound = .1;
 		zBound = 2;
-		yawBound = 5;
-		pitchBound = 5;
+		yawBound = .1;
+		pitchBound = .1;
 	}
 	setTransform(referenceFrame);
 	//positional bounds
-	bool xBounded = abs(relativePose.pose.position.x - desired.at(0)) < xBound;
-	bool yBounded = abs(relativePose.pose.position.y - desired.at(1)) < yBound;
+	bool xBounded = fabs(relativePose.pose.position.x - desired.at(0)) < xBound;
+	bool yBounded = fabs(relativePose.pose.position.y - desired.at(1)) < yBound;
 	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",
 		relativePose.pose.position.x, relativePose.pose.position.y);
 	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
+
+	ROS_INFO("POSITIONAL BOUNDS:");
+	ROS_INFO("Current x: %f    Desired x: %f", relativePose.pose.position.x, desired.at(0));
+	ROS_INFO("Current y: %f    Desired y: %f", relativePose.pose.position.y, desired.at(1));
+
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
 	double y = relativePose.pose.orientation.y;
 	double z = relativePose.pose.orientation.z;
 	double w = relativePose.pose.orientation.w;
-	double pitch = 57.2957795130823f
+	double pitch = 1
 			* -atan(
 					(2.0f * (x * z + w * y))
 							/ sqrt(
 									1.0f
 											- pow((2.0f * x * z + 2.0f * w * y),
-													2.0f)));
-	double yaw = 57.2957795130823f
+													2.0f))); // multiply by 57.2957795130823f to convert to degrees
+	double yaw = 1
 			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
-	bool pitchBounded = abs(pitch - desired.at(2)) < pitchBound;
-	bool yawBounded = abs(yaw - desired.at(3)) < yawBound;
+	bool pitchBounded = fabs(pitch - desired.at(2)) < pitchBound;
+	bool yawBounded = fabs(yaw - desired.at(3)) < yawBound;
 
+	ROS_INFO("ROTATIONAL BOUNDS:");
+	ROS_INFO("Current pitch: %f    Desired pitch: %f", pitch, desired.at(2));
+	ROS_INFO("Current yaw: %f    Desired yaw: %f", yaw, desired.at(2));
+	ROS_INFO("Variables bounded: x: %i, y: %i, yaw: %i, pitch: %i ", xBounded, yBounded, yawBounded, pitchBounded);
 	return (xBounded && yBounded && yawBounded && pitchBounded);
+
+
+	/*
+	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
+	tf::Matrix3x3 m(q); //convert quaternion to matrix
+
+	double roll; //unused, but needs to be sent to getRPY method
+
+
+	
+	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
+	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sig
+	*/
 }
 
 void Planner::setVisionObj(int objIndex) {
-	robosub_msg::CurrentCVTask msgFront;
-	robosub_msg::CurrentCVTask msgDown;
+	planner::CurrentCVTask msgFront;
+	planner::CurrentCVTask msgDown;
 
 	msgFront.currentCVTask = msgFront.NOTHING;
 	msgDown.currentCVTask = msgDown.NOTHING;
@@ -190,7 +201,7 @@ void Planner::setVisionObj(int objIndex) {
 }
 
 void Planner::setPoints(double pointControl[], std::string referenceFrame) {
-	robosub_msg::setPoints msgControl;
+	planner::setPoints msgControl;
 
 	msgControl.XPos.isActive = pointControl[0];
 	msgControl.XPos.data = pointControl[1];
@@ -264,11 +275,11 @@ void Planner::switchToTask(Tasks newTask) {
 	currentTask->execute();
 }
 
-void Planner::weAreLost(LostStates newTask) {
+void Planner::weAreLost(LostStates newTask, int lostPhase) {
 	switch(newTask) {
 		case Gate_A: 
 			delete currentTask;
-			currentTask = (Task*) new Lost_Gate(this, myStatusUpdater, 0);
+			currentTask = (Task*) new Lost_Gate(this, myStatusUpdater, lostPhase);
 			break;
 		case Gate_B: 
 			delete currentTask;
@@ -289,6 +300,19 @@ void Planner::weAreLost(LostStates newTask) {
 	}
 
 	currentTask->execute();
+}
+
+void Planner::resetIMU() {
+	ros::ServiceClient seClient = nodeHandle.serviceClient<state_estimation::setInitialPose>("/state_estimation/set_initial_pose");
+  	state_estimation::setInitialPose setPose;
+
+	setPose.request.a = 1;
+ 
+	if(seClient.call(setPose)) {
+    	ROS_INFO("notified state estimation: Success");
+  	} else {
+  		ROS_ERROR("Failed to call state estimation service");
+  	}
 }
 
 int main(int argc, char **argv) {
@@ -325,6 +349,7 @@ int main(int argc, char **argv) {
 	///////////////////////////////////////////////////////////////////////
 
 	//start routine
+	plannerNode->resetIMU();
 	plannerNode->switchToTask(plannerNode->Gate);
 
 	return 0;	
@@ -332,15 +357,15 @@ int main(int argc, char **argv) {
 
 Planner::Planner(ros::NodeHandle& n) {
 	go = inSim;
-
+	nodeHandle = n;
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
 
-	taskPubFront = n.advertise<robosub_msg::CurrentCVTask>("currentCVTask_Front", 1000);
-	taskPubDown = n.advertise<robosub_msg::CurrentCVTask>("currentCVTask_Down", 1000);
+	taskPubFront = n.advertise<planner::CurrentCVTask>("currentCVTask_Front", 1000);
+	taskPubDown = n.advertise<planner::CurrentCVTask>("currentCVTask_Down", 1000);
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
-	control_pub = n.advertise<robosub_msg::setPoints>("setPoints", 1000);
+	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater, 0);

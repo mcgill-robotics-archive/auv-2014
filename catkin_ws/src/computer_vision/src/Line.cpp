@@ -15,19 +15,23 @@ int thresh = 300;
 int max_thresh = 500;
 RNG rng(12345);
 
-//int main(int argc, char** argv){
-//
-//	VideoCapture video("run2-cropped.avi");
-//	executeVideo (video);
-//}
+const double PI = std::atan(1.0)*4;
+int smallestAreaTemp = 10000;
+double movingAverage [5];
+int pos = 0;
+int reset = 0;
 
 double calculateSize (double x1, double x2, double y1, double y2);
+cv::RotatedRect thresh_callback(int, void* );
+//double calculateApproxDistanceToLine (double yaw, double sizeLong, double sizeWide, cv::Mat& currentFrame);
 //double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
 
 Line::Line(const CVNode& _parent) : VisibleObject(_parent) {
 	xDistance = 0.0;
 	yDistance = 0.0;
+	zDistance = 0.0;
+	//yaw = 0.0;
 }
 
 std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(cv::Mat& currentFrame) {
@@ -36,9 +40,9 @@ std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(cv::Ma
         double pitchAngle = 90.0;
         //double xDistance = 1;
         //double yDistance = 3;
-        double zDistance = 0;
+        //double zDistance = 0;
         std::vector<computer_vision::VisibleObjectData*> messagesToReturn;
-        //std::cout << "TEST" << std::endl;
+
         // Creates a pointer that will point to a computer_vision::VisibleObjectData object.
         computer_vision::VisibleObjectData* visibleObjectData = new computer_vision::VisibleObjectData();
 
@@ -50,14 +54,14 @@ std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(cv::Ma
         if (visibility) {
                 // Get object data
                 // [...]
-				//std::cout << "VISIBLE" << std::endl;
+
                 // Return gathered data to caller
                 visibleObjectData->object_type = visibleObjectData->LANE;
                 visibleObjectData->pitch_angle = 0.0;
                 visibleObjectData->yaw_angle = yaw;
                 visibleObjectData->x_distance = xDistance;
                 visibleObjectData->y_distance = yDistance;
-                visibleObjectData->z_distance = 0.0;
+                visibleObjectData->z_distance = zDistance;
 
                 messagesToReturn.push_back(visibleObjectData);
 				visibility = false;
@@ -72,128 +76,209 @@ std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(cv::Ma
  */
 
 void Line::applyFilter(cv::Mat& image){
-		cv::Mat imageHSV;
-	   src = image;
-      cv::cvtColor(image, imageHSV,CV_BGR2HSV);
-      cv::GaussianBlur(filteredImage, filteredImage, cv::Size(kernelSize, kernelSize),0,0);
-      cv::inRange(imageHSV, cv::Scalar(5, 100, 100), cv::Scalar(15,255,255), filteredImage);
+	  cv::Mat imageHSV;
+	  Point2f vertices[4];
+	  src = image;
+	  cv::cvtColor(image, imageHSV,CV_BGR2HSV);
+	  cv::GaussianBlur(imageHSV, imageHSV, cv::Size(kernelSize, kernelSize),0,0);
 
 
-  /// Create Window
-  //char* source_window = "Source";
+	  cv::RotatedRect line;
+	  cv::RotatedRect holderTemp;
 
-  //namedWindow( source_window, CV_WINDOW_NORMAL);
-  //imshow( source_window, src );
+	  //Range for the simulator
+	  cv::inRange(imageHSV, cv::Scalar(5, 100, 100), cv::Scalar(15,255,255), filteredImage);
+	  holderTemp = thresh_callback( 0, 0 );
+	  line = holderTemp;
 
-  //createTrackbar( "Canny thresh:", "Source", &thresh, max_thresh, thresh_callback );
-  thresh_callback( 0, 0 );
+	  namedWindow( "Filtered Image", CV_WINDOW_NORMAL );
+	  //resizeWindow("Filtered Image", 1018, 715);
+	  imshow( "Filtered Image", filteredImage );
+
+	  //Range for the line in down video
+	  cv::inRange(imageHSV, cv::Scalar(100, 30, 170), cv::Scalar(180,90,250), filteredImage);
+	  //namedWindow( "Filtered Image", CV_WINDOW_NORMAL );
+	  //resizeWindow("Filtered Image", 1018, 715);
+	  //imshow( "Filtered Image", filteredImage );
+	  holderTemp = thresh_callback( 0, 0 );
+	  if (holderTemp.size.area() >= line.size.area()){
+		  line = holderTemp;
+	  }
+
+	  //Range for the down video
+	  cv::inRange(imageHSV, cv::Scalar(0, 20, 160), cv::Scalar(180,90,240), filteredImage);
+	  holderTemp = thresh_callback( 0, 0 );
+	  if (holderTemp.size.area() >= line.size.area()){
+		  line = holderTemp;
+	  }
+	            //line = holderTemp;
+
+	  //Range for the run2-cropped
+	  cv::inRange(imageHSV, cv::Scalar(5, 70, 30), cv::Scalar(15,350,180), filteredImage);
+	  holderTemp = thresh_callback( 0, 0 );
+	  if (holderTemp.size.area() >= line.size.area()){
+		  line = holderTemp;
+	  }
+
+	  //Range for the rosbag videos
+	  cv::inRange(imageHSV, cv::Scalar(5, 20, 30), cv::Scalar(150,130,180), filteredImage);
+	  holderTemp = thresh_callback( 0, 0 );
+	  if (holderTemp.size.area() >= line.size.area()){
+	      line = holderTemp;
+	  }
+
+	  Mat drawing = Mat::zeros( filteredImage.size(), CV_8UC3 );
+
+	  //draws located line
+	  line.points(vertices);
+
+
+	  double sizeLong;
+	  double sizeWide;
+
+	  sizeLong = calculateSize(vertices[0].x, vertices[(0 + 1) % 4].x, vertices[0].y,vertices[(0 + 1) % 4].y);
+	  sizeWide = calculateSize(vertices[0].x, vertices[(0 - 1) % 4].x ,vertices[0].y, vertices[(0 - 1) % 4].y);
+
+	  if (sizeLong < sizeWide) {
+		  double temp;
+		  temp = sizeLong;
+		  sizeLong = sizeWide;
+		  sizeWide = temp;
+	  }
+
+	  int centerX = line.center.x;
+	  int centerY = line.center.y;
+	  double yDistancePixels = 0;
+	  double xDistancePixels = 0;
+
+	  cv::line(drawing, Point(centerX, centerY), Point(centerX,centerY), cv::Scalar(0, 0, 255),2,8, 0 );
+	  cv::line(drawing, Point(drawing.size().width/2, drawing.size().height/2), Point(drawing.size().width/2, drawing.size().height/2), cv::Scalar(255, 0, 0),2,8, 0 );
+
+	  visibility = isVisible(line);
+	      		//for (int i = 0; i < 4; ++i){
+	      		    	//cv::line(drawing, vertices[i], vertices[(i + 1) % 4], cv::Scalar(0, 255, 0), 1, CV_AA);
+	      		//}
+	  yaw = relativeYaw(line);
+
+	  //Keep the five last yaw recordings and if the yaw is too far from the average, do not take it
+	  //Set visibility constant to false
+	  if (pos < 5){
+		  movingAverage[pos % 5] = yaw;
+	      pos++;
+	  } else{
+		  double sum= 0;
+		  for (int i =0; i < 5; i++){
+	 					sum += movingAverage[i];
+	 				}
+	 				if (std::abs(yaw - sum/5) < 0.40){
+	 					movingAverage[pos % 5] = yaw;
+	 					pos ++;
+	 				}
+	 				else{
+	 					visibility = false;
+	 				}
+	      		}
+
+	      		if (! visibility)
+	      			reset ++;
+	      		else
+	      			reset = 0;
+
+	      		if (reset > 10){
+	      			reset = 0;
+	      			for (int x = 0 ;  x < 5; x++)
+	      		     	movingAverage[x] = 0;
+	      		    pos = 0;
+	      		}
+	      		  //If output is opposite, then invert
+	      		  //xDistance = drawing.size().width/2 - centerX;
+	      		  //yDistance = drawing.size().height/2 - centerY;
+	      		  //isVisible(line);
+	      		  yDistancePixels = centerX - drawing.size().width/2;
+	      		  xDistancePixels = drawing.size().height/2 - centerY;
+	      		  yDistance = convertFromPixelsToMetres(yDistancePixels, sizeLong);
+	      		  xDistance = convertFromPixelsToMetres(xDistancePixels, sizeLong);
+
+	      		  //Calculate approximative distance to line assuming the line is right in front of the camera
+	      		  double approxDistance = calculateApproxDistanceToLine(yaw,sizeWide,sizeLong, image);
+
+	      		  //Calculate better approximation to determine real distance to line
+	      		  //double yOffset, xOffset;
+	      		  //yOffset = convertFromPixelsToMetres(std::abs((drawing.size().height/2 )- centerX),sizeLong);
+	      		  //xOffset = convertFromPixelsToMetres(std::abs((drawing.size().width/2 )- centerY),sizeLong);
+
+	      		  //double distance2D = std::sqrt((std::pow (xOffset, 2)) + (std::pow (yOffset, 2)));
+
+	      		  //Determines the zDistance
+	      		  zDistance = approxDistance;
+
+	      		  //if a line is visible draw the rectangle
+	      		  if (visibility) {
+	      			 for (int i = 0; i < 4; ++i){
+	      			     cv::line(drawing, vertices[i], vertices[(i + 1) % 4], cv::Scalar(0, 255, 0), 1, CV_AA);
+	      			  }
+	      		  }
+
+	      		/// Show in a window
+	      		       namedWindow( "Contours", CV_WINDOW_NORMAL );
+	      		       imshow( "Contours", drawing );
+
+
+	      		  /// Create Window
+	      		  char* source_window = "Source";
+
+	      		  namedWindow(source_window, CV_WINDOW_NORMAL);
+	      		  //resizeWindow(source_window, 1018, 715);
+	      		  imshow( source_window, src );
+
 }
 
-//void executeVideo(cv::VideoCapture cap) {
-//        while (1) {
-//                cv::Mat currentFrame;
-//                cv::Mat hsvCurrentFrame;
-//
-//                bool readCurrentFrame = cap.read(currentFrame);
-//                if (!readCurrentFrame) {
-//                        std::cout << "[INFO] Looping back to the first frame." << std::endl;
-//                        cap.set(CV_CAP_PROP_POS_FRAMES, 35);
-//                        readCurrentFrame = cap.read(currentFrame);
-//                }
-//
-//                //apply fliter to current frame
-//                applyFilter(currentFrame);
-//
-//                // Manages the frquency at which the frames are being updated. And closes the windows whenever ESC is pressed.
-//                if (cv::waitKey(150) == 27) {
-//                        std::cout << "[WARNING] The user has pressed ESC. Terminating the process" << std::endl;
-//                        exit(EXIT_SUCCESS);
-//                }
-//        }
-//}
-
-void Line::thresh_callback(int, void* )
+/**
+ * Record all rectangles and selects ones that have a bigger area than 500 pixels
+ */
+cv::RotatedRect thresh_callback(int, void* )
 {
-  Mat canny_output;
-  vector<vector<Point> > contours;
-  vector<Vec4i> hierarchy;
-  cv::Mat img = cv::Mat::zeros(500, 500, CV_8UC3);
+	Mat canny_output;
+	  vector<vector<Point> > contours;
+	  vector<Vec4i> hierarchy;
+	  cv::Mat img = cv::Mat::zeros(500, 500, CV_8UC3);
 
 
-  /// Detect edges using canny
-  Canny( filteredImage, canny_output, thresh, thresh*2, 3 );
-  /// Find contours
-  findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+	  /// Detect edges using canny
+	  Canny( filteredImage, canny_output, thresh, thresh*2, 3 );
+	  /// Find contours
+	  findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
-  /// Draw contours
-  Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
+	  /// Draw contours
+	  Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
 
-	  Point2f vertices[4];
-	  cv::RotatedRect line;
-	  std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
+		  Point2f vertices[4];
+		  cv::RotatedRect line;
+		  std::vector<std::vector<cv::Point> > contours_poly( contours.size() );
 
-	  	  //evaluates all found lines and returns largest line line that fits ratio
-		  for( int i = 0; i < contours.size(); i++ ) {
-		      approxPolyDP(cv::Mat(contours[i]), contours_poly[i], 4, true );
-		      std::vector<cv::Point> hull;
-		       cv::convexHull(cv::Mat(contours_poly[i]),hull);
-		       cv::Mat hull_points(hull);
-		       cv::RotatedRect current = minAreaRect(hull_points);
+		  	  //evaluates all found lines and returns largest line line that fits ratio
+			  for( int i = 0; i < contours.size(); i++ ) {
+			      approxPolyDP(cv::Mat(contours[i]), contours_poly[i], 4, true );
+			      std::vector<cv::Point> hull;
+			       cv::convexHull(cv::Mat(contours_poly[i]),hull);
+			       cv::Mat hull_points(hull);
+			       cv::RotatedRect current = minAreaRect(hull_points);
 
-		       //if(current.size.area()<350){
-		           //continue;
-		      // }
+			       //if(current.size.area()<350){
+			           //continue;
+			      // }
 
-		       current.points(vertices);
-		       if (current.size.area() > line.size.area()){
-		        line = minAreaRect(hull_points);
-		       }
-		  }
-
-		  //draws located line
-		  line.points(vertices);
-		  double sizeLong;
-		  double sizeWide;
-		  for (int i = 0; i < 4; ++i){
-			  cv::line(drawing, vertices[i], vertices[(i + 1) % 4], cv::Scalar(0, 255, 0), 1, CV_AA);
-		  }
-		  sizeLong = calculateSize(vertices[0].x, vertices[(0 + 1) % 4].x, vertices[0].y,vertices[(0 + 1) % 4].y);
-		  sizeWide = calculateSize(vertices[0].x, vertices[(0 - 1) % 4].x ,vertices[0].y, vertices[(0 - 1) % 4].y);
-		  //change
-		  if (sizeLong < sizeWide) {
-			  double temp;
-			  temp = sizeLong;
-			  sizeLong = sizeWide;
-			  sizeWide = temp;
-		  }
-		  //cout << "Size Long:" << sizeLong << "\n";
-		  //cout << "Size Wide" << sizeWide << "\n";
-
-		  double centerX = line.center.x;
-		  double centerY = line.center.y;
-		  double yDistancePixels;
-		  double xDistancePixels;
-
-		  cv::line(drawing, Point(centerX, centerY), Point(centerX,centerY), cv::Scalar(0, 0, 255),2,8, 0 );
-		  cv::line(drawing, Point(drawing.size().width/2, drawing.size().height/2), Point(drawing.size().width/2, drawing.size().height/2), cv::Scalar(255, 0, 0),2,8, 0 );
-		  visibility = isVisible(line);
-		  yaw = relativeYaw(line);
-
-		  //If output is opposite, then invert
-		  //invert the X and Y to be in the coordinate system of the robot
-		  //yDistance = drawing.size().width/2 - centerX;
- 		  //xDistance = drawing.size().height/2 - centerY;
- 		  yDistancePixels = centerX - drawing.size().width/2;
- 		  xDistancePixels = drawing.size().height/2 - centerY;
- 		  yDistance = convertFromPixelsToMetres(yDistancePixels, sizeLong);
- 		  xDistance = convertFromPixelsToMetres(xDistancePixels, sizeLong);
- 		  //cout << "xDistance: " << xDistance << "\n";
- 		  //cout << "yDistance: " << yDistance << "\n";
+			       if(current.size.area()<500){
+			    	   continue;
+			       }
 
 
-  /// Show in a window
-  namedWindow( "Contours", CV_WINDOW_NORMAL );
-  imshow( "Contours", drawing );
+			       current.points(vertices);
+			       if (current.size.area() > line.size.area()){
+			        line = minAreaRect(hull_points);
+			       }
+			  }
+			  return (line);
 }
 /**
  * Determines distance of robot from line
@@ -247,10 +332,28 @@ double Line::relativeYaw(cv::RotatedRect line){
 	
 	//cout << "Relative Yaw Is " << angle << endl;
 	//cout<< " -----------------------------------------------" << endl;
+	angle = (angle * PI) / 180;
 	return angle;
 }
 
 int Line::add(int x, int y) {
 	return x+y;
+}
+
+double Line::calculateApproxDistanceToLine (double yaw, double sizeLong, double sizeWide, cv::Mat& currentFrame) {
+	double realLineHeight;
+	double imageLineHeight;
+	double approxDistance;
+
+	realLineHeight = ( std::cos(yaw) * 1.2 ) + (std::sin(yaw) * 0.15);
+	imageLineHeight = (std::cos(yaw) * sizeLong) + (std::sin(yaw) * sizeWide);
+
+	//cout << currentFrame.size().height << "\n";
+	//cout << camera_focal_length;
+
+
+	approxDistance =  (parent.get_camera_focal_length() * realLineHeight * currentFrame.size().height )/(imageLineHeight * parent.get_camera_sensor_height());
+
+	return approxDistance;
 }
 

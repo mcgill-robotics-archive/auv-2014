@@ -109,7 +109,7 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 	frontEndPublisher.publish(msg);
 
 	std::vector<blinky::RGB> colors;
-
+/*
 	for(int i = 0; i < 5; i++) {
 		colors.push_back(color1);
 	}
@@ -121,7 +121,11 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 	for(int i = 0; i < 4; i++) {
 		colors.push_back(color3);
 	}
-	
+*/
+colors.push_back(color1);
+colors.push_back(color2);
+colors.push_back(color3);
+
 	blinky::UpdatePlannerLights srv;
 	srv.request.colors = colors;
 	if(!blinkyClient.call(srv)) {

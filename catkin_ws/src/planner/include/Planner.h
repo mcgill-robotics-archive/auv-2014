@@ -11,8 +11,8 @@
 #include "gazebo_msgs/ModelState.h"
 #include "gazebo_msgs/SetModelState.h"
 #include "tf/transform_listener.h"
-#include "robosub_msg/setPoints.h"
-#include "robosub_msg/CurrentCVTask.h"
+#include "planner/setPoints.h"
+#include "planner/CurrentCVTask.h"
 #include "blinky/RGB.h"
 #include "blinky/UpdatePlannerLights.h"
 #include "state_estimation/setInitialPose.h"
@@ -45,7 +45,8 @@ class Planner{
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
-	void weAreLost(LostStates newTask);
+	void weAreLost(LostStates newTask, int lostPhase);
+	void resetIMU();
 	Planner(ros::NodeHandle& nodeHandle);
 	//~Planner();
 
@@ -53,6 +54,7 @@ class Planner{
 	void setTransform(std::string referenceFrame);
 	void setPoints(double pointControl[], std::string referenceFrame);
 
+	ros::NodeHandle nodeHandle;
 	int go;
 	ros::Subscriber estimatedDepth_subscriber;
 
@@ -67,11 +69,11 @@ class Planner{
 	Task* currentTask;
 	StatusUpdater* myStatusUpdater;
 
-	int xBound;
-	int yBound;
-	int zBound;
-	int yawBound;
-	int pitchBound;
+	double xBound;
+	double yBound;
+	double zBound;
+	double yawBound;
+	double pitchBound;
 };
 
 #endif

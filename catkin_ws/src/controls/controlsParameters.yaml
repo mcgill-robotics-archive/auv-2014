@@ -1,46 +1,4 @@
-gains/kp: 1.5
-gains/ki: 0.00
-gains/kd: 15.0
-
-gains/kp_xPos: 1.5
-gains/ki_xPos: 0
-gains/kd_xPos: 15
-
-gains/kp_yPos: 1.5
-gains/ki_yPos: 0
-gains/kd_yPos: 15
-
-gains/kp_Depth: 4
-gains/ki_Depth: 0
-gains/kd_Depth: 20
-
-gains/kp_Pitch: .2
-gains/ki_Pitch: 0
-gains/kd_Pitch: 1
-
-gains/kp_Yaw: .2
-gains/ki_Yaw: 0
-gains/kd_Yaw: 1
-
-gains/OL_coef_x: 5
-gains/OL_coef_y: 5
-gains/OL_coef_yaw: 1
-gains/OL_coef_depth: 1
-gains/OL_coef_balance: 2
-
-#I dont think anybody reads these setpoints params
-setPoints/XPos/value: 0.5
-setPoints/XSpeed/value: 0
-
-setPoints/YPos/value: 0
-setPoints/YSpeed/value: 0
-
-setPoints/Depth/value: 9
-
-setPoints/Yaw/value: 0
-setPoints/YawSpeed/value: 0
-
-setPoints/Pitch/value: 0
+#gains were moved to another file (separate for gains.yaml and sim_gains.yaml)
 
 max_error_x_p: 10
 max_error_y_p: 10
@@ -57,6 +15,43 @@ max_error_yaw_d: 0.5
 XSpeed/max: 30
 YSpeed/max: 30
 
+
+coefs/mass: 30
+coefs/buoyancy: 0.02
+coefs/drag: 0.1
+coefs/gravity: 9.81
+coefs/dt: 0.5
+
+
+#thrust_mapper parameters
+voltage/min: -20 
+voltage/max: 20
+motorCommands/min: -500
+motorCommands/max: 500
+force/max: 30
+torque/max: 100
+
+Yaw/max: 3.14159 # pi # maximum setpoint 
+Pitch/max: 0.7853 # pi/4
+
+
+
+
+#I dont think anybody reads these setpoints params
+setPoints/XPos/value: 0.5
+setPoints/XSpeed/value: 0
+
+setPoints/YPos/value: 0
+setPoints/YSpeed/value: 0
+
+setPoints/Depth/value: 9
+
+setPoints/Yaw/value: 0
+setPoints/YawSpeed/value: 0
+
+setPoints/Pitch/value: 0
+
+
 # isActive parameters are not used yet -Nick 1/25
 # setPoints/XPos/isActive: 1
 # setPoints/XSpeed/isActive: 0
@@ -70,22 +65,3 @@ YSpeed/max: 30
 # setPoints/YawSpeed/isActive: 0
 
 # setPoints/Pitch/isActive: 0
-
-coefs/mass: 30
-coefs/buoyancy: 0.02
-coefs/drag: 0.1
-coefs/gravity: 9.81
-coefs/dt: 0.5
-
-#thrust_mapper parameters
-voltage/min: -20 
-voltage/max: 20
-motorCommands/min: -500
-motorCommands/max: 500
-#force/min: -30 # removed from controls node, not sure about thrust_mapper only max is needed because of symmetry
-force/max: 30
-#torque/min: -100 # removed from controls node, not sure about thrust_mapper
-torque/max: 100
-
-Yaw/max: 1.5708 # pi/2
-Pitch/max: 0.7853 # pi/4

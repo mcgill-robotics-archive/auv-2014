@@ -25,14 +25,11 @@
 
         <!-- node to reduce the size of raw camera image -->
         <node pkg="nodelet" type="nodelet" 
-        args="standalone image_proc/crop_decimate" 
-        name="decimator">
+            args="standalone image_proc/crop_decimate" 
+            name="decimator">
 
             <param name="decimation_x" type="int" value="2" />
             <param name="decimation_y" type="int" value="2" />
-
-            <remap from="camera_out/image_raw" to="camera/image_color" />
-            <remap from="camera_out/camera_info" to="camera/camera_info_crop" />
     
         </node>
 
@@ -40,9 +37,8 @@
             args="standalone image_proc/rectify"
             name="rectifier">
 
-            <remap from="image_mono" to="camera/image_color" />
-            <remap from="camera_info" to="camera/camera_info_crop" />
-            <remap from="image_rect" to="camera/image_rect" />
+            <remap from="image_mono" to="camera_out/image_raw" />
+            <remap from="camera_info" to="camera_out/camera_info" />
         </node>
     </group>
 
@@ -50,7 +46,7 @@
     <!--<arg name="viewFeed" default="0"/>-->
     <group if="$(arg viewFeed)">
       <node pkg="image_view" type="image_view" name="image_view" >
-        <remap from="image" to="camera/image_color" />
+        <remap from="image" to="camera/image_rect" />
       </node>
     </group>
     

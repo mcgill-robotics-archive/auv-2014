@@ -1,27 +1,65 @@
 #!/usr/bin/env python
 
-### IMPORTS
+# TODO: DISTINGUISH PRACTICE FROM COMPETITION
+
+# IMPORTS
+from ctypes import *
 import numpy as np
+import rospy
+import roslib
+from hydrophones.msg import *
+import param
 
-def solve(mics,speed):
-    """ Solve by multilateration """
-    NUMBER_OF_MICS = len(mics)
+# PARAMETERS
+try:
+    NUMBER_OF_MICS = param.get_number_of_mics()
+    POS = param.get_mic_positions()
+    SPEED = param.get_speed()
+except:
+    print 'ROS NOT RUNNING'
+    exit(1)
 
+# SET UP NODE AND TOPIC
+rospy.init_node('solver')
+solver_topic = rospy.Publisher('/hydrophones/sol',solution)
+sol = solution()
+
+
+def solve(data):
+    """ Solves by multilateration """
+    # PARSE TDOA
+    dt = [0,data.tdoa_1,data.tdoa_2,data.tdoa_3]
+
+    # MULTILATERATE
     A = np.zeros(NUMBER_OF_MICS)
     B = np.zeros(NUMBER_OF_MICS)
     C = np.zeros(NUMBER_OF_MICS)
-
     for i in range(2,NUMBER_OF_MICS):
-        A[i] = (2*mics[i].pos.x) / (speed*mics[i].diff) - \
-               (2*mics[1].pos.x) / (speed*mics[1].diff)
+        A[i] = (2*POS[i][0]) / (SPEED*dt[i]) - \
+               (2*POS[1][0]) / (SPEED*dt[1])
 
-        B[i] = (2*mics[i].pos.y) / (speed*mics[i].diff) - \
-               (2*mics[1].pos.y) / (speed*mics[1].diff)
+        B[i] = (2*POS[i][1]) / (SPEED*dt[i]) - \
+               (2*POS[1][1]) / (SPEED*dt[1])
 
-        C[i] = speed*(mics[i].diff - mics[1].diff) - \
-               (mics[i].pos.x**2 + mics[i].pos.y**2) / (speed*mics[i].diff) + \
-               (mics[1].pos.x**2 + mics[1].pos.y**2) / (speed*mics[1].diff)
+        C[i] = SPEED*(dt[i] - dt[1]) - \
+               (POS[i][0]**2 + POS[i][1]**2) / (SPEED*dt[i]) + \
+               (POS[1][0]**2 + POS[1][1]**2) / (SPEED*dt[1])
 
+    # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
-    return Point(x,y)
+    # PUBLISH
+    sol.cartesian.x = x
+    sol.cartesian.y = y
+    sol.polar.r = np.sqrt(x**2 + y**2)
+    sol.polar.theta = np.degrees(np.arctan2(y,x))
+    sol.target = True
+    solver_topic.publish(sol)
+
+
+if __name__ == '__main__':
+    try:
+        rospy.Subscriber('/hydrophones/tdoa',tdoa,solve)
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass

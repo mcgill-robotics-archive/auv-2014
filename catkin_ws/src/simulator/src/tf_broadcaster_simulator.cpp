@@ -197,7 +197,7 @@ int main(int argc, char** argv){
   ros::Subscriber sub6 = node.subscribe("/gazebo/link_states/", 10, &poseCallback6); //cam2_SO
   ros::Subscriber sub7 = node.subscribe("/gazebo/link_states/", 10, &poseCallback7); //cam3_SO
 
-
+  ros::Rate loop_rate(30);
   ros::spin();
   return 0;
 };

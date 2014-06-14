@@ -180,9 +180,19 @@ public:
 
 		// apply the wrench
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
+		
+		geometry_msgs::Wrench negativeMsg;
+		negativeMsg.force.x = -msg.force.x;
+		negativeMsg.force.y = -msg.force.y;
+		negativeMsg.force.z = -msg.force.z;
+		negativeMsg.torque.x = -msg.torque.x;
+		negativeMsg.torque.y = -msg.torque.y;
+		negativeMsg.torque.z = -msg.torque.z;
+
 		applyBodyWrench.request.body_name = (std::string) "robot::body";
-		applyBodyWrench.request.wrench = msg;
+		applyBodyWrench.request.wrench = negativeMsg;
 		applyBodyWrench.request.reference_frame = "robot::robot_reference_frame";
+
 
 		//applyBodyWrench.request.start_time not specified -> it will start ASAP.
 		applyBodyWrench.request.duration = ros::Duration(1);

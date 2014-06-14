@@ -1,0 +1,22 @@
+<launch>
+    <group ns="hydrophones">
+        <!-- parameters -->
+        <node name="param" pkg="hydrophones" type="param.py" respawn="false" output="screen"/>
+
+        <!-- audio -->
+        <node name="audio" pkg="hydrophones" type="sim_audio.py" respawn="false" output="screen"/>
+
+        <!-- tdoa -->
+        <node name="sim_tdoa" pkg="hydrophones" type="sim_tdoa.py" respawn="false" output="screen"/>
+        <node name="tdoa" pkg="hydrophones" type="tdoa.py" respawn="false" output="screen"/>
+
+        <!-- analyzer -->
+        <node name="analyzer" pkg="hydrophones" type="analyzer.py" respawn="false" output="screen"/>
+
+        <!-- solver -->
+        <node name="solver" pkg="hydrophones" type="multilateration.py" respawn="false" output="screen"/>
+
+        <!-- error -->
+        <node name="error" pkg="hydrophones" type="sim_error.py" respawn="false" output="screen"/>
+    </group>
+</launch>

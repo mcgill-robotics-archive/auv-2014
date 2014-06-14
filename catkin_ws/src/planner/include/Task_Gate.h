@@ -10,6 +10,7 @@ class Task_Gate: public Task{
 	private:
 		void phase1();
 		void phase2();
+		void phase3();
 		std::string frame;
 };
 

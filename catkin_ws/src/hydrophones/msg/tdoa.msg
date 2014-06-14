@@ -1,3 +1,4 @@
-float32 tdoa_1
-float32 tdoa_2
-float32 tdoa_3
+float64 tdoa_1
+float64 tdoa_2
+float64 tdoa_3
+bool    target

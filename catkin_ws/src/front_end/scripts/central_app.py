@@ -226,7 +226,7 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber("/electrical_interface/batteryVoltage1", Float32, self.bat_1)
         rospy.Subscriber("/electrical_interface/batteryVoltage2", Float32, self.bat_2)
         rospy.Subscriber("/camera_front_left/image_rect", Image, self.front_left_pre_callback)
-        rospy.Subscriber("/front_right_camera/image_rect", Image, self.front_right_pre_callback)
+        rospy.Subscriber("/camera_front_right/image_rect", Image, self.front_right_pre_callback)
         rospy.Subscriber("/camera_down/image_rect", Image, self.down_pre_callback)
         rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
         rospy.Subscriber("/front_cv/camera2", Image, self.front_post_right_callback)
@@ -326,7 +326,7 @@ class CentralUi(QtGui.QMainWindow):
             self.check_imu_vals()
 
     def check_imu_vals(self):
-        rospy.Subscriber("/electrical_interface/pose", PoseStamped, self.update_imu)
+        rospy.Subscriber("/state_estimation/pose", PoseStamped, self.update_imu)
 
     def update_imu(self, pose):
         self.ui.imu_x.setText(str(pose.pose.orientation.x))

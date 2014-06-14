@@ -22,11 +22,14 @@ ledCount = 30
 # where the tape is found
 blt = bt.BlinkyTape("/dev/blinkyTape", 2 * ledCount)
 
+# Color to separate subsections in the planner segment
+separation_color = RGB(0,0,0)
+
 # The two blinky tape segments
 planner_colorList = []
 battery_colorList = []
 
-# Warnings on the planner segment
+# Warning displayed on both segments
 warning_colorList = []
 
 # Frequency of the warning display in Hz
@@ -41,13 +44,11 @@ def initialize_blinkies():
     global battery_colorList	# across function calls
     colors = []
 	
-    for i in range(ledCount):
-    	colors.append(RGB(0,255,255)) # Cyan (!!!)
-
     # store the initial states
-    planner_colorList = colors
-    battery_colorList = colors
-
+    for i in range(ledCount):
+    	planner_colorList.append(RGB(0,255,255)) # Cyan (!!!)
+        battery_colorList.append(RGB(0,255,255))
+        
     # set all leds off
     for i in range(2 * ledCount):
     	blt.sendPixel(0,0,0)
@@ -58,35 +59,79 @@ def initialize_blinkies():
 # req is a request containing the service arguments
 # as fields accessible with the '.'
 
-# planner_colorList and battery_colorList store
-# the state of the blinky tape colors.
-# The planner segment is closest to the Arduino
-# The battery segment is farthest from the Arduino
-# |Arduino|--------- Planner ---------||--------- Battery ---------|
-
 # Update Planner segment
 # req.colors: list of RGB colors to display
+
+# This method divides the planner segment into n subsections,
+# where n is the number of colors passed in the req array.
+# Each color indicates the color of one of these subsections,
+# and the subsections are separated by a black led.
+# The planner segment consists of two parallel
+# strips of 15 leds each (totaling 30). The second strip is
+# the reverse of the first.
 def update_planner(req):
     global planner_colorList
+    global separation_color
     lock = threading.Lock()
 
+    segments = len(req.colors)
+    seg_size = 16/segments # 16 comes from magic (works for 1 <= i <= 5)
+    
+    colors = []
+
+    for s in req.colors:
+        for i in range(seg_size - 1):
+            colors.append(s)
+        colors.append(separation_color)
+
+    del(colors[-1])
+    
+    # filler with the last color until all 15 leds are on
+    for j in range(len(colors),15):
+        colors.append(req.colors[-1])
+
+    # reverse the colors on the second half of 15 leds
+    for j in range(15):
+        colors.append(colors[14-j])
+
     with lock:
-        planner_colorList = req.colors
+        planner_colorList = colors
 
     return UpdatePlannerLightsResponse(0)
 
-# Update Battery segment
+# Update Battery1 segment
 # req.colors: list of RGB colors to display
-def update_battery(req):
+def update_battery1(req):
     global battery_colorList
     lock = threading.Lock()
 
+    if len(req.colors) != 15:
+        return UpdateBattery1LightsResponse(1)
+
     with lock:
-        battery_colorList = req.colors
+        for i in range(15):
+            battery_colorList[i] = req.colors[i]
 
-    return UpdateBatteryLightsResponse(0)
+    print planner_colorList
+    return UpdateBattery1LightsResponse(0)
 
-# Display a warning on the planner segment
+# Update Battery2 segment
+# The colors are reversed.
+def update_battery2(req):
+    global battery_colorList
+    lock = threading.Lock()
+
+    if len(req.colors) != 15:
+        return UpdateBattery2LightsResponse(1)
+
+    with lock:
+        for i in range(15):
+            battery_colorList[29-i] = req.colors[i]
+
+    print planner_colorList
+    return UpdateBattery2LightsResponse(0)
+
+# Display a warning on the planner and battery segments
 # req.colors: list of colors to display
 # req.frequency: frequency at which to flash the warning (in Hz)
 # req.on: activate warning or stop it
@@ -107,12 +152,16 @@ def BlinkyTapeServer():
     initialize_blinkies()
     rospy.init_node('blinky')
     upl = rospy.Service('update_planner_lights', UpdatePlannerLights, update_planner)
-    ubl = rospy.Service('update_battery_lights', UpdateBatteryLights, update_battery)
+    ub1l = rospy.Service('update_battery1_lights', UpdateBattery1Lights, update_battery1)
+    ub2l = rospy.Service('update_battery2_lights', UpdateBattery2Lights, update_battery2)
     wl = rospy.Service('warning_lights', WarningLights, warn_lights)
+    pub_planner = rospy.Publisher('planner_colors', RGBArray)
+    pub_battery = rospy.Publisher('battery_colors', RGBArray)
+    pub_warning = rospy.Publisher('warning_colors', RGBArray)
 
     lock = threading.Lock()
     edge_time = time.time()
-    state = 0   # alternates between 0 (planner display) and 1 (warning display)
+    state = 0   # alternates between 0 (normal display) and 1 (warning display)
     list1 = planner_colorList   # List of colors to display on segment 1
     list2 = battery_colorList   # List of colors to display on segment 2
 
@@ -129,14 +178,19 @@ def BlinkyTapeServer():
             warning_freq_copy = warning_freq
             warning_colorList_copy = warning_colorList
 
-        # if warnings are on, alternate between planner colors
+        # publish all color lists
+        pub_planner.publish(planner_colorList_copy)
+        pub_battery.publish(battery_colorList_copy)
+        pub_warning.publish(warning_colorList_copy)
+
+        # if warnings are on, alternate between planner/battery colors
         # and warning colors, after measuring the time period.
         if (warning_on_copy == False) or (warning_freq_copy <= 0.0):
             list1 = planner_colorList_copy
             list2 = battery_colorList_copy
             edge_time = time.time() # reset time counter
             
-        # if warnings are on, toggle the planner display after each half-period
+        # if warnings are on, toggle the planner and battery display after each half-period
         elif (warning_freq_copy > 0.0) and (time.time() - edge_time >= 0.5 / warning_freq_copy):
             if state == 0:
                 list1 = warning_colorList_copy

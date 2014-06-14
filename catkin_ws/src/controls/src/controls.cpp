@@ -67,7 +67,7 @@ void soft_kill_callback(const std_msgs::Bool data)
 	killed = data.data;
 }
 
-void setPoints_callback(const robosub_msg::setPoints setPointsMsg)
+void setPoints_callback(const planner::setPoints setPointsMsg)
 {
 	double currentTime = ros::Time::now().toSec();
 	ROS_DEBUG("received setPoints - currentTime: %f", currentTime);
@@ -140,7 +140,7 @@ void getStateFromTF()
 
 	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
 	const std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	const std::string originalFrame = frame; //gate_center_sim
+	const std::string originalFrame = frame; //specified on the setPoints topic
 	
 	try
 	{
@@ -170,7 +170,7 @@ void getStateFromTF()
 	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
 	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
-	//ROS_DEBUG("RPY: %f %f %f %f %f %f", roll, estimated_Pitch, estimated_Yaw, r2, p2, y2); //debug output}
+	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
 }
 int main(int argc, char **argv)
 {
@@ -271,16 +271,16 @@ int main(int argc, char **argv)
 	bool estimatedStateIsPublished = 1; //Hardcoded cuz I'm lazy TODO fix
 	bool depthIsPublished = 0;
 
-	ROS_DEBUG("controls node waiting for setPoints to be published...");
+	ROS_INFO("\n----\n Controls node initialized. Waiting for setPoints to be published... \n----");
 	while (setPointsIsPublished == 0)
 	{
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
-		setPointsIsPublished = 1;		 
+		setPointsIsPublished = 1;
 		if (setPoints_subscriber.getNumPublishers() == 0) {setPointsIsPublished = 0;}
-		ros::Duration(5).sleep(); //sleep for this many seconds
+		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
 
-	ROS_DEBUG("All Subscribers Live. Starting Controller!");
+	ROS_INFO("All Subscribers Live. Starting Controller!");
 	while(ros::ok())
 	{
 
@@ -373,7 +373,7 @@ int main(int argc, char **argv)
 				ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 				ed_XPos = saturate(ed_XPos, MAX_ERROR_X_D, "X Derivative Error");
 				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
-				Fx *= -1; //flip direction to account for relative coordinate system
+				//Fx *= -1; //flip direction to account for relative coordinate system
 				//ROS_DEBUG("controlling xpos");
 				//ROS_DEBUG("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 			}
@@ -402,7 +402,7 @@ int main(int argc, char **argv)
 				ei_YPos += ep_YPos*dt;
 				ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 				Fy = kp_yPos*ep_YPos + ki_yPos*ei_YPos + kd_yPos*ed_YPos;
-				Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV }
+				//Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV }
 			}
 			else
 			{
@@ -427,9 +427,9 @@ int main(int argc, char **argv)
 				ei_Depth += ep_Depth*dt;
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
-				//Fz *= -1; //flip direction to account for relative coordinate system - don't have to do this because depth isnt relative like the others
-				//Fz = 0; // workaround temp
 				//Fz += buoyancy*m*g; //Account for positive buoyancy bias
+				Fz*=-1; //Depth is different from all the other coordinates. Positive force should push the water upwards, 
+				
 			}
 			else
 			{
@@ -464,7 +464,8 @@ int main(int argc, char **argv)
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
 			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
-			Tz *= -1; //yaw sign convenction
+			//Tz *= -1; //yaw sign convenction
+			//ROS_INFO("Calculating Errors, SP: %f, est_yaw: %f, ep = %f, Tz: %f", setPoint_Yaw, estimated_Yaw, ep_Yaw, Tz);
 		}
 
 		if (isActive_YawSpeed)
