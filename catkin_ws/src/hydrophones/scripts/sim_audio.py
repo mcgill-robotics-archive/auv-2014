@@ -35,6 +35,9 @@ time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 def create_signal(dt):
     """ Creates time shifted signal """
+    global TARGET_FREQUENCY
+    TARGET_FREQUENCY = param.get_target_frequency()
+
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
     signal = np.zeros(BUFFERSIZE,np.float32)
     for i in range(int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))):
