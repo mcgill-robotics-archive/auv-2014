@@ -1,6 +1,6 @@
 image_feed/left: camera_front_left/image_rect
 image_feed/right: camera_front_right/image_rect
-image_feed/down: camera_down/camera/image_color
+image_feed/down: camera_down/image_rect
 camera_sensor_height: 0.0036
 camera_focal_length: 0.003
 #Gate-related parameters
