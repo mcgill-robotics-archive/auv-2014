@@ -22,7 +22,7 @@ except:
     exit(1)
 
 # SET UP NODE
-rospy.init_node('plotter')
+rospy.init_node('text_plot')
 rate = rospy.Rate(SAMPLING_FREQUENCY/BUFFERSIZE)
 peak = [0 for channel in range(NUMBER_OF_MICS)]
 data = [[] for channel in range(NUMBER_OF_MICS)]

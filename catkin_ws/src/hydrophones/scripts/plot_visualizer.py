@@ -19,7 +19,7 @@ except:
     exit(1)
 
 # SET UP NODE
-rospy.init_node('visualizer')
+rospy.init_node('plot')
 times = [t for t in range(BUFFERSIZE)]
 plt.ion()
 
