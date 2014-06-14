@@ -8,13 +8,16 @@ from computer_vision.msg import VisibleObjectData
 from state_estimation.msg import AUVState
 import dead_reck
 import math
-
+import time
 
 POOL_DEPTH = 6
 SEE_OBJ = False
+COUNTER = time.time()
+THRESHOLD = 5   # IN SECONDS
+
 
 def publish():
-    global SEE_OBJ
+    global SEE_OBJ, COUNTER
     state = estimator.getState()
 
     state_msg = AUVState()
@@ -30,19 +33,20 @@ def publish():
     state_msg.hasTarget = state['hasTarget']
     state_msg.depth = state['depth']
 
-    #Todo: velocity, pitch, yaw
+    #TODO: velocity, pitch, yaw
 
     pub.publish(state_msg)
     see_obj_pub.publish(SEE_OBJ)
 
-    if SEE_OBJ == True:
+    if time.time() - COUNTER > THRESHOLD:
         SEE_OBJ = False
 
 # Callbacks
 def cvCallback(visObject):
-    SEE_OBJ = True
-    hasTarget = visObject.object_type != VisibleObjectData.CANNOT_DETERMINE_OBJECT
-    #TODO: remove conversion to angle once CV publishes in radians
+    global SEE_OBJ, COUNTER
+    has_target = (visObject.object_type != VisibleObjectData.CANNOT_DETERMINE_OBJECT)
+    SEE_OBJ = has_target
+    COUNTER = time.time()
     estimator.updateCV(hasTarget, visObject.object_type,
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
                        visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
@@ -51,7 +55,6 @@ def cvCallback(visObject):
 def imuCallback(poseStamped):
     q = poseStamped.pose.orientation
     Q = [q.w, q.x, q.y, q.z]
-
 
     #print "Corrected {}".format(Q)
     #print "%3f %3f %3f"%(Q[1],Q[2],Q[3])
@@ -63,7 +66,6 @@ def imuCallback(poseStamped):
     angle = 2*math.atan2(sin,cos)
     estimator.updateOrientation(angle)
     publish()
-
 
 
 def depthCallback(depth):
@@ -88,7 +90,7 @@ def init():
     pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     down_distance_pub = rospy.Publisher('state_estimation/down_distance', Float64)
     rospy.spin()
-    
+
 if __name__ == '__main__':
     try:
         init()
