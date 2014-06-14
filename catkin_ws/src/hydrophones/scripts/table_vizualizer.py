@@ -18,7 +18,6 @@ try:
     BUFFERSIZE = param.get_buffersize()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
     TARGET_FREQUENCY = param.get_target_frequency()
-
 except:
     print 'ROS NOT RUNNING'
     exit(1)

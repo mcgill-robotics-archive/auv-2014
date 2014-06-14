@@ -155,4 +155,8 @@ def set_parameters():
 
 
 if __name__ == '__main__':
-    set_parameters()
+    try:
+        set_parameters()
+    except:
+        print 'ROS NOT RUNNING'
+        exit(1)

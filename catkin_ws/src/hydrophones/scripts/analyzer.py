@@ -8,10 +8,14 @@ from hydrophones.msg import *
 import param
 
 # PARAMETERS
-NUMBER_OF_MICS = param.get_number_of_mics()
-BUFFERSIZE = param.get_buffersize()
-SAMPLING_FREQUENCY = param.get_sampling_frequency()
-FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
+try:
+    NUMBER_OF_MICS = param.get_number_of_mics()
+    BUFFERSIZE = param.get_buffersize()
+    SAMPLING_FREQUENCY = param.get_sampling_frequency()
+    FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
+except:
+    print 'ROS NOT RUNNING'
+    exit(1)
 
 # SET UP NODE AND TOPIC
 rospy.init_node('analyzer')

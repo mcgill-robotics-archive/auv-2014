@@ -10,12 +10,16 @@ import curses
 import time
 
 # PARAMETERS
-NUMBER_OF_MICS = param.get_number_of_mics()
-BUFFERSIZE = param.get_buffersize()
-SAMPLING_FREQUENCY = param.get_sampling_frequency()
-TARGET_FREQUENCY = param.get_target_frequency()
-FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
-DIVISION = 5
+try:
+    NUMBER_OF_MICS = param.get_number_of_mics()
+    BUFFERSIZE = param.get_buffersize()
+    SAMPLING_FREQUENCY = param.get_sampling_frequency()
+    TARGET_FREQUENCY = param.get_target_frequency()
+    FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
+    DIVISION = 5
+except:
+    print 'ROS NOT RUNNING'
+    exit(1)
 
 # SET UP NODE
 rospy.init_node('plotter')

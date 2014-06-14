@@ -8,9 +8,13 @@ from hydrophones.msg import *
 import param
 
 # SET UP NODE AND TOPIC
-rospy.init_node('error')
-error_topic = rospy.Publisher('/hydrophones/sim/error',solution)
-err = solution()
+try:
+    rospy.init_node('error')
+    error_topic = rospy.Publisher('/hydrophones/sim/error',solution)
+    err = solution()
+except:
+    print 'ROS NOT RUNNING'
+    exit(1)
 
 
 def compute_error(data):

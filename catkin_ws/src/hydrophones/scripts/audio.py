@@ -12,9 +12,13 @@ from hydrophones.msg import *
 import param
 
 # PARAMETERS
-BUFFERSIZE = param.get_buffersize()
-NUMBER_OF_MICS = param.get_number_of_mics()
-SAMPLING_FREQUENCY = param.get_sampling_frequency()
+try:
+    BUFFERSIZE = param.get_buffersize()
+    NUMBER_OF_MICS = param.get_number_of_mics()
+    SAMPLING_FREQUENCY = param.get_sampling_frequency()
+except:
+    print 'ROS NOT RUNNING'
+    exit(1)
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
