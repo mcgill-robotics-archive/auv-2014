@@ -467,7 +467,7 @@ class CentralUi(QtGui.QMainWindow):
             self.keyboard_control = False
             self.ps3_timer_with_controls.stop()
             self.key_timer.stop()
-            velocity_publisher.velocity_publisher(vel_vars.y_velocity, "/setPoints", 0)
+            velocity_publisher.velocity_publisher(vel_vars.y_velocity, "/setPoints", 0, False)
 
     ##  Method for the keyboard controller
     #

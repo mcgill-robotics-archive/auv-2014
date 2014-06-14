@@ -95,8 +95,8 @@ class PS3Controller(object):
                         z_rise()
 
                 elif anEvent.type == pygame.locals.JOYAXISMOTION:
-                    vel_vars.x_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(0)  # left left/right axis
-                    vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
+                    vel_vars.y_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(0)  # left left/right axis
+                    vel_vars.x_velocity = -vel_vars.MAX_LINEAR_VEL*self.controller.get_axis(1)  # left front/back axis
                     vel_vars.yaw_velocity = -vel_vars.MAX_YAW_VEL*self.controller.get_axis(2)  # right left/right axis
 
 
