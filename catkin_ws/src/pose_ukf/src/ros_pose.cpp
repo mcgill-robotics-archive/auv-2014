@@ -1,3 +1,8 @@
+/* Ros node for pose estimation algorithm
+ *
+ * Author: Max Krogius
+ */
+
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
 #include "geometry_msgs/PoseStamped.h"
@@ -5,7 +10,7 @@
 #include "geometry_msgs/Quaternion.h"
 #include "sensor_msgs/Imu.h"
 
-#include "ukf.h"
+#include "pose_ukf.h"
 
 ros::Publisher pub;
 ros::Subscriber sub;

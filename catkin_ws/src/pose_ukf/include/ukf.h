@@ -1,13 +1,12 @@
 #ifndef UKF_H_
 #define UKF_H_
 
-void h(double *sigma, double *gamma);
-void propogate(double* rotation, double* state);
-
 class ukf
 {
 	public:
     	ukf(int dim);
+    	ukf(int dim, double initialVariance
+    	   ,double processVariance, double measurementVariance);
     	void update(double* acc, double* gyro, double* quaternion);
 
 	private:
@@ -19,6 +18,7 @@ class ukf
     	double* crossCovar;
     	double* sigmas;
     	double* gammas;
+    	void init(int dim);
     	void predict(double rotation[3]);
     	void correct(double acc[3]);
     	void generateSigmas();

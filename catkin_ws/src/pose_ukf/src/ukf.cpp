@@ -1,50 +1,52 @@
 #include "ukf.h"
 #include "matrix_utils.h"
 #include "rotation_vector_utils.h"
-#include <math.h>
-#include <stdio.h>
-
-//Length of the state vector
-const double INITIAL_COVARIANCE = 0.0000001;
-const double PROCESS_VARIANCE = 0.00000004;
-const double MEASUREMENT_VARIANCE = 0.025;
+//#include <math.h>
 
 
 
-void prettyPrint(double* augCovar, int dim1, int dim2)
+void ukf::init(int dim):augState(new double[2*DIM+7*DIM*DIM]())
 {
-	for(int i = 0; i < dim1; i++)
-	{
-		for(int j = 0; j < dim2; j++)
-		{
-			printf("%e,", augCovar[i*dim2+j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
+	DIM = dim;
+
+	//initialize our state, covariance, and sigmas
+	augCovar = augState + DIM*sizeof(double);
+	sigmas = augCovar + DIM*DIM*sizeof(double);
+	gammas = gammas + 2*DIM*DIM*sizeof(double);
+	predMsmt = gammas + 2*DIM*DIM*sizeof(double);
+	measCovar = predMsmt + DIM*sizeof(double);
+	crossCovar = measCovar + DIM*DIM*sizeof(double);
+
 }
 
 ukf::ukf(int dim)
 {
-	DIM = dim;
+	init(dim);
+}
 
-	// Create our initial pose estimate and covariance
-	// Our internal representation of pose has to be a rotation vector since
-	// that is the only chart on SO(3) which is a vector
+ukf::ukf(int dim, double initialVariance
+		,double processVariance, double measurementVariance)
+{
+	init(dim);
 
-	//initialize our state, covariance, and sigmas
-	augState = new double[DIM]();
-	augCovar = new double[DIM*DIM]();
-	sigmas = new double[2*DIM*DIM]();
-	gammas = new double[2*DIM*DIM]();
-	predMsmt = new double[DIM]();
-	measCovar = new double[DIM*DIM]();
-	crossCovar = new double[DIM*DIM]();
+	const double[] INITIAL_COVARIANCE_MAT = {initialVariance,0,0
+											,0,initialVariance,0
+											,0,0,initialVariance};
+	const double[] PROCESS_VARIANCE_MAT = {processVariance,0,0
+										  ,0,processVariance,0
+										  ,0,0,processVariance};
 
-	//They are hopefully now set to zero
+	const double[] MEASUREMENT_VARIANCE_MAT = {measurementVariance,0,0
+											  ,0,measurementVariance,0
+											  ,0,0,measurementVariance};
 
-	//Now we need to set our initial covariance
-	diagonalMatrix(INITIAL_COVARIANCE, augCovar, DIM);
+	setCovariance(INITIAL_COVARIANCE_MAT);
+	setProcessVariance(PROCESS_VARIANCE_MAT);
+	setMeasurementVariance(MEASUREMENT_VARIANCE_MAT);
+}
+
+void ukf::setCovariance(const double covariance[DIM])
+{
 
 }
 
@@ -53,10 +55,8 @@ void ukf::generateSigmas()
 	//Here we generate 2*DIM states distributed on
 	//a hypersphere around augPose
 
-	//This writes the square root of covar into the first DIM sigmas
+	//This writes the square root of covar into the first $DIM sigmas
 	cholesky(augCovar, sigmas, DIM);
-
-	//prettyPrint(sigmas, DIM, DIM);
 
 	//Now we make a copy of it into the second
 	vectorCopy(sigmas, &(sigmas[DIM*DIM]), DIM*DIM);
@@ -73,28 +73,7 @@ void ukf::generateSigmas()
 	//of the matrix square root of augCovar
 }
 
-void propogate(double *rotation, double* state)
-{
-	//double rotationEarth[3] = {-rotation[0], -rotation[1], -rotation[2]};
-	double result[3] = {};
-	double tau = 2*3.141592653589793238462643383279502884197169399375105820974944;
 
-	composeRotations(rotation, state, result);
-
-	double angle = norm(result);
-	if (angle != 0)
-	{
-		scaleVector(1/angle, result, 3);
-	}
-
-	//We want to choose the rotation vector closest to sigma
-	angle += tau*floor(0.5 + (dot(state, result)-angle)/tau);
-
-	for (int j = 0; j < 3; j++)
-	{
-		state[j] = angle * result[j];
-	}
-}
 
 void ukf::recoverPrediction()
 {
@@ -122,13 +101,7 @@ void ukf::predict(double rotation[3])
 	//prettyPrint(augCovar, DIM, DIM);
 }
 
-void h(double *sigma, double *gamma)
-{
-	double gravity[] = {0, 0, 9.8};
-	double inverted[3] = {};
-	inverse(sigma, inverted);
-	rotateThisByThat(gravity, inverted, gamma);
-}
+
 
 void ukf::correct(double acc[3])
 {
