@@ -315,7 +315,7 @@ std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Ma
 		}
 	}
 
-	//cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
+	cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
 
 	if (parent.get_front_using_helpers()) {
 		cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
