@@ -310,12 +310,12 @@ std::vector<std::vector<cv::Point> > Gate::findContoursFromHSVFrame(const cv::Ma
 			(src[i] >= params.hue_range2_begin && src[i] <= params.hue_range2_end)) &&
 			(src[i + 2] >= params.value_range_begin && src[i + 2] <= params.value_range_end) ) {
 			*dst = 255;
+		} else {
+			*dst = 0;
 		}
 	}
 
-
-	//cv::inRange(frameInHSV, start, end, inRangeHSVFrame);
-	cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
+	//cv::dilate(inRangeHSVFrame, inRangeHSVFrame, cv::Mat(), cv::Point(-1, -1), 4);
 
 	if (parent.get_front_using_helpers()) {
 		cv::imshow(COLOR_THRESH_WINDOW, inRangeHSVFrame);
