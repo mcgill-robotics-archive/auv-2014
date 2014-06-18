@@ -33,12 +33,12 @@ void Task_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
-	myPlanner->setVelocity(.1, 0, 0, 8.8, frame);
+	myPlanner->setVelocity(1, 0, 0, 8.8, frame);
 	loop_rate.sleep();
 	tf::TransformListener listener;
 	try {
 		listener.waitForTransform(frame, "/robot/rotation_center",
-			ros::Time(0), ros::Duration(10));
+			ros::Time(0), ros::Duration(90));
 	} catch (tf::TransformException ex) {
 		myPlanner->weAreLost(myPlanner->Gate_A, 1);
 	}

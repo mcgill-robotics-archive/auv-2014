@@ -10,6 +10,7 @@ class Lost_Gate: public Task{
 
 	private:
 		void phase1();	
+		void phase0();
 };
 
 #endif

@@ -21,4 +21,22 @@ void Lost_Lane::execute() {
 }
 
 void Lost_Lane::phase1() {
+	ros::Rate loop_rate(50);
+	loop_rate.sleep();
+
+	myStatusUpdater->updateStatus(myStatusUpdater->lost_lane1);
+	loop_rate.sleep();
+
+	myPlanner->setVisionObj(2);
+	loop_rate.sleep();
+	
+	myPlanner->setVelocity(-1, 0, 0, 8.8, "/target/lane");
+	loop_rate.sleep();
+	tf::TransformListener listener;
+	try {
+		listener.waitForTransform("/target/lane", "/robot/rotation_center",
+			ros::Time(0), ros::Duration(10));
+	} catch (tf::TransformException ex) {
+		myPlanner->switchToTask(myPlanner->Lane);
+	}
 }
