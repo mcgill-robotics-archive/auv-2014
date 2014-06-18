@@ -23,11 +23,10 @@ except:
     exit(1)
 
 # USEFUL CONSTANTS
-FREQUENCY_RANGE = 100       # RANGE OFF TARGET TO MONITOR   Hz
+RANGE = 2
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
-TIME_PER_INDEX = 1 / SAMPLING_FREQUENCY
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
-RANGE = int(round(FREQUENCY_RANGE / FREQUENCY_PER_INDEX))
+LABELS = ['I', 'II', 'III', 'IV']
 
 # SET UP NODE
 rospy.init_node('table')
@@ -46,7 +45,8 @@ curses.init_pair(2,curses.COLOR_WHITE,curses.COLOR_BLUE)    # SUCCESS
 curses.init_pair(3,curses.COLOR_BLACK,curses.COLOR_WHITE)   # HEADING
 
 # STORE DATA
-magn = [np.zeros(BUFFERSIZE/2 + 1) for i in range(NUMBER_OF_MICS)]
+magn = [np.zeros(BUFFERSIZE/2 + 1) for channel in range(NUMBER_OF_MICS)]
+peak = [0 for channel in range(NUMBER_OF_MICS)]
 
 
 def update_magnitudes(data):
@@ -57,20 +57,29 @@ def update_magnitudes(data):
     magn[3] = data.channel_3
 
 
+def update_peaks(data):
+    """ Parses peak frequencies """
+    peak[0] = data.channel_0
+    peak[1] = data.channel_1
+    peak[2] = data.channel_2
+    peak[3] = data.channel_3
+
+
 def analyze():
     """ Monitors target frequency and prints table """
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
     screen.addstr(0, 0, target)
 
-    header = '\n%s\t%s\t%s\t\n\n' % (' MIC', 'FREQUENCY', 'MAGNITUDE')
+    header = '\n %s\t%s\t%s\t\n\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE')
     screen.addstr(header, curses.color_pair(3))
 
-    for i in range(NUMBER_OF_MICS):
-        for j in range(TARGET_INDEX - RANGE,
-                       TARGET_INDEX + RANGE + 1):
-            value = ' %d\t%5d Hz\t%+4.2f\tdB\n' % \
-                    (i, j * FREQUENCY_PER_INDEX, magn[i][j])
-            screen.addstr(value)
+    for channel in range(NUMBER_OF_MICS):
+        for i in range(TARGET_INDEX - RANGE, TARGET_INDEX + RANGE + 1):
+            label = LABELS[channel]
+            freq = i * FREQUENCY_PER_INDEX
+            amplitude = magn[channel][i]
+            string = ' %s\t%5d Hz\t%+4.2f dB \n' % (label, freq, amplitude)
+            screen.addstr(string)
 
         screen.addstr('\n')
 
@@ -78,17 +87,18 @@ def analyze():
 def maximize():
     """ Finds max frequency and prints table """
     screen.addstr(' MAX\t\t\t\t\t\n\n', curses.color_pair(3))
-    for i in range(NUMBER_OF_MICS):
-        max = np.argmax(magn[i])
+    for channel in range(NUMBER_OF_MICS):
+        peak_index = int(peak[channel] / FREQUENCY_PER_INDEX)
 
         state = 0
-        if ((max >= TARGET_INDEX - RANGE) and
-            (max <= TARGET_INDEX + RANGE)):
+        if np.abs(peak_index - TARGET_INDEX) <= RANGE:
             state = 2
 
-        value = ' %d\t%5d Hz\t%+4.2f\tdB\n' % \
-                (i, max * FREQUENCY_PER_INDEX, magn[i][max])
-        screen.addstr(value, curses.color_pair(state))
+        label = LABELS[channel]
+        freq = peak[channel]
+        amplitude = magn[channel][peak_index]
+        string = ' %s\t%5d Hz\t%+4.2f dB \n' % (label, freq, amplitude)
+        screen.addstr(string, curses.color_pair(state))
 
 
 def update_visualization():
@@ -105,6 +115,7 @@ def update_visualization():
 if __name__ == '__main__':
     try:
         rospy.Subscriber('/hydrophones/magn',channels,update_magnitudes)
+        rospy.Subscriber('/hydrophones/peak',peaks,update_peaks)
 
         while not rospy.is_shutdown():
             update_visualization()
