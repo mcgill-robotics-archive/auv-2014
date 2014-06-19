@@ -35,11 +35,14 @@ curses.echo()
 curses.cbreak()
 
 height = NUMBER_OF_MICS * (2 * RANGE + 4)
-freq_table = curses.newwin(height, 50, 2, 5)
-freq_table.clear()
+left_column = curses.newwin(height, 50, 2, 5)
+left_column.clear()
 
-sol_table = curses.newwin(height, 50, 2, 55)
-sol_table.clear()
+right_column = curses.newwin(height, 50, 2, 55)
+right_column.clear()
+
+bottom = curses.newwin(3, 100, height, 5)
+bottom.clear()
 
 curses.start_color()
 curses.use_default_colors()
@@ -50,6 +53,7 @@ curses.init_pair(3,curses.COLOR_BLACK,curses.COLOR_WHITE)   # HEADING
 # STORE DATA
 magn = [np.zeros(BUFFERSIZE/2 + 1) for channel in range(NUMBER_OF_MICS)]
 peak = [0 for channel in range(NUMBER_OF_MICS)]
+dt = [0 for channel in range(NUMBER_OF_MICS-1)]
 sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
 
 
@@ -67,6 +71,13 @@ def update_peaks(data):
     peak[1] = data.channel_1
     peak[2] = data.channel_2
     peak[3] = data.channel_3
+
+
+def update_tdoas(data):
+    """ Parses TDOAs """
+    dt[0] = data.tdoa_1
+    dt[1] = data.tdoa_2
+    dt[2] = data.tdoa_3
 
 
 def update_solution(data):
@@ -90,10 +101,10 @@ def frequency_table():
     TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
-    freq_table.addstr(0, 0, target)
+    left_column.addstr(0, 0, target)
 
     header = '\n %s\t%s\t%s\t\n\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE')
-    freq_table.addstr(header, curses.color_pair(3))
+    left_column.addstr(header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS):
         for i in range(TARGET_INDEX - RANGE, TARGET_INDEX + RANGE + 1):
@@ -101,14 +112,17 @@ def frequency_table():
             freq = i * FREQUENCY_PER_INDEX
             amplitude = magn[channel][i]
             string = ' %s\t%5d Hz\t%+4.2f dB \n' % (label, freq, amplitude)
-            freq_table.addstr(string)
+            left_column.addstr(string)
 
-        freq_table.addstr('\n')
+        left_column.addstr('\n')
 
+    left_column.refresh()
+
+
+def peak_table():
+    """ Draws table of peak frequencies """
     header = ' MAX FREQUENCIES\t\t\t\n\n'
-    sol_table.addstr(2, 0, header, curses.color_pair(3))
-
-    freq_table.refresh()
+    right_column.addstr(2, 0, header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS):
         peak_index = int(peak[channel] / FREQUENCY_PER_INDEX)
@@ -121,9 +135,21 @@ def frequency_table():
         freq = peak[channel]
         amplitude = magn[channel][peak_index]
         string = ' %s\t%5d Hz\t%+4.2f dB\t\n' % (label, freq, amplitude)
-        sol_table.addstr(string, curses.color_pair(state))
+        right_column.addstr(string, curses.color_pair(state))
 
-    sol_table.refresh()
+    right_column.refresh()
+
+
+def tdoa_table():
+    """ Draws table of solutions """
+    header = '\n TDOA\t\t\t\t\t\n\n'
+    right_column.addstr(header, curses.color_pair(3))
+
+    for channel in range(NUMBER_OF_MICS-1):
+        string = ' %s\t\t%+1.9f\t\t\n' % (LABELS[channel], dt[channel])
+        right_column.addstr(string)
+
+    right_column.refresh()
 
 
 def solution_table():
@@ -145,18 +171,20 @@ def solution_table():
         if sol[pinger]['new']:
             state = 2
 
-        sol_table.addstr(header[pinger], curses.color_pair(3))
-        sol_table.addstr(x[pinger], curses.color_pair(state))
-        sol_table.addstr(y[pinger], curses.color_pair(state))
-        sol_table.addstr(r[pinger], curses.color_pair(state))
-        sol_table.addstr(theta[pinger], curses.color_pair(state))
+        right_column.addstr(header[pinger], curses.color_pair(3))
+        right_column.addstr(x[pinger], curses.color_pair(state))
+        right_column.addstr(y[pinger], curses.color_pair(state))
+        right_column.addstr(r[pinger], curses.color_pair(state))
+        right_column.addstr(theta[pinger], curses.color_pair(state))
 
-    sol_table.refresh()
+    right_column.refresh()
 
 
 def update_visualization():
     """ Updates visualization """
     frequency_table()
+    peak_table()
+    tdoa_table()
     solution_table()
 
 
@@ -164,6 +192,7 @@ if __name__ == '__main__':
     try:
         rospy.Subscriber('/hydrophones/magn',channels,update_magnitudes)
         rospy.Subscriber('/hydrophones/peak',peaks,update_peaks)
+        rospy.Subscriber('/hydrophones/tdoa',tdoa,update_tdoas)
         rospy.Subscriber('/hydrophones/sol',solution,update_solution)
 
         while not rospy.is_shutdown():
@@ -173,8 +202,8 @@ if __name__ == '__main__':
         pass
 
     try:
-        freq_table.addstr(' GOODBYE\t\t\t\t\n\n', curses.color_pair(1))
-        freq_table.refresh()
+        bottom.addstr(' GOODBYE\t\t\t\t\t\t\t\t\t\t  \n\n', curses.color_pair(1))
+        bottom.refresh()
         time.sleep(1)
 
     finally:
