@@ -55,6 +55,7 @@ magn = [np.zeros(BUFFERSIZE/2 + 1) for channel in range(NUMBER_OF_MICS)]
 peak = [0 for channel in range(NUMBER_OF_MICS)]
 dt = [0 for channel in range(NUMBER_OF_MICS-1)]
 sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
+sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
 
 
 def update_magnitudes(data):
@@ -94,12 +95,23 @@ def update_solution(data):
     sol[1-pinger]['new'] = False
 
 
-def frequency_table():
-    """ Draws table of relevant frequencies """
-    global TARGET_FREQUENCY, TARGET_INDEX
+def update_parameters():
+    global SIMULATION, TARGET_FREQUENCY, TARGET_INDEX
+    SIMULATION = param.get_simulation_state()
     TARGET_FREQUENCY = param.get_target_frequency()
     TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 
+    sim_sol[0]['x'],sim_sol[0]['y'] = param.get_simulation_target()
+    sim_sol[1]['x'],sim_sol[1]['y'] = param.get_simulation_dummy()
+
+    for pinger in range(2):
+        x,y = sim_sol[pinger]['x'],sim_sol[pinger]['y']
+        sim_sol[pinger]['r'] = np.sqrt(x**2 + y**2)
+        sim_sol[pinger]['theta'] = np.degrees(np.arctan2(y,x))
+
+
+def frequency_table():
+    """ Draws table of relevant frequencies """
     target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
     left_column.addstr(0, 0, target)
 
@@ -121,7 +133,7 @@ def frequency_table():
 
 def peak_table():
     """ Draws table of peak frequencies """
-    header = ' MAX FREQUENCIES\t\t\t\n\n'
+    header = ' PEAKS\t\t\t\t\t\n\n'
     right_column.addstr(2, 0, header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS):
@@ -154,34 +166,43 @@ def tdoa_table():
 
 def solution_table():
     """ Draws table of solutions """
-    global SIMULATION
-    SIMULATION = param.get_simulation_state()
-
     x, y, r, theta = [], [], [], []
     for pinger in range(2):
         x.append(' X\t\t%4.2f\t\t\t\n' % (sol[pinger]['x']))
         y.append(' Y\t\t%4.2f\t\t\t\n' % (sol[pinger]['y']))
         r.append(' R\t\t%4.2f\t\t\t\n' % (sol[pinger]['r']))
-        theta.append(' Theta\t\t%4.2f\t\t\t\n' % (sol[pinger]['theta']))
+        theta.append(' THETA\t\t%4.2f\t\t\t\n' % (sol[pinger]['theta']))
 
-    header = ['\n TARGET SOLUTION\t\t\t\n\n', '\n DUMMY SOLUTION\t\t\t\t\n\n']
+    header = ['\n TARGET\t\t\t\t', '\n DUMMY\t\t\t\t']
 
     for pinger in range(2):
-        state = 0
+        state = [3, 0, 0, 0, 0]
         if sol[pinger]['new']:
-            state = 2
+            header[pinger] += '    NEW\t\n\n'
+        else:
+            header[pinger] += '\t\n\n'
+        if SIMULATION:
+            if np.abs(sol[pinger]['x'] - sim_sol[pinger]['x']) <= 5:
+                state[1] = 2
+            if np.abs(sol[pinger]['y'] - sim_sol[pinger]['y']) <= 5:
+                state[2] = 2
+            if np.abs(sol[pinger]['r'] - sim_sol[pinger]['r']) <= 5:
+                state[3] = 2
+            if np.abs(sol[pinger]['theta'] - sim_sol[pinger]['theta']) <= 1:
+                state[4] = 2
 
-        right_column.addstr(header[pinger], curses.color_pair(3))
-        right_column.addstr(x[pinger], curses.color_pair(state))
-        right_column.addstr(y[pinger], curses.color_pair(state))
-        right_column.addstr(r[pinger], curses.color_pair(state))
-        right_column.addstr(theta[pinger], curses.color_pair(state))
+        right_column.addstr(header[pinger], curses.color_pair(state[0]))
+        right_column.addstr(x[pinger], curses.color_pair(state[1]))
+        right_column.addstr(y[pinger], curses.color_pair(state[2]))
+        right_column.addstr(r[pinger], curses.color_pair(state[3]))
+        right_column.addstr(theta[pinger], curses.color_pair(state[4]))
 
     right_column.refresh()
 
 
 def update_visualization():
     """ Updates visualization """
+    update_parameters()
     frequency_table()
     peak_table()
     tdoa_table()
