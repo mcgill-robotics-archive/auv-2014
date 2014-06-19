@@ -1,0 +1,5 @@
+<launch>
+    <group ns="hydrophones">
+        <node name="table" pkg="hydrophones" type="table_visualizer.py" respawn="false" output="screen"/>
+    </group>
+</launch>

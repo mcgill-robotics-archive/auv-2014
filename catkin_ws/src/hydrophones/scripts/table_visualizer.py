@@ -34,14 +34,17 @@ curses.initscr()
 curses.echo()
 curses.cbreak()
 
-height = NUMBER_OF_MICS * (2 * RANGE + 4)
-left_column = curses.newwin(height, 50, 2, 5)
+top = curses.newwin(4, 100, 2, 5)
+top.clear()
+
+height = NUMBER_OF_MICS * (2 * RANGE + 3) + 1
+left_column = curses.newwin(height, 50, 6, 5)
 left_column.clear()
 
-right_column = curses.newwin(height, 50, 2, 55)
+right_column = curses.newwin(height, 50, 6, 55)
 right_column.clear()
 
-bottom = curses.newwin(3, 100, height, 5)
+bottom = curses.newwin(3, 100, height + 4, 5)
 bottom.clear()
 
 curses.start_color()
@@ -57,7 +60,7 @@ dt = [0 for channel in range(NUMBER_OF_MICS-1)]
 sim_dt = [0 for channel in range(NUMBER_OF_MICS-1)]
 sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
 sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
-
+last_ping = [time.time() for pinger in range(2)]
 
 def update_magnitudes(data):
     """ Parses frequency amplitudes """
@@ -109,8 +112,9 @@ def update_parameters():
     TARGET_FREQUENCY = param.get_target_frequency()
     TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 
-    sim_sol[0]['x'],sim_sol[0]['y'] = param.get_simulation_target()
-    sim_sol[1]['x'],sim_sol[1]['y'] = param.get_simulation_dummy()
+    if SIMULATION:
+        sim_sol[0]['x'],sim_sol[0]['y'] = param.get_simulation_target()
+        sim_sol[1]['x'],sim_sol[1]['y'] = param.get_simulation_dummy()
 
     for pinger in range(2):
         x,y = sim_sol[pinger]['x'],sim_sol[pinger]['y']
@@ -118,13 +122,19 @@ def update_parameters():
         sim_sol[pinger]['theta'] = np.degrees(np.arctan2(y,x))
 
 
+def header_table():
+    """ Draws header table """
+    header = 'HYDROPHONES MONITOR'
+    top.addstr(0, 0, header.center(90), curses.color_pair(3))
+    target = 'MONITORING %4d Hz' % (TARGET_FREQUENCY)
+    top.addstr(2, 0, target.center(90))
+    top.refresh()
+
+
 def frequency_table():
     """ Draws table of relevant frequencies """
-    target = 'TARGET\t  %4d Hz\n' % (TARGET_FREQUENCY)
-    left_column.addstr(0, 0, target)
-
-    header = '\n %s\t%s\t%s\t\n\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE')
-    left_column.addstr(header, curses.color_pair(3))
+    header = ' %s\t%s\t%s\t\n\n' % ('MIC', 'FREQUENCY', 'MAGNITUDE')
+    left_column.addstr(0, 0, header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS):
         for i in range(TARGET_INDEX - RANGE, TARGET_INDEX + RANGE + 1):
@@ -141,8 +151,8 @@ def frequency_table():
 
 def peak_table():
     """ Draws table of peak frequencies """
-    header = ' PEAKS\t\t\t\t\t\n\n'
-    right_column.addstr(2, 0, header, curses.color_pair(3))
+    header = ' PEAK FREQUENCY\t\t\t\t\n\n'
+    right_column.addstr(0, 0, header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS):
         peak_index = int(peak[channel] / FREQUENCY_PER_INDEX)
@@ -162,7 +172,7 @@ def peak_table():
 
 def tdoa_table():
     """ Draws table of solutions """
-    header = '\n TDOA\t\t\t\t\t\n\n'
+    header = '\n TIME DIFFERENCE OF ARRIVAL\t\t\n\n'
     right_column.addstr(header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS-1):
@@ -170,7 +180,7 @@ def tdoa_table():
         if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 2e-6:
             state = 2
 
-        string = ' %s\t\t%+1.9f\t\t\n' % (LABELS[channel], dt[channel])
+        string = ' %s\t\t\t%+1.9f\t\n' % (LABELS[channel], dt[channel])
         right_column.addstr(string, curses.color_pair(state))
 
     right_column.refresh()
@@ -180,23 +190,26 @@ def solution_table():
     """ Draws table of solutions """
     x, y, r, theta = [], [], [], []
     for pinger in range(2):
-        x.append(' X\t\t%4.2f\t\t\t\n' % (sol[pinger]['x']))
-        y.append(' Y\t\t%4.2f\t\t\t\n' % (sol[pinger]['y']))
-        r.append(' R\t\t%4.2f\t\t\t\n' % (sol[pinger]['r']))
-        theta.append(' THETA\t\t%4.2f\t\t\t\n' % (sol[pinger]['theta']))
+        x.append(' X\t\t\t%+4.3f\t\t\n' % (sol[pinger]['x']))
+        y.append(' Y\t\t\t%+4.3f\t\t\n' % (sol[pinger]['y']))
+        r.append(' R\t\t\t%+4.3f\t\t\n' % (sol[pinger]['r']))
+        theta.append(' THETA\t\t\t%+4.3f\t\t\n' % (sol[pinger]['theta']))
 
-    header = ['\n TARGET\t\t\t\t', '\n DUMMY\t\t\t\t']
+    header = ['\n TARGET PINGER\t\t', '\n DUMMY PINGER\t\t']
 
     for pinger in range(2):
         state = [3, 0, 0, 0, 0]
         if sol[pinger]['new']:
-            header[pinger] += '    NEW\t\n\n'
-        else:
-            header[pinger] += '\t\n\n'
+            last_ping[pinger] = time.time()
+            sol[pinger]['new'] = False
+
+        timer = '%1.1f' % (time.time() - last_ping[pinger])
+        header[pinger] += '   %s s \n\n' % (timer.rjust(10))
+
         if SIMULATION:
-            if np.abs(sol[pinger]['x'] - sim_sol[pinger]['x']) <= 5:
+            if np.abs(sol[pinger]['x'] - sim_sol[pinger]['x']) <= 1:
                 state[1] = 2
-            if np.abs(sol[pinger]['y'] - sim_sol[pinger]['y']) <= 5:
+            if np.abs(sol[pinger]['y'] - sim_sol[pinger]['y']) <= 1:
                 state[2] = 2
             if np.abs(sol[pinger]['r'] - sim_sol[pinger]['r']) <= 5:
                 state[3] = 2
@@ -215,6 +228,7 @@ def solution_table():
 def update_visualization():
     """ Updates visualization """
     update_parameters()
+    header_table()
     frequency_table()
     peak_table()
     tdoa_table()
@@ -232,11 +246,12 @@ if __name__ == '__main__':
         while not rospy.is_shutdown():
             update_visualization()
 
-    except rospy.ROSInterruptException:
-        pass
+    except Exception as e:
+        bottom.addstr(str(e).center(90), curses.color_pair(1))
+        bottom.addstr('\n\n')
 
     try:
-        bottom.addstr(' GOODBYE\t\t\t\t\t\t\t\t\t\t  \n\n', curses.color_pair(1))
+        bottom.addstr('GOODBYE'.center(90), curses.color_pair(1))
         bottom.refresh()
         time.sleep(1)
 
