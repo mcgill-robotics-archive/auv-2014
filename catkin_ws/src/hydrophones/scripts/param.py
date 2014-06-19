@@ -116,14 +116,24 @@ def get_simulation_dummy():
 
 def get_snr():
     """ Returns signal-to-noise ratio """
-    while not rospy.has_param('/hydrophones/sim'):
+    while not rospy.has_param('/hydrophones/sim/SNR'):
         pass
 
     return rospy.get_param('/hydrophones/sim/SNR')
 
 
+def get_simulation_state():
+    """ Returns state of simulation """
+    while not rospy.has_param('/hydrophones/sim/state'):
+        pass
+
+    return rospy.get_param('/hydrophones/sim/state')
+
+
 def set_simulation_parameters():
     """ Creates and sets ROS simulation parameters """
+    rospy.set_param('/hydrophones/sim/state',True)
+
     rospy.set_param('/hydrophones/sim/target/x',TARGET_PINGER[0])
     rospy.set_param('/hydrophones/sim/target/y',TARGET_PINGER[1])
     rospy.set_param('/hydrophones/sim/dummy/x',DUMMY_PINGER[0])
@@ -133,6 +143,8 @@ def set_simulation_parameters():
 
 def set_parameters():
     """ Creates and sets default ROS parameters """
+    rospy.set_param('/hydrophones/sim/state',False)
+
     rospy.set_param('/hydrophones/buffersize',BUFFERSIZE)
     rospy.set_param('/hydrophones/number_of_mics',NUMBER_OF_MICS)
     rospy.set_param('/hydrophones/speed',SPEED)
