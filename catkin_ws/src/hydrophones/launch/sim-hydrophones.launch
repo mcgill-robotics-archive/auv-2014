@@ -4,7 +4,7 @@
         <node name="param" pkg="hydrophones" type="param.py" respawn="false" output="screen"/>
 
         <!-- audio -->
-        <node name="audio" pkg="hydrophones" type="sim_audio.py" respawn="false" output="screen"/>
+        <node name="sim_audio" pkg="hydrophones" type="sim_audio.py" respawn="false" output="screen"/>
 
         <!-- tdoa -->
         <node name="sim_tdoa" pkg="hydrophones" type="sim_tdoa.py" respawn="false" output="screen"/>
