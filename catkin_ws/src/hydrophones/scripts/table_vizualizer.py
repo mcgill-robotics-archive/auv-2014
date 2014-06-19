@@ -54,6 +54,7 @@ curses.init_pair(3,curses.COLOR_BLACK,curses.COLOR_WHITE)   # HEADING
 magn = [np.zeros(BUFFERSIZE/2 + 1) for channel in range(NUMBER_OF_MICS)]
 peak = [0 for channel in range(NUMBER_OF_MICS)]
 dt = [0 for channel in range(NUMBER_OF_MICS-1)]
+sim_dt = [0 for channel in range(NUMBER_OF_MICS-1)]
 sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
 sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
 
@@ -79,6 +80,13 @@ def update_tdoas(data):
     dt[0] = data.tdoa_1
     dt[1] = data.tdoa_2
     dt[2] = data.tdoa_3
+
+
+def update_sim_tdoas(data):
+    """ Parses simulation TDOAs """
+    sim_dt[0] = data.tdoa_1
+    sim_dt[1] = data.tdoa_2
+    sim_dt[2] = data.tdoa_3
 
 
 def update_solution(data):
@@ -158,8 +166,12 @@ def tdoa_table():
     right_column.addstr(header, curses.color_pair(3))
 
     for channel in range(NUMBER_OF_MICS-1):
+        state = 0
+        if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 2e-6:
+            state = 2
+
         string = ' %s\t\t%+1.9f\t\t\n' % (LABELS[channel], dt[channel])
-        right_column.addstr(string)
+        right_column.addstr(string, curses.color_pair(state))
 
     right_column.refresh()
 
@@ -214,6 +226,7 @@ if __name__ == '__main__':
         rospy.Subscriber('/hydrophones/magn',channels,update_magnitudes)
         rospy.Subscriber('/hydrophones/peak',peaks,update_peaks)
         rospy.Subscriber('/hydrophones/tdoa',tdoa,update_tdoas)
+        rospy.Subscriber('/hydrophones/sim/tdoa',tdoa,update_sim_tdoas)
         rospy.Subscriber('/hydrophones/sol',solution,update_solution)
 
         while not rospy.is_shutdown():
