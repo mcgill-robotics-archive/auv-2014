@@ -16,7 +16,7 @@ try:
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
     TARGET_FREQUENCY = param.get_target_frequency()
     FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
-    DIVISION = 5
+    DIVISION = 6
 except:
     print 'ROS NOT RUNNING'
     exit(1)
@@ -27,14 +27,15 @@ rate = rospy.Rate(SAMPLING_FREQUENCY/BUFFERSIZE)
 peak = [0 for channel in range(NUMBER_OF_MICS)]
 data = [[] for channel in range(NUMBER_OF_MICS)]
 magn = [[] for channel in range(NUMBER_OF_MICS)]
+temp_magn = [[] for channel in range(NUMBER_OF_MICS)]
 
 # SET UP CURSES
 curses.initscr()
 curses.echo()
 curses.cbreak()
 HEIGHT = 40
-WIDTH = 115
-screen = curses.newwin(HEIGHT, WIDTH, 0, 3)
+WIDTH = 90
+screen = curses.newwin(HEIGHT, WIDTH, 2, 5)
 screen.clear()
 curses.start_color()
 curses.use_default_colors()
@@ -51,23 +52,24 @@ def update_magn(magnitudes):
     data[3] = magnitudes.channel_3
 
     for channel in range(NUMBER_OF_MICS):
-        magn[channel] = []
+        temp_magn[channel] = []
         sum = 0
         for frequency in range(len(data[channel])):
             sum += data[channel][frequency]
             if frequency % DIVISION == 0:
-                magn[channel].append(sum / DIVISION)
+                temp_magn[channel].append(sum)
                 sum = 0
+        magn[channel] = temp_magn[channel]
 
 
 def plot():
     """ Updates vizualization """
-    screen.clear()
-
     for x in range(len(magn[0])):
         for y in range(HEIGHT-1):
-            if magn[0][x] > 5*(HEIGHT-y):
-                screen.addch(y,x,ord('#'))
+            if magn[0][x] > 2*DIVISION*(HEIGHT-y):
+                screen.addch(y,x,ord(' '),curses.color_pair(3))
+            else:
+                screen.addch(y,x,ord(' '))
 
     screen.refresh()
 
