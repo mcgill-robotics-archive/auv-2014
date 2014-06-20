@@ -20,9 +20,7 @@ try:
     NUMBER_OF_MICS = param.get_number_of_mics()
     POS = param.get_mic_positions()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
-    SNR = param.get_snr()
     SPEED = param.get_speed()
-    TARGET_FREQUENCY = param.get_target_frequency()
 except:
     print 'ROS NOT RUNNING'
     exit(1)
@@ -39,7 +37,8 @@ time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 def create_signal(dt):
     """ Creates time shifted signal """
-    global TARGET_FREQUENCY
+    global SNR, TARGET_FREQUENCY
+    SNR = param.get_snr()
     TARGET_FREQUENCY = param.get_target_frequency()
 
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
