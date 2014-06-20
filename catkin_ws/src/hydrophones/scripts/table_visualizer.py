@@ -23,6 +23,7 @@ except:
 
 # USEFUL CONSTANTS
 RANGE = 2
+NUMBER_OF_PINGERS = 2
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 LABELS = ['I', 'II', 'III', 'IV']
 
@@ -34,19 +35,24 @@ curses.initscr()
 curses.echo()
 curses.cbreak()
 
-top = curses.newwin(4, 100, 2, 5)
+# SET UP HEADER
+top = curses.newwin(6, 100, 2, 5)
 top.clear()
 
+# SET UP LEFT COLUMN
 height = NUMBER_OF_MICS * (2 * RANGE + 3) + 1
-left_column = curses.newwin(height, 50, 6, 5)
+left_column = curses.newwin(height, 50, 8, 5)
 left_column.clear()
 
-right_column = curses.newwin(height, 50, 6, 55)
+# SET UP RIGHT COLUMN
+right_column = curses.newwin(height, 50, 8, 55)
 right_column.clear()
 
-bottom = curses.newwin(3, 100, height + 4, 5)
+# SET UP FOOTER
+bottom = curses.newwin(30, 100, height + 6, 5)
 bottom.clear()
 
+# SET UP CURSES COLORS
 curses.start_color()
 curses.use_default_colors()
 curses.init_pair(1,curses.COLOR_BLACK,curses.COLOR_RED)     # WARNING
@@ -58,9 +64,9 @@ magn = [np.zeros(BUFFERSIZE/2 + 1) for channel in range(NUMBER_OF_MICS)]
 peak = [0 for channel in range(NUMBER_OF_MICS)]
 dt = [0 for channel in range(NUMBER_OF_MICS-1)]
 sim_dt = [0 for channel in range(NUMBER_OF_MICS-1)]
-sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
-sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(2)]
-last_ping = [time.time() for pinger in range(2)]
+sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(NUMBER_OF_PINGERS)]
+sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(NUMBER_OF_PINGERS)]
+last_ping = [time.time() for pinger in range(NUMBER_OF_PINGERS)]
 
 def update_magnitudes(data):
     """ Parses frequency amplitudes """
@@ -107,7 +113,7 @@ def update_solution(data):
 
 
 def update_parameters():
-    global SIMULATION, TARGET_FREQUENCY, TARGET_INDEX
+    global SIMULATION, SNR, TARGET_FREQUENCY, TARGET_INDEX
     SIMULATION = param.get_simulation_state()
     TARGET_FREQUENCY = param.get_target_frequency()
     TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
@@ -115,8 +121,9 @@ def update_parameters():
     if SIMULATION:
         sim_sol[0]['x'],sim_sol[0]['y'] = param.get_simulation_target()
         sim_sol[1]['x'],sim_sol[1]['y'] = param.get_simulation_dummy()
+        SNR = param.get_snr()
 
-    for pinger in range(2):
+    for pinger in range(NUMBER_OF_PINGERS):
         x,y = sim_sol[pinger]['x'],sim_sol[pinger]['y']
         sim_sol[pinger]['r'] = np.sqrt(x**2 + y**2)
         sim_sol[pinger]['theta'] = np.degrees(np.arctan2(y,x))
@@ -128,6 +135,12 @@ def header_table():
     top.addstr(0, 0, header.center(90), curses.color_pair(3))
     target = 'MONITORING %4d Hz' % (TARGET_FREQUENCY)
     top.addstr(2, 0, target.center(90))
+    sim_state = 'SIMULATION %s' % ('ON' if SIMULATION else 'OFF')
+    top.addstr(3, 0, sim_state.center(90))
+    if SIMULATION:
+        snr = 'SNR %4.1f dB' % (SNR)
+        top.addstr(4, 0, snr.center(90))
+
     top.refresh()
 
 
@@ -189,7 +202,7 @@ def tdoa_table():
 def solution_table():
     """ Draws table of solutions """
     x, y, r, theta = [], [], [], []
-    for pinger in range(2):
+    for pinger in range(NUMBER_OF_PINGERS):
         x.append(' X\t\t\t%+4.3f\t\t\n' % (sol[pinger]['x']))
         y.append(' Y\t\t\t%+4.3f\t\t\n' % (sol[pinger]['y']))
         r.append(' R\t\t\t%+4.3f\t\t\n' % (sol[pinger]['r']))
@@ -197,7 +210,7 @@ def solution_table():
 
     header = ['\n TARGET PINGER\t\t', '\n DUMMY PINGER\t\t']
 
-    for pinger in range(2):
+    for pinger in range(NUMBER_OF_PINGERS):
         state = [3, 0, 0, 0, 0]
         if sol[pinger]['new']:
             last_ping[pinger] = time.time()
@@ -225,6 +238,19 @@ def solution_table():
     right_column.refresh()
 
 
+def plot():
+    """ Plots frequencies of the first hydrophone """
+    x_length, y_length = 90, 10
+    for x in range(x_length):
+        for y in range(y_length):
+            if magn[0][TARGET_INDEX-x_length/2+x] >= y_length*(y_length-y):
+                bottom.addch(y,x,ord(' '),curses.color_pair(3))
+            else:
+                bottom.addch(y,x,ord(' '))
+
+    bottom.refresh()
+
+
 def update_visualization():
     """ Updates visualization """
     update_parameters()
@@ -233,6 +259,7 @@ def update_visualization():
     peak_table()
     tdoa_table()
     solution_table()
+    plot()
 
 
 if __name__ == '__main__':
@@ -247,10 +274,12 @@ if __name__ == '__main__':
             update_visualization()
 
     except Exception as e:
-        bottom.addstr(str(e).center(90), curses.color_pair(1))
         bottom.addstr('\n\n')
+        bottom.addstr(str(e).center(90), curses.color_pair(1))
+        bottom.addstr('\n')
 
     try:
+        bottom.addstr('\n\n')
         bottom.addstr('GOODBYE'.center(90), curses.color_pair(1))
         bottom.refresh()
         time.sleep(1)
