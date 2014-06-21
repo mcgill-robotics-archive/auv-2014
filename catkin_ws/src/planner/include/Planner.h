@@ -25,6 +25,8 @@
  */
 int const TF_BROADCASTER_TIMOUT_PERIOD = 10;
 
+int const WAIT_TIME_AFTER_GO = 20; //wait time between sending "go" and assuming Ethernet cable has been unplugged
+
 void spinThread();
 void estimatedDepth_callback(const std_msgs::Float64 msg);
 int get_task_id(std::string name);

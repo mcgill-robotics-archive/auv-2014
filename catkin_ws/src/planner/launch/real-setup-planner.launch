@@ -1,4 +1,4 @@
-w<launch>
+<launch>
   <!-- launches: the dependencies for planner in real life but not the planner node itself (aka for front end use)-->
   <!-- WARNING: DOES NOT START PLANNER -->
   <!-- Written by Alex Reiff, May 17, McGill Robotics -->
@@ -6,16 +6,16 @@ w<launch>
 <!-- I don't know if this'll work right, don't hit me -->
 
   <!-- electrical interfaces -->
-  <include file="$(find arduino_msgs)/launch/temp_test.launch">
-  <include file="$(find arduino_msgs)/launch/arduino.launch">
-  <include file="$(find status)/launch/status.launch">
+  <include file="$(find arduino_msgs)/launch/temp_test.launch" />
+  <include file="$(find arduino_msgs)/launch/arduino.launch" />
+  <include file="$(find status)/launch/status.launch" />
 
   <!--control systems -->
   <include file="$(find controls)/launch/controls.launch" />
 
   <!-- computer vision -->
   <include file="$(find computer_vision)/launch/computer_vision.launch" >
-    <arg name="isUsingSimulation" value ="0">
+    <arg name="isUsingSimulation" value ="0" />
   </include>
 
   <!-- state estimation -->

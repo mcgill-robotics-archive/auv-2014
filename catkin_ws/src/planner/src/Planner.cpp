@@ -410,6 +410,9 @@ Planner::Planner(ros::NodeHandle& n) {
 
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
 	while (!n.getParam("/go", go) && go != 1) {
-		//TODO: Set wait time of 10-20 seconds so diver has time to disconnect Ethernet cable
+		//wait for "go" command from command line
 	}
+
+	//Set const wait time in header file so diver has time to disconnect Ethernet cable
+	ros::Duration(WAIT_TIME_AFTER_GO).sleep();
 }
