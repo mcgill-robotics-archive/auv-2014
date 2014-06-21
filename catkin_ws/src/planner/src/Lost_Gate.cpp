@@ -20,6 +20,8 @@ void Lost_Gate::execute() {
 	}
 }
 
+// assumes that if the robot still can't see the gate it's angle is off,
+// so rotate until it sees it
 void Lost_Gate::phase1() {
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
@@ -30,7 +32,7 @@ void Lost_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
-	myPlanner->setVelocity(2, 0, 2, 8.8, "/target/gate");
+	myPlanner->setVelocity(0, 0, 2, 8.8, "/target/gate");
 	loop_rate.sleep();
 	tf::TransformListener listener;
 	try {
@@ -39,9 +41,8 @@ void Lost_Gate::phase1() {
 	} catch (tf::TransformException ex) {
 		myPlanner->switchToTask(myPlanner->Gate);
 	}
+}	
+
+void Lost_Gate::phase0() {
+	myPlanner->switchToTask(myPlanner->Gate);
 }
-
-
-/*
-//if we don't see the gate in phase 1, start spinning
-*/

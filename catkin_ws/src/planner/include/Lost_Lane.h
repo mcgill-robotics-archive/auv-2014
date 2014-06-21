@@ -9,7 +9,8 @@ class Lost_Lane: public Task{
 		void execute();
 
 	private:
-		void phase1();	
+		void phase1();
+		double xSpeed;	
 };
 
 #endif

@@ -46,7 +46,15 @@ generate_messages (
    ${catkin_INCLUDE_DIRS}
  )
 
- add_executable(planner src/Planner.cpp src/Task.cpp src/StatusUpdater.cpp src/Task_Gate.cpp src/Lost_Gate.cpp src/Task_Lane.cpp src/Lost_Lane.cpp src/Task_Kill.cpp)
+ add_executable(planner src/Planner.cpp
+                        src/Task.cpp
+                        src/StatusUpdater.cpp
+                        src/Task_Gate.cpp
+                        src/Lost_Gate.cpp
+                        src/Task_Lane.cpp
+                        src/Lost_Lane.cpp
+                        src/Task_Kill.cpp)
+
  target_link_libraries(planner ${catkin_LIBRARIES})
  add_dependencies(planner ${catkin_EXPORTED_TARGETS})
  add_dependencies(planner planner_generate_messages_cpp)
