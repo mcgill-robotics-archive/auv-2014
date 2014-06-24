@@ -40,7 +40,8 @@ addTemperatureTopics() {
 }
 
 addCameraTopics() {
-	command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect camera_front_left/camera_out/camera_info camera_front_left/image_rect"
+	command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect"
+	command_arguments="${command_arguments} camera_front_left/camera_out/camera_info camera_front_left/image_rect"
 }
 
 addDepthTopic() {
@@ -63,14 +64,12 @@ addStateEstimationTopics() {
 
 # Changes the name of the ROS bag to what the user specified. Does some check on the name and will use a timestamp if rejected.
 changeNameOfRosBag() {
-	if [ "${targetDirectory}${nameOfRosBag}" -e ]
-		then
-			echo "The filename you specified for the ROSBag is in conflict with an existing file. A timestamp will be used instead."
-		else
-			nameOfRosBag=$1
-			echo "Using '${nameOfRosBag}' as filename."
+	if [ -e "${targetDirectory}$1" ]; then
+		echo "The filename you specified for the ROSBag is in conflict with an existing file. A timestamp will be used instead."
+	else
+		nameOfRosBag=$1
+		#echo "Using '${nameOfRosBag}' as filename."
 	fi
-
 	checkingForFileName=false
 }
 
@@ -78,7 +77,7 @@ changeNameOfRosBag() {
 handleInputParameters() {
 	for arg in "$@"; do
 
-		if [ "checkingForFileName" = false ]
+		if [ $checkingForFileName = false ]
 			then
 				case ${arg} in
 					'-a' )
