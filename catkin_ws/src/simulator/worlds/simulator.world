@@ -33,7 +33,7 @@
     <model name="robot">
       <plugin name="robot" filename="librobot.so"></plugin>
       <static>false</static>
-      <pose>1.7 -3.5 -.5 0 0 3.14159265359</pose>
+      <pose> 1.58725 -3.98664 -0.5 0 -0 -3.14159 </pose>
 
       <link name='body'>
 	    <!-- Metric Inertial Properties -->
@@ -286,7 +286,7 @@
 
 	<!-- gate -->
     <model name="gate">
-      <pose>-.5 0 -.5 1.5 0 .25</pose>
+      <pose>-0.813998 -0.667664 -0.503149 1.5 -0 0</pose>
       <static>false</static>
       <link name="body">
 
@@ -315,7 +315,7 @@
 	
 	<!-- line1 -->
     <model name="line1">
-      <pose>3.5 6.5 -4 1.5707963 0 1.5</pose>
+      <pose>-2.46864 12.0738 -4 1.5708 -0 -0.976815</pose>
       <static>false</static>
       <link name="body">
 
@@ -345,7 +345,7 @@
 
 	<!-- red buoy -->
     <model name="redbuoy">
-      <pose>2 2 -.5 1.5707963 0 .7</pose>
+      <pose>-1.11281 0.866034 -0.5 1.5708 0 0.7</pose>
       <static>false</static>
       <link name="body">
         <collision name="visual">
@@ -371,7 +371,7 @@
     
 	<!-- green buoy -->
     <model name="greenbuoy">
-      <pose>3 2 -.5 1.5707963 0 .7</pose>
+      <pose>0.110936 1.67764 -0.5 1.5708 0 0.7</pose>
       <static>false</static>
       <link name="body">
         <collision name="visual">
@@ -397,7 +397,7 @@
 
 	<!-- yellow buoy -->
     <model name="yellowbuoy">
-      <pose>4 2 -.5 1.5707963 0 .7</pose>
+      <pose>0.909955 2.96303 -0.5 1.5708 0 0.7</pose>
       <static>false</static>
       <link name="body">
         <collision name="visual">
@@ -424,5 +424,14 @@
 	<!-- buoys done -->
 	
 	<plugin name="create_torpedo" filename="libcreate_torpedo.so"></plugin>
+	
+	<!-- adjust camera so the whole arena is visible -->
+	<gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>4.45916 -23.9024 11.4144 5.4e-05 0.297657 1.65492</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+
   </world>
 </sdf>
