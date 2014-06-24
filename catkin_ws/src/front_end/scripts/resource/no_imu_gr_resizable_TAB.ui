@@ -49,16 +49,7 @@
              <number>0</number>
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>0</number>
              </property>
              <property name="spacing">
@@ -1007,15 +998,67 @@
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_5">
                 <item>
-                 <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0,0">
-                  <item row="0" column="1">
+                 <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,0,0,0,0,0">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item row="0" column="2">
                    <widget class="QLabel" name="label_31">
                     <property name="text">
                      <string>Ambiant Temp.</string>
                     </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
                    </widget>
                   </item>
                   <item row="0" column="4">
+                   <widget class="QLabel" name="label_32">
+                    <property name="text">
+                     <string>Battery 1</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="4">
+                   <widget class="QLabel" name="bat1_lbl">
+                    <property name="text">
+                     <string>0</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="ambiant_temp_lbl">
+                    <property name="text">
+                     <string>0</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_5">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>17</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>USB Devices</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="5">
                    <widget class="QLabel" name="bat_lbl">
                     <property name="minimumSize">
                      <size>
@@ -1032,59 +1075,12 @@
                     <property name="text">
                      <string>Battery 2</string>
                     </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_5">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>17</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>USB Devices</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="3">
-                   <widget class="QLabel" name="label_32">
-                    <property name="text">
-                     <string>Battery 1</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="usb_lbl">
-                    <property name="text">
-                     <string>0</string>
-                    </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
-                  <item row="1" column="1">
-                   <widget class="QLabel" name="ambiant_temp_lbl">
-                    <property name="text">
-                     <string>0</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="3">
-                   <widget class="QLabel" name="bat1_lbl">
-                    <property name="text">
-                     <string>0</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="4">
+                  <item row="1" column="5">
                    <widget class="QLabel" name="bat2_lbl">
                     <property name="text">
                      <string>0</string>
@@ -1093,6 +1089,36 @@
                      <set>Qt::AlignCenter</set>
                     </property>
                    </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_11">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="usb_lbl">
+                      <property name="text">
+                       <string>0</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="listUSB">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>List</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                  </layout>
                 </item>
@@ -1828,7 +1854,7 @@
      <x>0</x>
      <y>0</y>
      <width>1065</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1880,11 +1906,11 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>918</x>
-     <y>121</y>
+     <x>435</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
-     <x>797</x>
+     <x>326</x>
      <y>117</y>
     </hint>
    </hints>
@@ -1896,12 +1922,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>805</x>
-     <y>107</y>
+     <x>326</x>
+     <y>117</y>
     </hint>
     <hint type="destinationlabel">
-     <x>935</x>
-     <y>117</y>
+     <x>435</x>
+     <y>115</y>
     </hint>
    </hints>
   </connection>
@@ -1912,12 +1938,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>817</x>
-     <y>150</y>
+     <x>326</x>
+     <y>154</y>
     </hint>
     <hint type="destinationlabel">
-     <x>882</x>
-     <y>140</y>
+     <x>435</x>
+     <y>152</y>
     </hint>
    </hints>
   </connection>
@@ -1928,12 +1954,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>873</x>
-     <y>158</y>
+     <x>435</x>
+     <y>152</y>
     </hint>
     <hint type="destinationlabel">
-     <x>804</x>
-     <y>161</y>
+     <x>326</x>
+     <y>154</y>
     </hint>
    </hints>
   </connection>
@@ -1944,12 +1970,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>811</x>
-     <y>204</y>
+     <x>325</x>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel">
-     <x>859</x>
-     <y>218</y>
+     <x>434</x>
+     <y>211</y>
     </hint>
    </hints>
   </connection>
@@ -1960,12 +1986,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>878</x>
-     <y>207</y>
+     <x>434</x>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
-     <x>811</x>
-     <y>207</y>
+     <x>325</x>
+     <y>213</y>
     </hint>
    </hints>
   </connection>
@@ -1976,12 +2002,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>801</x>
-     <y>243</y>
+     <x>325</x>
+     <y>250</y>
     </hint>
     <hint type="destinationlabel">
-     <x>868</x>
-     <y>249</y>
+     <x>434</x>
+     <y>248</y>
     </hint>
    </hints>
   </connection>
@@ -1992,12 +2018,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>917</x>
-     <y>243</y>
+     <x>434</x>
+     <y>248</y>
     </hint>
     <hint type="destinationlabel">
-     <x>789</x>
-     <y>252</y>
+     <x>325</x>
+     <y>250</y>
     </hint>
    </hints>
   </connection>
@@ -2008,12 +2034,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>855</x>
-     <y>301</y>
+     <x>434</x>
+     <y>308</y>
     </hint>
     <hint type="destinationlabel">
-     <x>798</x>
-     <y>309</y>
+     <x>325</x>
+     <y>310</y>
     </hint>
    </hints>
   </connection>
@@ -2024,12 +2050,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>793</x>
-     <y>319</y>
+     <x>325</x>
+     <y>310</y>
     </hint>
     <hint type="destinationlabel">
-     <x>859</x>
-     <y>319</y>
+     <x>434</x>
+     <y>308</y>
     </hint>
    </hints>
   </connection>
@@ -2040,12 +2066,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>794</x>
-     <y>351</y>
+     <x>325</x>
+     <y>347</y>
     </hint>
     <hint type="destinationlabel">
-     <x>866</x>
-     <y>349</y>
+     <x>434</x>
+     <y>345</y>
     </hint>
    </hints>
   </connection>
@@ -2056,12 +2082,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>977</x>
-     <y>342</y>
+     <x>434</x>
+     <y>345</y>
     </hint>
     <hint type="destinationlabel">
-     <x>795</x>
-     <y>342</y>
+     <x>325</x>
+     <y>347</y>
     </hint>
    </hints>
   </connection>
