@@ -12,6 +12,7 @@
 from pose_view_widget import PoseViewWidget
 from no_imu import *
 from Battery_warning_popup import*
+from DevicesList import DevicesList
 from PyQt4 import QtCore, QtGui
 
 import velocity_publisher  # custom modules for publishing cmd_vel
@@ -151,8 +152,7 @@ class CentralUi(QtGui.QMainWindow):
 
         ## place holder variable for internal battery status
         self.battery_empty = False
-        self.devices = 0
-        
+
         # initiate pygame for the battery alarm
         pygame.init()
         pygame.mixer.init()
@@ -160,7 +160,7 @@ class CentralUi(QtGui.QMainWindow):
         # buttons connects
         QtCore.QObject.connect(self.ui.actionQuit, QtCore.SIGNAL("triggered()"), self.close)
         QtCore.QObject.connect(self.ui.attemptPS3, QtCore.SIGNAL("clicked()"), self.set_controller_timer)
-        QtCore.QObject.connect(self.ui.listUSB, QtCore.SIGNAL("clicked()"), lambda devices = self.devices: self.listPopup(devices))
+        QtCore.QObject.connect(self.ui.listUSB, QtCore.SIGNAL("clicked()"), self.listPopup)
 
         QtCore.QObject.connect(self.ui.blinky_red, QtCore.SIGNAL("clicked()"), lambda red = 255, blue = 0, green = 0 : self.send_color_blinky(red,green, blue))
         QtCore.QObject.connect(self.ui.blinky_green, QtCore.SIGNAL("clicked()"), lambda red = 0, blue = 0, green = 255 : self.send_color_blinky(red,green, blue))
@@ -242,12 +242,15 @@ class CentralUi(QtGui.QMainWindow):
         self.pose_ui.subscribe_topic('/state_estimation/pose')
 
     def usb_callback(self, msg):
-        self.devices = msg
+        self.devices = msg.name
         self.ui.usb_lbl.setText(str(msg.number))
 
-    def listUSB(self, devices):
-        self.popup = DevivesList(self, devices)
-        self.popup.exec_()
+    def listPopup(self):
+        try:
+            self.popup = DevicesList(self, self.devices)
+            self.popup.exec_()
+        except Exception as e:
+            self.log_error("central_app.py( 253)::Exception: %s"%e)
 
     def cpu_hdd_temp_callback(self, temp):
         self.ui.temp_core1.setText(str(temp.core_0))
