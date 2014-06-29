@@ -1,4 +1,8 @@
 <launch>
 <!-- front-end -->
+
+<!-- Loads the appropriate parameters used by the computer vision package -->
+<rosparam command="load" file="$(find front_end)/config/topics.yaml"/>
+
 <node name="front_end" pkg="front_end" type="central_app.py" respawn="false" output="screen"/> 
 </launch>

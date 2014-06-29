@@ -223,23 +223,42 @@ class CentralUi(QtGui.QMainWindow):
     #note that all the topic names are set in the file "VARIABLES.py"
     #@param self the object pointer
     def start_ros_subscriber(self):
+
+        depth_topic = rospy.get_param("/depth")
+        bat1_topic = rospy.get_param("/battery_1_voltage")
+        bat2_topic = rospy.get_param("/battery_2_voltage")
+        cam_raw_f_l_topic = rospy.get_param("/front_camera_left")
+        cam_raw_f_r_topic = rospy.get_param("/front_camera_right")
+        cam_raw_d_topic = rospy.get_param("/down_camera")
+        cam_pro_f_l_topic = rospy.get_param("/processed_front_camera_left")
+        cam_pro_f_r_topic = rospy.get_param("/processed_front_camera_right")
+        cam_pro_d_topic = rospy.get_param("/processed_down_camera")
+        cv_data_f_topic = rospy.get_param("/cv_data_front")
+        cv_data_d_topic = rospy.get_param("/cv_data_down")
+        planner_messages_topic = rospy.get_param("/planner_messages")
+        temp_topic = rospy.get_param("/cpu_temperature")
+        usb_topic = rospy.get_param("/ubs_devices")
+        state_est_topic = rospy.get_param("/state_estimation_pose")
+
+
+
         rospy.init_node('Front_End', anonymous=True)
-        rospy.Subscriber("/electrical_interface/depth", Int16, self.depth_callback)
-        rospy.Subscriber("/electrical_interface/batteryVoltage1", Float32, self.bat_1)
-        rospy.Subscriber("/electrical_interface/batteryVoltage2", Float32, self.bat_2)
-        rospy.Subscriber("/camera_front_left/image_rect", Image, self.front_left_pre_callback)
-        rospy.Subscriber("/camera_front_right/image_rect", Image, self.front_right_pre_callback)
-        rospy.Subscriber("/camera_down/image_rect", Image, self.down_pre_callback)
-        rospy.Subscriber("/front_cv/camera1", Image, self.front_post_left_callback)
-        rospy.Subscriber("/front_cv/camera2", Image, self.front_post_right_callback)
-        rospy.Subscriber("/down_cv/camera1", Image, self.down_post_callback)
-        rospy.Subscriber('front_cv/data', VisibleObjectData, self.front_cv_data_callback)
-        rospy.Subscriber('down_cv/data', VisibleObjectData, self.down_cv_data_callback)
-        rospy.Subscriber('planner/task', String, self.planner_callback)
-        rospy.Subscriber("/status/temperature", temp, self.cpu_hdd_temp_callback)
-        rospy.Subscriber("/status/usb", usb, self.usb_callback)
+        rospy.Subscriber(depth_topic, Int16, self.depth_callback)
+        rospy.Subscriber(bat1_topic, Float32, self.bat_1)
+        rospy.Subscriber(bat2_topic, Float32, self.bat_2)
+        rospy.Subscriber(cam_raw_f_l_topic, Image, self.front_left_pre_callback)
+        rospy.Subscriber(cam_raw_f_r_topic, Image, self.front_right_pre_callback)
+        rospy.Subscriber(cam_raw_d_topic, Image, self.down_pre_callback)
+        rospy.Subscriber(cam_pro_f_l_topic, Image, self.front_post_left_callback)
+        rospy.Subscriber(cam_pro_f_r_topic, Image, self.front_post_right_callback)
+        rospy.Subscriber(cam_pro_d_topic, Image, self.down_post_callback)
+        rospy.Subscriber(cv_data_f_topic, VisibleObjectData, self.front_cv_data_callback)
+        rospy.Subscriber(cv_data_d_topic, VisibleObjectData, self.down_cv_data_callback)
+        rospy.Subscriber(planner_messages_topic, String, self.planner_callback)
+        rospy.Subscriber(temp_topic, temp, self.cpu_hdd_temp_callback)
+        rospy.Subscriber(usb_topic, usb, self.usb_callback)
         #subscriber and callback for the 3d viz of pose data
-        self.pose_ui.subscribe_topic('/state_estimation/pose')
+        self.pose_ui.subscribe_topic(state_est_topic)
 
     def usb_callback(self, msg):
         self.devices = msg.name
