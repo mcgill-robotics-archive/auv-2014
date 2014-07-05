@@ -43,12 +43,12 @@ def initialize_blinkies():
     global planner_colorList	# need to declare as global to preserve
     global battery_colorList	# across function calls
     colors = []
-	
+
     # store the initial states
     for i in range(ledCount):
     	planner_colorList.append(RGB(0,255,255)) # Cyan (!!!)
         battery_colorList.append(RGB(0,255,255))
-        
+
     # set all leds off
     for i in range(2 * ledCount):
     	blt.sendPixel(0,0,0)
@@ -76,7 +76,7 @@ def update_planner(req):
 
     segments = len(req.colors)
     seg_size = 16/segments # 16 comes from magic (works for 1 <= i <= 5)
-    
+
     colors = []
 
     for s in req.colors:
@@ -85,7 +85,7 @@ def update_planner(req):
         colors.append(separation_color)
 
     del(colors[-1])
-    
+
     # filler with the last color until all 15 leds are on
     for j in range(len(colors),15):
         colors.append(req.colors[-1])
@@ -185,11 +185,13 @@ def BlinkyTapeServer():
 
         # if warnings are on, alternate between planner/battery colors
         # and warning colors, after measuring the time period.
+        planner_length = len(planner_colorList_copy)
+        battery_length = len(battery_colorList_copy)
         if (warning_on_copy == False) or (warning_freq_copy <= 0.0):
-            list1 = planner_colorList_copy
-            list2 = battery_colorList_copy
+            list1 = planner_colorList_copy[0:planner_length/2] + battery_colorList_copy[0:battery_length/2]
+            list2 = battery_colorList_copy[battery_length/2:battery_length] + planner_colorList_copy[planner_length/2:planner_length]
             edge_time = time.time() # reset time counter
-            
+
         # if warnings are on, toggle the planner and battery display after each half-period
         elif (warning_freq_copy > 0.0) and (time.time() - edge_time >= 0.5 / warning_freq_copy):
             if state == 0:
@@ -197,10 +199,10 @@ def BlinkyTapeServer():
                 list2 = warning_colorList_copy
                 state = 1
             else:
-                list1 = planner_colorList_copy
-                list2 = battery_colorList_copy
+                list1 = planner_colorList_copy[0:planner_length/2] + battery_colorList_copy[0:battery_length/2]
+                list2 = battery_colorList_copy[battery_length/2:battery_length] + planner_colorList_copy[planner_length/2:planner_length]
                 state = 0
-            
+
             # reset time counter
             edge_time = time.time()
 
