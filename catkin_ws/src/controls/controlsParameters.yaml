@@ -33,35 +33,3 @@ torque/max: 100
 
 Yaw/max: 3.14159 # pi # maximum setpoint 
 Pitch/max: 0.7853 # pi/4
-
-
-
-
-#I dont think anybody reads these setpoints params
-setPoints/XPos/value: 0.5
-setPoints/XSpeed/value: 0
-
-setPoints/YPos/value: 0
-setPoints/YSpeed/value: 0
-
-setPoints/Depth/value: 9
-
-setPoints/Yaw/value: 0
-setPoints/YawSpeed/value: 0
-
-setPoints/Pitch/value: 0
-
-
-# isActive parameters are not used yet -Nick 1/25
-# setPoints/XPos/isActive: 1
-# setPoints/XSpeed/isActive: 0
-
-# setPoints/YPos/isActive: 0
-# setPoints/YSpeed/isActive: 0
-
-# setPoints/Depth/isActive: 1
-
-# setPoints/Yaw/isActive: 0
-# setPoints/YawSpeed/isActive: 0
-
-# setPoints/Pitch/isActive: 0

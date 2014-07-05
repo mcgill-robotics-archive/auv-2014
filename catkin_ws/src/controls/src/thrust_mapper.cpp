@@ -115,7 +115,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	*/
 	
 	float mystery = 1.6667; //TODO figure out what this number is. I think it's a combo of the distnce between axes and the distribution across yaw thrusters (Actually I think it comes from inverting a matrix in matlab)
-	int directions[] = {1, 1, -1, 1, -1, -1}; //the math below assumes thrusters apply force in their positive coordinate directions. -1 here if oriented otherwise
+	int directions[] = {-1, -1, -1, 1, 1, 1}; //the math below assumes thrusters apply force in their positive coordinate directions. -1 here if oriented otherwise. Note that cenvention dictates that the positive force is applied to the environment, not the robot.
 
 	thrust[0] = 0.5 * wrenchMsg.force.x; 										//surge-starbord
 	thrust[1] = thrust[0];														//surge-port
