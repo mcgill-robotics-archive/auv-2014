@@ -129,11 +129,12 @@ float saturate(float value, float max, char* value_name) {
 	return value;
 }
 
-void pitchHorizon_callback()
+void pitchHorizon_callback(){
 	/*
 	* Subscribe to pose from the IMU to get pitch WRT the horizon.
 	* But what about accounting for the placement of the IMU? Sure that should be defined in a TF...
 	*/
+}
 
 
 void getStateFromTF()
@@ -141,7 +142,7 @@ void getStateFromTF()
 	/*
 	* Looks up the TF and saves local variables for estimated position.
 	*/
-	if (frame == '')
+	if (frame == "")
 	{
 		ROS_WARN("No frame specified in setPoints");
 		return;
@@ -175,10 +176,10 @@ void getStateFromTF()
 	tf::Matrix3x3 m(q); //convert quaternion to matrix
 
 	double roll_unused; //unused, but needs to be sent to getRPY method
-	double pitch_unused
+	double pitch_unused;
 
 	
-	m.getEulerYPR(estimated_Yaw, pitch_unused, roll);
+	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
 	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
