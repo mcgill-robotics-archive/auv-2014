@@ -1,3 +1,8 @@
 blinky_planner_color_topic:"/planner_colors"
 blinky_battery_color_topic:"/battery_colors"
 blinky_warning_color_topic:"/warning_colors"
+image_feed/left: "camera_front_left/image_rect"
+image_feed/right: "camera_front_right/image_rect"
+image_feed/down: "camera_down/image_rect"
+front_cv_data_topic:"/front_cv/data"
+current_task_front_topic:"currentCVTask_Front"

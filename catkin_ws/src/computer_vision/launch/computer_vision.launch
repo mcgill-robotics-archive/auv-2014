@@ -16,6 +16,7 @@
   <group unless="$(arg isUsingSimulation)">
     <!-- Loads parameters that are specific to the camera nodes and the competition-->
     <rosparam command="load" file="$(find computer_vision)/config/realitySpecific.yaml"/>
+    <rosparam command="load" file="$(find robosub_config)/config/topics.yaml"/>
   </group>
 
   <!-- Launches cv_front node. -->

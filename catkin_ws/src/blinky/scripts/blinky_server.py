@@ -20,7 +20,8 @@ ledCount = 30
 # blinky tape class handle (accesses 2 segments)
 # change first argument with usb serial port
 # where the tape is found
-blt = bt.BlinkyTape("/dev/blinkyTape", 2 * ledCount)
+port = rospy.get_param("/blinky_port", "/dev/blinkyTape")
+blt = bt.BlinkyTape(port, 2 * ledCount)
 
 # Color to separate subsections in the planner segment
 separation_color = RGB(0,0,0)
@@ -155,9 +156,14 @@ def BlinkyTapeServer():
     ub1l = rospy.Service('update_battery1_lights', UpdateBattery1Lights, update_battery1)
     ub2l = rospy.Service('update_battery2_lights', UpdateBattery2Lights, update_battery2)
     wl = rospy.Service('warning_lights', WarningLights, warn_lights)
-    pub_planner = rospy.Publisher('planner_colors', RGBArray)
-    pub_battery = rospy.Publisher('battery_colors', RGBArray)
-    pub_warning = rospy.Publisher('warning_colors', RGBArray)
+
+    plan_topic = rospy.get_param('/blinky_planner_color_topic','/planner_colors')
+    bat_topic = rospy.get_param('/blinky_battery_color_topic','/battery_colors')
+    warn_topic = rospy.get_param('/blinky_warning_color_topic','/warning_colors')
+
+    pub_planner = rospy.Publisher(plan_topic, RGBArray)
+    pub_battery = rospy.Publisher(bat_topic, RGBArray)
+    pub_warning = rospy.Publisher(warn_topic, RGBArray)
 
     lock = threading.Lock()
     edge_time = time.time()

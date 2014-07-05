@@ -75,9 +75,14 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "distanceCalculator");
 
   ros::NodeHandle node;
-  ros::Subscriber currentCVTask_Front_sub = node.subscribe("currentCVTask_Front", 1000, currentCVTask_Front_callback);
 
-  ros::Publisher cv_mock_pub_Front = node.advertise<computer_vision::VisibleObjectData>("/front_cv/data", 1000);
+  std::string currentTask;
+  node.param<std::string>("/current_task_front_topic",currentTask, "currentCVTask_Front");
+  ros::Subscriber currentCVTask_Front_sub = node.subscribe(currentTask, 1000, currentCVTask_Front_callback);
+
+  std::string data_dopic;
+  node.param<std::string>("/front_cv_data_topic", data_dopic, "/front_cv/data");
+  ros::Publisher cv_mock_pub_Front = node.advertise<computer_vision::VisibleObjectData>(data_dopic, 1000);
 
   computer_vision::VisibleObjectData msgCV;
   

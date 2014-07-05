@@ -1,3 +1,8 @@
 <launch>
+	
+
+	<rosparam command="load" file="$(find robosub_config)/config/topics.yaml"/>
+	<rosparam command="load" file="$(find robosub_config)/config/ports.yaml"/>
+
     <node name="blinky" pkg="blinky" type="blinky_server.py"/>
 </launch>
