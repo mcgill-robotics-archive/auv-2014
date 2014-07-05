@@ -1,1 +1,3 @@
-test: '/electrical_interface/depth'
+blinky_planner_color_topic:"/planner_colors"
+blinky_battery_color_topic:"/battery_colors"
+blinky_warning_color_topic:"/warning_colors"
