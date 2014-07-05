@@ -129,12 +129,23 @@ float saturate(float value, float max, char* value_name) {
 	return value;
 }
 
+void pitchHorizon_callback()
+	/*
+	* Subscribe to pose from the IMU to get pitch WRT the horizon.
+	* But what about accounting for the placement of the IMU? Sure that should be defined in a TF...
+	*/
+
+
 void getStateFromTF()
 {
 	/*
 	* Looks up the TF and saves local variables for estimated position.
 	*/
-
+	if (frame == '')
+	{
+		ROS_WARN("No frame specified in setPoints");
+		return;
+	}
 	tf::StampedTransform transform;
 	tf::TransformListener tf_listener; 
 
@@ -163,11 +174,11 @@ void getStateFromTF()
 	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
 	tf::Matrix3x3 m(q); //convert quaternion to matrix
 
-	double roll; //unused, but needs to be sent to getRPY method
-
+	double roll_unused; //unused, but needs to be sent to getRPY method
+	double pitch_unused
 
 	
-	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
+	m.getEulerYPR(estimated_Yaw, pitch_unused, roll);
 	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
@@ -265,22 +276,16 @@ int main(int argc, char **argv)
 	controls::DebugControls debugMsg;
 
 
-	ros::Rate loop_rate(1/dt); 
 	
-	bool setPointsIsPublished = 0;
-	bool estimatedStateIsPublished = 1; //Hardcoded cuz I'm lazy TODO fix
-	bool depthIsPublished = 0;
 
 	ROS_INFO("\n----\n Controls node initialized. Waiting for setPoints to be published... \n----");
-	while (setPointsIsPublished == 0)
+	while (setPoints_subscriber.getNumPublishers() == 0)
 	{
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
-		setPointsIsPublished = 1;
-		if (setPoints_subscriber.getNumPublishers() == 0) {setPointsIsPublished = 0;}
 		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
-
 	ROS_INFO("All Subscribers Live. Starting Controller!");
+	ros::Rate loop_rate(1/dt);
 	while(ros::ok())
 	{
 
@@ -356,15 +361,10 @@ int main(int argc, char **argv)
     	Ty = 0;
     	Tz = 0;
 
-		//Check if depth is being published
-		if (depth_subscriber.getNumPublishers() == 0) {depthIsPublished = 0;}
-		else {depthIsPublished = 1;}
-		
-
 		//X 
 		if (isActive_XPos)
 		{
-			if (estimatedStateIsPublished)
+			if (true) // TODO check if estimatedStateIsPublished
 			{
 				ep_XPos_prev = ep_XPos;
 				ep_XPos = setPoint_XPos - estimated_XPos;
@@ -394,7 +394,7 @@ int main(int argc, char **argv)
         //Y 
 		if (isActive_YPos)
 		{
-			if (estimatedStateIsPublished)
+			if (true) // TODO check if estimatedStateIsPublished
 			{
 				ep_YPos_prev = ep_YPos;
 				ep_YPos = setPoint_YPos - estimated_YPos;
@@ -419,7 +419,7 @@ int main(int argc, char **argv)
 		if (isActive_Depth)
 
 		{
-			if (depthIsPublished)
+			if (depth_subscriber.getNumPublishers() > 0)
 			{
 				//ROS_DEBUG("setPointDepth: %f | estimatedDepth: %f", setPoint_Depth, depth);
 				ep_Depth_prev = ep_Depth;

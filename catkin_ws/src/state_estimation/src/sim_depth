@@ -1,5 +1,20 @@
 #!/usr/bin/env python2.7
 
+'''
+I think the use of a timer in this node could be improved.
+The problem is that gazebo publishes modelStates at very high frequency,
+and we want to publish depth at a much lower frequency.
+
+I recommend changing the implementation as follows:
+    The modelStates callback should update a depth variable every time it is called.
+    A ROS timer should be called to publish the value in this variable ever x seconds in a separate callback function
+    http://wiki.ros.org/roscpp_tutorials/Tutorials/Timers
+
+-Nick Speal
+
+'''
+
+
 import rospy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import PoseStamped
@@ -12,7 +27,7 @@ def callback(modelStates):
     if time:
         if (rospy.get_time() - time) > 0.03:
             index = modelStates.name.index('robot')
-            pub.publish(10.0 - modelStates.pose[index].position.z)
+            pub.publish(10- modelStates.pose[index].position.z)
             time = rospy.get_time()
     else:
         time = rospy.get_time()
