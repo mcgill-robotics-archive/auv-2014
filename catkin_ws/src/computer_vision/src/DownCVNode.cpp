@@ -68,7 +68,6 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	}
 }
 
-
 DownCVNode::~DownCVNode() {
 	if (down_using_helpers) {
 		cv::destroyWindow(CAMERA3_CV_TOPIC_NAME);
@@ -76,12 +75,18 @@ DownCVNode::~DownCVNode() {
 	delete pLastImage;
 }
 
+//void cv::Mat convertSensorMessageToOpencvImage() {
+//	cv_bridge::CvImagePtr pCurrentFrame pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
+//	cv::Mat currentFrame = pCurrentFrame->image;
+//	return currentFrame;
+//}
+
 /**
  * @brief Function that is called when an image is received.
  *
  * @param rosMessage The ROS message that contains the image
  */
-void DownCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
+void DownCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message) {
 	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
 	cv_bridge::CvImagePtr pCurrentFrame;
 	cv::Mat currentFrame;

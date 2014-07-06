@@ -83,7 +83,7 @@ class CVNode {
 
 	private:
 
-	virtual void receiveImage(const sensor_msgs::ImageConstPtr& message) = 0;
+	virtual void imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message) = 0;
 };
 	
 #endif

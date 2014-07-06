@@ -107,7 +107,7 @@ void FrontCVNode::instanciateAllVisibleObjects() {
  * @param rosMessage The ROS message that contains the image
  *
  */
-void FrontCVNode::receiveImage(const sensor_msgs::ImageConstPtr& message) {
+void FrontCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message) {
 	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
 	cv_bridge::CvImagePtr pCurrentFrame;
 	cv::Mat currentFrame;
