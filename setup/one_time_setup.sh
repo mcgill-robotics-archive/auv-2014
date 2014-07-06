@@ -3,13 +3,14 @@
 # .make.sh
 # This script creates symlinks from the home directory to any desired dotfiles in ~/dotfiles
 ############################
-source /opt/ros/hydro/setup.bash 
+source /opt/ros/hydro/setup.bash
 ########## Variables
 echo "$(tput setaf 3)Copy udev.rules for serial devices$(tput sgr 0)"
 sudo cp -fv 48-RoboSub.rules /etc/udev/rules.d/48-RoboSub.rules
 echo "$(tput setaf 3)Copy Crontab startup script$(tput sgr 0)"
 sudo cp -fv startup ~/startup
 echo "$(tput setaf 3)Copy yml files for teamocil$(tput sgr 0)"
+mkdir -p ~/.teamocil
 sudo cp -fv startup.yml ~/.teamocil/startup.yml
 sudo cp -fv temperature.yml ~/.teamocil/temperature.yml
 
@@ -25,7 +26,7 @@ mkdir -p $olddir
 # change to the dotfiles directory
 cd $dir
 
-# move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks 
+# move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks
 echo "$(tput setaf 3)Moving any existing dotfiles from ~ to $olddir and create symlinks $(tput sgr 0)"
 for file in $files; do
     mv ~/.$file ~/dotfiles_old/
@@ -45,4 +46,4 @@ if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
     echo 'roboticrc does not exist in bashrc, adding...'
     echo "$(tput setaf 3)roboticrc is not sourced in bashrc, adding... $(tput sgr 0)"
     echo "source ~/.roboticrc" >> ~/.bashrc
-fi 
+fi
