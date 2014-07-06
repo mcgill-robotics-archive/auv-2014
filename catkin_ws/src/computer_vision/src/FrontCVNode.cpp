@@ -38,11 +38,11 @@ int main(int argc, char **argv) {
 }
 
 void FrontCVNode::listenToPlanner(planner::CurrentCVTask msg) {
-	this->visibleObjectList.clear();
+	this->objectsToSearchFor.clear();
 	if (msg.currentCVTask == 1) {
-		this->visibleObjectList.push_back(new Gate(*(this), gp));
+		this->objectsToSearchFor.push_back(new Gate(*(this), gp));
 	} else if (msg.currentCVTask == 2) {
-		this->visibleObjectList.push_back(new Buoy(*(this)));
+		objectsToSearchFor.push_back(new Buoy(*(this)));
 	}
 }
 
@@ -66,7 +66,7 @@ FrontCVNode::FrontCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int
 	nodeHandle.param<std::string>("cv_front_detect_object", currentObject, "");
 	if (!currentObject.empty()) {
 		if (currentObject.compare("gate") == 0) {
-			this->visibleObjectList.push_back(new Gate(*(this), gp));
+			this->objectsToSearchFor.push_back(new Gate(*(this), gp));
 		} else if (currentObject.compare("buoy") == 0) {
 			// TODO: add the Buoy object here when it is completed
 		}
@@ -126,7 +126,7 @@ void FrontCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message
 
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
-		for (std::list<VisibleObject*>::iterator it = visibleObjectList.begin(); it != visibleObjectList.end(); ++it) {
+		for (std::list<VisibleObject*>::iterator it = objectsToSearchFor.begin(); it != objectsToSearchFor.end(); ++it) {
 			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
 		}
 

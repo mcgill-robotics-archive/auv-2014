@@ -32,9 +32,9 @@ int main(int argc, char **argv) {
 }
 
 void DownCVNode::listenToPlanner(planner::CurrentCVTask msg) {
-	this->visibleObjectList.clear();
+	this->objectsToSearchFor.clear();
 	if (msg.currentCVTask == 3) {
-		this->visibleObjectList.push_back(new Line(*(this)));
+		this->objectsToSearchFor.push_back(new Line(*(this)));
 	}
 }
 
@@ -57,7 +57,7 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 	nodeHandle.param<std::string>("cv_down_detect_object", currentObject, "");
 	if (!currentObject.empty()) {
 		if (currentObject.compare("line") == 0) {
-			this->visibleObjectList.push_back(new Line(*(this)));
+			this->objectsToSearchFor.push_back(new Line(*(this)));
 		}
 	} else {
 		ROS_INFO("%s", "The 'cv_down_detect_object' parameter is empty, the CV will be looking for no object.");
@@ -75,11 +75,11 @@ DownCVNode::~DownCVNode() {
 	delete pLastImage;
 }
 
-//void cv::Mat convertSensorMessageToOpencvImage() {
-//	cv_bridge::CvImagePtr pCurrentFrame pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
-//	cv::Mat currentFrame = pCurrentFrame->image;
-//	return currentFrame;
-//}
+cv::Mat DownCVNode::convertSensorMessageToOpencvImage(const sensor_msgs::ImageConstPtr& sensorMessage) {
+	cv_bridge::CvImagePtr cvImagePointer = cv_bridge::toCvCopy(sensorMessage, sensor_msgs::image_encodings::BGR8);
+	cv::Mat currentImageMatrix = cvImagePointer->image;
+	return currentImageMatrix;
+}
 
 /**
  * @brief Function that is called when an image is received.
@@ -88,14 +88,11 @@ DownCVNode::~DownCVNode() {
  */
 void DownCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message) {
 	std::vector<computer_vision::VisibleObjectData*> messagesToPublish;
-	cv_bridge::CvImagePtr pCurrentFrame;
-	cv::Mat currentFrame;
+	cv::Mat currentImageMatrix;
 	std::list<VisibleObject*>::iterator it;
 
 	try {
-		// Convert sensor_msgs to an opencv image
-		pCurrentFrame = cv_bridge::toCvCopy(message, sensor_msgs::image_encodings::BGR8);
-		currentFrame = pCurrentFrame->image;
+		currentImageMatrix = convertSensorMessageToOpencvImage(message);
 	} catch (cv_bridge::Exception& e) {
 		ROS_ERROR("cv_bridge exception: %s", e.what());
 		return;
@@ -104,8 +101,8 @@ void DownCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message)
 	try {
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
-		for (it = visibleObjectList.begin(); it != visibleObjectList.end(); it++) {
-			messagesToPublish = (*it)->retrieveObjectData(currentFrame);
+		for (it = objectsToSearchFor.begin(); it != objectsToSearchFor.end(); it++) {
+			messagesToPublish = (*it)->retrieveObjectData(currentImageMatrix);
 		}
 
 		// Check if no objects were found. If so, only send data if this has been consistent for at least a given amount of frames.
@@ -133,12 +130,12 @@ void DownCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message)
 		cv_bridge::CvImage currentImage;
 		currentImage.header.stamp = ros::Time::now();
 		currentImage.encoding = sensor_msgs::image_encodings::BGR8;
-		currentImage.image = currentFrame;
+		currentImage.image = currentImageMatrix;
 		frontEndPublisher.publish(currentImage.toImageMsg());
 
 		if (down_using_helpers) {
 			// Display the filtered image
-			cv::imshow(CAMERA3_CV_TOPIC_NAME, currentFrame);
+			cv::imshow(CAMERA3_CV_TOPIC_NAME, currentImageMatrix);
 			cv::waitKey(5);
 		}
 	} catch (cv::Exception& e) {

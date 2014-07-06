@@ -22,5 +22,6 @@ class DownCVNode : public CVNode {
 	cv::Mat* pLastImage;
 
 	void imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message);
+	cv::Mat convertSensorMessageToOpencvImage(const sensor_msgs::ImageConstPtr& message);
 	void listenToPlanner(planner::CurrentCVTask msg);
 };

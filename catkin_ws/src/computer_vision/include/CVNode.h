@@ -71,7 +71,7 @@ class CVNode {
 	image_transport::Publisher frontEndPublisher;
 	ros::Publisher frontEndVisibleObjectDataPublisher;
 	ros::Subscriber plannerSubscriber;
-	std::list<VisibleObject*> visibleObjectList;
+	std::list<VisibleObject*> objectsToSearchFor;
 	int numFramesWithoutObject;
 
 	double camera_sensor_height;

@@ -65,9 +65,9 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
  */
 CVNode::~CVNode() {
 	// Delete all VisibleObjects
-	while (!visibleObjectList.empty()) {
-		delete visibleObjectList.front();
-		visibleObjectList.pop_front();
+	while (!objectsToSearchFor.empty()) {
+		delete objectsToSearchFor.front();
+		objectsToSearchFor.pop_front();
 	}
 
 	frontEndPublisher.shutdown();
