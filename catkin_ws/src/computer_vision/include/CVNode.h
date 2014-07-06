@@ -71,7 +71,7 @@ class CVNode {
 	image_transport::Publisher frontEndPublisher;
 	ros::Publisher frontEndVisibleObjectDataPublisher;
 	ros::Subscriber plannerSubscriber;
-	std::list<VisibleObject*> visibleObjectList;
+	std::list<VisibleObject*> objectsToSearchFor;
 	int numFramesWithoutObject;
 
 	double camera_sensor_height;
@@ -83,7 +83,7 @@ class CVNode {
 
 	private:
 
-	virtual void receiveImage(const sensor_msgs::ImageConstPtr& message) = 0;
+	virtual void imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message) = 0;
 };
 	
 #endif

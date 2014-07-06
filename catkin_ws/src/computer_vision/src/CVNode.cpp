@@ -26,7 +26,7 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 
 	// Instanciate the subscribers
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": will subscribe to the topic named '" + topicName + "'.").c_str());
-	cameraNodeSubscriber = pImageTransport->subscribe(topicName, bufferSize, &CVNode::receiveImage, this);
+	cameraNodeSubscriber = pImageTransport->subscribe(topicName, bufferSize, &CVNode::imageHasBeenReceived, this);
 
 	// Wait for publisher(s) to be ready
 	while (cameraNodeSubscriber.getNumPublishers() == 0) {
@@ -65,9 +65,9 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
  */
 CVNode::~CVNode() {
 	// Delete all VisibleObjects
-	while (!visibleObjectList.empty()) {
-		delete visibleObjectList.front();
-		visibleObjectList.pop_front();
+	while (!objectsToSearchFor.empty()) {
+		delete objectsToSearchFor.front();
+		objectsToSearchFor.pop_front();
 	}
 
 	frontEndPublisher.shutdown();
