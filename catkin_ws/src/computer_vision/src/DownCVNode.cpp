@@ -101,7 +101,10 @@ void DownCVNode::imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message)
 	try {
 		// Loop through the list of visible objects and transmit
 		// the received image to each visible object
-		for (it = objectsToSearchFor.begin(); it != objectsToSearchFor.end(); it++) {
+		for (it = objectsToSearchFor.begin(); it != objectsToSearchFor.end(); it++) {\
+			//FIXME This code will only work if there is ONLY ONE OBJECT in the vector.
+			// this is to be improved after the competition so that we can support more than
+			// one objects.
 			messagesToPublish = (*it)->retrieveObjectData(currentImageMatrix);
 		}
 
