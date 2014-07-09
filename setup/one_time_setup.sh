@@ -10,8 +10,8 @@ sudo cp -fv 48-RoboSub.rules /etc/udev/rules.d/48-RoboSub.rules
 echo "$(tput setaf 3)Copy Crontab startup script$(tput sgr 0)"
 sudo cp -fv startup ~/startup
 echo "$(tput setaf 3)Copy yml files for teamocil$(tput sgr 0)"
-sudo cp -fv startup.yml ~/.teamocil/startup.yml
-sudo cp -fv temperature.yml ~/.teamocil/temperature.yml
+cp -fv startup.yml ~/.teamocil/startup.yml
+cp -fv temperature.yml ~/.teamocil/temperature.yml
 
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                 # old dotfiles backup directory

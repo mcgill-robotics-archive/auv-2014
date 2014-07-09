@@ -2,7 +2,7 @@ windows:
   - name: "Core"
     clear: true
     root: "~/McGill_RoboSub_2014"
-    layout: "4c9b,205x57,0,0[205x28,0,0{64x28,0,0,75x28,65,0,64x28,141,0},205x28,0,29{95x28,0,29,109x28,96,29}]"
+    layout: "9377,185x52,0,0[185x15,0,0{46x15,0,0,45x15,47,0,46x15,93,0,45x15,140,0},185x14,0,16{46x14,0,16,45x14,47,16,46x14,93,16,45x14,140,16},185x21,0,31{92x21,0,31,92x21,93,31}]"
     panes:
       - cmd: "clear && roscore"
       - cmd: "sleep 20 && roslaunch ~/McGill_RoboSub_2014/catkin_ws/launch/startup.launch"
