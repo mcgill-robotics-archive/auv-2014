@@ -42,8 +42,8 @@
   #define VOLTAGE_INTERVAL 1000       //amount of delay between each voltages read
   #define DEPTH_INTERVAL 200          //amount of delay between each depth read
   
-  #define TEMP_RATIO 0.322265625
-  #define VOLT_RATIO 0.034179688
+const double TEMP_RATIO = 0.322265625;
+const double VOLT_RATIO = (3.3*30.9) / (3.9*1024.0); //(teensy voltage * totoal resistance / (single resisitance * max bit))
   
   
 ros::NodeHandle nh;
