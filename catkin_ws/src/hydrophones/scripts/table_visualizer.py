@@ -68,6 +68,7 @@ sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(NU
 sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(NUMBER_OF_PINGERS)]
 last_ping = [time.time() for pinger in range(NUMBER_OF_PINGERS)]
 
+
 def update_magnitudes(data):
     """ Parses frequency amplitudes """
     magn[0] = data.channel_0
