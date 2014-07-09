@@ -25,7 +25,7 @@ private:
 	int numFramesWithoutObject;
 
 	void instanciateAllVisibleObjects();
-	void receiveImage(const sensor_msgs::ImageConstPtr& message);
+	void imageHasBeenReceived(const sensor_msgs::ImageConstPtr& message);
 	void listenToPlanner(planner::CurrentCVTask msg);
 };
 

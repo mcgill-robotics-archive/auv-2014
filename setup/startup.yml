@@ -9,4 +9,9 @@ windows:
       - cmd: "sleep 25 && roslaunch status status.launch"
       - cmd: "clear"
       - cmd: "clear"
+      - cmd: "clear"
+      - cmd: "clear"
+      - cmd: "clear"
+      - cmd: "clear"
+      - cmd: "clear"
 

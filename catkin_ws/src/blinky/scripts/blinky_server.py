@@ -188,8 +188,8 @@ def BlinkyTapeServer():
         planner_length = len(planner_colorList_copy)
         battery_length = len(battery_colorList_copy)
         if (warning_on_copy == False) or (warning_freq_copy <= 0.0):
-            list1 = planner_colorList_copy[0:planner_length/2] + battery_colorList_copy[0:battery_length/2]
-            list2 = battery_colorList_copy[battery_length/2:battery_length] + planner_colorList_copy[planner_length/2:planner_length]
+            list1 = battery_colorList_copy[0:battery_length/2] + planner_colorList_copy[0:planner_length/2]
+            list2 = planner_colorList_copy[planner_length/2:planner_length] + battery_colorList_copy[battery_length/2:battery_length]
             edge_time = time.time() # reset time counter
 
         # if warnings are on, toggle the planner and battery display after each half-period
@@ -199,8 +199,8 @@ def BlinkyTapeServer():
                 list2 = warning_colorList_copy
                 state = 1
             else:
-                list1 = planner_colorList_copy[0:planner_length/2] + battery_colorList_copy[0:battery_length/2]
-                list2 = battery_colorList_copy[battery_length/2:battery_length] + planner_colorList_copy[planner_length/2:planner_length]
+                list1 = battery_colorList_copy[0:battery_length/2] + planner_colorList_copy[0:planner_length/2]
+                list2 = planner_colorList_copy[planner_length/2:planner_length] + battery_colorList_copy[battery_length/2:battery_length]
                 state = 0
 
             # reset time counter

@@ -12,15 +12,16 @@ checkingForFileName=false
 # Displays the usage of this script.
 usage() {
     echo USAGE: rosbagHelper.sh OPTION
-    echo "options: -a : all topics specified under"  
+    echo "options: -a : all topics specified below except for hydrophones"
     echo "         -i : imu pose and raw data"
     echo "         -t : data from all temperature sensors"
     echo "         -c : camera data; i.e. camera info, image rectified and color image from up and down cameras"
     echo "         -d : depth sensor data"
     echo "         -v : voltages from both batteries"
     echo "         -e : motor message, usb, solenoid, and pressure inside main pressure vessel"
-    echo "         -s : all state estimation topics (include IMU specific topics)"
-    echo "         -h : prints this menu"
+    echo "         -h : all hydrophones topics"
+    echo "         -s : all state estimation topics (including IMU specific topics)"
+    echo "         -help : prints this menu"
     echo "         -name nameOfYourROSBag : Will save the ROSbag using 'nameOfYourROSBag' as the filename."
     echo "                                  If the parameter is not present, a timestamp will be used."
     exit
@@ -62,6 +63,10 @@ addStateEstimationTopics() {
 	command_arguments="${command_arguments} tf"
 }
 
+addHydrophonesTopics() {
+	command_arguments="${command_arguments} hydrophones/audio hydrophones/freq hydrophones/magn hydrophones/peak hydrophones/sol hydrophones/tdoa"
+}
+
 # Changes the name of the ROS bag to what the user specified. Does some check on the name and will use a timestamp if rejected.
 changeNameOfRosBag() {
 	if [ -e "${targetDirectory}$1" ]; then
@@ -87,6 +92,7 @@ handleInputParameters() {
 						addDepthTopic
 						addVoltageTopics
 						addElectricalInterfaceTopics
+						# addHydrophonesTopics
 						;;
 					'-i' )
 						addImuTopics
@@ -101,7 +107,8 @@ handleInputParameters() {
 						addDepthTopic
 						;;
 					'-h' )
-						usage
+						addHydrophonesTopics
+						addImuTopics
 						;;
 					'-v' )
 						addVoltageTopics
@@ -109,12 +116,15 @@ handleInputParameters() {
 					'-e' )
 						addElectricalInterfaceTopics
 						;;
+					'-help' )
+						usage
+						;;
 					'-name' )
 						checkingForFileName=true
 						continue # This is to make sure that on the next iteration I will be checking for the file name.
 						;;
 					* )
-						echo "The input '${arg}' is not valid, try -h to see all the supported parameters."
+						echo "The input '${arg}' is not valid, try -help to see all the supported parameters."
 			            ;;
 				esac
 			else

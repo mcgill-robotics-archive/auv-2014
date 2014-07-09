@@ -21,27 +21,17 @@ def get_ports():
                 ports.append(dinfo['device'])
                 names.append(dinfo['tag'])
                 num_device+=1
-    #print num_device
-    #print ports
-    #print names
+
     msg = usb(num_device, ports, names)
     return msg
 
 if __name__ == '__main__':
-    try:
-        if not rospy.is_shutdown():
-            rospy.init_node('USB_monitor')
-            usb_topic = rospy.Publisher('status/usb', usb)
-            rate = rospy.Rate(1)
+    if not rospy.is_shutdown():
+        rospy.init_node('USB_monitor')
+        usb_topic = rospy.Publisher('status/usb', usb)
+        rate = rospy.Rate(1)
 
-            while True:
-                try:
-                    msg = get_ports()
-                    #print msg
-                    usb_topic.publish(msg)
-                    rate.sleep()
-
-                except KeyboardInterrupt:
-                    break
-    except Exception as e:
-        print e
+        while not rospy.is_shutdown():
+            msg = get_ports()
+            usb_topic.publish(msg)
+            rate.sleep()
