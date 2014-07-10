@@ -18,7 +18,7 @@ gains/kp_Pitch: .2
 gains/ki_Pitch: 0
 gains/kd_Pitch: 0
 
-gains/kp_Yaw: 1
+gains/kp_Yaw: 5
 gains/ki_Yaw: 0
 gains/kd_Yaw: 0.5
 
