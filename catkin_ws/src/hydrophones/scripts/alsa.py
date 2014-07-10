@@ -29,8 +29,8 @@ signal = channels()
 def setup():
     """ Sets up audio streams """
     global inputs
-    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:0,0')
-    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:0,1')
+    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:1,0')
+    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:1,2')
     inputs = {'mic':mic, 'lin':lin}
 
     for card in inputs:
