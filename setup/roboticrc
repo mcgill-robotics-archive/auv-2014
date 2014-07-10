@@ -6,8 +6,11 @@ alias roscereal='rosrun rosserial_python serial_node.py'
 alias asimov='ssh -Y robotics@10.0.0.1'
 alias asimosh='mosh robotics@10.0.0.1'
 alias uri='export ROS_MASTER_URI=http://10.0.0.1:11311'
-alias softkill='rostopic pub /controls/softKill std_msgs/Bool "data: true"'
-alias softstart='rostopic pub /controls/softKill std_msgs/Bool "data: false"'
+alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
+alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
+
+export USB_COMMAND="'0001\\|0002'"
+alias watch_usb="watch --interval=1 \"lsusb | grep $USB_COMMAND \" "
 
 function stop_warning {
     rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"

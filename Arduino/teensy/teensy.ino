@@ -9,12 +9,12 @@
 //Pin definitions 
 
   //PWM MOTOR
-  #define MOTOR_PIN_SU_ST 0
-  #define MOTOR_PIN_SU_PO 1
+  #define MOTOR_PIN_SU_ST 4
+  #define MOTOR_PIN_SU_PO 5
   #define MOTOR_PIN_SW_BO 2
   #define MOTOR_PIN_SW_ST 3
-  #define MOTOR_PIN_HE_BO 4
-  #define MOTOR_PIN_HE_ST 5
+  #define MOTOR_PIN_HE_BO 0
+  #define MOTOR_PIN_HE_ST 1
 
   //SOLENOID  
   #define SOLENOID_PIN_D_1 6 
@@ -42,7 +42,7 @@
   #define VOLTAGE_INTERVAL 1000       //amount of delay between each voltages read
   #define DEPTH_INTERVAL 200          //amount of delay between each depth read
   
-const double TEMP_RATIO = 0.322265625;
+const double TEMP_RATIO = 0.322265625;    
 const double VOLT_RATIO = (3.3*30.9) / (3.9*1024.0); //(teensy voltage * totoal resistance / (single resisitance * max bit))
   
   
@@ -75,21 +75,21 @@ int boundCheck(int x){
 
 void motorCb( const controls::motorCommands& msg){
   lastMotorCommand = millis();
-  myservo[0].writeMicroseconds(1496 + boundCheck(msg.cmd_surge_starboard));
-  myservo[1].writeMicroseconds(1499 + boundCheck(msg.cmd_surge_port));
+  myservo[0].writeMicroseconds(1476 + boundCheck(msg.cmd_surge_starboard));
+  myservo[1].writeMicroseconds(1483 + boundCheck(msg.cmd_surge_port));
   myservo[2].writeMicroseconds(1471 + boundCheck(msg.cmd_sway_bow));
   myservo[3].writeMicroseconds(1476 + boundCheck(msg.cmd_sway_stern));
-  myservo[4].writeMicroseconds(1469 + boundCheck(msg.cmd_heave_bow));
-  myservo[5].writeMicroseconds(1476 + boundCheck(msg.cmd_heave_stern));
+  myservo[4].writeMicroseconds(1489 + boundCheck(msg.cmd_heave_bow));
+  myservo[5].writeMicroseconds(1488 + boundCheck(msg.cmd_heave_stern));
 }
 
 void resetMotor(){
-  myservo[0].writeMicroseconds(1496);
-  myservo[1].writeMicroseconds(1499);
+  myservo[0].writeMicroseconds(1476);
+  myservo[1].writeMicroseconds(1483);
   myservo[2].writeMicroseconds(1471);
   myservo[3].writeMicroseconds(1476);
-  myservo[4].writeMicroseconds(1469);
-  myservo[5].writeMicroseconds(1476);
+  myservo[4].writeMicroseconds(1489);
+  myservo[5].writeMicroseconds(1488);
 }
 
 
@@ -161,7 +161,7 @@ void setup(){
 void loop(){
   
   long currentTime = millis();
-
+  /*
   //temperature sensing
   if(temperatureSechedule < currentTime){
    temperature1_msg.data = analogRead(TEMPERATURE_PIN_1) * TEMP_RATIO -50; 
@@ -176,6 +176,7 @@ void loop(){
    temperaturePub5.publish(&temperature5_msg);
    temperatureSechedule += TEMPERATURE_INTERVAL;
   }
+  */
   
   //depth sensing  
   if(depthSensorSchedule < currentTime){
