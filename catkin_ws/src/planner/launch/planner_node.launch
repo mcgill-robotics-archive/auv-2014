@@ -4,7 +4,7 @@
 
   <arg name="start_task" default="gate"/>
   <arg name="end_task" default="gate"/>
-  <arg name="isInSim" default="1"/>
+  <arg name="isInSim" default="0"/>
 
   <node name="planner" pkg="planner" type="planner" respawn="false" output="screen">
 
