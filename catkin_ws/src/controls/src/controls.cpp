@@ -174,6 +174,9 @@ void pitchHorizon_callback(){
 	/*
 	* Subscribe to pose from the IMU to get pitch WRT the horizon.
 	* But what about accounting for the placement of the IMU? Sure that should be defined in a TF...
+
+	//NO! TF IS BETTER!
+
 	*/
 }
 
@@ -182,6 +185,9 @@ void getStateFromTF()
 {
 	/*
 	* Looks up the TF and saves local variables for estimated position.
+	* First looks up TF for x,y,yaw for arbitrary frame
+	* Then looks up TF for pitch
+	
 	*/
 	if (frame == "")
 	{
@@ -192,20 +198,20 @@ void getStateFromTF()
 	tf::TransformListener tf_listener; 
 
 	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	const std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	const std::string originalFrame = frame; //specified on the setPoints topic
+	std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
+	std::string originalFrame = frame; //specified on the setPoints topic
 	
 	try
 	{
-	double currentTime = ros::Time::now().toSec();
-	ROS_DEBUG("waiting for transform- currentTime: %f", currentTime);
-	tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
-	currentTime = ros::Time::now().toSec();
-	ROS_DEBUG("done waiting for transform - currentTime: %f", currentTime);
-	tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
+		double currentTime = ros::Time::now().toSec();
+		ROS_DEBUG("waiting for transform- currentTime: %f", currentTime);
+		tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
+		currentTime = ros::Time::now().toSec();
+		ROS_DEBUG("done waiting for transform - currentTime: %f", currentTime);
+		tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
 	}
 	catch (tf::TransformException ex){
-	ROS_ERROR("%s",ex.what());
+		ROS_ERROR("%s",ex.what());
 	}
 	
 
@@ -221,6 +227,45 @@ void getStateFromTF()
 
 	
 	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
+
+
+
+
+
+
+
+
+
+
+
+
+	//Pitch and not all other dimensions
+
+	
+	tf::TransformListener tf_listener_pitch; 
+
+	targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //same as above
+	originalFrame = "robot/initial_pose"; //specified on the setPoints topic
+	
+	try
+	{
+		double currentTime = ros::Time::now().toSec();
+		ROS_DEBUG("waiting for pitch transform- currentTime: %f", currentTime);
+		tf_listener_pitch.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
+		currentTime = ros::Time::now().toSec();
+		ROS_DEBUG("done waiting for pitch transform - currentTime: %f", currentTime);
+		tf_listener_pitch.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform); //overwrite transform object
+	}
+	catch (tf::TransformException ex){
+		ROS_ERROR("error looking up pitch transform: \n %s",ex.what());
+	}
+	
+	q = transform.getRotation(); //save the rotation as a quaternion - overwrite
+	tf::Matrix3x3 matrix_for_pitch(q); //convert quaternion to matrix - overwrite
+
+	double yaw_unused;
+	
+	matrix_for_pitch.getEulerYPR(yaw_unused, estimated_Pitch, roll_unused);
 
 	//estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
@@ -550,7 +595,7 @@ int main(int argc, char **argv)
 				debugMsg.estimated_y = estimated_YPos;
 				debugMsg.estimated_depth = depth;
 				debugMsg.estimated_yaw = estimated_Yaw;
-				debugMsg.estimated_pitch = 99; //TODO add reference to var.
+				debugMsg.estimated_pitch = estimated_Pitch; //TODO add reference to var.
 
 			// Error
 				debugMsg.xError.proportional = ep_XPos;
