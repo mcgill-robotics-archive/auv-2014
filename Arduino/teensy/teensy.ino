@@ -43,7 +43,7 @@
   #define DEPTH_INTERVAL 200          //amount of delay between each depth read
   
 const double TEMP_RATIO = 0.322265625;    
-const double VOLT_RATIO = (3.3*30.9) / (3.9*1024.0); //(teensy voltage * totoal resistance / (single resisitance * max bit))
+const double VOLT_RATIO = (3.3*30.9 * 24.12) / (3.9 * 1024.0 * 23.5); //(teensy voltage * totoal resistance / (single resisitance * max bit))
   
   
 ros::NodeHandle nh;
@@ -58,10 +58,10 @@ std_msgs::Float32 temperature5_msg;
 
 Servo myservo[6];
 
-unsigned long depthSensorSchedule;
-unsigned long batteryVoltageSchedule;
-unsigned long temperatureSechedule;
-unsigned long lastMotorCommand;
+unsigned long depthSensorSchedule = 0;
+unsigned long batteryVoltageSchedule = 0;
+unsigned long temperatureSechedule = 0;
+unsigned long lastMotorCommand = 0;
 
 int boundCheck(int x){
   if(x> 500 || x< -500){
@@ -109,11 +109,13 @@ ros::Publisher depthPub("/electrical_interface/depth", &depth_msg);  // Publish 
 ros::Publisher voltagePub1("/electrical_interface/batteryVoltage1", &batteryVoltage1_msg);
 ros::Publisher voltagePub2("/electrical_interface/batteryVoltage2", &batteryVoltage2_msg);
 
+/*
 ros::Publisher temperaturePub1("/electrical_interface/temperature1", &temperature1_msg);
 ros::Publisher temperaturePub2("/electrical_interface/temperature2", &temperature2_msg);
 ros::Publisher temperaturePub3("/electrical_interface/temperature3", &temperature3_msg);
 ros::Publisher temperaturePub4("/electrical_interface/temperature4", &temperature4_msg);
 ros::Publisher temperaturePub5("/electrical_interface/temperature5", &temperature5_msg);
+*/
 
 ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
 
@@ -144,11 +146,13 @@ void setup(){
   nh.advertise(depthPub);        //depth sensor
   nh.advertise(voltagePub1);     //battery level
   nh.advertise(voltagePub2);
+  /*
   nh.advertise(temperaturePub1);
   nh.advertise(temperaturePub2);
   nh.advertise(temperaturePub3);
   nh.advertise(temperaturePub4);
   nh.advertise(temperaturePub5);
+  */
   
   //ros subscribe initialization
   nh.subscribe(motorSub);  
