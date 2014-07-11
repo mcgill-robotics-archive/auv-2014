@@ -22,6 +22,7 @@ double T_MAX;
 boost::numeric::ublas::matrix<double> wrench2thrust (5,5);
 
 float limit_check(float value, float max, char* value_type, char* value_id){
+	//UNUSED AS OF JUNE 11 2014
 	if (value > max | value < -1*max) {
 		ROS_WARN("%s: %s value is %f. This exceeds the maximum allowable value of %f.", value_type, value_id, value, max);
 		value = 0; 
@@ -31,6 +32,23 @@ float limit_check(float value, float max, char* value_type, char* value_id){
 		return value;
 	}
 }
+
+
+float saturate(float value, float max, char* value_name) {
+	//saturates if out of range
+	if (value > max) {
+		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
+		value=max;
+	}
+	else if (value < -1*max)
+	{
+		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
+		value=-1*max;
+	}
+
+	return value;
+}
+
 
 //update these values based on final characterization
 float thrust_voltage(float thrust){
@@ -92,7 +110,6 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	int32_t motor_cmd[6] = {0, 0, 0, 0, 0, 0};
 
 	controls::motorCommands motorCommands;
-	controls::DebugControls DebugControls;
 	boost::numeric::ublas::vector<double> wrenchVector (5);
 	boost::numeric::ublas::vector<double> thrustsVector (5);
 
@@ -124,7 +141,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
  	for (int i=0; i<6; i++)
 	{
 		voltage[i] = thrust_voltage(thrust[i]);
-		voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
+		//voltage[i] = limit_check(voltage[i], VOLTAGE_MAX, "VOLTAGE", voltage_name[i]);
 		//ROS_DEBUG("Voltage %i: %f",i,voltage[i]);
 	}	
 
@@ -139,10 +156,10 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	motor_cmd[4] = 20.583*voltage[4];
 	motor_cmd[5] = 20.63*voltage[5];
 
-	char* motor_name[] {"one", "two", "three", "four", "five", "six"};
+	char* motor_name[] {"Motor 1: surge-starbord", "Motor 2: surge-port", "Motor 3: sway-bow", "Motor 4: sway-stern", "Motor 5: heave-bow", "Motor 6: heave-stern"};
 	for (int i=0; i<6; i++)
 	{	
-		motor_cmd[i] = limit_check(motor_cmd[i], MOTOR_CMD_MAX, "MOTOR", motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
+		motor_cmd[i] = saturate(motor_cmd[i], MOTOR_CMD_MAX, motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
 	}
 
 	motorCommands.cmd_surge_starboard=motor_cmd[0];
@@ -152,16 +169,8 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	motorCommands.cmd_heave_bow=motor_cmd[4];
 	motorCommands.cmd_heave_stern=motor_cmd[5];
 
-	DebugControls.thrust_surge_port=thrust[0];
-	DebugControls.thrust_surge_starboard=thrust[1];
-	DebugControls.thrust_sway_bow=thrust[2];
-	DebugControls.thrust_sway_stern=thrust[3];
-	DebugControls.thrust_heave_bow=thrust[4];
-	DebugControls.thrust_heave_stern=thrust[5];
-
 	//publish
 	voltage_publisher.publish(motorCommands);
-	thrust_publisher.publish(DebugControls);
 }
 
 int main(int argc, char **argv)
@@ -182,8 +191,6 @@ int main(int argc, char **argv)
 
 	//ROS Publisher setup
 	voltage_publisher = n.advertise<controls::motorCommands>("/electrical_interface/motor", 100); 
-	thrust_publisher = n.advertise<controls::DebugControls>("/controls/DebugControls", 100); 
-
 	/*
 	** Calculations for the allocation of thrust to each thruster **
 	----------------------------------------------------------------

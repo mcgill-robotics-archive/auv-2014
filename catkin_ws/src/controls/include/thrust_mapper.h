@@ -15,6 +15,7 @@
 #include <string>
 
 float limit_check(float value, float min, float max, char* value_type, char* value_id );
+float saturate(float value, float max, char* value_name);
 void thrust_callback(geometry_msgs::Wrench wrenchMsg);
 float thrust_voltage(float thrust);
 #endif

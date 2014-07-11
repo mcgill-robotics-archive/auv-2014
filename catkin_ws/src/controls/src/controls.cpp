@@ -4,10 +4,12 @@
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
 Open Loop Speed Control.	
 
-Created by Nick Speal Jan 10.
+Created by Nick Speal Jan 10 2014.
 */
 
 //global vars
+	double PI = 3.14159265359;
+
 	double z_des = 0;
 	double z_est = 0;
 
@@ -31,7 +33,7 @@ Created by Nick Speal Jan 10.
 	int8_t isActive_YawSpeed = 0;
 	int8_t isActive_DepthSpeed = 0;
 
-	std::string frame = "target/gate"; //default
+	std::string frame = ""; //default
 
 	double estimated_XPos = 0;
 	double estimated_YPos = 0;
@@ -60,7 +62,32 @@ Created by Nick Speal Jan 10.
 	double YAW_MAX;
 	double PITCH_MAX;
 
+	//define and initialize error variables
+    double ep_XPos = 0; //error
+    double ei_XPos = 0; //integral error
+    double ed_XPos = 0; //derivative error
+    double ep_XPos_prev = 0; //proportional error at last timestep
+    double ep_YPos = 0;
+    double ei_YPos = 0;
+    double ed_YPos = 0;
+    double ep_YPos_prev = 0;
+    double ep_Depth = 0;
+    double ei_Depth = 0;
+    double ed_Depth = 0;
+    double ep_Depth_prev = 0;
+    double ep_Pitch = 0;
+    double ei_Pitch = 0;
+    double ed_Pitch = 0;
+    double ep_Pitch_prev = 0;
+    double ep_Yaw = 0;
+    double ei_Yaw = 0;
+    double ed_Yaw = 0;
+    double ep_Yaw_prev = 0;
+
+
 	bool killed = false;
+	ros::Time timeOfLastSetPoint; //for checking if setPoints is still publishing
+	planner::setPoints oldSetPointsMsg; //for checking if setPoints has changed.
 
 void soft_kill_callback(const std_msgs::Bool data)
 {
@@ -69,7 +96,21 @@ void soft_kill_callback(const std_msgs::Bool data)
 
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
-	double currentTime = ros::Time::now().toSec();
+	
+	//check if setPoints has changed
+	/*
+	if (oldSetPointsMsg == setPointsMsg){
+		//reset integral errors
+	    double ei_XPos = 0; //integral error
+	    double ei_YPos = 0;
+	    double ei_Depth = 0;
+	    double ei_Pitch = 0;
+	    double ei_Yaw = 0;	    
+		oldSetPointsMsg = setPointsMsg;
+	}
+	*/
+	timeOfLastSetPoint = ros::Time::now();
+	double currentTime = timeOfLastSetPoint.toSec();
 	ROS_DEBUG("received setPoints - currentTime: %f", currentTime);
 
 	setPoint_XPos = setPointsMsg.XPos.data;
@@ -180,7 +221,8 @@ void getStateFromTF()
 
 	
 	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
-	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
+
+	//estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
 	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
 	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
 }
@@ -232,29 +274,7 @@ int main(int argc, char **argv)
 	    double OL_coef_yaw;
 	    double OL_coef_balance; // used to balance surge thrusters, given as a whole number percent, off of evenly balanced
 	   
-	//define and initialize error variables
-	
 
-	    double ep_XPos = 0; //error
-	    double ei_XPos = 0; //integral error
-	    double ed_XPos = 0; //derivative error
-	    double ep_XPos_prev = 0; //proportional error at last timestep
-	    double ep_YPos = 0;
-	    double ei_YPos = 0;
-	    double ed_YPos = 0;
-	    double ep_YPos_prev = 0;
-	    double ep_Depth = 0;
-	    double ei_Depth = 0;
-	    double ed_Depth = 0;
-	    double ep_Depth_prev = 0;
-	    double ep_Pitch = 0;
-	    double ei_Pitch = 0;
-	    double ed_Pitch = 0;
-	    double ep_Pitch_prev = 0;
-	    double ep_Yaw = 0;
-	    double ei_Yaw = 0;
-	    double ed_Yaw = 0;
-	    double ep_Yaw_prev = 0;
 
 	//Define wrench variables. They get reinitialized to zero on each iteration.
 	    double Fx = 0;
@@ -263,12 +283,12 @@ int main(int argc, char **argv)
 	    double Ty = 0;
 	    double Tz = 0;
 
+	ros::Duration durationSinceLastSetPoint;
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
 	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
 	ros::Subscriber softKill_subscriber = n.subscribe("/controls/softKill", 1000, soft_kill_callback);
-	//TO DO: add clock subscription
 
 	//ROS Publisher setup
 	ros::Publisher wrench_publisher = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 100);
@@ -285,6 +305,7 @@ int main(int argc, char **argv)
 		ROS_DEBUG_THROTTLE(2,"Waiting...");
 		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
+	timeOfLastSetPoint = ros::Time::now();
 	ROS_INFO("All Subscribers Live. Starting Controller!");
 	ros::Rate loop_rate(1/dt);
 	while(ros::ok())
@@ -348,6 +369,26 @@ int main(int argc, char **argv)
 
 
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
+
+
+		//make sure all dimensions are not controlled unless setPoints says so. No control if 
+		durationSinceLastSetPoint = ros::Time::now() - timeOfLastSetPoint;
+		//ROS_INFO("Duration since last set point: %f", durationSinceLastSetPoint.toSec());
+		if (durationSinceLastSetPoint.toSec() > 3) {
+			if (durationSinceLastSetPoint.toSec() <6){ //nested if so that this message isn't repeated forever and ever
+				ROS_INFO("No recent setPoint. Pausing Controls."); 	
+			}
+			isActive_XPos = 0;
+			isActive_YPos = 0;
+			isActive_Depth = 0;
+			isActive_Yaw = 0;
+			isActive_Pitch = 0;
+			isActive_XSpeed = 0;
+			isActive_YSpeed = 0;
+			isActive_YawSpeed = 0;
+			isActive_DepthSpeed = 0;
+			//frame = ""; no need to reset this. It just throws lots of warnings
+		}
 
 		double currentTime = ros::Time::now().toSec();
 		ROS_DEBUG("\n--\nTop of main loop - currentTime: %f", currentTime);
@@ -462,6 +503,13 @@ int main(int argc, char **argv)
 	       	setPoint_Yaw=saturate(setPoint_Yaw, YAW_MAX, "Yaw"); //saturate yaw
 			ep_Yaw_prev = ep_Yaw;
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
+			if (ep_Yaw > PI){
+				ep_Yaw -= 2*PI;
+			}
+			else if (ep_Yaw < -1*PI){
+				ep_Yaw += 2*PI;
+			}
+			ep_Yaw = saturate(ep_Yaw, MAX_ERROR_YAW_P, "Yaw Proportional Error");
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
 			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
@@ -473,8 +521,8 @@ int main(int argc, char **argv)
         {
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
-		//Limit check for output force/torque values
-			Fx=saturate(Fx, F_MAX, "Force: X");
+		//Limit check for output force/torque values - not meaningful saturation as of July 11 because the limits are intentionally super high
+			Fx=saturate(Fx, F_MAX, "Force: X"); 
 			Fy=saturate(Fy, F_MAX, "Force: Y");
 			Fz=saturate(Fz, F_MAX, "Force: Z");
 			Ty=saturate(Ty, T_MAX, "Torque: Y");
@@ -496,6 +544,14 @@ int main(int argc, char **argv)
 
 		// Assemble Debug Message
 
+			//Estimated Positions
+
+				debugMsg.estimated_x = estimated_XPos;
+				debugMsg.estimated_y = estimated_YPos;
+				debugMsg.estimated_depth = depth;
+				debugMsg.estimated_yaw = estimated_Yaw;
+				debugMsg.estimated_pitch = 99; //TODO add reference to var.
+
 			// Error
 				debugMsg.xError.proportional = ep_XPos;
 				debugMsg.yError.proportional = ep_YPos;
@@ -515,26 +571,6 @@ int main(int argc, char **argv)
 				debugMsg.pitchError.derivative = ed_Pitch;
 				debugMsg.yawError.derivative = ed_Yaw;
 
-			// Gains	
-				
-				debugMsg.xGain.proportional = kp_xPos;
-				debugMsg.yGain.proportional = kp_yPos;
-				debugMsg.depthGain.proportional = kp_Depth;
-				debugMsg.pitchGain.proportional = kp_Pitch;
-				debugMsg.yawGain.proportional = kp_Yaw;
-
-				debugMsg.xGain.integral = ki_xPos;
-				debugMsg.yGain.integral = ki_yPos;
-				debugMsg.depthGain.integral = ki_Depth;
-				debugMsg.pitchGain.integral = ki_Pitch;
-				debugMsg.yawGain.integral = ki_Yaw;
-
-				debugMsg.xGain.derivative = kd_xPos;
-				debugMsg.yGain.derivative = kd_yPos;
-				debugMsg.depthGain.derivative = kd_Depth;
-				debugMsg.pitchGain.derivative = kd_Pitch;
-				debugMsg.yawGain.derivative = kd_Yaw;
-				
 			// Forces
 				debugMsg.xForce.proportional = kp_xPos*ep_XPos;
 				debugMsg.yForce.proportional = kp_yPos*ep_YPos;

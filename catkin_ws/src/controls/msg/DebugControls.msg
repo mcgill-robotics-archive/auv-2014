@@ -2,6 +2,15 @@
 # It contains values published by controls that should be useful
 # for debugging the control system
 
+
+# Estimated Positions
+
+float64 estimated_x
+float64 estimated_y
+float64 estimated_depth
+float64 estimated_yaw
+float64 estimated_pitch
+
 # Errors
 
 VectorPID xError
@@ -10,13 +19,6 @@ VectorPID depthError
 VectorPID pitchError
 VectorPID yawError
 
-# Gains
-
-VectorPID xGain
-VectorPID yGain
-VectorPID depthGain
-VectorPID pitchGain
-VectorPID yawGain
 
 # PID Forces (and Torques)
 
@@ -25,14 +27,3 @@ VectorPID yForce
 VectorPID depthForce
 VectorPID pitchForce
 VectorPID yawForce
-
-# Total Forces?
-
-# Thrusts
-int32 thrust_surge_port
-int32 thrust_surge_starboard
-int32 thrust_sway_bow
-int32 thrust_sway_stern
-int32 thrust_heave_bow
-int32 thrust_heave_stern
-
