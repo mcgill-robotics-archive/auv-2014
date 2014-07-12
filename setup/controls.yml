@@ -1,0 +1,11 @@
+windows:
+  - name: "Core"
+    clear: true
+    root: "~/"
+    layout: "b378,185x52,0,0{92x52,0,0[92x26,0,0,92x25,0,27],46x52,93,0[46x26,93,0,46x25,93,27],45x52,140,0}"
+    panes:
+      - cmd: "pwd"
+      - cmd: "roslaunch controls controls.launch"
+      - cmd: "sleep 2 && rostopic echo /controls/wrench"
+      - cmd: "sleep 2 && rostopic echo -p /electrical_interface/motor"
+      - cmd: "sleep 2 && rostopic echo /controls/debug"

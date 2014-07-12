@@ -5,13 +5,12 @@ windows:
     layout: "9377,185x52,0,0[185x15,0,0{46x15,0,0,45x15,47,0,46x15,93,0,45x15,140,0},185x14,0,16{46x14,0,16,45x14,47,16,46x14,93,16,45x14,140,16},185x21,0,31{92x21,0,31,92x21,93,31}]"
     panes:
       - cmd: "clear && roscore"
-      - cmd: "sleep 20 && roslaunch state_estimation state_estimation.launch"
-      - cdm: "sleep 20 && roslaunch robosub_msg teeny.launch "
+      - cmd: "sleep 25 && roslaunch state_estimation state_estimation.launch"
+      - cmd: "sleep 20 && roslaunch robosub_msg teensy.launch "
       - cmd: "sleep 25 && roslaunch status status.launch"
-      - cmd: "watch_usb"
+      - cmd: "sleep 10 && watch_usb"
       - cmd: "clear"
       - cmd: "clear"
       - cmd: "clear"
       - cmd: "clear"
       - cmd: "clear"
-
