@@ -19,6 +19,7 @@
 const std::string VIDEO_FEED_TOPIC_NAME = "camera_feed";
 const std::string FORWARD_CAMERAS_TOPIC_NAME = "forward_cameras_object";
 const int FRAME_VISIBILITY_THRESHOLD = 10;
+const int ONE_SECOND = 1;
 
 class CVNode {
 
