@@ -31,6 +31,7 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 	// Wait for publisher(s) to be ready
 	while (cameraNodeSubscriber.getNumPublishers() == 0) {
 		ROS_INFO_THROTTLE(DELAY_BETWEEN_INFOS, (std::string(__PRETTY_FUNCTION__) + ": Waiting for a publisher to start publishing on the topic '" + topicName + "'.").c_str());
+		ros::Duration(ONE_SECOND).sleep();
 	}
 
 	nodeHandle.param<bool>("cv_front_using_helper_windows", front_using_helpers, 0);
