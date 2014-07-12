@@ -248,6 +248,12 @@ void Planner::setPosition(std::vector<double> desired, std::string referenceFram
 	setPoints(pointControl, referenceFrame);
 }
 
+void Planner::setVelocityWithCloseLoopYawAndDepth(double yaw, double x_speed, double depth, std::string referenceFrame) {
+	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 0, 0, 1, x_speed, 0, 0,
+			0, 0, 1, depth, 0, 0};
+	setPoints(pointControl, referenceFrame);
+}
+
 void Planner::switchToTask(Tasks newTask) {
 	switch(newTask) {
 		case Gate: 

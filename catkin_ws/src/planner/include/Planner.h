@@ -46,6 +46,7 @@ class Planner{
 	void setVisionObj(int objIndex);
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
+	void setVelocityWithCloseLoopYawAndDepth(double yaw, double x_speed, double depth, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();

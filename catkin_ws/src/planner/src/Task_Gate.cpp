@@ -8,7 +8,7 @@ Task_Gate::Task_Gate(Planner* planner, StatusUpdater* mSU, int newPhase){
 
 void Task_Gate::execute() {
 	//setup stuff that should always run
-	frame = "/target/gate";
+	frame = "/robot/initial_pose";
 	ROS_INFO("%s", "Executing the gate task.");
 
 	if(phase <= 1) {
@@ -33,14 +33,17 @@ void Task_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
-	myPlanner->setVelocity(1, 0, 0, 8.8, frame);
+	//GO STRAIGHT
+	myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame);
+
 	loop_rate.sleep();
 	tf::TransformListener listener;
 	try {
 		listener.waitForTransform(frame, "/robot/rotation_center",
 			ros::Time(0), ros::Duration(90));
 	} catch (tf::TransformException ex) {
-		myPlanner->weAreLost(myPlanner->Gate_A, 1);
+		ROS_INFO("Could not find transform from %s to /robot/rotation_center, keep going straight", frame.c_str());
+		myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame); //Keeps going straight if cannot find transform
 	}
 	ROS_INFO("we found it");
 }
