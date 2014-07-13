@@ -6,7 +6,7 @@
 
   <rosparam command="load" file="$(find computer_vision)/config/gate.yaml"/>
 
-  <arg name="isUsingSimulation" default="1"/>
+  <arg name="isUsingSimulation" default="0"/>
 
   <group if="$(arg isUsingSimulation)">
     <!-- Loads parameters that are specific to the simulation environment -->
