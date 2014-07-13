@@ -21,6 +21,8 @@ std::string objectID[] = {
     "unknown"
 };
 
+// quaternion constructor: x y z w
+
 void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
@@ -34,11 +36,13 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/robot/rotation_center"
 		)
 	);
+	tf::Quaternion quat;
+	quat.setRPY(-1.570796327,0,0);
 
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0, 0.0), tf::Vector3(0.297, 0.1435, 0.1942)),
+			tf::Transform(quat, tf::Vector3(0.297, 0.1435, 0.1942)), 
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -46,7 +50,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			// to
 			"/sensors/IMU"
 		)
-	);
+	); //was 1/root 2, 1/root 2, 0, 0
 	
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
@@ -74,6 +78,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 
+	/*
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -86,7 +91,8 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/sensors/forward_camera_center"
 		)
 	);
-	
+	*/
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -115,7 +121,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 	*/
-	
+	/*
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -142,7 +148,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 		
-	broadcaster.sendTransform(
+	/broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
 			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.696, -0.0245, 0.016)),
@@ -180,7 +186,8 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			// to
 			"/extremeties/contact_buoy"
 		)
-	);		
+	);
+	*/		
 }
 
 void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
@@ -221,24 +228,51 @@ void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 
 void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	tf::TransformBroadcaster broadcaster;
-	broadcaster.sendTransform(
+	
+	tf::Quaternion orientation = tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w);
+
+	broadcaster.sendTransform
+	(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
-		tf::StampedTransform(
-			tf::Transform(
-				tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w).inverse(), 
+		tf::StampedTransform
+		(
+			tf::Transform
+			(
+				orientation, 
 				tf::Vector3(0.0, 0.0, 0.0)
 			),
-			// Give it a time stamp
-			ros::Time::now(),
+			ros::Time::now(), // Give it a time stamp
 			// from
-			"/sensors/IMU",
+				"/sensors/IMU",
 			// to
-			"/sensors/IMU_reference"
-		
-
-			// was rotation center to initial pose
+				"/sensors/IMU_global_reference"
 		)
 	);
+
+	double roll,pitch,yaw;
+	tf::Matrix3x3(orientation).getRPY(roll,pitch,yaw);
+	tf::Quaternion yawOnlyQuat;
+	yawOnlyQuat.setRPY(0,0,pitch); //lol this is on purpose (particular to mounting of IMU in July 2014)
+
+	broadcaster.sendTransform
+	(
+		// Transform data, quaternion for rotations and vector3 for translational vectors
+		tf::StampedTransform
+		(
+			tf::Transform
+			(
+				yawOnlyQuat.inverse(), 
+				tf::Vector3(0.0, 0.0, 0.0)
+			),
+			ros::Time::now(), // Give it a time stamp
+			// from
+				"/sensors/IMU_global_reference",
+			// to
+				"/sensors/IMU_local_horizon"
+		)
+	);
+
+
 }
 
 int main(int argc, char** argv) {

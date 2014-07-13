@@ -245,7 +245,7 @@ void getStateFromTF()
 	tf::TransformListener tf_listener_pitch; 
 
 	targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //same as above
-	originalFrame = "robot/initial_pose"; //specified on the setPoints topic
+	originalFrame = "sensors/IMU_local_horizon"; //specified on the setPoints topic
 	
 	try
 	{
