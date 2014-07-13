@@ -1,3 +1,0 @@
-<launch>
-	<node name="hardware_test" pkg="system_test" type="hardware_test" output="screen" />
-</launch>
