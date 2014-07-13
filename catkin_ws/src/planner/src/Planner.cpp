@@ -79,7 +79,8 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
 void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	switch (task_id) {
 		case (1) :
-			setRobotInitialPosition(n, 2.7, -3.5, 1, 0, 0, 0);
+			setRobotInitialPosition(n, 1.58725, -3.98664, 4.5, 0, -0, -3.14159);
+
 			break;
 		case (2) :
 			setRobotInitialPosition(n, 1.102, 2.15, 1, 0, 0, 0);
