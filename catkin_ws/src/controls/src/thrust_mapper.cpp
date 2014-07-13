@@ -215,7 +215,11 @@ int main(int argc, char **argv)
 
 	//TODO raise warning if any of these variables == their default of 0. This means bad parameter file.
 	if (VOLTAGE_MAX == 0.0){ROS_ERROR("PARAMETER FILE DID NOT LOAD IN THRUST_MAPPER");}
-	ros::Subscriber thrust_subscriber = n.subscribe("/controls/wrench", 1000, thrust_callback);
+
+	std::string trust_topic;
+	n.param<std::string>("/thrust_topic", thrust_topic, "/controls/wrench");
+
+	ros::Subscriber thrust_subscriber = n.subscribe(thrust_topic 1000, thrust_callback);
 	//add clock subscription
 
 	//ROS Publisher setup

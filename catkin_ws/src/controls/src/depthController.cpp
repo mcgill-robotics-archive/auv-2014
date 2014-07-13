@@ -95,8 +95,15 @@ int main(int argc, char **argv)
 	// ROS subscriber setup
 	ros::init(argc,argv,"depthController");
 	ros::NodeHandle n;
-	ros::Subscriber partial_cmd_vel_subscriber = n.subscribe("partial_cmd_vel", 1000, partial_cmd_vel_callback);
-	ros::Subscriber zdes_subscriber = n.subscribe("zdes", 1000, zdes_callback);
+	
+	std::string partial_cmd_vel_topic;
+	n.param<std::string>("partial_cmd_vel_topic",partial_cmd_vel_topic,"partial_cmd_vel")
+	
+	std::string zeds;
+	n.param<std::string>("zdes", zdes, "zdes");
+
+	ros::Subscriber partial_cmd_vel_subscriber = n.subscribe(partial_cmd_vel_topic, 1000, partial_cmd_vel_callback);
+	ros::Subscriber zdes_subscriber = n.subscribe(zdes, 1000, zdes_callback);
 	ros::Subscriber pose_subscriber = n.subscribe("gazebo/model_states", 1000, pose_callback);
 	//add clock subscription
 

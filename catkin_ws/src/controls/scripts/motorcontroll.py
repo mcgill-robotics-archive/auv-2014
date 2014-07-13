@@ -5,7 +5,8 @@ from controls.msg import motorCommands
 
 
 def talker():
-    pub = rospy.Publisher('arduino/motor', motorCommands)
+    motor_topic=rospy.get_param("/motor_topic", 'arduino/motor')
+    pub = rospy.Publisher(motor_topic, motorCommands)
     rospy.init_node('talker')
     while not rospy.is_shutdown():
         commands = motorCommands()

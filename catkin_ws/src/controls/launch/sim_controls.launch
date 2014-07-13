@@ -1,6 +1,8 @@
 <launch>
 	<!-- launches controls node with appropriate parameters. Assumes Simulator with Roscore is already running. -->	
     <!-- Parameters needed for controls to work at all!!! -->
+    <rosparam command="load" file="$(find robosub_config)/config/topics.yaml"/>   
+  		
       <rosparam command="load" file="$(find controls)/controlsParameters.yaml"/> 
       <rosparam command="load" file="$(find controls)/sim_gains.yaml"/>
 

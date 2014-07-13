@@ -265,9 +265,18 @@ int main(int argc, char **argv)
 
 
 	// ROS subscriber setup
-	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
-	ros::Subscriber softKill_subscriber = n.subscribe("/controls/softKill", 1000, soft_kill_callback);
+	    std::string set_points_topic;
+	ros::param<std::string>("set_points_topic", set_points_topic, "setPoints");
+
+	    std::string depth_topic;
+	ros::param<std::string>("estimated_depth_topic", depth_topic, "/state_estimation/depth");
+
+	    std::string controls_softkill_topic;
+	ros::param<std::string>("controls_soft_kill_topic", controls_softkill_topic, "/controls/softKill");
+
+	ros::Subscriber setPoints_subscriber = n.subscribe(set_points_topic, 1000, setPoints_callback);
+	ros::Subscriber depth_subscriber = n.subscribe(depth_topic, 1000, depth_callback);
+	ros::Subscriber softKill_subscriber = n.subscribe(controls_softkill_topic, 1000, soft_kill_callback);
 	//TO DO: add clock subscription
 
 	//ROS Publisher setup
