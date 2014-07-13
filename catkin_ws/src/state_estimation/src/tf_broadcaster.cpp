@@ -38,7 +38,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.297, 0.1435, 0.1942)),
+			tf::Transform(tf::Quaternion(1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0, 0.0), tf::Vector3(0.297, 0.1435, 0.1942)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -225,15 +225,18 @@ void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
 			tf::Transform(
-				tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w), 
+				tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w).inverse(), 
 				tf::Vector3(0.0, 0.0, 0.0)
 			),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
-			"/robot/rotation_center",
+			"/sensors/IMU",
 			// to
-			"/robot/initial_pose"
+			"/sensors/IMU_reference"
+		
+
+			// was rotation center to initial pose
 		)
 	);
 }
