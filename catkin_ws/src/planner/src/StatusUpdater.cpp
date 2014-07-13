@@ -8,10 +8,10 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 	switch(newState) {
 		case ready:
 			msg.data = "ready to start the run";
-			//all base
-			color1 = base;
-			color2 = base;
-			color3 = base;
+			//all white
+			color1 = ready_color;
+			color2 = ready_color;
+			color3 = ready_color;
 			break;
 		case gate1:
 			msg.data = "Looking for the gate";
@@ -136,6 +136,10 @@ colors.push_back(color3);
 StatusUpdater::StatusUpdater(ros::Publisher frontEndPub, ros::ServiceClient btClient) {
 	frontEndPublisher = frontEndPub;
 	blinkyClient = btClient;
+	//white
+	ready_color.r = 255;
+	ready_color.g = 255;
+	ready_color.b = 255;
 	//cyan
 	base.r = 0;
 	base.g = 255;

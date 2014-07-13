@@ -19,8 +19,16 @@ void estimatedDepth_callback(const std_msgs::Float64 msg) {
 	ourDepth = msg.data;
 }
 
+void Planner::seeObject_callback(const std_msgs::Bool msg) {
+	seeObject = msg.data;
+}
+
 double Planner::getDepth() {
 	return ourDepth;
+}
+
+bool Planner::getSeeObject() {
+	return seeObject;
 }
 
 int get_task_id(std::string name) {
@@ -71,7 +79,8 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
 void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	switch (task_id) {
 		case (1) :
-			setRobotInitialPosition(n, 2.7, -3.5, 1, 0, 0, 0);
+			setRobotInitialPosition(n, 1.58725, -3.98664, 4.5, 0, -0, -3.14159);
+
 			break;
 		case (2) :
 			setRobotInitialPosition(n, 1.102, 2.15, 1, 0, 0, 0);
@@ -365,6 +374,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	go = inSim;
 	nodeHandle = n;
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
+	seeObject_subscriber = n.subscribe("state_estimation/see_object", 1000, &Planner::seeObject_callback, this);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
 
@@ -389,6 +399,8 @@ Planner::Planner(ros::NodeHandle& n) {
 			ready = 1;
 		}
 
+		//TODO: really necessary? 
+		/*
 		try {
 			tf::TransformListener listener;
 			geometry_msgs::PoseStamped emptyPose;
@@ -409,11 +421,16 @@ Planner::Planner(ros::NodeHandle& n) {
 			ROS_DEBUG("Planner - Error thrown in TF listener.");
 			ROS_ERROR("%s", ex.what());
 		}
+		*/
 		ROS_DEBUG("Planner - waiting for dependencies");
 	}
 
 	myStatusUpdater->updateStatus(myStatusUpdater->ready);
 
+	/*
+	 * TODO: Remove everything below once we are ready to test planner, and once we make planner run at startup,
+	 * so that the diver doesn't have to unplug the Ethernet cable, which can be hard to do with the new connectors.
+	 */
 	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
 	while (!n.getParam("/go", go) && go != 1) {
 		//wait for "go" command from command line
