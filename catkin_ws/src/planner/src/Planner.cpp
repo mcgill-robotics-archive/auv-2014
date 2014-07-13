@@ -246,20 +246,20 @@ void Planner::setPoints(double pointControl[], std::string referenceFrame) {
 
 void Planner::setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
 	double pointControl[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
-			1, yaw_speed, 1, depth, 0, 0};
+			1, yaw_speed, 0, depth, 0, 0};
 	setPoints(pointControl, referenceFrame);
 }
 
 void Planner::setPosition(std::vector<double> desired, std::string referenceFrame) {
 	double pointControl[18] =
 			{ 1, desired.at(0), 1, desired.at(1), 1, desired.at(2), 1,
-					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4), 0, 0 };
+					desired.at(3), 0, 0, 0, 0, 0, 0, 0, desired.at(4), 0, 0 };
 	setPoints(pointControl, referenceFrame);
 }
 
-void Planner::setVelocityWithCloseLoopYawAndDepth(double yaw, double x_speed, double depth, std::string referenceFrame) {
-	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 0, 0, 1, x_speed, 0, 0,
-			0, 0, 1, depth, 0, 0};
+void Planner::setVelocityWithCloseLoopYawPitchDepth(double x_speed, double yaw, double pitch, double depth, std::string referenceFrame) {
+	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 1, pitch, 1, x_speed, 0, 0,
+			0, 0, 0/*set to 1 once depth sensor is fixed*/, depth, 1, -6}; //set the last two to zero once depth sensor works
 	setPoints(pointControl, referenceFrame);
 }
 
@@ -371,7 +371,7 @@ int main(int argc, char **argv) {
 }
 
 Planner::Planner(ros::NodeHandle& n) {
-	go = inSim;
+	go = 0;
 	nodeHandle = n;
 	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
 	seeObject_subscriber = n.subscribe("state_estimation/see_object", 1000, &Planner::seeObject_callback, this);
@@ -389,14 +389,14 @@ Planner::Planner(ros::NodeHandle& n) {
 	// Waits until the environment is properly setup until the planner actually starts.
 	int ready = 0;
 	while (ready == 0) {
-		ROS_DEBUG_THROTTLE(2,
-				"Waiting for the environment to be setup properly before starting the planner...");
 
-		if (estimatedDepth_subscriber.getNumPublishers() == 0) {
+		if (seeObject_subscriber.getNumPublishers() == 0) {
 			// We need to wait for the publishers to be publishing their data.
 			ready = 0;
+			ROS_INFO_THROTTLE(2, "Waiting for the environment to be setup properly before starting the planner...");
 		} else {
 			ready = 1;
+			ROS_INFO_THROTTLE(1, "State Estimation Ready. Updating Blinky.");
 		}
 
 		//TODO: really necessary? 
@@ -431,9 +431,9 @@ Planner::Planner(ros::NodeHandle& n) {
 	 * TODO: Remove everything below once we are ready to test planner, and once we make planner run at startup,
 	 * so that the diver doesn't have to unplug the Ethernet cable, which can be hard to do with the new connectors.
 	 */
-	ROS_INFO("Waiting for the 'go' command: rosparam set /go 1");
 	while (!n.getParam("/go", go) && go != 1) {
 		//wait for "go" command from command line
+    	ROS_INFO_ONCE("Waiting for the 'go' command: rosparam set /go 1");
 	}
 	/*
 	//Set const wait time in header file so diver has time to disconnect Ethernet cable

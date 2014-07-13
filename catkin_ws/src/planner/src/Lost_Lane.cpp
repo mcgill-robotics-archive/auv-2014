@@ -30,7 +30,7 @@ void Lost_Lane::phase1() {
 	myPlanner->setVisionObj(2);
 	loop_rate.sleep();
 	
-	myPlanner->setVelocity(-1, 0, 0, 8.8, "/target/lane");
+	myPlanner->setVelocity(-1, 0, 0, 8.8, "/robot/initial_pose");
 	loop_rate.sleep();
 	tf::TransformListener listener;
 	try {

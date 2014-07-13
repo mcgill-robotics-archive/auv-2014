@@ -1,4 +1,5 @@
 #include "controls.h"
+#define PI 3.14159265358979323846
 /*
 5DOF control system for the McGill Robotics AUV
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
@@ -8,7 +9,6 @@ Created by Nick Speal Jan 10 2014.
 */
 
 //global vars
-	double PI = 3.14159265359;
 
 	double z_des = 0;
 	double z_est = 0;
@@ -187,7 +187,6 @@ void getStateFromTF()
 	* Looks up the TF and saves local variables for estimated position.
 	* First looks up TF for x,y,yaw for arbitrary frame
 	* Then looks up TF for pitch
-	
 	*/
 	if (frame == "")
 	{
@@ -197,9 +196,8 @@ void getStateFromTF()
 	tf::StampedTransform transform;
 	tf::TransformListener tf_listener; 
 
-	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	std::string originalFrame = frame; //specified on the setPoints topic
+	std::string targetFrame = frame; //specified on the setPoints topic
+	std::string originalFrame = "robot/rotation_center"; //rpy,xyz of target frame is expressed w.r.t. the original frame axes
 	
 	try
 	{
@@ -227,25 +225,13 @@ void getStateFromTF()
 
 	
 	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
-
-
-
-
-
-
-
-
-
-
-
-
+	//------------------------------------------------------------------------------------------------------------
 	//Pitch and not all other dimensions
 
-	
 	tf::TransformListener tf_listener_pitch; 
 
-	targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //same as above
-	originalFrame = "robot/initial_pose"; //specified on the setPoints topic
+	targetFrame = "sensors/IMU_global_reference";
+	originalFrame = "robot/rotation_center"; 
 	
 	try
 	{
@@ -266,10 +252,6 @@ void getStateFromTF()
 	double yaw_unused;
 	
 	matrix_for_pitch.getEulerYPR(yaw_unused, estimated_Pitch, roll_unused);
-
-	//estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
-	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
-	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
 }
 int main(int argc, char **argv)
 {
@@ -332,7 +314,7 @@ int main(int argc, char **argv)
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
+	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/filteredDepth", 1000, depth_callback);
 	ros::Subscriber softKill_subscriber = n.subscribe("/controls/softKill", 1000, soft_kill_callback);
 
 	//ROS Publisher setup
@@ -514,7 +496,8 @@ int main(int argc, char **argv)
 				ei_Depth += ep_Depth*dt;
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
-				//Fz += buoyancy*m*g; //Account for positive buoyancy bias
+				Fz += 6; //account for positive buoyancy bias
+                                //Fz += buoyancy*m*g; //Account for positive buoyancy bias
 				Fz*=-1; //Depth is different from all the other coordinates. Positive force should push the water upwards, 
 				
 			}
