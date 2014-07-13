@@ -12,7 +12,7 @@ ORANGE = RGB(255,105,0)
 # Minimum and maximum battery voltage values in volts
 # Ask power section for accurate values
 MIN_VOLTAGE = 22.0
-MAX_VOLTAGE = 25.2
+MAX_VOLTAGE = 24.0
 
 ledCount = 30
 
