@@ -16,7 +16,13 @@ void Task_Lane::execute() {
 	myStatusUpdater->updateStatus(myStatusUpdater->lane1);
 
 	loop_rate.sleep();
-ROS_INFO("looking for the lane");
+    ROS_INFO("looking for the lane");
+
+    while (!myPlanner->getSeeObject()) {
+        myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame);
+        loop_rate.sleep();
+    }
+
 	tf::TransformListener listener;
 	listener.waitForTransform(frame, "/robot/rotation_center",
 			ros::Time(0), ros::Duration(300));
@@ -25,7 +31,8 @@ ROS_INFO("looking for the lane");
 //	std::vector<double> desired0(myPoints0, myPoints0 + sizeof(myPoints0) / sizeof(myPoints0[0]));
 //	myPlanner->setPosition(desired0, "/robot/rotation_center");
 //	myPlanner->setVelocity(0, 0, 0, 8.8, frame);
-ROS_INFO("found the lane");
+
+    ROS_INFO("found the lane");
 	myStatusUpdater->updateStatus(myStatusUpdater->lane2);
 	loop_rate.sleep();
 	//position above the lane marker

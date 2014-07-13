@@ -4,6 +4,7 @@
 #include "StatusUpdater.h"
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/String.h"
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
@@ -33,7 +34,6 @@ int get_task_id(std::string name);
 void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, int roll, int yaw);
 void setRobotInitialPosition(ros::NodeHandle n, int task_id);
 
-
 class Task;
 
 class Planner{
@@ -42,6 +42,7 @@ class Planner{
 	enum Tasks {Gate, Lane, Buoy, Hydrophones, Kill};
 	enum LostStates {Gate_A, Gate_B, Lane_A, Buoy_A, Hydrophones_A};
 	double getDepth();
+	bool getSeeObject();
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
@@ -56,10 +57,13 @@ class Planner{
 	private:
 	void setTransform(std::string referenceFrame);
 	void setPoints(double pointControl[], std::string referenceFrame);
+	void seeObject_callback(const std_msgs::Bool msg);
+	bool seeObject;
 
 	ros::NodeHandle nodeHandle;
 	int go;
 	ros::Subscriber estimatedDepth_subscriber;
+	ros::Subscriber seeObject_subscriber;
 
 	ros::ServiceClient btClient;
 

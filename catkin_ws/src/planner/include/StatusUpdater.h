@@ -16,6 +16,7 @@ class StatusUpdater {
 	private:
 		ros::Publisher frontEndPublisher;
 		ros::ServiceClient blinkyClient;
+		blinky::RGB ready_color;
 		blinky::RGB base;
 		blinky::RGB off;
 		blinky::RGB gate;
