@@ -15,7 +15,7 @@ def depth_filter(sensor_reading):
     global depth
     global counter
     depth_reading = sensor_reading
-    
+
     # Calculations
     current_depth = ((depth_reading * max_arduino_voltage / max_analog / resistance - base_current) / current_range) * max_depth - offset
     current_depth = current_depth / 100.0   # To meters
@@ -26,15 +26,18 @@ def depth_filter(sensor_reading):
     depths_tmp.sort()
     median = (depths_tmp[WINDOW_WIDTH/2] + depths_tmp[(WINDOW_WIDTH+1)/2]) / 2.0
 
-    if counter >= WINDOW_WIDTH:
-        # Apply Filters
-        if abs(current_depth - median) > THRESHOLD :
-            clipped_depth = median
-    else:
-        counter = counter + 1
+    # if counter >= WINDOW_WIDTH:
+    #     # Apply Filters
+    #     if abs(current_depth - median) > THRESHOLD :
+    #         clipped_depth = median
+    # else:
+    #     counter = counter + 1
+
+    if counter <= WINDOW_WIDTH:
+        counter += 1
 
     depths.append(clipped_depth)
-    
+
     depth = depth + (clipped_depth - depths.pop(0)) / WINDOW_WIDTH
 
     return current_depth, depth
@@ -57,13 +60,13 @@ def init():
     global current_range
     global max_depth
     global offset
-    
-    
+
+
     rospy.init_node('depth_node')
     rospy.Subscriber('electrical_interface/depth', Int16, depthCallBack)
     pub1 = rospy.Publisher('state_estimation/rawDepth', Float64)
     pub2 = rospy.Publisher('state_estimation/filteredDepth', Float64)
-    
+
     # Constants
     max_analog = 1023  			# in bits
     max_arduino_voltage = 3300 	# in mV
@@ -80,4 +83,4 @@ if __name__ == '__main__':
     try:
        init()
     except rospy.ROSInterruptException:
-	pass
+	   pass
