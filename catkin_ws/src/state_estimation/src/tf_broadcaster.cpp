@@ -150,7 +150,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 		
-	/broadcaster.sendTransform(
+	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
 			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.696, -0.0245, 0.016)),
