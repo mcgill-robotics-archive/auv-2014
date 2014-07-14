@@ -37,7 +37,7 @@ void Task_Gate::phase1() {
 	
 	while (!myPlanner->getSeeObject()) {
 		ROS_INFO_THROTTLE(1, "Does not see gate, sending velocity with close loop yaw and depth.");
-		myPlanner->setVelocityWithCloseLoopYawAndDepth(0, -4, 8.8, frame);
+		myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
 		loop_rate.sleep();
 		ros::spinOnce();
 	}
@@ -93,7 +93,7 @@ void Task_Gate::phase3() {
 	ROS_INFO("Task_Gate::reached the front of the gate");
 	//TODO: this phase doesn't really do anything anymore.
 	//Controls requires continuous sending of velocity now.
-	myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame);
+	myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
 
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 	loop_rate.sleep();

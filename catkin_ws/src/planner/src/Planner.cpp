@@ -246,20 +246,20 @@ void Planner::setPoints(double pointControl[], std::string referenceFrame) {
 
 void Planner::setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
 	double pointControl[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
-			1, yaw_speed, 1, depth, 0, 0};
+			1, yaw_speed, 0, depth, 0, 0};
 	setPoints(pointControl, referenceFrame);
 }
 
 void Planner::setPosition(std::vector<double> desired, std::string referenceFrame) {
 	double pointControl[18] =
 			{ 1, desired.at(0), 1, desired.at(1), 1, desired.at(2), 1,
-					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4), 0, 0 };
+					desired.at(3), 0, 0, 0, 0, 0, 0, 0, desired.at(4), 0, 0 };
 	setPoints(pointControl, referenceFrame);
 }
 
-void Planner::setVelocityWithCloseLoopYawAndDepth(double yaw, double x_speed, double depth, std::string referenceFrame) {
-	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 0, 0, 1, x_speed, 0, 0,
-			0, 0, 0, depth, 0, 0};
+void Planner::setVelocityWithCloseLoopYawPitchDepth(double x_speed, double yaw, double pitch, double depth, std::string referenceFrame) {
+	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 1, pitch, 1, x_speed, 0, 0,
+			0, 0, 0/*set to 1 once depth sensor is fixed*/, depth, 1, -6}; //set the last two to zero once depth sensor works
 	setPoints(pointControl, referenceFrame);
 }
 
