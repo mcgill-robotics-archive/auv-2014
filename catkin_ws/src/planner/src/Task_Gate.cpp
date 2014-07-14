@@ -29,14 +29,17 @@ void Task_Gate::phase1() {
 	loop_rate.sleep();
 
 	myStatusUpdater->updateStatus(myStatusUpdater->gate1);
+	ROS_INFO("Gate phase 1");
 	loop_rate.sleep();
 
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
 	while (!myPlanner->getSeeObject()) {
-		myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame);
+		ROS_INFO_THROTTLE(1, "Does not see gate, sending velocity with close loop yaw and depth.");
+		myPlanner->setVelocityWithCloseLoopYawAndDepth(0, -4, 8.8, frame);
 		loop_rate.sleep();
+		ros::spinOnce();
 	}
 
 	/*
@@ -62,6 +65,7 @@ void Task_Gate::phase2() {
 	loop_rate.sleep();
 	
 	myStatusUpdater->updateStatus(myStatusUpdater->gate2);
+	ROS_INFO("Gate phase 2");
 	loop_rate.sleep();
 	
 	double myPoints[5] = {2.5, 0.0, 0.0, 0.0, 8.8};
@@ -83,6 +87,7 @@ void Task_Gate::phase3() {
 	loop_rate.sleep();
 
 	myStatusUpdater->updateStatus(myStatusUpdater->gate3);
+	ROS_INFO("Gate phase 3");
 	loop_rate.sleep();
 
 	ROS_INFO("Task_Gate::reached the front of the gate");
