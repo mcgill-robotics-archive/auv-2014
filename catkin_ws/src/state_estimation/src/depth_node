@@ -37,7 +37,7 @@ def depth_filter(sensor_reading):
     
     depth = depth + (clipped_depth - depths.pop(0)) / WINDOW_WIDTH
 
-    return clipped_depth, depth
+    return current_depth, depth
 
 
 def depthCallBack(sensor_reading):
@@ -66,12 +66,12 @@ def init():
     
     # Constants
     max_analog = 1023  			# in bits
-    max_arduino_voltage = 5000 	# in mV
-    resistance = 100.0 			# In ohms. Set to the value of the resistor being used. Should be less than 250 ohms because 5V / 20mA (max current) = 250 omhs.
+    max_arduino_voltage = 3300 	# in mV
+    resistance = 150.0 			# In ohms. Set to the value of the resistor being used. Should be less than 250 ohms because 5V / 20mA (max current) = 250 omhs.
     base_current = 4.0
     current_range = 16.0   		# from 4.0 mA to 20.0 mA
     max_depth = 914.4      		# In centimeters. 30 feet
-    offset = 17.0          		# Just substract it. May need to be recalculated when circuit is built.
+    offset = 16.          		# Just substract it. May need to be recalculated when circuit is built.
 
     rospy.spin()
 
