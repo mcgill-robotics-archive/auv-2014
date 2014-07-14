@@ -42,7 +42,8 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 	);
 	
 	tf::Quaternion quat;
-	quat.setRPY(-PI/2,0,PI);
+	// quat.setRPY(-PI/2,0,PI);
+	quat.setRPY(-PI/2,0,0);
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
