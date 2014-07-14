@@ -1,4 +1,5 @@
 #include "controls.h"
+#define PI 3.14159265358979323846
 /*
 5DOF control system for the McGill Robotics AUV
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
@@ -8,7 +9,6 @@ Created by Nick Speal Jan 10 2014.
 */
 
 //global vars
-	double PI = 3.14159265359;
 
 	double z_des = 0;
 	double z_est = 0;
