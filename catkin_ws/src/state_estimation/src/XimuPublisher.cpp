@@ -74,7 +74,7 @@ void spin() {
 			q[1] = quaternionStruct.x;
 			q[2] = quaternionStruct.y;
 			q[3] = quaternionStruct.z;
-            multiplyQuaternions(q, prerotation);
+            //multiplyQuaternions(q, prerotation);
 			pos.orientation.w = q[0];
 			pos.orientation.x = q[1];
 			pos.orientation.y = q[2];
