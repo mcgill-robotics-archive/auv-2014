@@ -9,6 +9,8 @@
 #include <state_estimation/AUVState.h>
 #include <computer_vision/VisibleObjectData.h>
 
+#define PI 3.14159265358979323846
+
 // Object IDs
 std::string objectID[] = {
     "gate",
@@ -21,6 +23,7 @@ std::string objectID[] = {
     "lane",
     "unknown"
 };
+
 
 // quaternion constructor: x y z w
 
@@ -37,9 +40,9 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/robot/rotation_center"
 		)
 	);
+	
 	tf::Quaternion quat;
-	quat.setRPY(-1.570796327,0,0);
-
+	quat.setRPY(-PI/2,0,PI);
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
