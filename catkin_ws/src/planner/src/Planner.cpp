@@ -390,7 +390,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	int ready = 0;
 	while (ready == 0) {
 
-		if (estimatedDepth_subscriber.getNumPublishers() == 0) {
+		if (seeObject_subscriber.getNumPublishers() == 0) {
 			// We need to wait for the publishers to be publishing their data.
 			ready = 0;
 			ROS_INFO_THROTTLE(2, "Waiting for the environment to be setup properly before starting the planner...");
