@@ -5,7 +5,7 @@ from std_msgs.msg import Int16
 from std_msgs.msg import Float64
 
 # Filter window
-WINDOW_WIDTH = 20
+WINDOW_WIDTH = 10
 THRESHOLD = 0.30
 depths = [0.0] * WINDOW_WIDTH
 depth = 0.0
@@ -73,7 +73,7 @@ def init():
     base_current = 4.0
     current_range = 16.0   		# from 4.0 mA to 20.0 mA
     max_depth = 914.4      		# In centimeters. 30 feet
-    offset = 16.          		# Just substract it. May need to be recalculated when circuit is built.
+    offset = -38.82         	# Just substract it. May need to be recalculated when circuit is built.
 
     rospy.spin()
 
