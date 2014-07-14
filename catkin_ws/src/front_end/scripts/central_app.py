@@ -552,9 +552,9 @@ class CentralUi(QtGui.QMainWindow):
         self.depth_data.append(data_input)
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
-        if data_input > misc_vars.depth_max:
+        if data_input < misc_vars.depth_max:
             misc_vars.depth_max = data_input
-            self.depth_graph.setYRange(0, misc_vars.depth_max)
+            self.depth_graph.setYRange(misc_vars.depth_max, 0)
 
     ##
     #appends the last message recieved from planner to a textbox in screen
