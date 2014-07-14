@@ -23,7 +23,7 @@ void Task_Gate::execute() {
 
 //approach the gate area while looking for it
 void Task_Gate::phase1() {
-	frame = "/robot/initial_pose";
+	frame = "/sensors/IMU_global_reference";
 
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
@@ -34,7 +34,7 @@ void Task_Gate::phase1() {
 
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
-	
+
 	while (!myPlanner->getSeeObject()) {
 		ROS_INFO_THROTTLE(1, "Does not see gate, sending velocity with close loop yaw and depth.");
 		myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
@@ -56,23 +56,23 @@ void Task_Gate::phase1() {
 }
 
 //after finding the gate, approach it even more using CV data
-void Task_Gate::phase2() {	
+void Task_Gate::phase2() {
 	frame = "/target/gate";
 
 	//TODO: update robot's reference frame with CV data
 
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
-	
+
 	myStatusUpdater->updateStatus(myStatusUpdater->gate2);
 	ROS_INFO("Gate phase 2");
 	loop_rate.sleep();
-	
+
 	double myPoints[5] = {2.5, 0.0, 0.0, 0.0, 8.8};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
-	
+
 	while (!myPlanner->areWeThereYet(frame, desired)) {
-		ROS_DEBUG("Task_Gate::setPoints published");		
+		ROS_DEBUG("Task_Gate::setPoints published");
 		myPlanner->setPosition(desired, frame);
 		loop_rate.sleep();
 	}
@@ -81,7 +81,7 @@ void Task_Gate::phase2() {
 //move through the gate
 void Task_Gate::phase3() {
 	//TODO: use a frame updated in phase 2
-	frame = "/robot/initial_pose";
+	frame = "/sensors/IMU_global_reference";
 
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
