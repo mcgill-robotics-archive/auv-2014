@@ -32,7 +32,7 @@ void Lost_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 	
-	myPlanner->setVelocity(0, 0, 2, 8.8, "/target/gate");
+	myPlanner->setVelocity(0, 0, 2, 8.8, "/robot/initial_pose");
 	loop_rate.sleep();
 	tf::TransformListener listener;
 	try {

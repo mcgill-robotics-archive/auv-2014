@@ -19,7 +19,7 @@ void Task_Lane::execute() {
     ROS_INFO("looking for the lane");
 
     while (!myPlanner->getSeeObject()) {
-        myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame);
+		myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
         loop_rate.sleep();
     }
 
