@@ -1,5 +1,5 @@
 windows:
-  - name: "Temperatures"
+  - name: "TEMPERATURES"
     clear: true
     root: "~/McGill_RoboSub_2014"
     layout: even-horizontal
