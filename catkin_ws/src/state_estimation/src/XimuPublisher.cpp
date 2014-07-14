@@ -17,7 +17,6 @@ static unsigned int sequence = 0;
 ros::Publisher pub, pub2, rawPub;
 geometry_msgs::Pose pos;
 geometry_msgs::PoseStamped posStamped;
-double prerotation[] = {1.0/sqrt(2.0), 1.0/sqrt(2.0), 0.0, 0.0};
 double* q = new double[4];
 asio::io_service serial_io;
 asio::serial_port port(serial_io);
@@ -37,16 +36,16 @@ void multiplyQuaternions(double q[],double p[])
 }
 
 void spin() {
-	port.open("/dev/ttyUSB0");
-	port.set_option(asio::serial_port_base::baud_rate(115200));
+    port.open("/dev/ttyUSB0");
+    port.set_option(asio::serial_port_base::baud_rate(115200));
 
-	char c;
+    char c;
 
-	while (true) {
-		// Read 1 character into c, this will block
-		// forever if no character arrives.
-		asio::read(port, asio::buffer(&c,1));
-		receiver.processNewChar(c);
+    while (true) {
+        // Read 1 character into c, this will block
+        // forever if no character arrives.
+        asio::read(port, asio::buffer(&c,1));
+        receiver.processNewChar(c);
 
         if (receiver.isInertialAndMagGetReady()) {
             InertialAndMagStruct ims = receiver.getInertialAndMag();
@@ -68,40 +67,40 @@ void spin() {
         }
 
         if (receiver.isQuaternionGetReady()) {
-			QuaternionStruct quaternionStruct = receiver.getQuaternion();
+            QuaternionStruct quaternionStruct = receiver.getQuaternion();
 
- 			q[0] = quaternionStruct.w;
-			q[1] = quaternionStruct.x;
-			q[2] = quaternionStruct.y;
-			q[3] = quaternionStruct.z;
-            //multiplyQuaternions(q, prerotation);
-			pos.orientation.w = q[0];
-			pos.orientation.x = q[1];
-			pos.orientation.y = q[2];
-			pos.orientation.z = q[3];
+            q[0] = quaternionStruct.w;
+            q[1] = quaternionStruct.x;
+            q[2] = quaternionStruct.y;
+            q[3] = quaternionStruct.z;
 
-			posStamped = geometry_msgs::PoseStamped();
-			posStamped.pose = pos;
-			posStamped.header.seq = sequence++;
-			posStamped.header.stamp = ros::Time::now();
-			posStamped.header.frame_id = "base_footprint";
+            pos.orientation.w = q[0];
+            pos.orientation.x = q[1];
+            pos.orientation.y = q[2];
+            pos.orientation.z = q[3];
 
-			pub.publish(posStamped);
-		}
-	}
+            posStamped = geometry_msgs::PoseStamped();
+            posStamped.pose = pos;
+            posStamped.header.seq = sequence++;
+            posStamped.header.stamp = ros::Time::now();
+            posStamped.header.frame_id = "base_footprint";
+
+            pub.publish(posStamped);
+        }
+    }
 }
 
 int main(int argc, char** argv) {
-	printf("Starting XimuPublisher\n");
-	ros::init(argc, argv, "x_imu_pose");
-	ros::NodeHandle node;
+    printf("Starting XimuPublisher\n");
+    ros::init(argc, argv, "x_imu_pose");
+    ros::NodeHandle node;
 
-	pub = node.advertise<geometry_msgs::PoseStamped>("state_estimation/pose", 100);
+    pub = node.advertise<geometry_msgs::PoseStamped>("state_estimation/pose", 100);
     pub2 = node.advertise<geometry_msgs::Vector3>("state_estimation/acc", 100);
     // Publish raw data
     rawPub = node.advertise<sensor_msgs::Imu>("state_estimation/raw", 100);
 
-	spin();
+    spin();
 
-	return 0;
+    return 0;
 }
