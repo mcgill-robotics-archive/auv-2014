@@ -187,7 +187,6 @@ void getStateFromTF()
 	* Looks up the TF and saves local variables for estimated position.
 	* First looks up TF for x,y,yaw for arbitrary frame
 	* Then looks up TF for pitch
-	
 	*/
 	if (frame == "")
 	{
@@ -197,9 +196,8 @@ void getStateFromTF()
 	tf::StampedTransform transform;
 	tf::TransformListener tf_listener; 
 
-	//const std::string targetFrame = "/sensors/forward_camera_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	std::string targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //robot_reoriented
-	std::string originalFrame = frame; //specified on the setPoints topic
+	std::string targetFrame = frame; //specified on the setPoints topic
+	std::string originalFrame = "robot/rotation_center"; //rpy,xyz of target frame is expressed w.r.t. the original frame axes
 	
 	try
 	{
@@ -227,25 +225,13 @@ void getStateFromTF()
 
 	
 	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
-
-
-
-
-
-
-
-
-
-
-
-
+	//------------------------------------------------------------------------------------------------------------
 	//Pitch and not all other dimensions
 
-	
 	tf::TransformListener tf_listener_pitch; 
 
-	targetFrame = "robot/rotation_center"; //find the pose of the originalFrame in this frame //same as above
-	originalFrame = "sensors/IMU_local_horizon"; //specified on the setPoints topic
+	targetFrame = "sensors/IMU_global_reference";
+	originalFrame = "robot/rotation_center"; 
 	
 	try
 	{
@@ -266,10 +252,6 @@ void getStateFromTF()
 	double yaw_unused;
 	
 	matrix_for_pitch.getEulerYPR(yaw_unused, estimated_Pitch, roll_unused);
-
-	//estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sign
-	//tf::Matrix3x3(quatquat).getEulerYPR(new_yaw,new_pitch,new_roll);
-	//ROS_INFO("RPY: %f %f %f", roll, estimated_Pitch, estimated_Yaw); //debug output}
 }
 int main(int argc, char **argv)
 {

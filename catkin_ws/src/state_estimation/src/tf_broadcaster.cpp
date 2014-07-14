@@ -1,6 +1,7 @@
 #include <string>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/PoseStamped.h>
 
@@ -249,29 +250,53 @@ void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 		)
 	);
 
-	double roll,pitch,yaw;
-	tf::Matrix3x3(orientation).getRPY(roll,pitch,yaw);
-	tf::Quaternion yawOnlyQuat;
-	yawOnlyQuat.setRPY(0,0,pitch); //lol this is on purpose (particular to mounting of IMU in July 2014)
+	/*
+	Define vectors in the global frame (IMU_global_reference)
+	
 
-	broadcaster.sendTransform
-	(
-		// Transform data, quaternion for rotations and vector3 for translational vectors
-		tf::StampedTransform
-		(
-			tf::Transform
-			(
-				yawOnlyQuat.inverse(), 
-				tf::Vector3(0.0, 0.0, 0.0)
-			),
-			ros::Time::now(), // Give it a time stamp
-			// from
-				"/sensors/IMU_global_reference",
-			// to
-				"/sensors/IMU_local_horizon"
-		)
-	);
 
+	*/
+	
+	// tf::TransformListener tf_listener;
+
+	// tf::Stamped<tf::Vector3> b_global = tf::Stamped<tf::Vector3>(tf::Vector3(0,0,1),msg->header.stamp,"/sensors/IMU_global_reference");
+	// tf::Stamped<tf::Vector3> a_body = tf::Stamped<tf::Vector3>(tf::Vector3(0,0,1),msg->header.stamp,"/robot/rotation_center");
+	// tf::Stamped<tf::Vector3> a_global;	
+
+	// tf_listener.waitForTransform("/sensors/IMU_global_reference", "/robot/rotation_center", ros::Time(0), ros::Duration(0.4));
+	// tf_listener.transformVector("/sensors/IMU_global_reference", a_body, a_global); 
+
+	// tf::Vector3 axis = tf::tfCross(a_global,b_global);
+	// tf::Quaternion quat = tf::Quaternion(axis,tf::tfAngle(a_global,b_global));
+
+
+
+	
+	
+	//double roll,pitch,yaw;
+	//tf::Matrix3x3(orientation).getRPY(roll,pitch,yaw);
+	//tf::Quaternion yawOnlyQuat;
+	//yawOnlyQuat.setRPY(0,0,pitch); //lol this is on purpose (particular to mounting of IMU in July 2014)
+	//yawOnlyQuat.inverse()
+
+	// broadcaster.sendTransform
+	// (
+	// 	// Transform data, quaternion for rotations and vector3 for translational vectors
+	// 	tf::StampedTransform
+	// 	(
+	// 		tf::Transform
+	// 		(
+	// 			quat, 
+	// 			tf::Vector3(0.0, 0.0, 0.0)
+	// 		),
+	// 		ros::Time::now(), // Give it a time stamp
+	// 		// from
+	// 			"/robot/rotation_center",
+	// 		// to
+	// 			"/robot/horizon"
+	// 	)
+	// );
+	
 
 }
 
