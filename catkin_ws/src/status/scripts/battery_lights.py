@@ -8,11 +8,13 @@ from blinky.srv import *
 
 CYAN = RGB(0,255,255)
 ORANGE = RGB(255,105,0)
+RED = RGB(255,0,0)
 
 # Minimum and maximum battery voltage values in volts
 # Ask power section for accurate values
 MIN_VOLTAGE = 22.0
 MAX_VOLTAGE = 24.0
+LOW_BATTERY = False
 
 ledCount = 30
 
@@ -35,6 +37,7 @@ def Battery1_sendColors(colors):
     except Exception as e:
         print "Exception: %s"%e
 
+
 def Battery2_sendColors(colors):
     try:
         # wait for the update_battery2_lights service
@@ -55,14 +58,18 @@ def Battery2_sendColors(colors):
 # Recieves a voltage message and displays in on the blinky tape.
 # Units are in volts, in floating point.
 def process_voltage1(voltage):
+    global LOW_BATTERY
+
     volts = voltage.data
 
     charge_level = (int)(((volts - MIN_VOLTAGE)/(MAX_VOLTAGE - MIN_VOLTAGE))*15)
     colors = []
 
     if charge_level < 0:
+        LOW_BATTERY = True
         charge_level = 0
     elif charge_level > 15:
+        LOW_BATTERY = False
         charge_level = 15
 
     for i in range(15):
@@ -73,15 +80,20 @@ def process_voltage1(voltage):
 
     Battery1_sendColors(colors)
 
+
 def process_voltage2(voltage):
+    global LOW_BATTERY
+
     volts = voltage.data
 
     charge_level = (int)(((volts - MIN_VOLTAGE)/(MAX_VOLTAGE - MIN_VOLTAGE))*15)
     colors = []
 
     if charge_level < 0:
+        LOW_BATTERY = True
         charge_level = 0
     elif charge_level > 15:
+        LOW_BATTERY = False
         charge_level = 15
 
     for i in range(15):
@@ -92,11 +104,27 @@ def process_voltage2(voltage):
 
     Battery2_sendColors(colors)
 
+
+def warn_low_battery(state):
+    try:
+        rospy.wait_for_service('warning_lights')
+        blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
+        result = blinky_proxy(RED, 0.5, state)
+
+        if result.success != 0:
+            print 'WarningUpdateLights request unsuccessful: %s' % (result)
+
+    except rospy.exceptions.ROSInterruptException:
+        pass
+
+
 def BatteryListener():
     rospy.init_node('battery_lights')
     rospy.Subscriber("electrical_interface/batteryVoltage1", Float32, process_voltage1)
     rospy.Subscriber("electrical_interface/batteryVoltage2", Float32, process_voltage2)
-    rospy.spin()
+
 
 if __name__ == "__main__":
     BatteryListener()
+    if not rospy.is_shutdown():
+        warn_low_battery(LOW_BATTERY)
