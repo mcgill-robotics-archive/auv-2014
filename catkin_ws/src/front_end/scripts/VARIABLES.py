@@ -16,8 +16,8 @@ class vel_vars(object):
     z_position = 0
     z_position_step = 0.5
 
-    MAX_YAW_VEL = 10
-    MAX_LINEAR_VEL = 10
+    MAX_YAW_VEL = 5
+    MAX_LINEAR_VEL = 7
 
 
 ##    Here we define the keyboard map for our controller

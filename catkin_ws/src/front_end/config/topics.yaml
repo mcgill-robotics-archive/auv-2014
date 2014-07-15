@@ -1,4 +1,4 @@
-depth: '/electrical_interface/depth'
+depth: '/state_estimation/filteredDepth'
 battery_1_voltage: 'electrical_interface/batteryVoltage1'
 battery_2_voltage: 'electrical_interface/batteryVoltage2'
 front_camera_left: 'camera_front_left/image_rect'
