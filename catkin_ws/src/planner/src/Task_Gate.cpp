@@ -35,22 +35,34 @@ void Task_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 
-	//Wait some time before sending surge
-	ros::Time start_time = ros::Time::now();
-	ros::Duration timeout(10.0);
-	while(ros::Time::now() - start_time < timeout) {
-        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge");
-        myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, 0, 0, 8.8, frame);
-        loop_rate.sleep();
-        ros::spinOnce();
-	}
+	if (myPlanner->isOpenLoopDepth()) {
+		ROS_INFO("OPEN LOOP DEPTH");
 
-	//Start sending surge
-	while (!myPlanner->getSeeObject()) {
-		ROS_INFO_THROTTLE(1, "Does not see gate, sending surge velocity with close loop yaw and depth.");
-		myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
-		loop_rate.sleep();
-		ros::spinOnce();
+		//Wait some time before sending surge
+		ros::Time start_time = ros::Time::now();
+		ros::Duration timeout(10.0);
+		while(ros::Time::now() - start_time < timeout) {
+	        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge");
+	        myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, myPlanner->getOpenLoopDepthSpeed(), frame);
+	        loop_rate.sleep();
+	        ros::spinOnce();
+		}		
+
+		//Start sending surge
+		while (!myPlanner->getSeeObject()) {
+			ROS_INFO_THROTTLE(1, "Does not see gate, sending surge velocity with close loop yaw and depth.");
+			myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getOpenLoopDepthSpeed(), frame);
+			loop_rate.sleep();
+			ros::spinOnce();
+		}
+	} else {
+		ROS_INFO("CLOSE LOOP DEPTH");
+		while (!myPlanner->getSeeObject()) {
+			ROS_INFO_THROTTLE(1, "Does not see gate, sending surge velocity with close loop yaw and depth.");
+			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), frame);
+			loop_rate.sleep();
+			ros::spinOnce();
+		}
 	}
 
 	/*
@@ -63,7 +75,7 @@ void Task_Gate::phase1() {
 		myPlanner->setVelocityWithCloseLoopYawAndDepth(0, 1, 8.8, frame); //Keeps going straight if cannot find transform
 	}
 	*/
-	ROS_INFO("we found it");
+	ROS_INFO("FOUND THE GATE");
 }
 
 //after finding the gate, approach it even more using CV data
@@ -79,7 +91,7 @@ void Task_Gate::phase2() {
 	ROS_INFO("Gate phase 2");
 	loop_rate.sleep();
 
-	double myPoints[5] = {2.5, 0.0, 0.0, 0.0, 8.8};
+	double myPoints[5] = {2.5, 0.0, 0.0, 0.0, myPlanner->getCloseLoopDepth()};
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 
 	while (!myPlanner->areWeThereYet(frame, desired)) {
@@ -104,7 +116,7 @@ void Task_Gate::phase3() {
 	ROS_INFO("Task_Gate::reached the front of the gate");
 	//TODO: this phase doesn't really do anything anymore.
 	//Controls requires continuous sending of velocity now.
-	myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
+	myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), frame);
 
 	ROS_INFO("%s", "Task_Gate::The gate task has been completed.");
 	loop_rate.sleep();

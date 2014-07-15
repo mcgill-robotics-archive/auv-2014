@@ -43,11 +43,17 @@ class Planner{
 	enum LostStates {Gate_A, Gate_B, Lane_A, Buoy_A, Hydrophones_A};
 	double getDepth();
 	bool getSeeObject();
+	bool isOpenLoopDepth();
+	double getOpenLoopDepthSpeed();
+	double getCloseLoopDepth();
+	double getSurgeSpeed();
+
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 	void setVelocityWithCloseLoopYawPitchDepth(double x_speed, double yaw, double pitch, double depth, std::string referenceFrame);
+	void setVelocityWithCloseLoopYawPitchOpenLoopDepth(double x_speed, double yaw, double pitch, double depthSpeed, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();
@@ -59,6 +65,10 @@ class Planner{
 	void setPoints(double pointControl[], std::string referenceFrame);
 	void seeObject_callback(const std_msgs::Bool msg);
 	bool seeObject;
+	bool openLoopDepth;
+	double openLoopDepthSpeed;
+	double closeLoopDepth;
+	double surgeSpeed;
 
 	ros::NodeHandle nodeHandle;
 	int go;

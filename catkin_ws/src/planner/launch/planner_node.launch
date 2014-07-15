@@ -2,6 +2,8 @@
   <!-- launches: just the planner node -->
   <!-- Written by Alex Reiff, April 28, McGill Robotics -->
 
+  <rosparam command="load" file="$(find planner)/config/setPoints.yaml"/> 
+
   <arg name="start_task" default="gate"/>
   <arg name="end_task" default="gate"/>
   <arg name="isInSim" default="0"/>

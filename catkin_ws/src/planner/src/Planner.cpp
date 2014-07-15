@@ -31,6 +31,22 @@ bool Planner::getSeeObject() {
 	return seeObject;
 }
 
+bool Planner::isOpenLoopDepth() {
+	return openLoopDepth;
+}
+
+double Planner::getOpenLoopDepthSpeed() {
+    return openLoopDepthSpeed;
+}
+
+double Planner::getCloseLoopDepth() {
+    return closeLoopDepth;
+}
+
+double Planner::getSurgeSpeed() {
+    return surgeSpeed;
+}
+
 int get_task_id(std::string name) {
 	if (name == "gate") return 1;
 	if (name == "lane") return 2;
@@ -259,7 +275,13 @@ void Planner::setPosition(std::vector<double> desired, std::string referenceFram
 
 void Planner::setVelocityWithCloseLoopYawPitchDepth(double x_speed, double yaw, double pitch, double depth, std::string referenceFrame) {
 	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 1, pitch, 1, x_speed, 0, 0,
-			0, 0, 0/*set to 1 once depth sensor is fixed*/, depth, 1, -6}; //set the last two to zero once depth sensor works
+			0, 0, 1, depth, 0, 0};
+	setPoints(pointControl, referenceFrame);
+}
+
+void Planner::setVelocityWithCloseLoopYawPitchOpenLoopDepth(double x_speed, double yaw, double pitch, double depthSpeed, std::string referenceFrame) {
+	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 1, pitch, 1, x_speed, 0, 0,
+			0, 0, 0, 0, 1, depthSpeed};
 	setPoints(pointControl, referenceFrame);
 }
 
@@ -382,6 +404,11 @@ Planner::Planner(ros::NodeHandle& n) {
 	taskPubDown = n.advertise<planner::CurrentCVTask>("currentCVTask_Down", 1000);
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
+
+	nodeHandle.param<bool>("openLoopDepth", openLoopDepth, 0);
+	nodeHandle.param<double>("openLoopDepthSpeed", openLoopDepthSpeed, 0);
+	nodeHandle.param<double>("closeLoopDepth", closeLoopDepth, 0);
+	nodeHandle.param<double>("surgeSpeed", surgeSpeed, 0);
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater, 0);
