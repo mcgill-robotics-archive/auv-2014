@@ -314,7 +314,7 @@ int main(int argc, char **argv)
 
 	// ROS subscriber setup
 	ros::Subscriber setPoints_subscriber = n.subscribe("setPoints", 1000, setPoints_callback);
-	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/depth", 1000, depth_callback);
+	ros::Subscriber depth_subscriber = n.subscribe("/state_estimation/filteredDepth", 1000, depth_callback);
 	ros::Subscriber softKill_subscriber = n.subscribe("/controls/softKill", 1000, soft_kill_callback);
 
 	//ROS Publisher setup
@@ -504,7 +504,8 @@ int main(int argc, char **argv)
 				ei_Depth += ep_Depth*dt;
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
-				//Fz += buoyancy*m*g; //Account for positive buoyancy bias
+				Fz += 6; //account for positive buoyancy bias
+                                //Fz += buoyancy*m*g; //Account for positive buoyancy bias
 				Fz*=-1; //Depth is different from all the other coordinates. Positive force should push the water upwards, 
 				
 			}

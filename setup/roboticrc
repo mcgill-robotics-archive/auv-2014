@@ -1,3 +1,5 @@
+export USB_COMMAND="'16c0\\|0403\\|1e10\\|1d50'"
+
 alias glances='glances -yet 5'
 alias go='rosparam set /go 1'
 alias planner_pls='rosparam set /go 1'
@@ -8,9 +10,7 @@ alias asimosh='mosh robotics@10.0.0.1'
 alias uri='export ROS_MASTER_URI=http://10.0.0.1:11311'
 alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
-
-export USB_COMMAND="'16c0\\|0403\\|1e10\\|1d50'"
-alias watch_usb="watch --interval=1 --no-title \"lsusb | grep $USB_COMMAND \" "
+alias watch_usb="watch --interval=2 \"lsusb | grep $USB_COMMAND \""
 
 function stop_warning {
     rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"
