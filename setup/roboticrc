@@ -24,7 +24,7 @@ function motor {
         echo sway-stern: $4
         echo heave-bow: $5
         echo heave-stern: $6
-        echo -e '\nrotating motors...'
+        echo -e '\nRotating motors...'
         rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $2, cmd_sway_bow: $3, cmd_sway_stern: $4, cmd_heave_bow: $5, cmd_heave_stern: $6}"
     elif [[ $# -eq 1 ]]; then
         echo surge-starboard: $1
@@ -33,15 +33,84 @@ function motor {
         echo sway-stern: $1
         echo heave-bow: $1
         echo heave-stern: $1
-        echo -e '\nrotating motors...'
+        echo -e '\nRotating motors...'
         rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $1, cmd_sway_bow: $1, cmd_sway_stern: $1, cmd_heave_bow: $1, cmd_heave_stern: $1}"
     else
-        echo 'usage: motor [surge-starboard] [surge-port] [sway-bow] [sway-stern] [heave-bow] [heave-stern]'
-        echo 'all arguments are values between -500 and 500'
-        echo -e '\nstopping motors...'
+        echo 'Usage: motor [surge-starboard] [surge-port] [sway-bow] [sway-stern] [heave-bow] [heave-stern]'
+        echo 'All arguments are values between -500 and 500'
+        echo -e '\nStopping motors...'
         rostopic pub -1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"
     fi
 }
+
+function setPoints {
+    rate='1'
+    xPosActive='0'
+    yPosActive='0'
+    yawActive='0'
+    pitchActive='0'
+    xSpeedActive='0'
+    ySpeedActive='0'
+    yawSpeedActive='0'
+    depthActive='0'
+    depthSpeedActive='0'
+    xPos='0'
+    yPos='0'
+    yaw='0'
+    pitch='0'
+    xSpeed='0'
+    ySpeed='0'
+    yawSpeed='0'
+    depth='0'
+    depthSpeed='0'
+    frame='/sensors/IMU_global_reference'
+
+    while [ $# -gt 0 ]
+    do
+        case $1 in
+            -r|--rate) rate=$2; shift;;
+            -y|--yaw) yawActive='1'; yaw=$2; shift;;
+            -p|--pitch) pitchActive='1'; pitch=$2; shift;;
+            -d|--depth) depthActive='1'; depth=$2; shift;;
+            --yawSpeed) yawSpeedActive='1'; yawSpeed=$2; shift;;
+            --depthSpeed) depthSpeedActive='1'; depthSpeed=$2; shift;;
+            --xPos) xPosActive='1'; xPos=$2; shift;;
+            --yPos) yPosActive='1'; yPos=$2; shift;;
+            --xSpeed) xSpeedActive='1'; xSpeed=$2; shift;;
+            --ySpeed) ySpeedActive='1'; ySpeed=$2; shift;;
+            -f|--frame) frame=$2; shift;;
+            (*) echo 'Usage: setPoints'
+                echo '       [--xPos]'
+                echo '       [--yPos]'
+                echo '       [-y | --yaw]'
+                echo '       [-p | --pitch]'
+                echo '       [--xSpeed]'
+                echo '       [--ySpeed]'
+                echo '       [--yawSpeed]'
+                echo '       [-d | --depth]'
+                echo '       [--depthSpeed]'
+                echo '       [-f | --frame]'
+                echo '       [-r | --rate]'
+                return 1;;
+        esac
+        shift
+    done
+
+    echo "XPos:       isActive: $xPosActive   data: $xPos"
+    echo "YPos:       isActive: $yPosActive   data: $yPos"
+    echo "Yaw:        isActive: $yawActive   data: $yaw"
+    echo "Pitch:      isActive: $pitchActive   data: $pitch"
+    echo "XSpeed:     isActive: $xSpeedActive   data: $xSpeed"
+    echo "YSpeed:     isActive: $ySpeedActive   data: $ySpeed"
+    echo "YawSpeed:   isActive: $yawSpeedActive   data: $yawSpeed"
+    echo "Depth:      isActive: $depthActive   data: $depth"
+    echo "DepthSpeed: isActive: $depthSpeedActive   data: $depthSpeed"
+    echo "Frame: $frame"
+
+    echo -e "\nSetting points..."
+    rostopic pub -r $rate /setPoints planner/setPoints "{XPos: {isActive: $xPosActive, data: $xPos}, YPos: {isActive: $yPosActive, data: $yPos}, Yaw: {isActive: $yawActive, data: $yaw}, Pitch: {isActive: $pitchActive, data: $pitch}, XSpeed: {isActive: $xSpeedActive, data: $xSpeed}, YSpeed: {isActive: $ySpeedActive, data: $ySpeed}, YawSpeed: {isActive: $yawSpeedActive, data: $yawSpeed}, Depth: {isActive: $depthActive, data: $depth}, DepthSpeed: {isActive: $depthSpeedActive, data: $depthSpeed}, Frame: $frame}"
+}
+
 
 alias motor_stop='motor 0 0 0 0 0 0'
 
