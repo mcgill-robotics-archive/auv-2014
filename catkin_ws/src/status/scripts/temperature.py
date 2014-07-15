@@ -15,9 +15,9 @@ temperatures = temp()       # MESSAGE TO PUBLISH
 warning = False             # STORES WHETHER WARNING OR NOT
 
 # CONSTANTS
-COLOR = [RGB(255, 0, 0)]    # COLOR TO FLASH               RED
+RED = [RGB(255, 0, 0)]      # COLOR TO FLASH               RED
 HOST = ('127.0.0.1', 7634)  # HDDTEMP DAEMON SOCKET
-CPU_THRESHOLD = 90          # THRESHOLD FOR CPU CORES        C
+CPU_THRESHOLD = 70          # THRESHOLD FOR CPU CORES        C
 SSD_THRESHOLD = 65          # THRESHOLD FOR SSD              C
 BLINKING_CAP = 5.0          # MAX BLINKING FREQUENCY        Hz
 
@@ -105,11 +105,11 @@ def blinky(state):
         try:
             rospy.wait_for_service('warning_lights')
             blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
-            result = blinky_proxy(COLOR, frequency, state)
+            result = blinky_proxy(RED, frequency, state)
 
             if result.success != 0:
                 print 'WarningUpdateLights request unsuccessful: %s' % (result)
-        
+
         except rospy.exceptions.ROSInterruptException:
             pass
 
