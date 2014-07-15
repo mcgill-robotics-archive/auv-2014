@@ -11,15 +11,15 @@ gains/ki_yPos: 0
 gains/kd_yPos: 0
 
 gains/kp_Depth: 4
-gains/ki_Depth: 0
+gains/ki_Depth: 0.075
 gains/kd_Depth: 0
 
 gains/kp_Pitch: 10
-gains/ki_Pitch: 0
+gains/ki_Pitch: 0.01 #arbitrary
 gains/kd_Pitch: 0
 
 gains/kp_Yaw: 5
-gains/ki_Yaw: 0
+gains/ki_Yaw: 0.025
 gains/kd_Yaw: 0.5
 
 gains/OL_coef_x: 5

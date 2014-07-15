@@ -415,6 +415,14 @@ int main(int argc, char **argv)
 			isActive_YawSpeed = 0;
 			isActive_DepthSpeed = 0;
 			//frame = ""; no need to reset this. It just throws lots of warnings
+			/*
+			Reset integral errors - not sure if this should be done.
+			ei_XPos = 0;
+			ei_YPos = 0;
+			ei_Depth = 0;
+			ei_Yaw = 0;
+			ei_Pitch = 0;
+			*/
 		}
 
 		double currentTime = ros::Time::now().toSec();
