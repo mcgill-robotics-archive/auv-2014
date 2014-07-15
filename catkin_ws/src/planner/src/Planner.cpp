@@ -393,7 +393,7 @@ Planner::Planner(ros::NodeHandle& n) {
 		if (seeObject_subscriber.getNumPublishers() == 0) {
 			// We need to wait for the publishers to be publishing their data.
 			ready = 0;
-			ROS_INFO_THROTTLE(2, "Waiting for the environment to be setup properly before starting the planner...");
+			ROS_INFO_THROTTLE(2, "Waiting for State Estimation to be ready. Checking /see_object publisher...");
 		} else {
 			ready = 1;
 			ROS_INFO_THROTTLE(1, "State Estimation Ready. Updating Blinky.");
