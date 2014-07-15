@@ -8,9 +8,10 @@ windows:
       - cmd: "sleep 25 && roslaunch state_estimation state_estimation.launch"
       - cmd: "sleep 20 && roslaunch robosub_msg teensy.launch "
       - cmd: "sleep 25 && roslaunch status status.launch"
-      - cmd: "sleep 10 && watch_usb"
+      - cmd: "watch_usb"
       - cmd: "clear"
       - cmd: "clear"
       - cmd: "clear"
+      - cmd: "glances"
       - cmd: "clear"
-      - cmd: "clear"
+        focus: true

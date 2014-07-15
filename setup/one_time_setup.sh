@@ -13,7 +13,6 @@ echo "$(tput setaf 3)Copy yml files for teamocil$(tput sgr 0)"
 mkdir -p ~/.teamocil
 cp -fv startup.yml ~/.teamocil/startup.yml
 cp -fv controls.yml ~/.teamocil/controls.yml
-cp -fv temperature.yml ~/.teamocil/temperature.yml
 
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                 # old dotfiles backup directory
