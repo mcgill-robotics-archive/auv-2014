@@ -27,3 +27,6 @@ gains/OL_coef_y: 5
 gains/OL_coef_yaw: 1
 gains/OL_coef_depth: 1
 gains/OL_coef_balance: 0
+
+z_steady_force: 6
+pitch_steady_torque: 1

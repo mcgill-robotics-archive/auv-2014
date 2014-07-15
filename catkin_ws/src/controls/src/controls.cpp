@@ -300,7 +300,9 @@ int main(int argc, char **argv)
 	    double OL_coef_depth;
 	    double OL_coef_yaw;
 	    double OL_coef_balance; // used to balance surge thrusters, given as a whole number percent, off of evenly balanced
-	   
+
+		double z_steady_force;
+		double pitch_steady_torque;	   
 
 
 	//Define wrench variables. They get reinitialized to zero on each iteration.
@@ -394,6 +396,8 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/OL_coef_depth", OL_coef_depth, 0.0);
 		    n.param<double>("gains/OL_coef_balance", OL_coef_balance, 0.0); // used to balance surge thrusters
 
+		    n.pararm<double>("z_steady_state", z_steady_force, 0);
+		    n.param<double>("pitch_steady_torque", pitch_steady_torque, 0)
 
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
 
@@ -504,9 +508,9 @@ int main(int argc, char **argv)
 				ei_Depth += ep_Depth*dt;
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
-				Fz += 6; //account for positive buoyancy bias
-                                //Fz += buoyancy*m*g; //Account for positive buoyancy bias
-				Fz*=-1; //Depth is different from all the other coordinates. Positive force should push the water upwards, 
+				Fz += z_steady_force; //account for positive buoyancy bias
+                //Fz += buoyancy*m*g; //Account for positive buoyancy bias
+				Fz*=-1; //Depth is different from all the other coordinates. Depth increases as the surface moves upwards, which is the opposite to our NED convention
 				
 			}
 			else
@@ -531,6 +535,7 @@ int main(int argc, char **argv)
 			ei_Pitch += ep_Pitch*dt;
 			ed_Pitch = (ep_Pitch - ep_Pitch_prev)/dt;
 			Ty = kp_Pitch*ep_Pitch + ki_Pitch*ei_Pitch + kd_Pitch*ed_Pitch;
+			Ty+=pitch_steady_torque;
 		}
 
 		//Yaw
