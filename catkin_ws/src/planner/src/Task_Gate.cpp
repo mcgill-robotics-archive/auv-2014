@@ -35,8 +35,19 @@ void Task_Gate::phase1() {
 	myPlanner->setVisionObj(1);
 	loop_rate.sleep();
 
+	//Wait some time before sending surge
+	ros::Time start_time = ros::Time::now();
+	ros::Duration timeout(10.0);
+	while(ros::Time::now() - start_time < timeout) {
+        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge");
+        myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, 0, 0, 8.8, frame);
+        loop_rate.sleep();
+        ros::spinOnce();
+	}
+
+	//Start sending surge
 	while (!myPlanner->getSeeObject()) {
-		ROS_INFO_THROTTLE(1, "Does not see gate, sending velocity with close loop yaw and depth.");
+		ROS_INFO_THROTTLE(1, "Does not see gate, sending surge velocity with close loop yaw and depth.");
 		myPlanner->setVelocityWithCloseLoopYawPitchDepth(-4, 0, 0, 8.8, frame);
 		loop_rate.sleep();
 		ros::spinOnce();

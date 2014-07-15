@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 
 import rospy
+import numpy as np
 from std_msgs.msg import Int16
 from std_msgs.msg import Float64
 
 # Filter window
 WINDOW_WIDTH = 25
 depths = [0.0] * WINDOW_WIDTH
-depth = 0.0
 counter = 0
 
+
 def depth_filter(sensor_reading):
-    global depth
     global counter
     depth_reading = sensor_reading
 
@@ -27,16 +27,7 @@ def depth_filter(sensor_reading):
         depths.pop(0)
 
     # Get depths
-    depths_tmp = list(depths)
-    depths_tmp.sort()
-    median = (depths_tmp[WINDOW_WIDTH/2] + depths_tmp[(WINDOW_WIDTH+1)/2]) / 2.0
-
-    # if counter >= WINDOW_WIDTH:
-    #     # Apply Filters
-    #     if abs(current_depth - median) > THRESHOLD :
-    #         clipped_depth = median
-    # else:
-    #     counter = counter + 1
+    median = np.median(depths)
 
     return current_depth, median
 
@@ -48,6 +39,7 @@ def depthCallBack(sensor_reading):
     pub1.publish(current_depth)
     pub2.publish(depth)
 
+
 def init():
     global pub1
     global pub2
@@ -58,7 +50,6 @@ def init():
     global current_range
     global max_depth
     global offset
-
 
     rospy.init_node('depth_node')
     rospy.Subscriber('electrical_interface/depth', Int16, depthCallBack)
