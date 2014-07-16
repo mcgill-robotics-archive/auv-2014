@@ -112,7 +112,6 @@ def update_battery1(req):
         for i in range(15):
             battery_colorList[i] = req.colors[i]
 
-    print planner_colorList
     return UpdateBattery1LightsResponse(0)
 
 # Update Battery2 segment
@@ -128,7 +127,6 @@ def update_battery2(req):
         for i in range(15):
             battery_colorList[29-i] = req.colors[i]
 
-    print planner_colorList
     return UpdateBattery2LightsResponse(0)
 
 # Display a warning on the planner and battery segments
