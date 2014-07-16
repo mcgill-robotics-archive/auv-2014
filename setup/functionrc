@@ -172,12 +172,13 @@ function image_view {
 }
 
 # SET PANE TITLE AND CLEAR
+title='UNTITLED'
 function set_pane_title {
     title=$@
     if [ -z "$title" ]; then
-        title='UNSET'
+        title='UNTITLED'
     fi
     printf '\033]2;%s\033\\' "$title"
-    clear
-    tmux clear-history
 }
+trap "printf '\033]2;%s\033\\' $title" SIGHUP SIGINT SIGQUIT SIGILL SIGTRAP SIGABRT SIGKILL SIGSEGV SIGPIPE SIGALRM SIGTERM SIGCHLD
+
