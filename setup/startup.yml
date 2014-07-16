@@ -4,7 +4,7 @@ windows:
     root: "~/McGill_RoboSub_2014"
     layout: "9377,185x52,0,0[185x15,0,0{46x15,0,0,45x15,47,0,46x15,93,0,45x15,140,0},185x14,0,16{46x14,0,16,45x14,47,16,46x14,93,16,45x14,140,16},185x21,0,31{92x21,0,31,92x21,93,31}]"
     panes:
-      - cmd: "clear && roscore"
+      - cmd: "tmux rename-session MAIN && clear && roscore"
       - cmd: "roslaunch --wait state_estimation state_estimation.launch"
       - cmd: "roslaunch --wait robosub_msg teensy.launch "
       - cmd: "roslaunch --wait status status.launch"
