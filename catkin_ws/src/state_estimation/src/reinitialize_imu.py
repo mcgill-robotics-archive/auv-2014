@@ -133,6 +133,7 @@ def reinitialize_imu():
     rospy.set_param('/IMU/initial/roll',roll)
     rospy.set_param('/IMU/initial/pitch',pitch)
     rospy.set_param('/IMU/initial/yaw',yaw)
+    rospy.set_param('/IMU/reinitialized',True)
 
     # PRINT
     print 'AVERAGE IMU READINGS:'
@@ -144,9 +145,10 @@ def reinitialize_imu():
 if __name__ == '__main__':
     if not rospy.is_shutdown():
         # GET TIMEOUT
-        while not rospy.has_param('/countdown/timeout'):
+        while not rospy.has_param('/countdown/'):
             pass
         timeout = int(rospy.get_param('/countdown/timeout'))
+        go = rospy.get_param('/countdown/go')
 
         # HEADER
         print 'Recalibrating IMU in', timeout, 'seconds' if timeout != 1 else "second"
@@ -174,6 +176,12 @@ if __name__ == '__main__':
         time.sleep(2.5)
         set_planner([GREEN])
         warning(False, 0, BLACK)
+
+        # GO IF NEEDED
+        if go:
+            rospy.set_param('/go', 1)
+        else:
+            pass
 
         # EXIT
         exit(0)

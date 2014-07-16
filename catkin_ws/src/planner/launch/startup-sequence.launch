@@ -7,8 +7,10 @@
   </include>
 
   <arg name="timeout" default="10"/>
+  <arg name="go" default="true"/>
 
   <node name="countdown" pkg="state_estimation" type="reinitialize_imu.py" respawn="false" output="screen">
     <param name="timeout" type="int" value="$(arg timeout)"/>
+    <param name="go" type="bool" value="$(arg go)"/>
   </node>
 </launch>
