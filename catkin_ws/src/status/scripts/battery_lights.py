@@ -92,11 +92,14 @@ def process_voltage2(voltage):
     charge_level = (int)(((volts - MIN_VOLTAGE)/(MAX_VOLTAGE - MIN_VOLTAGE))*15)
     colors = []
 
-    if charge_level < 0:
+    if volts <= MIN_VOLTAGE and volts >= 10.0:
         LOW_BATTERY = True
+    else:
+        LOW_BATTERY = False
+
+    if charge_level < 0:
         charge_level = 0
     elif charge_level > 15:
-        LOW_BATTERY = False
         charge_level = 15
 
     for i in range(15):
@@ -112,7 +115,7 @@ def warn_low_battery(state):
     try:
         rospy.wait_for_service('warning_lights')
         blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
-        result = blinky_proxy(RED, 0.5, state)
+        result = blinky_proxy([RED], 0.5, state)
 
         if result.success != 0:
             print 'WarningUpdateLights request unsuccessful: %s' % (result)
@@ -129,5 +132,5 @@ def BatteryListener():
 
 if __name__ == "__main__":
     BatteryListener()
-    if not rospy.is_shutdown():
+    while not rospy.is_shutdown():
         warn_low_battery(LOW_BATTERY)
