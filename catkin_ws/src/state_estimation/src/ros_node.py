@@ -83,7 +83,7 @@ def init():
     rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
     rospy.Subscriber('state_estimation/pose', PoseStamped, imuCallback)
-    rospy.Subscriber('state_estimation/depth', Float64, depthCallback)
+    rospy.Subscriber('state_estimation/filteredDepth', Float64, depthCallback)
     # See object
     see_obj_pub = rospy.Publisher('state_estimation/see_object', Bool)
     # Publish the filtered data to a topic
