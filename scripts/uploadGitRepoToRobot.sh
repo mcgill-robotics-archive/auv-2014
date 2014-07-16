@@ -13,7 +13,7 @@
 # Uploads all the required folder on the onboard computer.
 uploadRepository() {
     echo "Removing old files from Asimov..."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "cd ~/McGill_RoboSub_2014/ && rm -rf catkin_ws/src catkin_src/launch Arduino scripts setup"
+    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "cd ~/McGill_RoboSub_2014/ && rm -rf catkin_ws/src catkin_src/launch Arduino scripts setup" > /dev/null
 
     echo "Starting uploading all the required folders..."
 
