@@ -466,6 +466,7 @@ class SerialClient:
                         self.callbacks[topic_id](msg)
                     except KeyError:
                         rospy.logerr("Tried to publish before configured, topic id %d" % topic_id)
+                        exit(1)
                     rospy.sleep(0.001)
 
             except IOError:
