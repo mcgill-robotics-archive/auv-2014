@@ -65,7 +65,7 @@ def process_voltage1(voltage):
     charge_level = (int)(((volts - MIN_VOLTAGE)/(MAX_VOLTAGE - MIN_VOLTAGE))*15)
     colors = []
 
-    if volts <= MIN_VOLTAGE and volts >= 5.0:
+    if volts <= MIN_VOLTAGE and volts >= 10.0:
         LOW_BATTERY = True
     else:
         LOW_BATTERY = False
