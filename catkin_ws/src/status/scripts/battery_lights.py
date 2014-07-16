@@ -12,7 +12,7 @@ RED = RGB(255,0,0)
 
 # Minimum and maximum battery voltage values in volts
 # Ask power section for accurate values
-MIN_VOLTAGE = 22.0
+MIN_VOLTAGE = 21.0
 MAX_VOLTAGE = 24.0
 LOW_BATTERY = False
 
