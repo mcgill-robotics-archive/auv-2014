@@ -6,25 +6,31 @@ windows:
     panes:
       - cmd:
         - "tmux rename-session MAIN"
-        - "set_pane_title ROSCORE"
-        - "roscore"
+        - "sleep 2 && set_pane_title ROSCORE & roscore"
       - cmd:
-        - "set_pane_title STATE ESTIMATION"
-        - "roslaunch --wait state_estimation state_estimation.launch"
+        - "sleep 2 && set_pane_title STATE ESTIMATION & roslaunch --wait state_estimation state_estimation.launch"
       - cmd:
-        - "set_pane_title TEENSY"
-        - "roslaunch --wait robosub_msg teensy.launch "
+        - "sleep 2 && set_pane_title TEENSY & roslaunch --wait robosub_msg teensy.launch "
       - cmd:
-        - "set_pane_title STATUS"
-        - "roslaunch --wait status status.launch"
+        - "sleep 2 && set_pane_title STATUS & roslaunch --wait status status.launch"
       - cmd:
-        - "set_pane_title USB"
-        - "watch_usb"
-      - cmd: "set_pane_title"
-      - cmd: "set_pane_title"
-      - cmd: "set_pane_title"
+        - "set_pane_title USB & watch_usb"
       - cmd:
-        - "set_pane_title GLANCES"
-        - "glances"
-      - cmd: "set_pane_title"
+        - "set_pane_title"
+        - "clear"
+        - "tmux clear-history"
+      - cmd:
+        - "set_pane_title"
+        - "clear"
+        - "tmux clear-history"
+      - cmd:
+        - "set_pane_title"
+        - "clear"
+        - "tmux clear-history"
+      - cmd:
+        - "set_pane_title GLANCES & glances"
+      - cmd:
+        - "set_pane_title"
+        - "clear"
+        - "tmux clear-history"
         focus: true

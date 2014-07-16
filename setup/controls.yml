@@ -9,8 +9,7 @@ windows:
         - "setpoints -h || setpoints"
         focus: true
       - cmd:
-        - "set_pane_title LAUNCH"
-        - "roslaunch controls controls.launch"
+        - "sleep 2 && set_pane_title LAUNCH & roslaunch --wait controls controls.launch"
       - cmd:
         - "set_pane_title WRENCH"
         - "rostopic echo /controls/wrench"

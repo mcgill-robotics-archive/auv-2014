@@ -24,4 +24,4 @@ alias main='tmux attach -t MAIN'
 alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
 alias uri='export ROS_MASTER_URI=http://10.0.0.1:11311'
-alias watch_usb="watch --interval=2 \"lsusb | grep '16c0\\|0403\\|1e10\\|1d50' \""
+alias watch_usb="watch --interval=2 --no-title \"lsusb | grep '16c0\\|0403\\|1e10\\|1d50' \""
