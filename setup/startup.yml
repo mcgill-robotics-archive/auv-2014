@@ -4,14 +4,27 @@ windows:
     root: "~/McGill_RoboSub_2014"
     layout: "9377,185x52,0,0[185x15,0,0{46x15,0,0,45x15,47,0,46x15,93,0,45x15,140,0},185x14,0,16{46x14,0,16,45x14,47,16,46x14,93,16,45x14,140,16},185x21,0,31{92x21,0,31,92x21,93,31}]"
     panes:
-      - cmd: "tmux rename-session MAIN && clear && roscore"
-      - cmd: "roslaunch --wait state_estimation state_estimation.launch"
-      - cmd: "roslaunch --wait robosub_msg teensy.launch "
-      - cmd: "roslaunch --wait status status.launch"
-      - cmd: "watch_usb"
-      - cmd: "clear && tmux clear-history"
-      - cmd: "clear && tmux clear-history"
-      - cmd: "clear && tmux clear-history"
-      - cmd: "glances"
-      - cmd: "clear && tmux clear-history"
+      - cmd:
+        - "tmux rename-session MAIN"
+        - "set_pane_title ROSCORE"
+        - "roscore"
+      - cmd:
+        - "set_pane_title STATE ESTIMATION"
+        - "roslaunch --wait state_estimation state_estimation.launch"
+      - cmd:
+        - "set_pane_title TEENSY"
+        - "roslaunch --wait robosub_msg teensy.launch "
+      - cmd:
+        - "set_pane_title STATUS"
+        - "roslaunch --wait status status.launch"
+      - cmd:
+        - "set_pane_title USB"
+        - "watch_usb"
+      - cmd: "set_pane_title"
+      - cmd: "set_pane_title"
+      - cmd: "set_pane_title"
+      - cmd:
+        - "set_pane_title GLANCES"
+        - "glances"
+      - cmd: "set_pane_title"
         focus: true
