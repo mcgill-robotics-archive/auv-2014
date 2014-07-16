@@ -33,7 +33,7 @@ def countdown(steps, time_counter, incomplete_color, complete_color):
     """ Lights up blinkytape for countdown """
     start_time = time.time()
     time_left = time_counter
-    while time_left > 0:
+    while time_left > -0.1:
         colors = []
         incomplete_blinky_steps = int(ceil(steps * time_left / time_counter))
 
