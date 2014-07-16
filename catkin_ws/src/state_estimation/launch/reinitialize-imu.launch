@@ -1,0 +1,12 @@
+<launch>
+  <!-- launches: IMU reinitialization -->
+  <!-- Written by Anass Al-Wohoush, July 16, McGill Robotics -->
+
+  <arg name="timeout" default="1"/>
+
+  <node name="countdown" pkg="status" type="countdown.py" respawn="false" output="screen">
+
+    <param name="timeout" type="int" value="$(arg timeout)"/>
+
+  </node>
+</launch>
