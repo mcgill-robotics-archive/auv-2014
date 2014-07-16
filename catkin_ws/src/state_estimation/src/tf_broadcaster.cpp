@@ -40,14 +40,14 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/robot/rotation_center"
 		)
 	);
-	
+
 	tf::Quaternion quat;
 	// quat.setRPY(-PI/2,0,PI);
 	quat.setRPY(-PI/2,0,0);
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
-			tf::Transform(quat, tf::Vector3(0.297, 0.1435, 0.1942)), 
+			tf::Transform(quat, tf::Vector3(0.297, 0.1435, 0.1942)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -56,7 +56,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/sensors/IMU"
 		)
 	); //was 1/root 2, 1/root 2, 0, 0
-	
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -69,7 +69,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/sensors/forward_camera_right"
 		)
 	);
-	
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -97,7 +97,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 	*/
-        
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -111,8 +111,8 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/sensors/downward_camera"
 		)
 	);
-	
-	/*	
+
+	/*
 	// Not measured because grabber is not ready
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
@@ -140,7 +140,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/extremeties/marker_left"
 		)
 	);
-	
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -153,7 +153,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/extremeties/marker_right"
 		)
 	);
-		
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -166,7 +166,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/exteremeties/torpedo_left"
 		)
 	);
-	
+
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
@@ -179,7 +179,7 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/extremeties/torpedo_right"
 		)
 	);
-	
+
 	// Assume torpedo launcher right now
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
@@ -193,29 +193,29 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 			"/extremeties/contact_buoy"
 		)
 	);
-	*/		
+	*/
 }
 
 void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
-	// Create a transform listener in every callback	
+	// Create a transform listener in every callback
 	tf::TransformBroadcaster broadcaster;
 	if (msg->hasTarget) {
 		// Visible Object Data
 		computer_vision::VisibleObjectData object = msg->visibleObjectData;
-		
+
 		tf::Quaternion quat = tf::createQuaternionFromRPY(0.0, object.pitch_angle, object.yaw_angle);
 		tf::Vector3 vect(object.x_distance, object.y_distance, object.z_distance);
-		
+
 		if (object.object_type != 255) {
 			// If objectID is 255 we did not see anything
 			// So we dont publish anything
 			std::string refFrame = "/target/" + objectID[object.object_type];
-			
+
 			broadcaster.sendTransform(
 				// Transform data, quaternion for rotations and vector3 for translational vectors
 				tf::StampedTransform(
 					tf::Transform(
-						quat, 
+						quat,
 						vect
 					),
 					// Give it a time stamp
@@ -234,7 +234,7 @@ void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 
 void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	tf::TransformBroadcaster broadcaster;
-	
+
 	tf::Quaternion orientation = tf::Quaternion(msg->pose.orientation.x, msg->pose.orientation.y, msg->pose.orientation.z, msg->pose.orientation.w);
 
 	broadcaster.sendTransform
@@ -244,7 +244,55 @@ void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 		(
 			tf::Transform
 			(
-				orientation, 
+				orientation,
+				tf::Vector3(0.0, 0.0, 0.0)
+			),
+			ros::Time::now(), // Give it a time stamp
+			// from
+				"/sensors/IMU",
+			// to
+				"/sensors/raw/IMU_global_reference"
+		)
+	);
+
+	// GET INITIAL RPY
+	float roll, pitch, yaw;
+	ros::param::get("/IMU/initial/roll", roll);
+	ros::param::get("/IMU/initial/pitch", pitch);
+	ros::param::get("/IMU/initial/yaw", yaw);
+
+	// SET INITIAL ORIENTATION
+	tf::Quaternion initialQuat;
+	initialQuat.setRPY(roll, pitch, yaw);
+	broadcaster.sendTransform
+	(
+		// Transform data, quaternion for rotations and vector3 for translational vectors
+		tf::StampedTransform
+		(
+			tf::Transform
+			(
+				initialQuat,
+				tf::Vector3(0.0, 0.0, 0.0)
+			),
+			ros::Time::now(), // Give it a time stamp
+			// from
+				"/sensors/IMU",
+			// to
+				"/sensors/initial/IMU_global_reference"
+		)
+	);
+
+	// CALCULATE REINITIALIZED ORIENTATION
+	initialQuat.setRPY(0, 0, yaw);
+	tf::Quaternion reinitializedQuat = orientation * initialQuat;
+	broadcaster.sendTransform
+	(
+		// Transform data, quaternion for rotations and vector3 for translational vectors
+		tf::StampedTransform
+		(
+			tf::Transform
+			(
+				reinitializedQuat,
 				tf::Vector3(0.0, 0.0, 0.0)
 			),
 			ros::Time::now(), // Give it a time stamp
@@ -257,27 +305,27 @@ void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 
 	/*
 	Define vectors in the global frame (IMU_global_reference)
-	
+
 
 
 	*/
-	
+
 	// tf::TransformListener tf_listener;
 
 	// tf::Stamped<tf::Vector3> b_global = tf::Stamped<tf::Vector3>(tf::Vector3(0,0,1),msg->header.stamp,"/sensors/IMU_global_reference");
 	// tf::Stamped<tf::Vector3> a_body = tf::Stamped<tf::Vector3>(tf::Vector3(0,0,1),msg->header.stamp,"/robot/rotation_center");
-	// tf::Stamped<tf::Vector3> a_global;	
+	// tf::Stamped<tf::Vector3> a_global;
 
 	// tf_listener.waitForTransform("/sensors/IMU_global_reference", "/robot/rotation_center", ros::Time(0), ros::Duration(0.4));
-	// tf_listener.transformVector("/sensors/IMU_global_reference", a_body, a_global); 
+	// tf_listener.transformVector("/sensors/IMU_global_reference", a_body, a_global);
 
 	// tf::Vector3 axis = tf::tfCross(a_global,b_global);
 	// tf::Quaternion quat = tf::Quaternion(axis,tf::tfAngle(a_global,b_global));
 
 
 
-	
-	
+
+
 	//double roll,pitch,yaw;
 	//tf::Matrix3x3(orientation).getRPY(roll,pitch,yaw);
 	//tf::Quaternion yawOnlyQuat;
@@ -291,7 +339,7 @@ void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	// 	(
 	// 		tf::Transform
 	// 		(
-	// 			quat, 
+	// 			quat,
 	// 			tf::Vector3(0.0, 0.0, 0.0)
 	// 		),
 	// 		ros::Time::now(), // Give it a time stamp
@@ -301,7 +349,7 @@ void imuCallBack(const geometry_msgs::PoseStamped::ConstPtr& msg) {
 	// 			"/robot/horizon"
 	// 	)
 	// );
-	
+
 
 }
 

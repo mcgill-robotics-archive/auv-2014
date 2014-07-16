@@ -89,6 +89,11 @@ def init():
     # Publish the filtered data to a topic
     pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     down_distance_pub = rospy.Publisher('state_estimation/down_distance', Float64)
+
+    rospy.set_param('/IMU/initial/roll',0)
+    rospy.set_param('/IMU/initial/pitch',0)
+    rospy.set_param('/IMU/initial/yaw',0)
+
     rospy.spin()
 
 if __name__ == '__main__':

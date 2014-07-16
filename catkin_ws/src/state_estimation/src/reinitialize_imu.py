@@ -105,7 +105,7 @@ def imu_callback(pose):
         try:
             (trans,rot) = listener.lookupTransform(
                 # from
-                '/sensors/IMU_global_reference',
+                '/sensors/raw/IMU_global_reference',
                 # to
                 '/robot/rotation_center',
                 rospy.Time(0))
@@ -160,10 +160,10 @@ if __name__ == '__main__':
         warning(True, 1, YELLOW)
         time.sleep(5)
         print 'Set...'
-        set_planner([YELLOW])
+        set_planner([BLACK])
         warning(False, 0, BLACK)
         print 'Go.'
-        time.sleep(1)
+        time.sleep(0.5)
 
         # COUNTDOWN
         rospy.Subscriber('state_estimation/pose', PoseStamped, imu_callback)
@@ -172,16 +172,17 @@ if __name__ == '__main__':
         reinitialize_imu()
 
         # WARN WHEN DONE
-        warning(True, 2, GREEN)
+        if go:
+            set_planner([GREEN])
+        else:
+            set_planner([CYAN])
+        warning(True, 2, BLACK)
         time.sleep(2.5)
-        set_planner([GREEN])
         warning(False, 0, BLACK)
 
         # GO IF ASKED AND UNTETHERED
         if go and "up" not in open('/sys/class/net/eth0/operstate' % ifname).read():
             rospy.set_param('/go', 1)
-        else:
-            pass
 
         # EXIT
         exit(0)
