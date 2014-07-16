@@ -26,7 +26,13 @@ function motor {
         echo -e '\nRotating motors...'
         rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $1, cmd_sway_bow: $1, cmd_sway_stern: $1, cmd_heave_bow: $1, cmd_heave_stern: $1}"
     else
-        echo 'Usage: motor [surge-starboard] [surge-port] [sway-bow] [sway-stern] [heave-bow] [heave-stern]'
+        echo 'Usage: motor
+                     surge-starboard
+                     surge-port
+                     sway-bow
+                     sway-stern
+                     heave-bow
+                     heave-stern'
         echo 'All arguments are values between -500 and 500'
         echo -e '\nStopping motors...'
         rostopic pub -1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: 0, cmd_surge_port: 0, cmd_sway_bow: 0, cmd_sway_stern: 0, cmd_heave_bow: 0, cmd_heave_stern: 0}"
@@ -71,17 +77,17 @@ function setpoints {
             --ySpeed) ySpeedActive='1'; ySpeed=$2; shift;;
             -f|--frame) frame=$2; shift;;
             (*) echo 'Usage: setPoints'
-                echo '       [--xPos]'
-                echo '       [--yPos]'
-                echo '       [-y | --yaw]'
-                echo '       [-p | --pitch]'
-                echo '       [--xSpeed]'
-                echo '       [--ySpeed]'
-                echo '       [--yawSpeed]'
-                echo '       [-d | --depth]'
-                echo '       [--depthSpeed]'
-                echo '       [-f | --frame]'
-                echo '       [-r | --rate]'
+                echo '       [--xPos        FLOAT]   desired x position'
+                echo '       [--yPos        FLOAT]   desired y position'
+                echo '       [-y | --yaw    FLOAT]   desired yaw'
+                echo '       [-p | --pitch  FLOAT]   desired pitch'
+                echo '       [--xSpeed      FLOAT]   desired x speed'
+                echo '       [--ySpeed      FLOAT]   desired y speed'
+                echo '       [--yawSpeed    FLOAT]   desired yaw speed'
+                echo '       [-d | --depth  FLOAT]   desired depth'
+                echo '       [--depthSpeed  FLOAT]   desired depth speed'
+                echo '       [-r | --rate   FLOAT]   publishing rate'
+                echo '       [-f | --frame    STR]   target frame'
                 return 1;;
         esac
         shift
@@ -102,6 +108,7 @@ function setpoints {
     rostopic pub -r $rate /setPoints planner/setPoints "{XPos: {isActive: $xPosActive, data: $xPos}, YPos: {isActive: $yPosActive, data: $yPos}, Yaw: {isActive: $yawActive, data: $yaw}, Pitch: {isActive: $pitchActive, data: $pitch}, XSpeed: {isActive: $xSpeedActive, data: $xSpeed}, YSpeed: {isActive: $ySpeedActive, data: $ySpeed}, YawSpeed: {isActive: $yawSpeedActive, data: $yawSpeed}, Depth: {isActive: $depthActive, data: $depth}, DepthSpeed: {isActive: $depthSpeedActive, data: $depthSpeed}, Frame: $frame}"
 }
 
+# CALIBRATE TARGET CAMERA
 function calibrate_camera {
     size='12x8'
     square='0.03'
@@ -116,10 +123,10 @@ function calibrate_camera {
             -c|--camera) camera=$2; shift;;
             -i|--image) image=$2; shift;;
             (*) echo 'Usage: calibrateCamera'
-                echo '       [-s | --size] WIDTHxHEIGHT of the chessboard'
-                echo '       [-q | --square] size of the squares in meters'
-                echo '       [-c | --camera] the node name of the camera'
-                echo '       [-i | --image] the topic name of the image'
+                echo '        -c | --camera STR    camera name'
+                echo '       [-s | --size   STR]   chessboard size WIDTHxHEIGHT'
+                echo '       [-q | --square STR]   square size meters'
+                echo '       [-i | --image  STR]   image topic'
                 return 1;;
         esac
         shift
@@ -132,13 +139,14 @@ function calibrate_camera {
     fi
 
     if [ -z "$image" ]; then
-	   image="$camera/image_raw"
+	   image="$camera/camera/image_raw"
     fi
 
     echo "Calibrating $camera through $image using $size grid of $square m squares"
-    rosrun camera_calibration cameracalibrator.py --size $size --square $square image:=$image camera:=$camera
+    rosrun camera_calibration cameracalibrator.py --size $size --square $square image:=$image camera:=$camera/camera
 }
 
+# VIEW TARGET CAMERA FEED
 function image_view {
     topic=''
     compressed=''
@@ -146,11 +154,11 @@ function image_view {
     while [ $# -gt 0 ]
     do
         case $1 in
-            -c) compressed="_image_transport:=\"compressed\"";;
-            -t) topic=$2; shift;;
+            -c|--compressed) compressed="_image_transport:=compressed";;
+            -i|--image) topic=$2; shift;;
             (*) echo 'Usage: image_view'
-                echo '       [-c] Using compressed image'
-                echo '       [-t VALUE] Topic to subscrib'
+                echo '       [-c | --compressed]   compresses feed'
+                echo '       [-i | --image  STR]   image feed'
                 return 1;;
         esac
         shift
@@ -174,11 +182,11 @@ function image_view {
 # SET PANE TITLE AND CLEAR
 title='UNTITLED'
 function set_pane_title {
-    title=$@
-    if [ -z "$title" ]; then
-        title='UNTITLED'
+    if [ -z "$@" ]; then
+        title=$@
     fi
     printf '\033]2;%s\033\\' "$title"
+
 }
 trap "printf '\033]2;%s\033\\' $title" SIGHUP SIGINT SIGQUIT SIGILL SIGTRAP SIGABRT SIGKILL SIGSEGV SIGPIPE SIGALRM SIGTERM SIGCHLD
 
