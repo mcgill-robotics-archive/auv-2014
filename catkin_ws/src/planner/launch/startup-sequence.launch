@@ -2,25 +2,13 @@
   <!-- launches: startup sequence -->
   <!-- Written by Anass Al-Wohoush, July 16, McGill Robotics -->
 
-  <rosparam command="load" file="$(find planner)/config/setPoints.yaml"/>
-
-  <arg name="start_task" default="gate"/>
-  <arg name="end_task" default="gate"/>
-  <arg name="isInSim" default="0"/>
-
-  <node name="planner" pkg="planner" type="planner" respawn="false" output="screen">
-
-    <param name="start_task" type="str" value="$(arg start_task)"/>
-    <param name="end_task" type="str" value="$(arg end_task)"/>
-    <param name="inSim" type="int" value="$(arg isInSim)"/>
-
-  </node>
+  <include file="$(find planner)/launch/planner_node.launch" >
+    <arg name="isInSim" value="0"/>
+  </include>
 
   <arg name="timeout" default="10"/>
 
   <node name="countdown" pkg="status" type="countdown.py" respawn="false" output="screen">
-
     <param name="timeout" type="int" value="$(arg timeout)"/>
-
   </node>
 </launch>
