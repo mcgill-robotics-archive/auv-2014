@@ -67,8 +67,10 @@ def process_voltage1(voltage):
 
     if volts <= MIN_VOLTAGE and volts >= 10.0:
         LOW_BATTERY = True
-    else:
+        warn_low_battery(True)
+    elif LOW_BATTERY:
         LOW_BATTERY = False
+        warn_low_battery(False)
 
     if charge_level < 0:
         charge_level = 0
@@ -94,8 +96,10 @@ def process_voltage2(voltage):
 
     if volts <= MIN_VOLTAGE and volts >= 10.0:
         LOW_BATTERY = True
-    else:
+        warn_low_battery(True)
+    elif LOW_BATTERY:
         LOW_BATTERY = False
+        warn_low_battery(False)
 
     if charge_level < 0:
         charge_level = 0
@@ -128,9 +132,8 @@ def BatteryListener():
     rospy.init_node('battery_lights')
     rospy.Subscriber("electrical_interface/batteryVoltage1", Float32, process_voltage1)
     rospy.Subscriber("electrical_interface/batteryVoltage2", Float32, process_voltage2)
+    rospy.spin()
 
 
 if __name__ == "__main__":
     BatteryListener()
-    while not rospy.is_shutdown():
-        warn_low_battery(LOW_BATTERY)
