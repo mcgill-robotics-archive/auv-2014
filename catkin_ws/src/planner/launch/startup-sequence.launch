@@ -8,7 +8,7 @@
 
   <arg name="timeout" default="10"/>
 
-  <node name="countdown" pkg="status" type="countdown.py" respawn="false" output="screen">
+  <node name="countdown" pkg="state_estimation" type="reinitialize_imu.py" respawn="false" output="screen">
     <param name="timeout" type="int" value="$(arg timeout)"/>
   </node>
 </launch>

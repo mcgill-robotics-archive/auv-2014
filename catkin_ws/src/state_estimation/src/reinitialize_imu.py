@@ -7,10 +7,10 @@ import time
 import tf
 from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion
-from math import ceil, atan2, asin
+from math import ceil
 from blinky.srv import *
 from blinky.msg import *
-rospy.init_node('countdown')
+rospy.init_node('reinitializer')
 
 # COLORS
 BLACK = RGB(0, 0, 0)
@@ -149,7 +149,7 @@ if __name__ == '__main__':
         timeout = int(rospy.get_param('/countdown/timeout'))
 
         # HEADER
-        print 'Recalibrating IMU in', timeout, 'seconds'
+        print 'Recalibrating IMU in', timeout, 'seconds' if timeout != 1 else "second"
 
         # WARN BEFORE START
         time.sleep(timeout)
