@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # STOP BLINKY TAPE WARNING LIGHTS
 function stop_warning {
     rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"
@@ -124,18 +126,19 @@ function calibrate_camera {
     done
 
     if [ -z "$camera" ]; then
-	echo "Please specify a camera"        
-	calibrateCamera -h
-	return 1
+    	echo "Please specify a camera"
+    	calibrateCamera -h
+    	return 1
     fi
 
     if [ -z "$image" ]; then
-	image="$camera/image_raw"
-    fi	
+	   image="$camera/image_raw"
+    fi
 
     echo "Calibrating $camera through $image using $size grid of $square m squares"
     rosrun camera_calibration cameracalibrator.py --size $size --square $square image:=$image camera:=$camera
 }
+
 function image_view {
     topic=''
     compressed=''
@@ -154,18 +157,27 @@ function image_view {
     done
 
     if [ -z "$topic" ]; then
-	echo "Please a camera topic"        
-	image_view -h
-	return 1
+    	echo "Please a camera topic"
+    	image_view -h
+    	return 1
     fi
-    
+
     if [ -z "$compressed" ]; then
         echo "Viewing raw image from $topic"
     else
         echo "Viewing compressed image from $topic"
     fi
-    
+
     rosrun image_view image_view image:=$topic $compressed
 }
 
-
+# SET PANE TITLE AND CLEAR
+function set_pane_title {
+    title=$@
+    if [ -z "$title" ]; then
+        title='UNSET'
+    fi
+    printf '\033]2;%s\033\\' "$title"
+    clear
+    tmux clear-history
+}

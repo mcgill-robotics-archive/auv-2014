@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # SOURCES
 if [ -f /opt/ros/hydro/setup.bash ];
 then
