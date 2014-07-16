@@ -1,6 +1,6 @@
 <launch>
     <!-- blinky -->
-    <node name="blinky" pkg="blinky" type="blinky_server.py"/>
+    <node name="blinky" pkg="blinky" type="blinky_server.py" respawn="true"/>
 
     <!-- battery -->
     <node name="battery" pkg="status" type="battery_lights.py"/>
