@@ -98,7 +98,7 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 			color1 = off;
 			color2 = off;
 			color3 = off;
-			break;	
+			break;
 		case end:
 			msg.data = "Finished Routine";
 			color1 = base;
@@ -109,7 +109,7 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 	frontEndPublisher.publish(msg);
 
 	std::vector<blinky::RGB> colors;
-/*
+	/*
 	for(int i = 0; i < 5; i++) {
 		colors.push_back(color1);
 	}
@@ -121,10 +121,10 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 	for(int i = 0; i < 4; i++) {
 		colors.push_back(color3);
 	}
-*/
-colors.push_back(color1);
-colors.push_back(color2);
-colors.push_back(color3);
+	*/
+	colors.push_back(color1);
+	colors.push_back(color2);
+	colors.push_back(color3);
 
 	blinky::UpdatePlannerLights srv;
 	srv.request.colors = colors;
@@ -137,7 +137,7 @@ StatusUpdater::StatusUpdater(ros::Publisher frontEndPub, ros::ServiceClient btCl
 	frontEndPublisher = frontEndPub;
 	blinkyClient = btClient;
 	//white
-	ready_color.r = 255;
+	ready_color.r = 0;
 	ready_color.g = 255;
 	ready_color.b = 255;
 	//cyan
@@ -153,15 +153,15 @@ StatusUpdater::StatusUpdater(ros::Publisher frontEndPub, ros::ServiceClient btCl
 	gate.g = 255;
 	gate.b = 0;
 	//yellow
-	lane.r = 255;
-	lane.g = 200;
-	lane.b = 0;
-	//orange?
-	buoy.r = 0;
-	buoy.g = 0;
+	hydro.r = 255;
+	hydro.g = 200;
+	hydro.b = 0;
+	//orange
+	buoy.r = 255;
+	buoy.g = 105;
 	buoy.b = 0;
 	//purple
-	hydro.r = 255;
-	hydro.g = 0;
-	hydro.b = 125;
+	lane.r = 255;
+	lane.g = 0;
+	lane.b = 125;
 }

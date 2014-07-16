@@ -46,8 +46,8 @@ def initialize_blinkies():
 
     # store the initial states
     for i in range(ledCount):
-    	planner_colorList.append(RGB(0,255,255)) # Cyan (!!!)
-        battery_colorList.append(RGB(0,255,255))
+    	planner_colorList.append(RGB(255,255,255)) # Cyan (!!!)
+        battery_colorList.append(RGB(255,255,255))
 
     # set all leds off
     for i in range(2 * ledCount):
