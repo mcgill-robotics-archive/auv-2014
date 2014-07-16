@@ -177,8 +177,8 @@ if __name__ == '__main__':
         set_planner([GREEN])
         warning(False, 0, BLACK)
 
-        # GO IF NEEDED
-        if go:
+        # GO IF ASKED AND UNTETHERED
+        if go and "up" not in open('/sys/class/net/eth0/operstate' % ifname).read():
             rospy.set_param('/go', 1)
         else:
             pass
