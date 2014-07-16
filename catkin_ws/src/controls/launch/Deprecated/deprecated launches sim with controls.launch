@@ -1,6 +1,6 @@
 <launch>
-	
-  
+
+
 
 
   <include file="$(find simulator)/launch/simulator.launch" />
@@ -8,9 +8,9 @@
 
   <!--setPointPublisher -->
       <node name="testControls" pkg="controls" type="testControls"  respawn="false" output="screen"/>
- 
-  <include file="$(find state_estimation)/launch/state_estimation-sim.launch" />
-  
+
+  <include file="$(find state_estimation)/launch/sim_state_estimation.launch" />
+
   <!-- COMPUTER VISION -->
       <arg name="realCV" default="1"/>
       <group if="$(arg realCV)">
