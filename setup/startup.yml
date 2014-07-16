@@ -9,9 +9,9 @@ windows:
       - cmd: "roslaunch --wait robosub_msg teensy.launch "
       - cmd: "roslaunch --wait status status.launch"
       - cmd: "watch_usb"
-      - cmd: "clear"
-      - cmd: "clear"
-      - cmd: "clear"
+      - cmd: "clear && tmux clear-history"
+      - cmd: "clear && tmux clear-history"
+      - cmd: "clear && tmux clear-history"
       - cmd: "glances"
-      - cmd: "clear"
+      - cmd: "clear && tmux clear-history"
         focus: true
