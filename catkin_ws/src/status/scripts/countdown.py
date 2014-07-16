@@ -60,7 +60,7 @@ def countdown(steps, time_counter, incomplete_color, complete_color):
 if __name__ == '__main__':
     if not rospy.is_shutdown():
         # WARN BEFORE START
-        warning(True, 1, ORANGE)
+        warning(True, 1, BLACK)
         time.sleep(5.5)
         warning(False, 0, BLACK)
 
