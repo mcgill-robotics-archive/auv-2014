@@ -5,18 +5,13 @@ import numpy as np
 from std_msgs.msg import Int16
 from std_msgs.msg import Float64
 
-# Filter window
-WINDOW_WIDTH = 25
-depths = [0.0] * WINDOW_WIDTH
-counter = 0
-
 
 def depth_filter(sensor_reading):
     global counter
     depth_reading = sensor_reading
 
     # Calculations
-    current_depth = ((depth_reading * max_arduino_voltage / max_analog / resistance - base_current) / current_range) * max_depth + offset
+    current_depth = ((depth_reading * max_arduino_voltage / max_analog / resistance - base_current) / current_range) * max_depth + OFFSET
     current_depth = current_depth / 100.0   # To meters
 
     # Add Depth
@@ -33,6 +28,16 @@ def depth_filter(sensor_reading):
 
 
 def depthCallBack(sensor_reading):
+    global WINDOW_WIDTH, OFFSET, depths
+    while not rospy.has_param('/depth/'):
+        pass
+
+    WINDOW_WIDTH = int(rospy.get_param('/depth/window'))
+    OFFSET = rospy.get_param('/depth/offset')
+
+    if (WINDOW_WIDTH != len(depths)):
+        depths = [0.0] * WINDOW_WIDTH
+
     current_depth, depth = depth_filter(sensor_reading.data)
 
     # Publish
@@ -49,12 +54,20 @@ def init():
     global base_current
     global current_range
     global max_depth
-    global offset
+    global depths
+    global counter
+    global OFFSET, WINDOW_WIDTH
 
     rospy.init_node('depth_node')
     rospy.Subscriber('electrical_interface/depth', Int16, depthCallBack)
     pub1 = rospy.Publisher('state_estimation/rawDepth', Float64)
     pub2 = rospy.Publisher('state_estimation/filteredDepth', Float64)
+
+    while not rospy.has_param('/depth/'):
+        pass
+
+    WINDOW_WIDTH = int(rospy.get_param('/depth/window'))
+    OFFSET = rospy.get_param('/depth/offset')
 
     # Constants
     max_analog = 1023           # in bits
@@ -63,7 +76,8 @@ def init():
     base_current = 4.0
     current_range = 16.0        # from 4.0 mA to 20.0 mA
     max_depth = 914.4           # In centimeters. 30 feet
-    offset = 38.82              # Just substract it. May need to be recalculated when circuit is built.
+    depths = [0.0] * WINDOW_WIDTH
+    counter = 0
 
     rospy.spin()
 
