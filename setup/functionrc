@@ -32,7 +32,7 @@ function motor {
 }
 
 # CONTROL SET POINTS
-function setPoints {
+function setpoints {
     rate='1'
     xPosActive='0'
     yPosActive='0'
@@ -99,3 +99,73 @@ function setPoints {
     echo -e "\nSetting points..."
     rostopic pub -r $rate /setPoints planner/setPoints "{XPos: {isActive: $xPosActive, data: $xPos}, YPos: {isActive: $yPosActive, data: $yPos}, Yaw: {isActive: $yawActive, data: $yaw}, Pitch: {isActive: $pitchActive, data: $pitch}, XSpeed: {isActive: $xSpeedActive, data: $xSpeed}, YSpeed: {isActive: $ySpeedActive, data: $ySpeed}, YawSpeed: {isActive: $yawSpeedActive, data: $yawSpeed}, Depth: {isActive: $depthActive, data: $depth}, DepthSpeed: {isActive: $depthSpeedActive, data: $depthSpeed}, Frame: $frame}"
 }
+
+function calibrate_camera {
+    size='12x8'
+    square='0.03'
+    image=''
+    camera=''
+
+    while [ $# -gt 0 ]
+    do
+        case $1 in
+            -s|--size) size=$2; shift;;
+            -q|--square) square=$2; shift;;
+            -c|--camera) camera=$2; shift;;
+            -i|--image) image=$2; shift;;
+            (*) echo 'Usage: calibrateCamera'
+                echo '       [-s | --size] WIDTHxHEIGHT of the chessboard'
+                echo '       [-q | --square] size of the squares in meters'
+                echo '       [-c | --camera] the node name of the camera'
+                echo '       [-i | --image] the topic name of the image'
+                return 1;;
+        esac
+        shift
+    done
+
+    if [ -z "$camera" ]; then
+	echo "Please specify a camera"        
+	calibrateCamera -h
+	return 1
+    fi
+
+    if [ -z "$image" ]; then
+	image="$camera/image_raw"
+    fi	
+
+    echo "Calibrating $camera through $image using $size grid of $square m squares"
+    rosrun camera_calibration cameracalibrator.py --size $size --square $square image:=$image camera:=$camera
+}
+function image_view {
+    topic=''
+    compressed=''
+
+    while [ $# -gt 0 ]
+    do
+        case $1 in
+            -c) compressed="_image_transport:=\"compressed\"";;
+            -t) topic=$2; shift;;
+            (*) echo 'Usage: image_view'
+                echo '       [-c] Using compressed image'
+                echo '       [-t VALUE] Topic to subscrib'
+                return 1;;
+        esac
+        shift
+    done
+
+    if [ -z "$topic" ]; then
+	echo "Please a camera topic"        
+	image_view -h
+	return 1
+    fi
+    
+    if [ -z "$compressed" ]; then
+        echo "Viewing raw image from $topic"
+    else
+        echo "Viewing compressed image from $topic"
+    fi
+    
+    rosrun image_view image_view image:=$topic $compressed
+}
+
+
