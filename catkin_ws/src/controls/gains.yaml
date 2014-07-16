@@ -10,12 +10,12 @@ gains/kp_yPos: 1.5
 gains/ki_yPos: 0
 gains/kd_yPos: 0
 
-gains/kp_Depth: 4
-gains/ki_Depth: 0.075
+gains/kp_Depth: 20
+gains/ki_Depth: 0.5
 gains/kd_Depth: 0
 
 gains/kp_Pitch: 10
-gains/ki_Pitch: 0.01 #arbitrary
+gains/ki_Pitch: 0.1 #arbitrary
 gains/kd_Pitch: 0
 
 gains/kp_Yaw: 5
@@ -28,5 +28,5 @@ gains/OL_coef_yaw: 1
 gains/OL_coef_depth: 1
 gains/OL_coef_balance: 0
 
-z_steady_force: 6
-pitch_steady_torque: 1
+z_steady_force: 4.2
+pitch_steady_torque: -0.4

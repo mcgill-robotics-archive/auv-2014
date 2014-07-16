@@ -336,7 +336,7 @@ int main(int argc, char **argv)
 	}
 	timeOfLastSetPoint = ros::Time::now();
 	ROS_INFO("All Subscribers Live. Starting Controller!");
-	ros::Rate loop_rate(1/dt);
+	ros::Rate loop_rate(1.0/dt);
 	while(ros::ok())
 	{
 
@@ -396,7 +396,7 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/OL_coef_depth", OL_coef_depth, 0.0);
 		    n.param<double>("gains/OL_coef_balance", OL_coef_balance, 0.0); // used to balance surge thrusters
 
-		    n.param<double>("z_steady_state", z_steady_force, 0);
+		    n.param<double>("z_steady_force", z_steady_force, 0);
 		    n.param<double>("pitch_steady_torque", pitch_steady_torque, 0);
 
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}

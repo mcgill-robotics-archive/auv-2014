@@ -97,12 +97,12 @@ void broadcastStaticFrames(tf::TransformBroadcaster& broadcaster) {
 		)
 	);
 	*/
-
+        
 	broadcaster.sendTransform(
 		// Transform data, quaternion for rotations and vector3 for translational vectors
 		tf::StampedTransform(
 			//TODO: CHECK THE NEWLY ADDED ANGLE CHANGE
-			tf::Transform(tf::Quaternion(0, 1.0/sqrt(2.0), 0, 1.0/sqrt(2.0)), tf::Vector3(0.509, 0.1435, 0.245)),
+			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.509, 0.1435, 0.245)),
 			// Give it a time stamp
 			ros::Time::now(),
 			// from
@@ -221,7 +221,7 @@ void cvCallBack(const state_estimation::AUVState::ConstPtr& msg) {
 					// Give it a time stamp
 					ros::Time::now(),
 					// refrence frame does not have a name now
-					"/sensors/forward_camera_center",
+					"/sensors/downward_camera",
 					// to
 					refFrame
 				)

@@ -1,5 +1,5 @@
-openLoopDepth: false
+openLoopDepth: true
 openLoopDepthSpeed: -6.0 #only used when openLoopDepth = true
-closeLoopDepth: 0.9      #only used when openLoopDepth = false
+closeLoopDepth: 0.5      #only used when openLoopDepth = false
 
-surgeSpeed: -4.0
+surgeSpeed: -2.0
