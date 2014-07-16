@@ -138,7 +138,7 @@ class CentralUi(QtGui.QMainWindow):
         self.depth_curve = self.depth_graph.plot(pen="w")
         self.depth_graph.setXRange(0, misc_vars.length_plot)
         self.depth_graph.setYRange(0, misc_vars.depth_max)
-        
+
         self.start_ros_subscriber()
 
         ## creates the timers to enable or disable the ps3 controller for the controls systems
@@ -240,10 +240,8 @@ class CentralUi(QtGui.QMainWindow):
         usb_topic = rospy.get_param("/ubs_devices")
         state_est_topic = rospy.get_param("/state_estimation_pose")
 
-
-
         rospy.init_node('Front_End', anonymous=True)
-        rospy.Subscriber(depth_topic, Int16, self.depth_callback)
+        rospy.Subscriber(depth_topic, Float64, self.depth_callback)
         rospy.Subscriber(bat1_topic, Float32, self.bat_1)
         rospy.Subscriber(bat2_topic, Float32, self.bat_2)
         rospy.Subscriber(cam_raw_f_l_topic, Image, self.front_left_pre_callback)
