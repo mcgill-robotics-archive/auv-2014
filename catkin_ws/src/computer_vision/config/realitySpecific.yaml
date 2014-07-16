@@ -1,12 +1,32 @@
+################################################################################
+# ROS topic names:                                                             #
+################################################################################
 image_feed/left: camera_front_left/image_rect
 image_feed/right: camera_front_right/image_rect
 image_feed/down: camera_down/image_rect
+
+################################################################################
+# Camera related parameters:                                                   #
+################################################################################
 camera_sensor_height: 0.0036
 camera_focal_length: 0.003
-#Gate-related parameters
-gate_hue_range1_start: 125
-gate_hue_range1_end: 179
+
+################################################################################
+# Gate-related parameters:                                                     #
+################################################################################
+
+# These settings were used with the new ROS bags in July that appear to be foggy:
+gate_hue_range1_start: 116
+gate_hue_range1_end: 134
 gate_hue_range2_start: 0
-gate_hue_range2_end: 20
+gate_hue_range2_end: 0
 gate_value_start: 55
 gate_value_end: 200
+
+# These settings were used in June with the old ROS bags:
+#gate_hue_range1_start: 125
+#gate_hue_range1_end: 179
+#gate_hue_range2_start: 0
+#gate_hue_range2_end: 20
+#gate_value_start: 55
+#gate_value_end: 200

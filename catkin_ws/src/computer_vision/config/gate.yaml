@@ -1,8 +1,20 @@
+# These settings were used with the new ROS bags in July that appear to be foggy:
 gate_min_number_points_contour: 4
 gate_pole_desired_angle_deg: 90
-gate_pole_angle_error_deg: 15
-gate_width_error: 4.0
+gate_pole_angle_error_deg: 40
+gate_width_error: 2.0
 gate_min_pole_ratio: 4
 gate_height_m: 1.2
 gate_width_m: 3.1262
 gate_min_convexity_ratio: 0.7
+
+
+# These settings were used in June with the old ROS bags:
+#gate_min_number_points_contour: 4
+#gate_pole_desired_angle_deg: 90
+#gate_pole_angle_error_deg: 15
+#gate_width_error: 4.0
+#gate_min_pole_ratio: 4
+#gate_height_m: 1.2
+#gate_width_m: 3.1262
+#gate_min_convexity_ratio: 0.7
