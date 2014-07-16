@@ -156,8 +156,8 @@ if __name__ == '__main__':
         # WARN BEFORE START
         time.sleep(timeout)
         print 'Ready...'
-        set_planner([BLACK])
-        warning(True, 1, YELLOW)
+        set_planner([YELLOW])
+        warning(True, 1, BLACK)
         time.sleep(5)
         print 'Set...'
         set_planner([BLACK])
