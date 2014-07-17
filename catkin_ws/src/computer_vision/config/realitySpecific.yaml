@@ -31,3 +31,39 @@ gate_value_end: 200
 #gate_hue_range2_end: 20
 #gate_value_start: 55
 #gate_value_end: 200
+
+################################################################################
+# Line-related parameters:
+################################################################################
+
+# Range 1:
+line_hue_range1_begin: 100
+line_hue_range1_end: 180
+line_sat_range1_begin: 30
+line_sat_range1_end: 90
+line_value_range1_begin: 170
+line_value_range1_end: 250
+
+# Range 2:
+line_hue_range2_begin: 0
+line_hue_range2_end: 180
+line_sat_range2_begin: 20
+line_sat_range2_end: 90
+line_value_range2_begin: 160
+line_value_range2_end: 240
+
+# Range 3:
+line_hue_range3_begin: 5
+line_hue_range3_end: 15
+line_sat_range3_begin: 70
+line_sat_range3_end: 350
+line_value_range3_begin: 30
+line_value_range3_end: 180
+
+# Range 4:
+line_hue_range4_begin: 5
+line_hue_range4_end: 150
+line_sat_range4_begin: 20
+line_sat_range4_end: 130
+line_value_range4_begin: 30
+line_value_range4_end: 180

@@ -28,8 +28,7 @@ cv::RotatedRect thresh_callback(int, void*);
 //double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
 
-Line::Line(const CVNode& _parent) :
-	VisibleObject(_parent) {
+Line::Line(const CVNode& _parent, CVNode::LineParameters& _params) : VisibleObject(_parent), params(_params) {
 	xDistance = 0.0;
 	yDistance = 0.0;
 	zDistance = 0.0;
@@ -99,8 +98,14 @@ void Line::applyFilter(cv::Mat& image) {
 	//resizeWindow("Filtered Image", 1018, 715);
 	//imshow("Filtered Image", filteredImage);
 
+	// HSV (0-180, 0-255, 0-255)
+	// Scalar (H, S, V)
+
 	//Range for the line in down video
-	cv::inRange(imageHSV, cv::Scalar(100, 30, 170), cv::Scalar(180, 90, 250),
+	//##########################################################################
+	// Filter 1
+	//##########################################################################
+	cv::inRange(imageHSV, cv::Scalar(params.hue_range1_begin, params.sat_range1_begin, params.value_range1_begin), cv::Scalar(params.hue_range1_end, params.sat_range1_end, params.value_range1_end),
 			filteredImage);
 	//namedWindow( "Filtered Image", CV_WINDOW_NORMAL );
 	//resizeWindow("Filtered Image", 1018, 715);
@@ -111,7 +116,10 @@ void Line::applyFilter(cv::Mat& image) {
 	}
 
 	//Range for the down video
-	cv::inRange(imageHSV, cv::Scalar(0, 20, 160), cv::Scalar(180, 90, 240),
+	//##########################################################################
+	// Filter 2
+	//##########################################################################
+	cv::inRange(imageHSV, cv::Scalar(params.hue_range2_begin, params.sat_range2_begin, params.value_range2_begin), cv::Scalar(params.hue_range2_end, params.sat_range2_end, params.value_range2_end),
 			filteredImage);
 	holderTemp = thresh_callback(0, 0);
 	if (holderTemp.size.area() >= line.size.area()) {
@@ -120,7 +128,10 @@ void Line::applyFilter(cv::Mat& image) {
 	//line = holderTemp;
 
 	//Range for the run2-cropped
-	cv::inRange(imageHSV, cv::Scalar(5, 70, 30), cv::Scalar(15, 350, 180),
+	//##########################################################################
+	// Filter 3
+	//##########################################################################
+	cv::inRange(imageHSV, cv::Scalar(params.hue_range3_begin, params.sat_range3_begin, params.value_range3_begin), cv::Scalar(params.hue_range3_end, params.sat_range3_end, params.value_range3_end),
 			filteredImage);
 	holderTemp = thresh_callback(0, 0);
 	if (holderTemp.size.area() >= line.size.area()) {
@@ -128,7 +139,10 @@ void Line::applyFilter(cv::Mat& image) {
 	}
 
 	//Range for the rosbag videos
-	cv::inRange(imageHSV, cv::Scalar(5, 20, 30), cv::Scalar(150, 130, 180),
+	//##########################################################################
+	// Filter 4
+	//##########################################################################
+	cv::inRange(imageHSV, cv::Scalar(params.hue_range4_begin, params.sat_range4_begin, params.value_range4_begin), cv::Scalar(params.hue_range4_end, params.sat_range4_end, params.value_range4_end),
 			filteredImage);
 	holderTemp = thresh_callback(0, 0);
 	if (holderTemp.size.area() >= line.size.area()) {

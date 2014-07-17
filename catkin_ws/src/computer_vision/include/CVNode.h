@@ -58,6 +58,40 @@ class CVNode {
 		int hue_range2_end;
 	};
 
+	struct LineParameters {
+		// Range 1:
+		int hue_range1_begin;
+		int hue_range1_end;
+		int sat_range1_begin;
+		int sat_range1_end;
+		int value_range1_begin;
+		int value_range1_end;
+
+		// Range 2:
+		int hue_range2_begin;
+		int hue_range2_end;
+		int sat_range2_begin;
+		int sat_range2_end;
+		int value_range2_begin;
+		int value_range2_end;
+
+		// Range 3:
+		int hue_range3_begin;
+		int hue_range3_end;
+		int sat_range3_begin;
+		int sat_range3_end;
+		int value_range3_begin;
+		int value_range3_end;
+
+		// Range 4:
+		int hue_range4_begin;
+		int hue_range4_end;
+		int sat_range4_begin;
+		int sat_range4_end;
+		int value_range4_begin;
+		int value_range4_end;
+	};
+
 	private:
 	
 	/**
@@ -81,6 +115,7 @@ class CVNode {
 	bool front_using_helpers;
 
 	GateParameters gp;
+	LineParameters lp;
 
 	private:
 
