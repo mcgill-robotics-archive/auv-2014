@@ -5,6 +5,9 @@
     <!-- battery -->
     <node name="battery" pkg="status" type="battery_lights.py"/>
 
+    <!-- ethernet -->
+    <node name="connection" pkg="status" type="connection_notifier.py" output="screen"/>
+
     <!-- temperature -->
     <node name="temperature" pkg="status" type="temperature.py" respawn="false" output="screen"/>
 
