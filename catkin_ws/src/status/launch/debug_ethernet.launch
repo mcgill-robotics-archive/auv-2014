@@ -1,0 +1,8 @@
+<launch>
+    <arg name="debug" default="true"/>
+
+    <!-- ethernet connection -->
+    <node name="connection" pkg="status" type="ethernet.py" output="screen">
+        <param name="debug" type="bool" value="$(arg debug)"/>
+    </node>
+</launch>

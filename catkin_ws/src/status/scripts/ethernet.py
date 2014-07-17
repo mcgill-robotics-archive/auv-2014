@@ -8,12 +8,14 @@ import time
 from blinky.srv import *
 from blinky.msg import *
 rospy.init_node('connection')
+rate = rospy.Rate(10)
 
 # COLORS
 BLACK = RGB(0, 0, 0)
 CYAN = RGB(0, 255, 255)
 GREEN = RGB(0, 255, 0)
 ORANGE = RGB(255, 105, 0)
+PURPLE = RGB(255, 0, 105)
 RED = RGB(255, 0, 0)
 WHITE = RGB(255, 255, 255)
 YELLOW = RGB(255, 200, 0)
@@ -46,25 +48,39 @@ def get_connection_status():
 
 
 if __name__ == '__main__':
-    while not rospy.is_shutdown():
+    if not rospy.is_shutdown():
         try:
-            connection = get_connection_status()
-            if connection == "down":
-                if not timing:
-                    timing = True
+            while not rospy.has_param('/connection/'):
+                pass
+            debug = rospy.get_param('/connection/debug')
+            if debug:
+                rospy.logwarn('DEBUG MODE ACTIVE')
+
+            on_boot = True
+            connection_is_good = False
+
+            start_time = time.time()
+            while not rospy.is_shutdown():
+                if connection_is_good and get_connection_status() == "down":
                     start_time = time.time()
-                warning(True, RED)
-            elif connection == "up":
-                if timing:
-                    timing = False
+                    rospy.logwarn("Connection dropped!")
+                    connection_is_good = False
+                    if debug:
+                        warning(True, RED)
+                elif not connection_is_good and get_connection_status() == "up":
                     end_time = time.time()
                     delta_time = end_time - start_time
-                    print "Time until connection established:", delta_time, "seconds"
-                warning(True, GREEN)
-            else:
-                warning(True, CYAN)
+                    rospy.logwarn("Connection established: %f s", delta_time)
+                    connection_is_good = True
+                    if on_boot:
+                        on_boot = False
+                        os.system("bash -ic blinky_alert")
+                    elif debug:
+                        warning(True, GREEN)
+                rate.sleep()
 
         except:
-            break
+            pass
 
-    os.system("bash -ic stop_warning")
+    if debug:
+        os.system("bash -ic stop_warning")

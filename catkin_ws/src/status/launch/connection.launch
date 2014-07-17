@@ -1,4 +1,0 @@
-<launch>
-    <!-- ethernet connection -->
-    <node name="connection" pkg="status" type="ethernet_debugger.py" output="screen"/>
-</launch>

@@ -1,4 +1,5 @@
 <launch>
+    <arg name="debug" default="false"/>
     <arg name="cpu" default="70"/>
     <arg name="ssd" default="65"/>
 
@@ -9,7 +10,9 @@
     <node name="battery" pkg="status" type="battery_lights.py" respawn="true"/>
 
     <!-- ethernet -->
-    <node name="connection" pkg="status" type="connection_notifier.py" output="screen"/>
+    <node name="connection" pkg="status" type="ethernet.py" output="screen">
+        <param name="debug" type="bool" value="$(arg debug)"/>
+    </node>
 
     <!-- temperature -->
     <node name="temperature" pkg="status" type="temperature.py" output="screen" respawn="true">
