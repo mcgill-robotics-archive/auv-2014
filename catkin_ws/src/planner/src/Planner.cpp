@@ -47,6 +47,22 @@ double Planner::getSurgeSpeed() {
     return surgeSpeed;
 }
 
+double Planner::getYawTimeout() {
+	return yawTimeout;
+}
+
+double Planner::getCloseLoopDepthTimeout() {
+	return closeLoopDepthTimeout;
+}
+
+double Planner::getOpenLoopDepthTimeout() {
+	return openLoopDepthTimeout;
+}
+
+double Planner::getGateTimeout() {
+	return gateTimeout;
+}
+
 int get_task_id(std::string name) {
 	if (name == "gate") return 1;
 	if (name == "lane") return 2;
@@ -133,6 +149,7 @@ void Planner::setTransform(std::string referenceFrame) {
 bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desired) {
 	//has two sets of bound, one set for the simulator, one for real life
 		//both sets still need to be experimentally determined
+	/* SPECIFIED IN YAML FILE JULY 16
 	if(inSim) {
 		xBound = .1;
 		yBound = .1;
@@ -147,6 +164,7 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 		yawBound = .1;
 		pitchBound = .1;
 	}
+	*/
 	setTransform(referenceFrame);
 	//positional bounds
 	bool xBounded = fabs(relativePose.pose.position.x - desired.at(0)) < xBound;
@@ -155,9 +173,12 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 		relativePose.pose.position.x, relativePose.pose.position.y);
 	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
 
-	ROS_INFO("POSITIONAL BOUNDS:");
-	ROS_INFO("Current x: %f    Desired x: %f", relativePose.pose.position.x, desired.at(0));
-	ROS_INFO("Current y: %f    Desired y: %f", relativePose.pose.position.y, desired.at(1));
+	ROS_INFO_THROTTLE(1, "BOUNDS:");
+	ROS_INFO_THROTTLE(1, "xBound: %f    yBound: %f    yawBound: %f    pitchBound: %f", xBound, yBound, yawBound, pitchBound);
+
+	ROS_INFO_THROTTLE(1, "POSITION:");
+	ROS_INFO_THROTTLE(1, "Current x: %f    Desired x: %f", relativePose.pose.position.x, desired.at(0));
+	ROS_INFO_THROTTLE(1, "Current y: %f    Desired y: %f", relativePose.pose.position.y, desired.at(1));
 
 	//rotational bounds
 	double x = relativePose.pose.orientation.x;
@@ -176,10 +197,10 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	bool pitchBounded = fabs(pitch - desired.at(2)) < pitchBound;
 	bool yawBounded = fabs(yaw - desired.at(3)) < yawBound;
 
-	ROS_INFO("ROTATIONAL BOUNDS:");
-	ROS_INFO("Current pitch: %f    Desired pitch: %f", pitch, desired.at(2));
-	ROS_INFO("Current yaw: %f    Desired yaw: %f", yaw, desired.at(2));
-	ROS_INFO("Variables bounded: x: %i, y: %i, yaw: %i, pitch: %i ", xBounded, yBounded, yawBounded, pitchBounded);
+	ROS_INFO_THROTTLE(1, "ORIENTATION:");
+	ROS_INFO_THROTTLE(1, "Current pitch: %f    Desired pitch: %f", pitch, desired.at(2));
+	ROS_INFO_THROTTLE(1, "Current yaw: %f    Desired yaw: %f", yaw, desired.at(2));
+	ROS_INFO_THROTTLE(1, "Variables bounded: x: %i, y: %i, yaw: %i, pitch: %i ", xBounded, yBounded, yawBounded, pitchBounded);
 	return (xBounded && yBounded && yawBounded && pitchBounded);
 
 
@@ -285,6 +306,12 @@ void Planner::setVelocityWithCloseLoopYawPitchOpenLoopDepth(double x_speed, doub
 	setPoints(pointControl, referenceFrame);
 }
 
+void Planner::setYaw(double yaw, std::string referenceFrame) {
+	double pointControl[18] = { 0, 0, 0, 0, 1, yaw, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0};
+	setPoints(pointControl, referenceFrame);
+}
+
 void Planner::switchToTask(Tasks newTask) {
 	switch(newTask) {
 		case Gate: 
@@ -382,11 +409,11 @@ int main(int argc, char **argv) {
 
 	if(inSim) {
 		setRobotInitialPosition(nodeHandle, start_task_id);
+		plannerNode->resetIMU(); //TODO: NOT WORKING ANYMORE JULY 16
 	}
 	///////////////////////////////////////////////////////////////////////
 
 	//start routine
-	plannerNode->resetIMU();
 	plannerNode->switchToTask(plannerNode->Gate);
 
 	return 0;	
@@ -409,6 +436,14 @@ Planner::Planner(ros::NodeHandle& n) {
 	nodeHandle.param<double>("openLoopDepthSpeed", openLoopDepthSpeed, 0);
 	nodeHandle.param<double>("closeLoopDepth", closeLoopDepth, 0);
 	nodeHandle.param<double>("surgeSpeed", surgeSpeed, 0);
+	nodeHandle.param<double>("yawTimeout", yawTimeout, 0);
+	nodeHandle.param<double>("closeLoopDepthTimeout", closeLoopDepthTimeout, 0);
+	nodeHandle.param<double>("openLoopDepthTimeout", openLoopDepthTimeout, 0);
+	nodeHandle.param<double>("gateTimeout", gateTimeout, 0);
+	nodeHandle.param<double>("xBound", xBound, 0);
+	nodeHandle.param<double>("yBound", yBound, 0);
+	nodeHandle.param<double>("yawBound", yawBound, 0);
+	nodeHandle.param<double>("pitchBound", pitchBound, 0);
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater, 0);
@@ -458,7 +493,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	 * TODO: Remove everything below once we are ready to test planner, and once we make planner run at startup,
 	 * so that the diver doesn't have to unplug the Ethernet cable, which can be hard to do with the new connectors.
 	 */
-	while (!n.getParam("/go", go) && go != 1) {
+	while (!n.getParam("/go", go) || go != 1) {
 		//wait for "go" command from command line
     	ROS_INFO_ONCE("Waiting for the 'go' command: rosparam set /go 1");
 	}

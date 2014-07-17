@@ -14,7 +14,4 @@
   <!-- state estimation -->
   <include file="$(find state_estimation)/launch/sim_state_estimation.launch" />
 
-  <!-- blinky -->
-  <include file="$(find blinky)/launch/blinky.launch" />
-
 </launch>
