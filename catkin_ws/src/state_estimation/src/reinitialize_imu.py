@@ -201,7 +201,10 @@ if __name__ == '__main__':
         time.sleep(2.2)
         warning(False, 0, BLACK)
         time.sleep(0.5)
-        set_planner(original_colors)
+        if go_signal:
+            set_planner([CYAN])
+        else:
+            set_planner(original_colors)
 
         # GO IF ASKED AND UNTETHERED
         if ready_to_go(go_signal):
