@@ -5,6 +5,7 @@ import sensors
 import socket
 import roslib
 import rospy
+import os
 from blinky.srv import *
 from blinky.msg import *
 from status.msg import *
@@ -17,8 +18,6 @@ warning = False             # STORES WHETHER WARNING OR NOT
 # CONSTANTS
 RED = [RGB(255, 0, 0)]      # COLOR TO FLASH               RED
 HOST = ('127.0.0.1', 7634)  # HDDTEMP DAEMON SOCKET
-CPU_THRESHOLD = 70          # THRESHOLD FOR CPU CORES        C
-SSD_THRESHOLD = 65          # THRESHOLD FOR SSD              C
 BLINKING_CAP = 5.0          # MAX BLINKING FREQUENCY        Hz
 
 # SET UP NODE AND TOPIC
@@ -32,6 +31,18 @@ sensors.init()
 
 def update():
     """ Updates temperatures """
+    global CPU_THRESHOLD, SSD_THRESHOLD
+
+    # UPDATE THRESHOLD FOR CPU CORES AND SSD (CELCIUS)
+    try:
+        while not rospy.has_param('/temperature/'):
+            pass
+        CPU_THRESHOLD = int(rospy.get_param('/temperature/cpu'))
+        SSD_THRESHOLD = int(rospy.get_param('/temperature/ssd'))
+    except:
+        CPU_THRESHOLD = 70
+        SSD_THRESHOLD = 65
+
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
         for feature in chip:
@@ -132,5 +143,5 @@ if __name__ == '__main__':
         except Exception as e:
             print e
             sensors.cleanup()
-            blinky(False)
+            os.system("bash -ic stop_warning")
             break

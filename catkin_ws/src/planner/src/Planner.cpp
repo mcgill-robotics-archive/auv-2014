@@ -283,14 +283,14 @@ void Planner::setPoints(double pointControl[], std::string referenceFrame) {
 
 void Planner::setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame) {
 	double pointControl[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, x_speed, 1, y_speed,
-			1, yaw_speed, 0, depth, 0, 0};
+			1, yaw_speed, 1, depth, 0, 0};
 	setPoints(pointControl, referenceFrame);
 }
 
 void Planner::setPosition(std::vector<double> desired, std::string referenceFrame) {
 	double pointControl[18] =
 			{ 1, desired.at(0), 1, desired.at(1), 1, desired.at(2), 1,
-					desired.at(3), 0, 0, 0, 0, 0, 0, 0, desired.at(4), 0, 0 };
+					desired.at(3), 0, 0, 0, 0, 0, 0, 1, desired.at(4), 0, 0 };
 	setPoints(pointControl, referenceFrame);
 }
 

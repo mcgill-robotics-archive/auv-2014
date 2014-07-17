@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find computer_vision)/launch/camera_front_left.launch"></include>
+    <include file="$(find computer_vision)/launch/camera_front_right.launch"></include>
+    <include file="$(find computer_vision)/launch/camera_down.launch"></include>
+</launch>

@@ -3,10 +3,12 @@
   <!-- Written by Anass Al-Wohoush, July 16, McGill Robotics -->
 
   <arg name="timeout" default="1"/>
+  <arg name="timer" default="5"/>
   <arg name="go" default="false"/>
 
-  <node name="countdown" pkg="state_estimation" type="reinitialize_imu.py" respawn="false" output="screen">
+  <node name="countdown" pkg="state_estimation" type="initialize_imu.py" respawn="false" output="screen">
     <param name="timeout" type="int" value="$(arg timeout)"/>
+    <param name="timer" type="int" value="$(arg timer)"/>
     <param name="go" type="bool" value="$(arg go)"/>
   </node>
 </launch>

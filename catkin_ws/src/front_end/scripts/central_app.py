@@ -28,6 +28,7 @@ import pygame  # module top play the alarm
 
 from std_msgs.msg import String  # ros message types
 from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 from std_msgs.msg import Int16
 from std_msgs.msg import Int32
 from sensor_msgs.msg import Image

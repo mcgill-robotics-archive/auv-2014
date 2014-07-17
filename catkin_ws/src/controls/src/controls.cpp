@@ -3,7 +3,7 @@
 /*
 5DOF control system for the McGill Robotics AUV
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
-Open Loop Speed Control.	
+Open Loop Speed Control.
 
 Created by Nick Speal Jan 10 2014.
 */
@@ -13,7 +13,7 @@ Created by Nick Speal Jan 10 2014.
 	double z_des = 0;
 	double z_est = 0;
 
-	double setPoint_XPos = 0; 
+	double setPoint_XPos = 0;
 	double setPoint_YPos = 0;
 	double setPoint_Depth = 0;
 	double setPoint_Yaw = 0;
@@ -23,7 +23,7 @@ Created by Nick Speal Jan 10 2014.
 	double setPoint_YawSpeed = 0;
 	double setPoint_DepthSpeed = 0;
 
-	int8_t isActive_XPos = 0;	
+	int8_t isActive_XPos = 0;
 	int8_t isActive_YPos = 0;
 	int8_t isActive_Depth = 0;
 	int8_t isActive_Yaw = 0;
@@ -54,7 +54,7 @@ Created by Nick Speal Jan 10 2014.
 	double MAX_ERROR_Y_D;
 	double MAX_ERROR_Z_D;
 	double MAX_ERROR_PITCH_D;
-	double MAX_ERROR_YAW_D;	
+	double MAX_ERROR_YAW_D;
 
 	double XSPEED_MAX;
 	double YSPEED_MAX;
@@ -96,7 +96,7 @@ void soft_kill_callback(const std_msgs::Bool data)
 
 void setPoints_callback(const planner::setPoints setPointsMsg)
 {
-	
+
 	//check if setPoints has changed
 	/*
 	if (oldSetPointsMsg == setPointsMsg){
@@ -105,7 +105,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	    double ei_YPos = 0;
 	    double ei_Depth = 0;
 	    double ei_Pitch = 0;
-	    double ei_Yaw = 0;	    
+	    double ei_Yaw = 0;
 		oldSetPointsMsg = setPointsMsg;
 	}
 	*/
@@ -194,11 +194,11 @@ void getStateFromTF()
 		return;
 	}
 	tf::StampedTransform transform;
-	tf::TransformListener tf_listener; 
+	tf::TransformListener tf_listener;
 
 	std::string targetFrame = frame; //specified on the setPoints topic
 	std::string originalFrame = "robot/rotation_center"; //rpy,xyz of target frame is expressed w.r.t. the original frame axes
-	
+
 	try
 	{
 		double currentTime = ros::Time::now().toSec();
@@ -211,7 +211,7 @@ void getStateFromTF()
 	catch (tf::TransformException ex){
 		ROS_ERROR("%s",ex.what());
 	}
-	
+
 
 	estimated_XPos = transform.getOrigin().x();
 	estimated_YPos = transform.getOrigin().y();
@@ -223,16 +223,24 @@ void getStateFromTF()
 	double roll_unused; //unused, but needs to be sent to getRPY method
 	double pitch_unused;
 
-	
+
 	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
+
+
+	//LOLLL im sorry anass made me do it
+	if (frame=="/target/lane"){ estimated_Yaw*=-1;}
+
+
+
+
 	//------------------------------------------------------------------------------------------------------------
 	//Pitch and not all other dimensions
 
-	tf::TransformListener tf_listener_pitch; 
+	tf::TransformListener tf_listener_pitch;
 
 	targetFrame = "sensors/IMU_global_reference";
-	originalFrame = "robot/rotation_center"; 
-	
+	originalFrame = "robot/rotation_center";
+
 	try
 	{
 		double currentTime = ros::Time::now().toSec();
@@ -245,12 +253,12 @@ void getStateFromTF()
 	catch (tf::TransformException ex){
 		ROS_ERROR("error looking up pitch transform: \n %s",ex.what());
 	}
-	
+
 	q = transform.getRotation(); //save the rotation as a quaternion - overwrite
 	tf::Matrix3x3 matrix_for_pitch(q); //convert quaternion to matrix - overwrite
 
 	double yaw_unused;
-	
+
 	matrix_for_pitch.getEulerYPR(yaw_unused, estimated_Pitch, roll_unused);
 }
 int main(int argc, char **argv)
@@ -260,13 +268,13 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 
 	//specify ROSCONSOLE verbosity level
-	//Fred Lafrance: temporarily commented because of compile error	
+	//Fred Lafrance: temporarily commented because of compile error
 	//if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
 	//{
    	//	ros::console::notifyLoggerLevelsChanged();
 	//}
 
-	//define variables for Parameters 
+	//define variables for Parameters
 		double m; //mass in kg
 		double g;
 		double cd; // drag coefficient
@@ -302,7 +310,7 @@ int main(int argc, char **argv)
 	    double OL_coef_balance; // used to balance surge thrusters, given as a whole number percent, off of evenly balanced
 
 		double z_steady_force;
-		double pitch_steady_torque;	   
+		double pitch_steady_torque;
 
 
 	//Define wrench variables. They get reinitialized to zero on each iteration.
@@ -326,7 +334,7 @@ int main(int argc, char **argv)
 	controls::DebugControls debugMsg;
 
 
-	
+
 
 	ROS_INFO("\n----\n Controls node initialized. Waiting for setPoints to be published... \n----");
 	while (setPoints_subscriber.getNumPublishers() == 0)
@@ -349,7 +357,7 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/kp_yPos", kp_yPos, 0.0);
 		    n.param<double>("gains/ki_yPos", ki_yPos, 0.0);
 		    n.param<double>("gains/kd_yPos", kd_yPos, 0.0);
-		    
+
 		    n.param<double>("gains/kp_Depth", kp_Depth, 0.0);
 		    n.param<double>("gains/ki_Depth", ki_Depth, 0.0);
 		    n.param<double>("gains/kd_Depth", kd_Depth, 0.0);
@@ -362,7 +370,7 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/ki_Yaw", ki_Yaw, 0.0);
 		    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
 
-		   
+
 		    n.param<double>("coefs/mass", m, -1); //defaut negative to check for proper loading
 		    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
 		    n.param<double>("coefs/drag", cd, 0.0);
@@ -377,12 +385,12 @@ int main(int argc, char **argv)
 			n.param<double>("max_error_z_p", MAX_ERROR_Z_P, 0.0);
 			n.param<double>("max_error_pitch_p", MAX_ERROR_PITCH_P, 0.0);
 			n.param<double>("max_error_yaw_p", MAX_ERROR_YAW_P, 0.0);
-			
+
 			n.param<double>("max_error_x_d", MAX_ERROR_X_D, 0.0);
 			n.param<double>("max_error_y_d", MAX_ERROR_Y_D, 0.0);
 			n.param<double>("max_error_z_d", MAX_ERROR_Z_D, 0.0);
 			n.param<double>("max_error_pitch_d", MAX_ERROR_PITCH_D, 0.0);
-			n.param<double>("max_error_yaw_d", MAX_ERROR_YAW_D, 0.0);	
+			n.param<double>("max_error_yaw_d", MAX_ERROR_YAW_D, 0.0);
 
 			n.param<double>("XSpeed/max", XSPEED_MAX, 0.0);
 			n.param<double>("YSpeed/max", YSPEED_MAX, 0.0);
@@ -390,7 +398,7 @@ int main(int argc, char **argv)
 			n.param<double>("Pitch/max", PITCH_MAX, 0.0);
 			n.param<double>("Yaw/max", YAW_MAX, 0.0);
 
-		    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);	
+		    n.param<double>("gains/OL_coef_x", OL_coef_x, 0.0);
 		    n.param<double>("gains/OL_coef_y", OL_coef_y, 0.0);
 		    n.param<double>("gains/OL_coef_yaw", OL_coef_yaw, 0.0);
 		    n.param<double>("gains/OL_coef_depth", OL_coef_depth, 0.0);
@@ -402,12 +410,12 @@ int main(int argc, char **argv)
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
 
 
-		//make sure all dimensions are not controlled unless setPoints says so. No control if 
+		//make sure all dimensions are not controlled unless setPoints says so. No control if
 		durationSinceLastSetPoint = ros::Time::now() - timeOfLastSetPoint;
 		//ROS_INFO("Duration since last set point: %f", durationSinceLastSetPoint.toSec());
 		if (durationSinceLastSetPoint.toSec() > 3) {
 			if (durationSinceLastSetPoint.toSec() <6){ //nested if so that this message isn't repeated forever and ever
-				ROS_INFO("No recent setPoint. Pausing Controls."); 	
+				ROS_INFO("No recent setPoint. Pausing Controls.");
 			}
 			isActive_XPos = 0;
 			isActive_YPos = 0;
@@ -442,7 +450,7 @@ int main(int argc, char **argv)
     	Ty = 0;
     	Tz = 0;
 
-		//X 
+		//X
 		if (isActive_XPos)
 		{
 			if (true) // TODO check if estimatedStateIsPublished
@@ -463,7 +471,7 @@ int main(int argc, char **argv)
 				ROS_WARN("X-Position Control is active, but estimated state is not published");
 			}
 		}
-        
+
         if (isActive_XSpeed)
         {
            	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
@@ -472,7 +480,7 @@ int main(int argc, char **argv)
         	//ROS_DEBUG("controlling xspeed");
         }
 
-        //Y 
+        //Y
 		if (isActive_YPos)
 		{
 			if (true) // TODO check if estimatedStateIsPublished
@@ -496,7 +504,7 @@ int main(int argc, char **argv)
         	Fy = OL_coef_y*setPoint_YSpeed;
         }
 
-        //Z 
+        //Z
 		if (isActive_Depth)
 
 		{
@@ -511,7 +519,7 @@ int main(int argc, char **argv)
 				Fz += z_steady_force; //account for positive buoyancy bias
                 //Fz += buoyancy*m*g; //Account for positive buoyancy bias
 				Fz*=-1; //Depth is different from all the other coordinates. Depth increases as the surface moves upwards, which is the opposite to our NED convention
-				
+
 			}
 			else
 			{
@@ -522,7 +530,7 @@ int main(int argc, char **argv)
 		if (isActive_DepthSpeed)
 		{
         	Fz = OL_coef_depth*setPoint_DepthSpeed; //no saturation because it's not worth it
-		}	
+		}
 
 
 
@@ -563,7 +571,7 @@ int main(int argc, char **argv)
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
 		//Limit check for output force/torque values - not meaningful saturation as of July 11 because the limits are intentionally super high
-			Fx=saturate(Fx, F_MAX, "Force: X"); 
+			Fx=saturate(Fx, F_MAX, "Force: X");
 			Fy=saturate(Fy, F_MAX, "Force: Y");
 			Fz=saturate(Fz, F_MAX, "Force: Z");
 			Ty=saturate(Ty, T_MAX, "Torque: Y");

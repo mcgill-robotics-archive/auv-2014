@@ -10,7 +10,7 @@ from tf.transformations import euler_from_quaternion
 from math import ceil
 from blinky.srv import *
 from blinky.msg import *
-rospy.init_node('reinitializer')
+rospy.init_node('initializer')
 
 # COLORS
 BLACK = RGB(0, 0, 0)
@@ -20,6 +20,8 @@ ORANGE = RGB(255, 105, 0)
 RED = RGB(255, 0, 0)
 WHITE = RGB(255, 255, 255)
 YELLOW = RGB(255, 200, 0)
+original_colors = []
+got_original_colors = False
 
 # IMU READINGS
 roll_angles = []
@@ -35,7 +37,7 @@ listener = tf.TransformListener()
 
 
 def set_planner(colors):
-    """ Lights up planner blinkytape """
+    """ Lights up planner BlinkyTape """
     try:
         rospy.wait_for_service('update_planner_lights')
         blinky_proxy = rospy.ServiceProxy('update_planner_lights', UpdatePlannerLights)
@@ -49,7 +51,7 @@ def set_planner(colors):
 
 
 def warning(state, frequency, color):
-    """ Lights up blinkytape for warnings """
+    """ Lights up BlinkyTape for warnings """
     try:
         rospy.wait_for_service('warning_lights')
         blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
@@ -63,7 +65,7 @@ def warning(state, frequency, color):
 
 
 def countdown(time_counter, incomplete_color, complete_color, steps):
-    """ Counts down on planner blinkytape """
+    """ Counts down on planner BlinkyTape """
     global is_counting_down, previous_blinky_step
 
     # SET FLAGS
@@ -88,7 +90,7 @@ def countdown(time_counter, incomplete_color, complete_color, steps):
 
         # PRINT
         if previous_blinky_step != incomplete_blinky_steps and incomplete_blinky_steps > 0:
-            print incomplete_blinky_steps
+            rospy.logwarn('%d blinkies left', incomplete_blinky_steps)
             previous_blinky_step = incomplete_blinky_steps
         else:
             pass
@@ -123,8 +125,19 @@ def imu_callback(pose):
         pass
 
 
+def planner_callback(data):
+    """ Gets colors currently displayed on the planner BlinkyTape """
+    global original_colors, got_original_colors
+
+    if not got_original_colors:
+        original_colors = data.colors
+        got_original_colors = True
+    else:
+        pass
+
+
 def reinitialize_imu():
-    """ Reinitialize IMU heading parameters """
+    """ Reinitializes IMU heading parameters """
     # AVERAGE OVER COUNTDOWN
     roll = sum(roll_angles)/len(roll_angles)
     pitch = sum(pitch_angles)/len(pitch_angles)
@@ -136,11 +149,19 @@ def reinitialize_imu():
     rospy.set_param('/IMU/initial/yaw',yaw)
     rospy.set_param('/IMU/reinitialized',True)
 
-    # PRINT
-    print 'AVERAGE IMU READINGS:'
-    print 'ROLL: ', roll
-    print 'PITCH:', pitch
-    print 'YAW:  ', yaw
+    # LOG
+    rospy.logwarn('AVERAGED %d DATA POINTS', len(roll_angles))
+    rospy.logwarn('INITIAL ROLL: %f', roll)
+    rospy.logwarn('INITIAL PITCH:%f', pitch)
+    rospy.logwarn('INITIAL YAW:  %f', yaw)
+
+
+def ready_to_go(go_signal):
+    """ Checks if planner is running and computer is untethered """
+    connection = open('/sys/class/net/eth0/operstate').read().rstrip()
+    yes = go_signal and connection == "down"
+
+    return yes
 
 
 if __name__ == '__main__':
@@ -149,40 +170,46 @@ if __name__ == '__main__':
         while not rospy.has_param('/countdown/'):
             pass
         timeout = int(rospy.get_param('/countdown/timeout'))
-        go = rospy.get_param('/countdown/go')
+        timer = int(rospy.get_param('/countdown/timer'))
+        go_signal = rospy.get_param('/countdown/go')
 
         # HEADER
-        print 'Recalibrating IMU in', timeout, 'seconds' if timeout != 1 else "second"
+        rospy.logwarn('Initializing IMU in %d sec', timeout)
+        rospy.Subscriber('original_planner_colors', RGBArray, planner_callback)
 
         # WARN BEFORE START
         time.sleep(timeout)
-        print 'Ready...'
-        set_planner([YELLOW])
-        warning(True, 1, BLACK)
-        time.sleep(5)
-        print 'Set...'
+        rospy.logwarn('Ready...')
+        while not got_original_colors:
+            pass
         set_planner([BLACK])
+        rospy.logwarn('Set..')
+        warning(True, 1, YELLOW)
+        time.sleep(5.25)
         warning(False, 0, BLACK)
-        print 'Go.'
+        rospy.logwarn('Go.')
         time.sleep(0.5)
 
         # COUNTDOWN
         rospy.Subscriber('state_estimation/pose', PoseStamped, imu_callback)
-        countdown(5, YELLOW, BLACK, 5)
-        print 'Done.'
+        countdown(timer, YELLOW, BLACK, 5)
+        rospy.logwarn('DONE')
         reinitialize_imu()
 
         # WARN WHEN DONE
-        if go:
-            set_planner([GREEN])
-        else:
-            set_planner([WHITE])
-        warning(True, 2, BLACK)
-        time.sleep(2.5)
+        set_planner([BLACK])
+        warning(True, 2, GREEN)
+        time.sleep(2.2)
         warning(False, 0, BLACK)
+        time.sleep(0.5)
+        if go_signal:
+            set_planner([CYAN])
+        else:
+            set_planner(original_colors)
 
         # GO IF ASKED AND UNTETHERED
-        if go and "up" not in open('/sys/class/net/eth0/operstate' % ifname).read():
+        if ready_to_go(go_signal):
+            rospy.logwarn("GO ASIMOV GO")
             rospy.set_param('/go', 1)
 
         # EXIT

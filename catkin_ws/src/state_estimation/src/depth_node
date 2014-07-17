@@ -59,15 +59,16 @@ def init():
     global OFFSET, WINDOW_WIDTH
 
     rospy.init_node('depth_node')
-    rospy.Subscriber('electrical_interface/depth', Int16, depthCallBack)
-    pub1 = rospy.Publisher('state_estimation/rawDepth', Float64)
-    pub2 = rospy.Publisher('state_estimation/filteredDepth', Float64)
 
     while not rospy.has_param('/depth/'):
         pass
 
     WINDOW_WIDTH = int(rospy.get_param('/depth/window'))
     OFFSET = rospy.get_param('/depth/offset')
+
+    rospy.Subscriber('electrical_interface/depth', Int16, depthCallBack)
+    pub1 = rospy.Publisher('state_estimation/rawDepth', Float64)
+    pub2 = rospy.Publisher('state_estimation/filteredDepth', Float64)
 
     # Constants
     max_analog = 1023           # in bits

@@ -1,8 +1,15 @@
 #!/bin/bash
 
-# STOP BLINKY TAPE WARNING LIGHTS
+# STOP BLINKYTAPE WARNING LIGHTS
 function stop_warning {
-    rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"
+    rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}" > /dev/null
+}
+
+# FLASH BLINKYTAPE FOR ALERT
+function blinky_alert {
+    rosservice call /warning_lights "{'colors': [{'r': 255, 'b': 105, 'g': 0}], 'frequency': 2.0, 'on': true}" > /dev/null
+    sleep 0.9
+    stop_warning
 }
 
 # CONTROL MOTORS
@@ -182,19 +189,14 @@ function image_view {
 # SET PANE TITLE
 title='UNTITLED'
 function set_pane_title {
-    if [ -n "$@" ]; then
+    if [ "$#" -ne 0 ]; then
         export title=$@
     fi
     refresh_pane_title
-    trap "printf '\033]2;%s\033\\' $title" SIGHUP SIGINT SIGQUIT SIGILL SIGTRAP SIGABRT SIGKILL SIGSEGV SIGPIPE SIGALRM SIGTERM SIGCHLD
+    trap refresh_pane_title SIGCHLD
 }
 
 # REFRESH PANE TITLE
 function refresh_pane_title {
-    printf '\033]2;%s\033\\' $title
+    printf '\033]2;%s\033\\' "$title"
 }
-
-# REFRESH PANE TITLE AFTER EVERY COMMAND
-# it does really weird random shit in text only mode --bei
-#trap refresh_pane_title SIGHUP SIGINT SIGQUIT SIGILL SIGTRAP SIGABRT SIGKILL SIGSEGV SIGPIPE SIGALRM SIGTERM SIGCHLD
-
