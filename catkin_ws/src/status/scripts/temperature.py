@@ -18,8 +18,6 @@ warning = False             # STORES WHETHER WARNING OR NOT
 # CONSTANTS
 RED = [RGB(255, 0, 0)]      # COLOR TO FLASH               RED
 HOST = ('127.0.0.1', 7634)  # HDDTEMP DAEMON SOCKET
-CPU_THRESHOLD = 70          # THRESHOLD FOR CPU CORES        C
-SSD_THRESHOLD = 65          # THRESHOLD FOR SSD              C
 BLINKING_CAP = 5.0          # MAX BLINKING FREQUENCY        Hz
 
 # SET UP NODE AND TOPIC
@@ -33,6 +31,12 @@ sensors.init()
 
 def update():
     """ Updates temperatures """
+    global CPU_THRESHOLD, SSD_THRESHOLD
+
+    # UPDATE THRESHOLD FOR CPU CORES AND SSD (CELCIUS)
+    CPU_THRESHOLD = int(rospy.get_param('/temperature/cpu'))
+    SSD_THRESHOLD = int(rospy.get_param('/temperature/ssd'))
+
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
         for feature in chip:
