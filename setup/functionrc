@@ -193,13 +193,10 @@ function set_pane_title {
         export title=$@
     fi
     refresh_pane_title
+    trap refresh_pane_title SIGCHLD
 }
 
 # REFRESH PANE TITLE
 function refresh_pane_title {
     printf '\033]2;%s\033\\' "$title"
 }
-
-# REFRESH PANE TITLE AFTER EVERY COMMAND
-# trap refresh_pane_title SIGCHLD
-
