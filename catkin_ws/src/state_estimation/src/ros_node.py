@@ -77,19 +77,23 @@ def depthCallback(depth):
 def init():
     global estimator, pub, down_distance_pub, see_obj_pub
 
+    # NODE
     rospy.init_node('state_estimation')
     estimator = dead_reck.dead_reck(rospy)
-    # Subscribe to different inputing topics
-    rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
-    rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
-    rospy.Subscriber('state_estimation/pose', PoseStamped, imuCallback)
-    rospy.Subscriber('state_estimation/filteredDepth', Float64, depthCallback)
+
     # See object
     see_obj_pub = rospy.Publisher('state_estimation/see_object', Bool)
     # Publish the filtered data to a topic
     pub = rospy.Publisher('state_estimation/state_estimate', AUVState)
     down_distance_pub = rospy.Publisher('state_estimation/down_distance', Float64)
 
+    # Subscribe to different inputing topics
+    rospy.Subscriber('front_cv/data', VisibleObjectData, cvCallback)
+    rospy.Subscriber('down_cv/data', VisibleObjectData, cvCallback)
+    rospy.Subscriber('state_estimation/pose', PoseStamped, imuCallback)
+    rospy.Subscriber('state_estimation/filteredDepth', Float64, depthCallback)
+
+    # SET INITIAL IMU RPY PARAMS
     rospy.set_param('/IMU/initial/roll',0)
     rospy.set_param('/IMU/initial/pitch',0)
     rospy.set_param('/IMU/initial/yaw',0)
