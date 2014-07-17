@@ -18,6 +18,7 @@ CYAN = RGB(0, 255, 255)
 GREEN = RGB(0, 255, 0)
 ORANGE = RGB(255, 105, 0)
 RED = RGB(255, 0, 0)
+WHITE = RGB(255, 255, 255)
 YELLOW = RGB(255, 200, 0)
 
 # IMU READINGS
@@ -175,7 +176,7 @@ if __name__ == '__main__':
         if go:
             set_planner([GREEN])
         else:
-            set_planner([CYAN])
+            set_planner([WHITE])
         warning(True, 2, BLACK)
         time.sleep(2.5)
         warning(False, 0, BLACK)
