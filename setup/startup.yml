@@ -16,7 +16,7 @@ windows:
       - cmd:
         - "sleep 2 && set_pane_title CAMERAS & roslaunch --wait computer_vision camera_all.launch "
       - cmd:
-        - "sleep 2 && set_pane_title CV & roslaunch --wait computer_vision computer_vision.launch "
+        - "sleep 2 && set_pane_title COMPUTER VISION & roslaunch --wait computer_vision computer_vision.launch "
       - cmd:
         - "sleep 2 && set_pane_title CONTROLS & roslaunch --wait controls controls.launch "
       - cmd:
