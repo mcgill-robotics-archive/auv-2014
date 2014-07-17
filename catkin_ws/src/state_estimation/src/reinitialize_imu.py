@@ -124,7 +124,7 @@ def imu_callback(pose):
 
 
 def reinitialize_imu():
-    """ Reinitialize IMU heading parameters """
+    """ Reinitializes IMU heading parameters """
     # AVERAGE OVER COUNTDOWN
     roll = sum(roll_angles)/len(roll_angles)
     pitch = sum(pitch_angles)/len(pitch_angles)
@@ -141,6 +141,11 @@ def reinitialize_imu():
     print 'ROLL: ', roll
     print 'PITCH:', pitch
     print 'YAW:  ', yaw
+
+
+def ready_to_go(go):
+    """ Checks if planner is running and computer is untethered """
+    return go and "up" not in open('/sys/class/net/eth0/operstate').read()
 
 
 if __name__ == '__main__':
@@ -173,7 +178,7 @@ if __name__ == '__main__':
         reinitialize_imu()
 
         # WARN WHEN DONE
-        if go:
+        if ready_to_go():
             set_planner([GREEN])
         else:
             set_planner([WHITE])
@@ -182,7 +187,7 @@ if __name__ == '__main__':
         warning(False, 0, BLACK)
 
         # GO IF ASKED AND UNTETHERED
-        if go and "up" not in open('/sys/class/net/eth0/operstate' % ifname).read():
+        if ready_to_go():
             rospy.set_param('/go', 1)
 
         # EXIT
