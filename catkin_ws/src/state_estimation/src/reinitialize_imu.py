@@ -198,7 +198,7 @@ if __name__ == '__main__':
         # WARN WHEN DONE
         set_planner([BLACK])
         warning(True, 2, GREEN)
-        time.sleep(2.3)
+        time.sleep(2.2)
         warning(False, 0, BLACK)
         time.sleep(0.5)
         set_planner(original_colors)

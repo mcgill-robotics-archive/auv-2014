@@ -6,7 +6,7 @@
     <arg name="isInSim" value="0"/>
   </include>
 
-  <arg name="timeout" default="10"/>
+  <arg name="timeout" default="35"/>
   <arg name="go" default="true"/>
 
   <node name="countdown" pkg="state_estimation" type="reinitialize_imu.py" respawn="false" output="screen">
