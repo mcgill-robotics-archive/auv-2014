@@ -5,6 +5,7 @@ import sensors
 import socket
 import roslib
 import rospy
+import os
 from blinky.srv import *
 from blinky.msg import *
 from status.msg import *
@@ -132,5 +133,5 @@ if __name__ == '__main__':
         except Exception as e:
             print e
             sensors.cleanup()
-            blinky(False)
+            os.system("bash -ic stop_warning")
             break
