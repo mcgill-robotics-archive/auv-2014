@@ -29,6 +29,9 @@ uploadRepository() {
     sshpass -p 'elgordo21' scp -r ../setup robotics@10.0.0.1:~/McGill_RoboSub_2014
     echo "Upload complete."
     sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic blinky_alert" >& /dev/null
+    echo "Compiling..."
+    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic catkin_alert" >& /dev/null
+    echo "Compilation complete."
 }
 
 uploadRepository
