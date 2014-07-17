@@ -17,6 +17,15 @@ import BlinkyTape as bt
 # number of leds per blinky segment
 ledCount = 30
 
+# COLORS
+BLACK = RGB(0, 0, 0)
+CYAN = RGB(0, 255, 255)
+GREEN = RGB(0, 255, 0)
+ORANGE = RGB(255, 105, 0)
+RED = RGB(255, 0, 0)
+WHITE = RGB(255, 255, 255)
+YELLOW = RGB(255, 200, 0)
+
 # blinky tape class handle (accesses 2 segments)
 # change first argument with usb serial port
 # where the tape is found
@@ -24,6 +33,10 @@ blt = bt.BlinkyTape("/dev/blinkyTape", 2 * ledCount)
 
 # Color to separate subsections in the planner segment
 separation_color = RGB(0,0,0)
+
+# Request received for planner colors
+
+original_planner_colorList = []
 
 # The two blinky tape segments
 planner_colorList = []
@@ -42,12 +55,14 @@ warning_on = False
 def initialize_blinkies():
     global planner_colorList	# need to declare as global to preserve
     global battery_colorList	# across function calls
+    global original_planner_colorList
     colors = []
 
     # store the initial states
+    original_planner_colorList = [WHITE]
     for i in range(ledCount):
-    	planner_colorList.append(RGB(255,255,255)) # Cyan (!!!)
-        battery_colorList.append(RGB(255,255,255))
+    	planner_colorList.append(WHITE)
+        battery_colorList.append(WHITE)
 
     # set all leds off
     for i in range(2 * ledCount):
@@ -72,14 +87,17 @@ def initialize_blinkies():
 def update_planner(req):
     global planner_colorList
     global separation_color
+    global original_planner_colorList
     lock = threading.Lock()
 
     segments = len(req.colors)
     seg_size = 16/segments # 16 comes from magic (works for 1 <= i <= 5)
 
     colors = []
+    original_colors = []
 
     for s in req.colors:
+        original_colors.append(s)
         for i in range(seg_size - 1):
             colors.append(s)
         colors.append(separation_color)
@@ -96,6 +114,7 @@ def update_planner(req):
 
     with lock:
         planner_colorList = colors
+        original_planner_colorList = original_colors
 
     return UpdatePlannerLightsResponse(0)
 
@@ -146,6 +165,7 @@ def warn_lights(req):
 
     return WarningLightsResponse(0)
 
+
 def BlinkyTapeServer():
     initialize_blinkies()
     rospy.init_node('blinky')
@@ -154,6 +174,7 @@ def BlinkyTapeServer():
     ub2l = rospy.Service('update_battery2_lights', UpdateBattery2Lights, update_battery2)
     wl = rospy.Service('warning_lights', WarningLights, warn_lights)
     pub_planner = rospy.Publisher('planner_colors', RGBArray)
+    pub_original_planner = rospy.Publisher('original_planner_colors', RGBArray)
     pub_battery = rospy.Publisher('battery_colors', RGBArray)
     pub_warning = rospy.Publisher('warning_colors', RGBArray)
 
@@ -171,6 +192,7 @@ def BlinkyTapeServer():
         # thereby causing a division by zero.
         with lock:
             planner_colorList_copy = planner_colorList
+            original_planner_colorList_copy = original_planner_colorList
             battery_colorList_copy = battery_colorList
             warning_on_copy = warning_on
             warning_freq_copy = warning_freq
@@ -178,6 +200,7 @@ def BlinkyTapeServer():
 
         # publish all color lists
         pub_planner.publish(planner_colorList_copy)
+        pub_original_planner.publish(original_planner_colorList_copy)
         pub_battery.publish(battery_colorList_copy)
         pub_warning.publish(warning_colorList_copy)
 

@@ -20,6 +20,8 @@ ORANGE = RGB(255, 105, 0)
 RED = RGB(255, 0, 0)
 WHITE = RGB(255, 255, 255)
 YELLOW = RGB(255, 200, 0)
+original_colors = []
+got_original_colors = False
 
 # IMU READINGS
 roll_angles = []
@@ -35,7 +37,7 @@ listener = tf.TransformListener()
 
 
 def set_planner(colors):
-    """ Lights up planner blinkytape """
+    """ Lights up planner BlinkyTape """
     try:
         rospy.wait_for_service('update_planner_lights')
         blinky_proxy = rospy.ServiceProxy('update_planner_lights', UpdatePlannerLights)
@@ -49,7 +51,7 @@ def set_planner(colors):
 
 
 def warning(state, frequency, color):
-    """ Lights up blinkytape for warnings """
+    """ Lights up BlinkyTape for warnings """
     try:
         rospy.wait_for_service('warning_lights')
         blinky_proxy = rospy.ServiceProxy('warning_lights', WarningLights)
@@ -63,7 +65,7 @@ def warning(state, frequency, color):
 
 
 def countdown(time_counter, incomplete_color, complete_color, steps):
-    """ Counts down on planner blinkytape """
+    """ Counts down on planner BlinkyTape """
     global is_counting_down, previous_blinky_step
 
     # SET FLAGS
@@ -123,6 +125,17 @@ def imu_callback(pose):
         pass
 
 
+def planner_callback(data):
+    """ Gets colors currently displayed on the planner BlinkyTape """
+    global original_colors, got_original_colors
+
+    if not got_original_colors:
+        original_colors = data.colors
+        got_original_colors = True
+    else:
+        pass
+
+
 def reinitialize_imu():
     """ Reinitializes IMU heading parameters """
     # AVERAGE OVER COUNTDOWN
@@ -145,7 +158,10 @@ def reinitialize_imu():
 
 def ready_to_go(go_signal):
     """ Checks if planner is running and computer is untethered """
-    return go_signal and "up" not in open('/sys/class/net/eth0/operstate').read()
+    connection = open('/sys/class/net/eth0/operstate').read().rstrip()
+    yes = go_signal and connection == "down"
+
+    return yes
 
 
 if __name__ == '__main__':
@@ -157,16 +173,18 @@ if __name__ == '__main__':
         go_signal = rospy.get_param('/countdown/go')
 
         # HEADER
-        print 'Recalibrating IMU in', timeout, 'seconds' if timeout != 1 else "second"
+        print 'Reinitializing IMU in', timeout, 'seconds' if timeout != 1 else "second"
+        rospy.Subscriber('original_planner_colors', RGBArray, planner_callback)
 
         # WARN BEFORE START
         time.sleep(timeout)
         print 'Ready...'
-        set_planner([YELLOW])
-        warning(True, 1, BLACK)
-        time.sleep(5)
-        print 'Set...'
+        while not got_original_colors:
+            pass
         set_planner([BLACK])
+        print 'Set...'
+        warning(True, 1, YELLOW)
+        time.sleep(5.5)
         warning(False, 0, BLACK)
         print 'Go.'
         time.sleep(0.5)
@@ -178,16 +196,14 @@ if __name__ == '__main__':
         reinitialize_imu()
 
         # WARN WHEN DONE
-        if ready_to_go(go_signal):
-            set_planner([GREEN])
-        else:
-            set_planner([WHITE])
+        set_planner(original_colors)
         warning(True, 2, BLACK)
         time.sleep(2.5)
         warning(False, 0, BLACK)
 
         # GO IF ASKED AND UNTETHERED
         if ready_to_go(go_signal):
+            print "Sending GO signal!"
             rospy.set_param('/go', 1)
 
         # EXIT
