@@ -5,6 +5,7 @@ import roslib
 import rospy
 import time
 import tf
+import numpy as np
 from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion
 from math import ceil
@@ -136,12 +137,17 @@ def planner_callback(data):
         pass
 
 
-def reinitialize_imu():
+def reinitialize_imu(average):
     """ Reinitializes IMU heading parameters """
-    # AVERAGE OVER COUNTDOWN
-    roll = sum(roll_angles)/len(roll_angles)
-    pitch = sum(pitch_angles)/len(pitch_angles)
-    yaw = sum(yaw_angles)/len(yaw_angles)
+    # MEAN OR MEDIAN OVER COUNTDOWN
+    if mean:
+        roll = sum(roll_angles)/len(roll_angles)
+        pitch = sum(pitch_angles)/len(pitch_angles)
+        yaw = sum(yaw_angles)/len(yaw_angles)
+    else:
+        roll = float(np.median(roll_angles))
+        pitch = float(np.median(pitch_angles))
+        yaw = float(np.median(yaw_angles))
 
     # SET PARAMETERS
     rospy.set_param('/IMU/initial/roll',roll)
@@ -150,7 +156,7 @@ def reinitialize_imu():
     rospy.set_param('/IMU/reinitialized',True)
 
     # LOG
-    rospy.logwarn('AVERAGED %d DATA POINTS', len(roll_angles))
+    rospy.logwarn('FILTERED %d DATA POINTS', len(roll_angles))
     rospy.logwarn('INITIAL ROLL: %f', roll)
     rospy.logwarn('INITIAL PITCH:%f', pitch)
     rospy.logwarn('INITIAL YAW:  %f', yaw)
@@ -169,6 +175,7 @@ if __name__ == '__main__':
         # GET TIMEOUT
         while not rospy.has_param('/countdown/'):
             pass
+        mean = rospy.get_param('/countdown/mean')
         timeout = int(rospy.get_param('/countdown/timeout'))
         timer = int(rospy.get_param('/countdown/timer'))
         go_signal = rospy.get_param('/countdown/go')
@@ -194,7 +201,7 @@ if __name__ == '__main__':
         rospy.Subscriber('state_estimation/pose', PoseStamped, imu_callback)
         countdown(timer, YELLOW, BLACK, 5)
         rospy.logwarn('DONE')
-        reinitialize_imu()
+        reinitialize_imu(mean)
 
         # WARN WHEN DONE
         set_planner([BLACK])

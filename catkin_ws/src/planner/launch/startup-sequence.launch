@@ -6,11 +6,13 @@
     <arg name="isInSim" value="0"/>
   </include>
 
+  <arg name="mean" default="false"/> <!-- false means take median instead -->
   <arg name="timeout" default="35"/>
   <arg name="timer" default="5"/>
   <arg name="go" default="true"/>
 
   <node name="countdown" pkg="state_estimation" type="initialize_imu.py" respawn="false" output="screen">
+    <param name="mean" type="bool" value="$(arg mean)"/>
     <param name="timeout" type="int" value="$(arg timeout)"/>
     <param name="timer" type="int" value="$(arg timer)"/>
     <param name="go" type="bool" value="$(arg go)"/>

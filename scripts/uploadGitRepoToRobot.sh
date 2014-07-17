@@ -29,9 +29,22 @@ uploadRepository() {
     sshpass -p 'elgordo21' scp -r ../setup robotics@10.0.0.1:~/McGill_RoboSub_2014
     echo "Upload complete."
     sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic blinky_alert" >& /dev/null
+
+}
+
+# Runs catkin_make remotely
+compile() {
     echo "Compiling..."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic catkin_alert" >& /dev/null
+    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic 'cd ~/McGill_RoboSub_2014/catkin_ws/ && catkin_alert'"
     echo "Compilation complete."
 }
 
 uploadRepository
+
+if [ $# -eq 1 ] && [ "$1" = "python" ]; then
+    echo "Skipping compilation."
+else
+    compile
+fi
+
+echo "Done."
