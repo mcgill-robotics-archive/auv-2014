@@ -34,8 +34,14 @@ def update():
     global CPU_THRESHOLD, SSD_THRESHOLD
 
     # UPDATE THRESHOLD FOR CPU CORES AND SSD (CELCIUS)
-    CPU_THRESHOLD = int(rospy.get_param('/temperature/cpu'))
-    SSD_THRESHOLD = int(rospy.get_param('/temperature/ssd'))
+    try:
+        while not rospy.has_param('/temperature/'):
+            pass
+        CPU_THRESHOLD = int(rospy.get_param('/temperature/cpu'))
+        SSD_THRESHOLD = int(rospy.get_param('/temperature/ssd'))
+    except:
+        CPU_THRESHOLD = 70
+        SSD_THRESHOLD = 65
 
     # GET CPU CORE TEMPERATURES
     for chip in sensors.iter_detected_chips():
