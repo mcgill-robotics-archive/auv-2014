@@ -47,6 +47,10 @@ class Planner{
 	double getOpenLoopDepthSpeed();
 	double getCloseLoopDepth();
 	double getSurgeSpeed();
+	double getYawTimeout();
+	double getCloseLoopDepthTimeout();
+	double getOpenLoopDepthTimeout();
+	double getGateTimeout();
 
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
@@ -54,6 +58,7 @@ class Planner{
 	void setVelocity(double x_speed, double y_speed, double yaw_speed, double depth, std::string referenceFrame);
 	void setVelocityWithCloseLoopYawPitchDepth(double x_speed, double yaw, double pitch, double depth, std::string referenceFrame);
 	void setVelocityWithCloseLoopYawPitchOpenLoopDepth(double x_speed, double yaw, double pitch, double depthSpeed, std::string referenceFrame);
+	void setYaw(double yaw, std::string referenceFrame);
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();
@@ -69,6 +74,10 @@ class Planner{
 	double openLoopDepthSpeed;
 	double closeLoopDepth;
 	double surgeSpeed;
+	double yawTimeout;
+	double closeLoopDepthTimeout;
+	double openLoopDepthTimeout;
+	double gateTimeout;
 
 	ros::NodeHandle nodeHandle;
 	int go;
