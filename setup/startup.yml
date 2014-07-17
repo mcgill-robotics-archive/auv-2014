@@ -14,23 +14,15 @@ windows:
       - cmd:
         - "sleep 2 && set_pane_title STATUS & roslaunch --wait status status.launch"
       - cmd:
-        - "set_pane_title USB & watch_usb"
+        - "sleep 2 && set_pane_title CAMERAS & roslaunch --wait computer_vision camera_all.launch "
       - cmd:
-        - "set_pane_title"
-        - "clear"
-        - "tmux clear-history"
+        - "sleep 2 && set_pane_title CV & roslaunch --wait computer_vision computer_vision.launch "
       - cmd:
-        - "set_pane_title"
-        - "clear"
-        - "tmux clear-history"
+        - "sleep 2 && set_pane_title CONTROLS & roslaunch --wait controls controls.launch "
       - cmd:
-        - "set_pane_title"
-        - "clear"
-        - "tmux clear-history"
+        - "sleep 2 && set_pane_title PLANNER & roslaunch --wait planner startup-sequence.launch "
       - cmd:
         - "set_pane_title GLANCES & glances"
       - cmd:
-        - "set_pane_title"
-        - "clear"
-        - "tmux clear-history"
+        - "set_pane_title USB & watch_usb"
         focus: true
