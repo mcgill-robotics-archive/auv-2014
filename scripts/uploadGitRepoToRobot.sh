@@ -13,9 +13,9 @@
 # Uploads all the required folder on the onboard computer.
 uploadRepository() {
     echo "Removing old files from Asimov..."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "cd ~/McGill_RoboSub_2014/ && rm -rf catkin_ws/src catkin_src/launch Arduino scripts setup" > /dev/null
+    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "cd ~/McGill_RoboSub_2014/ && rm -rf catkin_ws/src catkin_src/launch Arduino scripts setup" >& /dev/null
 
-    echo -e "\rStarting uploading all the required folders..."
+    echo -e "\rUploading all the required files..."
 
     echo "Uploading the 'catkin/src' folder..."
     sshpass -p 'elgordo21' scp -r ../catkin_ws/src robotics@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
@@ -27,9 +27,8 @@ uploadRepository() {
     sshpass -p 'elgordo21' scp -r ../scripts robotics@10.0.0.1:~/McGill_RoboSub_2014/
     echo "Uploading the 'setup' folder..."
     sshpass -p 'elgordo21' scp -r ../setup robotics@10.0.0.1:~/McGill_RoboSub_2014/
+    echo "Upload complete."
+    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "blinky_alert" >& /dev/null
 }
 
 uploadRepository
-
-echo "The execution of this script is now complete."
-
