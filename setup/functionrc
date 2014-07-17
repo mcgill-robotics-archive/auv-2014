@@ -194,5 +194,5 @@ function refresh_pane_title {
 }
 
 # REFRESH PANE TITLE AFTER EVERY COMMAND
-trap refresh_pane_title SIGCHLD
+# trap refresh_pane_title SIGCHLD
 
