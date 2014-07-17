@@ -4,6 +4,7 @@
 import roslib
 import rospy
 import os
+import time
 from blinky.srv import *
 from blinky.msg import *
 rospy.init_node('connection')
@@ -17,6 +18,11 @@ RED = RGB(255, 0, 0)
 WHITE = RGB(255, 255, 255)
 YELLOW = RGB(255, 200, 0)
 
+# TIMER
+timing = False
+start_time = time.time()
+end_time = 0
+delta_time = 0
 
 def warning(state, color):
     """ Lights up BlinkyTape for warnings """
@@ -44,8 +50,16 @@ if __name__ == '__main__':
         try:
             connection = get_connection_status()
             if connection == "down":
+                if not timing:
+                    timing = True
+                    start_time = time.time()
                 warning(True, RED)
             elif connection == "up":
+                if timing:
+                    timing = False
+                    end_time = time.time()
+                    delta_time = end_time - start_time
+                    print "Time until connection established:", delta_time, "seconds"
                 warning(True, GREEN)
             else:
                 warning(True, CYAN)
