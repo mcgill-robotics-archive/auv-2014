@@ -95,9 +95,9 @@ void Line::applyFilter(cv::Mat& image) {
 	holderTemp = thresh_callback(0, 0);
 	line = holderTemp;
 
-	namedWindow("Filtered Image", CV_WINDOW_NORMAL);
+	//namedWindow("Filtered Image", CV_WINDOW_NORMAL);
 	//resizeWindow("Filtered Image", 1018, 715);
-	imshow("Filtered Image", filteredImage);
+	//imshow("Filtered Image", filteredImage);
 
 	//Range for the line in down video
 	cv::inRange(imageHSV, cv::Scalar(100, 30, 170), cv::Scalar(180, 90, 250),
@@ -234,15 +234,17 @@ void Line::applyFilter(cv::Mat& image) {
 	}
 
 	/// Show in a window
-	namedWindow("Contours", CV_WINDOW_NORMAL);
-	imshow("Contours", drawing);
+	if (parent.get_down_using_helpers()) {
+		namedWindow("Contours", CV_WINDOW_NORMAL);
+		imshow("Contours", drawing);
+	}
 
 	/// Create Window
-	char* source_window = "Source";
+	//char* source_window = "Source";
 
-	namedWindow(source_window, CV_WINDOW_NORMAL);
+	//namedWindow(source_window, CV_WINDOW_NORMAL);
 	//resizeWindow(source_window, 1018, 715);
-	imshow(source_window, src);
+	//imshow(source_window, src);
 
 }
 
