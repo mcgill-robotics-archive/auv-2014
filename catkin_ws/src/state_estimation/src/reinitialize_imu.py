@@ -90,7 +90,7 @@ def countdown(time_counter, incomplete_color, complete_color, steps):
 
         # PRINT
         if previous_blinky_step != incomplete_blinky_steps and incomplete_blinky_steps > 0:
-            print incomplete_blinky_steps
+            rospy.logwarn('%d blinkies left', incomplete_blinky_steps)
             previous_blinky_step = incomplete_blinky_steps
         else:
             pass
@@ -149,11 +149,10 @@ def reinitialize_imu():
     rospy.set_param('/IMU/initial/yaw',yaw)
     rospy.set_param('/IMU/reinitialized',True)
 
-    # PRINT
-    print 'AVERAGE IMU READINGS:'
-    print 'ROLL: ', roll
-    print 'PITCH:', pitch
-    print 'YAW:  ', yaw
+    # LOG
+    rospy.logwarn('INITIAL ROLL: %f', roll)
+    rospy.logwarn('INITIAL PITCH:%f', pitch)
+    rospy.logwarn('INITIAL YAW:  %f', yaw)
 
 
 def ready_to_go(go_signal):
@@ -170,29 +169,30 @@ if __name__ == '__main__':
         while not rospy.has_param('/countdown/'):
             pass
         timeout = int(rospy.get_param('/countdown/timeout'))
+        timer = int(rospy.get_param('/countdown/timer'))
         go_signal = rospy.get_param('/countdown/go')
 
         # HEADER
-        print 'Reinitializing IMU in', timeout, 'seconds' if timeout != 1 else "second"
+        rospy.logwarn('Reinitializing IMU in %d sec', timeout)
         rospy.Subscriber('original_planner_colors', RGBArray, planner_callback)
 
         # WARN BEFORE START
         time.sleep(timeout)
-        print 'Ready...'
+        rospy.logwarn('Ready...')
         while not got_original_colors:
             pass
         set_planner([BLACK])
-        print 'Set...'
+        rospy.logwarn('Set..')
         warning(True, 1, YELLOW)
         time.sleep(5.25)
         warning(False, 0, BLACK)
-        print 'Go.'
+        rospy.logwarn('Go.')
         time.sleep(0.5)
 
         # COUNTDOWN
         rospy.Subscriber('state_estimation/pose', PoseStamped, imu_callback)
-        countdown(5, YELLOW, BLACK, 5)
-        print 'Done.'
+        countdown(timer, YELLOW, BLACK, 5)
+        rospy.logwarn('DONE')
         reinitialize_imu()
 
         # WARN WHEN DONE
@@ -208,7 +208,7 @@ if __name__ == '__main__':
 
         # GO IF ASKED AND UNTETHERED
         if ready_to_go(go_signal):
-            print "Sending GO signal!"
+            rospy.logwarn("GO PLANNER GO")
             rospy.set_param('/go', 1)
 
         # EXIT
