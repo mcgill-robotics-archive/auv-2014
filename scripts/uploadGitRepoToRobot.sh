@@ -28,7 +28,7 @@ uploadRepository() {
     echo "Uploading the 'setup' folder..."
     sshpass -p 'elgordo21' scp -r ../setup robotics@10.0.0.1:~/McGill_RoboSub_2014
     echo "Upload complete."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic blinky_alert"
+    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic blinky_alert" >& /dev/null
 }
 
 uploadRepository
