@@ -8,6 +8,7 @@ import time
 from blinky.srv import *
 from blinky.msg import *
 rospy.init_node('connection')
+rate = rospy.Rate(10)
 
 # COLORS
 BLACK = RGB(0, 0, 0)
@@ -49,18 +50,24 @@ def get_connection_status():
 if __name__ == '__main__':
     if not rospy.is_shutdown():
         try:
+            on_boot = True
+            connection_is_good = False
+
             start_time = time.time()
-
-            # WAIT
-            while get_connection_status() != "up":
-                pass
-
-            end_time = time.time()
-            delta_time = end_time - start_time
-
-            rospy.loginfo("Time until connection established: %f seconds", delta_time)
-
-            os.system("bash -ic blinky_alert")
+            while not rospy.is_shutdown():
+                if connection_is_good and get_connection_status() == "down":
+                    start_time = time.time()
+                    rospy.logwarn("Connection dropped!")
+                    connection_is_good = False
+                elif not connection_is_good and get_connection_status() == "up":
+                    end_time = time.time()
+                    delta_time = end_time - start_time
+                    rospy.logwarn("Connection established: %f s", delta_time)
+                    connection_is_good = True
+                    if on_boot:
+                        on_boot = False
+                        os.system("bash -ic blinky_alert")
+                rate.sleep()
 
         except:
             pass
