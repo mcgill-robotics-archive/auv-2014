@@ -101,7 +101,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int x, int y, int z, int pitch, 
   //client.call(setmodelstate);
 
   ros::service::waitForService("/gazebo/set_model_state", -1);
-  if(client.call(setmodelstate)) { 
+  if(client.call(setmodelstate)) {
     ROS_INFO("Set robot's position: Success");
   } else {
     ROS_ERROR("Failed to call service ");
@@ -119,7 +119,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 			break;
 		case (3) : //TODO: the last parameter is doing nothing for now
 			setRobotInitialPosition(n, -1.38, 3.225, 1, 0, 0, -2.3016);
-			break;	
+			break;
 	}
 }
 
@@ -211,7 +211,7 @@ bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desi
 	double roll; //unused, but needs to be sent to getRPY method
 
 
-	
+
 	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
 	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sig
 	*/
@@ -314,15 +314,15 @@ void Planner::setYaw(double yaw, std::string referenceFrame) {
 
 void Planner::switchToTask(Tasks newTask) {
 	switch(newTask) {
-		case Gate: 
+		case Gate:
 			delete currentTask;
 			currentTask = (Task*) new Task_Gate(this, myStatusUpdater, 0);
 			break;
-		case Lane: 
+		case Lane:
 			delete currentTask;
 			currentTask = (Task*) new Task_Lane(this, myStatusUpdater, 0);
 			break;
-		case Buoy: 
+		case Buoy:
 			delete currentTask;
 			//
 			break;
@@ -330,7 +330,7 @@ void Planner::switchToTask(Tasks newTask) {
 			delete currentTask;
 			//
 			break;
-		case Kill: 
+		case Kill:
 			delete currentTask;
 			currentTask = (Task*) new Task_Kill(this, myStatusUpdater, 0);
 			break;
@@ -341,19 +341,19 @@ void Planner::switchToTask(Tasks newTask) {
 
 void Planner::weAreLost(LostStates newTask, int lostPhase) {
 	switch(newTask) {
-		case Gate_A: 
+		case Gate_A:
 			delete currentTask;
 			currentTask = (Task*) new Lost_Gate(this, myStatusUpdater, lostPhase);
 			break;
-		case Gate_B: 
+		case Gate_B:
 			delete currentTask;
 			//
 			break;
-		case Lane_A: 
+		case Lane_A:
 			delete currentTask;
 			//
 			break;
-		case Buoy_A: 
+		case Buoy_A:
 			delete currentTask;
 			//
 			break;
@@ -371,7 +371,7 @@ void Planner::resetIMU() {
   	state_estimation::setInitialPose setPose;
 
 	setPose.request.a = 1;
- 
+
 	if(seClient.call(setPose)) {
     	ROS_INFO("notified state estimation: Success");
   	} else {
@@ -416,13 +416,13 @@ int main(int argc, char **argv) {
 	//start routine
 	plannerNode->switchToTask(plannerNode->Gate);
 
-	return 0;	
+	return 0;
 }
 
 Planner::Planner(ros::NodeHandle& n) {
 	go = 0;
 	nodeHandle = n;
-	estimatedDepth_subscriber = n.subscribe("state_estimation/depth", 1000, estimatedDepth_callback);
+	estimatedDepth_subscriber = n.subscribe("state_estimation/filteredDepth", 1000, estimatedDepth_callback);
 	seeObject_subscriber = n.subscribe("state_estimation/see_object", 1000, &Planner::seeObject_callback, this);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
@@ -461,7 +461,7 @@ Planner::Planner(ros::NodeHandle& n) {
 			ROS_INFO_THROTTLE(1, "State Estimation Ready. Updating Blinky.");
 		}
 
-		//TODO: really necessary? 
+		//TODO: really necessary?
 		/*
 		try {
 			tf::TransformListener listener;
