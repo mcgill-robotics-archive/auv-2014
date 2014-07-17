@@ -65,6 +65,6 @@ if __name__ == '__main__':
                 warning(True, CYAN)
 
         except:
-            break;
+            break
 
     os.system("bash -ic stop_warning")

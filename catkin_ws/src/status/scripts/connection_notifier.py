@@ -57,9 +57,10 @@ if __name__ == '__main__':
 
             end_time = time.time()
             delta_time = end_time - start_time
-            print "Time until connection established:", delta_time, "seconds"
+
+            rospy.loginfo("Time until connection established: %f seconds", delta_time)
 
             os.system("bash -ic blinky_alert")
 
         except:
-            break;
+            pass
