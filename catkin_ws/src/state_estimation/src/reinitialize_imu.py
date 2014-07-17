@@ -184,7 +184,7 @@ if __name__ == '__main__':
         set_planner([BLACK])
         print 'Set...'
         warning(True, 1, YELLOW)
-        time.sleep(5.5)
+        time.sleep(5.25)
         warning(False, 0, BLACK)
         print 'Go.'
         time.sleep(0.5)
@@ -196,10 +196,12 @@ if __name__ == '__main__':
         reinitialize_imu()
 
         # WARN WHEN DONE
-        set_planner(original_colors)
-        warning(True, 2, BLACK)
-        time.sleep(2.5)
+        set_planner([BLACK])
+        warning(True, 2, GREEN)
+        time.sleep(2.3)
         warning(False, 0, BLACK)
+        time.sleep(0.5)
+        set_planner(original_colors)
 
         # GO IF ASKED AND UNTETHERED
         if ready_to_go(go_signal):
