@@ -6,7 +6,7 @@ windows:
     panes:
       - cmd:
         - "set_pane_title SETPOINTS"
-        - "setpoints -h || setpoints"
+        - "setpoints -h"
         focus: true
       - cmd:
         - "sleep 2 && set_pane_title LAUNCH & roslaunch --wait controls controls.launch"
