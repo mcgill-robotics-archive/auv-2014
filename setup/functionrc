@@ -1,8 +1,15 @@
 #!/bin/bash
 
-# STOP BLINKY TAPE WARNING LIGHTS
+# STOP BLINKYTAPE WARNING LIGHTS
 function stop_warning {
-    rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}"
+    rosservice call /warning_lights "{'colors': [{'r': 0, 'b': 0, 'g': 0}], 'frequency': 0.0, 'on': false}" > /dev/null
+}
+
+# FLASH BLINKYTAPE FOR ALERT
+function blinky_alert {
+    rosservice call /warning_lights "{'colors': [{'r': 255, 'b': 105, 'g': 0}], 'frequency': 2.0, 'on': true}" > /dev/null
+    sleep 3
+    stop_warning
 }
 
 # CONTROL MOTORS
