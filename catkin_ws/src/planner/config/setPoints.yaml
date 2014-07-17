@@ -1,6 +1,6 @@
 openLoopDepth: false
 openLoopDepthSpeed: -6.0 #only used when openLoopDepth = true
-closeLoopDepth: 0.75     #only used when openLoopDepth = false
+closeLoopDepth: 1.00     #only used when openLoopDepth = false
 
 surgeSpeed: -3.0
 
