@@ -143,9 +143,9 @@ def reinitialize_imu():
     print 'YAW:  ', yaw
 
 
-def ready_to_go(go):
+def ready_to_go(go_signal):
     """ Checks if planner is running and computer is untethered """
-    return go and "up" not in open('/sys/class/net/eth0/operstate').read()
+    return go_signal and "up" not in open('/sys/class/net/eth0/operstate').read()
 
 
 if __name__ == '__main__':
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         while not rospy.has_param('/countdown/'):
             pass
         timeout = int(rospy.get_param('/countdown/timeout'))
-        go = rospy.get_param('/countdown/go')
+        go_signal = rospy.get_param('/countdown/go')
 
         # HEADER
         print 'Recalibrating IMU in', timeout, 'seconds' if timeout != 1 else "second"
@@ -178,7 +178,7 @@ if __name__ == '__main__':
         reinitialize_imu()
 
         # WARN WHEN DONE
-        if ready_to_go():
+        if ready_to_go(go_signal):
             set_planner([GREEN])
         else:
             set_planner([WHITE])
@@ -187,7 +187,7 @@ if __name__ == '__main__':
         warning(False, 0, BLACK)
 
         # GO IF ASKED AND UNTETHERED
-        if ready_to_go():
+        if ready_to_go(go_signal):
             rospy.set_param('/go', 1)
 
         # EXIT
