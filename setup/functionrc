@@ -8,7 +8,7 @@ function stop_warning {
 # FLASH BLINKYTAPE FOR ALERT
 function blinky_alert {
     rosservice call /warning_lights "{'colors': [{'r': 255, 'b': 105, 'g': 0}], 'frequency': 2.0, 'on': true}" > /dev/null
-    sleep 3
+    sleep 0.9
     stop_warning
 }
 
