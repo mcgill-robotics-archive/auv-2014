@@ -49,7 +49,7 @@ def cvCallback(visObject):
     COUNTER = time.time()
     estimator.updateCV(hasTarget, visObject.object_type,
                        visObject.x_distance, visObject.y_distance, visObject.z_distance,
-                       visObject.yaw_angle*math.pi/180, visObject.pitch_angle*math.pi/180)
+                       visObject.yaw_angle, visObject.pitch_angle)
 
 
 def imuCallback(poseStamped):
