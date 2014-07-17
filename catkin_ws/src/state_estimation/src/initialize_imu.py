@@ -10,7 +10,7 @@ from tf.transformations import euler_from_quaternion
 from math import ceil
 from blinky.srv import *
 from blinky.msg import *
-rospy.init_node('reinitializer')
+rospy.init_node('initializer')
 
 # COLORS
 BLACK = RGB(0, 0, 0)
@@ -150,6 +150,7 @@ def reinitialize_imu():
     rospy.set_param('/IMU/reinitialized',True)
 
     # LOG
+    rospy.logwarn('AVERAGED %d DATA POINTS', len(roll_angles))
     rospy.logwarn('INITIAL ROLL: %f', roll)
     rospy.logwarn('INITIAL PITCH:%f', pitch)
     rospy.logwarn('INITIAL YAW:  %f', yaw)
@@ -173,7 +174,7 @@ if __name__ == '__main__':
         go_signal = rospy.get_param('/countdown/go')
 
         # HEADER
-        rospy.logwarn('Reinitializing IMU in %d sec', timeout)
+        rospy.logwarn('Initializing IMU in %d sec', timeout)
         rospy.Subscriber('original_planner_colors', RGBArray, planner_callback)
 
         # WARN BEFORE START
@@ -208,7 +209,7 @@ if __name__ == '__main__':
 
         # GO IF ASKED AND UNTETHERED
         if ready_to_go(go_signal):
-            rospy.logwarn("GO PLANNER GO")
+            rospy.logwarn("GO ASIMOV GO")
             rospy.set_param('/go', 1)
 
         # EXIT
