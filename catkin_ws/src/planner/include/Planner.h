@@ -42,6 +42,10 @@ class Planner{
 	enum Tasks {Gate, Lane, Buoy, Hydrophones, Kill};
 	enum LostStates {Gate_A, Gate_B, Lane_A, Buoy_A, Hydrophones_A};
 	double getDepth();
+	double getCurrentYaw(std::string frame);
+	double getCurrentX(std::string frame);
+	double getCurrentY(std::string frame);
+
 	bool getSeeObject();
 	bool isOpenLoopDepth();
 	double getOpenLoopDepthSpeed();
@@ -52,6 +56,7 @@ class Planner{
 	double getOpenLoopDepthTimeout();
 	double getGateTimeout();
 	double getLaneTimeout();
+	double getYawBound();
 
 	// Newly added getters for the multiple competition scenarios:
 	bool getUseHardcodedLineAngleAfterGate();
@@ -71,19 +76,25 @@ class Planner{
 	void setVelocityWithCloseLoopYawPitchDepth(double x_speed, double yaw, double pitch, double depth, std::string referenceFrame);
 	void setVelocityWithCloseLoopYawPitchOpenLoopDepth(double x_speed, double yaw, double pitch, double depthSpeed, std::string referenceFrame);
 	void setYaw(double yaw, std::string referenceFrame);
+
+	double getXYYawFromIMU(std::string frame);
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();
 
-	geometry_msgs::PoseStamped getRelativePose(std::string referenceFrame);
+	tf::StampedTransform getStampedTransform(std::string referenceFrame);
 
 	Planner(ros::NodeHandle& nodeHandle);
 	~Planner();
 
 	private:
-	void setTransform(std::string referenceFrame);
 	void setPoints(double pointControl[], std::string referenceFrame);
 	void seeObject_callback(const std_msgs::Bool msg);
+
+	double currentYaw;
+	double currentX;
+	double currentY;
+
 	bool seeObject;
 	bool openLoopDepth;
 	double openLoopDepthSpeed;

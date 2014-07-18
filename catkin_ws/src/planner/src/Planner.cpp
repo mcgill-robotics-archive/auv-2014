@@ -8,7 +8,6 @@
 
 double ourDepth;
 int inSim;
-geometry_msgs::PoseStamped relativePose;
 std::string starting_task;
 
 void spinThread() {
@@ -67,6 +66,40 @@ double Planner::getLaneTimeout() {
 	return laneTimeout;
 }
 
+double Planner::getYawBound() {
+	return yawBound;
+}
+
+double Planner::getXYYawFromIMU(std::string frame) {
+	tf::StampedTransform transform = getStampedTransform(frame);
+
+	currentX = transform.getOrigin().x();
+	currentY = transform.getOrigin().y();
+	//ignore depth. it comes in on a topic
+
+	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
+	tf::Matrix3x3 m(q); //convert quaternion to matrix
+
+	double roll_unused; //unused, but needs to be sent to getRPY method
+	double pitch_unused;
+
+	m.getEulerYPR(currentYaw, pitch_unused, roll_unused);
+}
+
+double Planner::getCurrentX(std::string referenceFrame) {
+	getXYYawFromIMU(referenceFrame);
+	return currentX;
+}
+
+double Planner::getCurrentY(std::string referenceFrame) {
+	getXYYawFromIMU(referenceFrame);
+	return currentY;
+}
+
+double Planner::getCurrentYaw(std::string referenceFrame) {
+	getXYYawFromIMU(referenceFrame);
+	return currentYaw;
+}
 
 //##############################################################################
 // Newly added parameters for the multiple competition scenario:         [START]
@@ -162,7 +195,7 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 			setRobotInitialPosition(n, 1.58725, -3.98664, 4.5, 0, -0, -3.14159);
 			break;
 		case (2) :
-			setRobotInitialPosition(n, 1.102, 2.15, 1, 0, 0, 0);
+			setRobotInitialPosition(n, -2.083993, 10.368956, 4.5, 0, 0, -3.141591);
 			break;
 		case (3) : //TODO: the last parameter is doing nothing for now
 			setRobotInitialPosition(n, -1.38, 3.225, 1, 0, 0, -2.3016);
@@ -170,87 +203,49 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	}
 }
 
-/**
- * gets the position/heading of robot relative to chosen object
- */
-void Planner::setTransform(std::string referenceFrame) {
-	relativePose = getRelativePose(referenceFrame);
-}
+tf::StampedTransform Planner::getStampedTransform(std::string frame) {
+	tf::StampedTransform transform;
+	tf::TransformListener tf_listener;
 
-geometry_msgs::PoseStamped Planner::getRelativePose(std::string referenceFrame) {
-	tf::TransformListener listener;
-	geometry_msgs::PoseStamped emptyPose;
-	emptyPose.header.frame_id = referenceFrame;
-	emptyPose.pose.position.x = 0.0;
-	emptyPose.pose.position.y = 0.0;
-	emptyPose.pose.position.z = 0.0;
-	emptyPose.pose.orientation.x = 0.0;
-	emptyPose.pose.orientation.y = 0.0;
-	emptyPose.pose.orientation.z = 0.0;
-	emptyPose.pose.orientation.w = 1.0;
+	std::string targetFrame = frame; //specified on the setPoints topic
+	std::string originalFrame = "robot/rotation_center"; //rpy,xyz of target frame is expressed w.r.t. the original frame axes
 
-	geometry_msgs::PoseStamped pose;
-	try {
-		listener.waitForTransform("/robot/rotation_center", emptyPose.header.frame_id,
-				ros::Time(0), ros::Duration(0.4));
-		listener.transformPose("/robot/rotation_center", emptyPose, pose);
-	} catch (tf::TransformException ex) {
-		ROS_ERROR("%s", ex.what());
+	try	{
+		double currentTime = ros::Time::now().toSec();
+		ROS_DEBUG("waiting for transform- currentTime: %f", currentTime);
+		tf_listener.waitForTransform(targetFrame, originalFrame, ros::Time(0), ros::Duration(0.4)); //not sure what an appropriate time to wait is. I wanted to wait less than the target 2 Hz.
+		currentTime = ros::Time::now().toSec();
+		ROS_DEBUG("done waiting for transform - currentTime: %f", currentTime);
+		tf_listener.lookupTransform(targetFrame, originalFrame, ros::Time(0), transform);
 	}
-	return pose;
+	catch (tf::TransformException ex){
+		ROS_ERROR("%s",ex.what());
+	}
+	return transform;
 }
+
 
 bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desired) {
-	setTransform(referenceFrame);
+	getXYYawFromIMU(referenceFrame);
+
 	//positional bounds
-	bool xBounded = fabs(relativePose.pose.position.x - desired.at(0)) < xBound;
-	bool yBounded = fabs(relativePose.pose.position.y - desired.at(1)) < yBound;
-	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",
-		relativePose.pose.position.x, relativePose.pose.position.y);
-	bool zBounded = abs(relativePose.pose.position.z - desired.at(4)) < zBound;
+	bool xBounded = fabs(currentX - desired.at(0)) < xBound;
+	bool yBounded = fabs(currentY - desired.at(1)) < yBound;
+	ROS_DEBUG("Planner::areWeThereYet relative x: %f -- y: %f",	currentX, currentY);
 
 	ROS_INFO_THROTTLE(1, "BOUNDS:");
-	ROS_INFO_THROTTLE(1, "xBound: %f    yBound: %f    yawBound: %f    pitchBound: %f", xBound, yBound, yawBound, pitchBound);
+	ROS_INFO_THROTTLE(1, "xBound: %f    yBound: %f    yawBound: %f", xBound, yBound, yawBound);
 
 	ROS_INFO_THROTTLE(1, "POSITION:");
-	ROS_INFO_THROTTLE(1, "Current x: %f    Desired x: %f", relativePose.pose.position.x, desired.at(0));
-	ROS_INFO_THROTTLE(1, "Current y: %f    Desired y: %f", relativePose.pose.position.y, desired.at(1));
+	ROS_INFO_THROTTLE(1, "Current x: %f    Desired x: %f", currentX, desired.at(0));
+	ROS_INFO_THROTTLE(1, "Current y: %f    Desired y: %f", currentY, desired.at(1));
 
-	//rotational bounds
-	double x = relativePose.pose.orientation.x;
-	double y = relativePose.pose.orientation.y;
-	double z = relativePose.pose.orientation.z;
-	double w = relativePose.pose.orientation.w;
-	double pitch = 1
-			* -atan(
-					(2.0f * (x * z + w * y))
-							/ sqrt(
-									1.0f
-											- pow((2.0f * x * z + 2.0f * w * y),
-													2.0f))); // multiply by 57.2957795130823f to convert to degrees
-	double yaw = 1
-			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
-	bool pitchBounded = fabs(pitch - desired.at(2)) < pitchBound;
-	bool yawBounded = fabs(yaw - desired.at(3)) < yawBound;
+	bool yawBounded = fabs(currentYaw - desired.at(2)) < yawBound;
 
 	ROS_INFO_THROTTLE(1, "ORIENTATION:");
-	ROS_INFO_THROTTLE(1, "Current pitch: %f    Desired pitch: %f", pitch, desired.at(2));
-	ROS_INFO_THROTTLE(1, "Current yaw: %f    Desired yaw: %f", yaw, desired.at(2));
-	ROS_INFO_THROTTLE(1, "Variables bounded: x: %i, y: %i, yaw: %i, pitch: %i ", xBounded, yBounded, yawBounded, pitchBounded);
-	return (xBounded && yBounded && yawBounded && pitchBounded);
-
-
-	/*
-	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
-	tf::Matrix3x3 m(q); //convert quaternion to matrix
-
-	double roll; //unused, but needs to be sent to getRPY method
-
-
-
-	m.getEulerYPR(estimated_Yaw, estimated_Pitch, roll);
-	estimated_Pitch *= -1;//Seems to be needed to make pitch have correct sig
-	*/
+	ROS_INFO_THROTTLE(1, "Current yaw: %f    Desired yaw: %f", currentYaw, desired.at(2));
+	ROS_INFO_THROTTLE(1, "Variables bounded: x: %i, y: %i, yaw: %i", xBounded, yBounded, yawBounded);
+	return (xBounded && yBounded && yawBounded);
 }
 
 void Planner::setVisionObj(int objIndex) {
@@ -483,7 +478,6 @@ Planner::Planner(ros::NodeHandle& n) {
 	nodeHandle.param<double>("xBound", xBound, 0);
 	nodeHandle.param<double>("yBound", yBound, 0);
 	nodeHandle.param<double>("yawBound", yawBound, 0);
-	nodeHandle.param<double>("pitchBound", pitchBound, 0);
 
 
 	//##############################################################################

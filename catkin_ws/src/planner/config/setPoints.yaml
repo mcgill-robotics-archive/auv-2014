@@ -1,34 +1,34 @@
 ################################################################################
 # Planner state parameters
 ################################################################################
-openLoopDepth: false								# Are we using closed loop or open loop depth control?
-openLoopDepthSpeed: -6.0 							# Only used when openLoopDepth = true
-closeLoopDepth: 1.00     							# Only used when openLoopDepth = false
-surgeSpeed: -3.00									# The surge speed
+openLoopDepth: false                                # Are we using closed loop or open loop depth control?
+openLoopDepthSpeed: -6.0                            # Only used when openLoopDepth = true
+closeLoopDepth: 1.00                                # Only used when openLoopDepth = false
+surgeSpeed: -3.00                                   # The surge speed
 
-													# Newly added parameters for the multiple competition scenario:
-useHardcodedLineAngleAfterGate: false				# Are we using the hardcoded relative angle or the one given by CV?
-hardcodedRelativeLineAngleAfterGate: -30.00			# Only used if 'useHardcodedLineAngleAfterGate' is set to 'true'
-useDistanceWithLineThreshold: false					# Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
-relativeDistanceWithLineThreshold: 1.00 			# Only used if 'useDistanceWithLineThreshold' is set to 'true'
-doHydrophonesAfterLine: false						# Do we execute the hydrophones task after the line task is completed?
-estimatedRelativeAngleForThePinger: 0.00			# Only used if 'doHydrophonesAfterLine' is set to 'true'
-													# An approximation of where the hydrophones are relative to the robot yaw angle1
-usingTimerForHydrophonesInsteadOfDistance: true		# Are we using a timer or a distance to determine the completion of the hydrophones task
-relativeDistanceForHydrophonesTask: 1.00			# Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'false'
-													# Determine the relative distance from the pinger at which the robot surfaces
-timerForHydrophonesTask: 60.00						# Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
-													# Determine the time at which the robot surgaces
+                                                    # Newly added parameters for the multiple competition scenario:
+useHardcodedLineAngleAfterGate: false               # Are we using the hardcoded relative angle or the one given by CV?
+hardcodedRelativeLineAngleAfterGate: -30.00         # Only used if 'useHardcodedLineAngleAfterGate' is set to 'true'
+useDistanceWithLineThreshold: false                 # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
+relativeDistanceWithLineThreshold: 1.00             # Only used if 'useDistanceWithLineThreshold' is set to 'true'
+doHydrophonesAfterLine: false                       # Do we execute the hydrophones task after the line task is completed?
+estimatedRelativeAngleForThePinger: 0.00            # Only used if 'doHydrophonesAfterLine' is set to 'true'
+                                                    # An approximation of where the hydrophones are relative to the robot yaw angle1
+usingTimerForHydrophonesInsteadOfDistance: true     # Are we using a timer or a distance to determine the completion of the hydrophones task
+relativeDistanceForHydrophonesTask: 1.00            # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'false'
+                                                    # Determine the relative distance from the pinger at which the robot surfaces
+timerForHydrophonesTask: 60.00                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
+                                                    # Determine the time at which the robot surgaces
 
 ################################################################################
 # Timeouts
 ################################################################################
-yawTimeout: 5.00							# 
-openLoopDepthTimeout: 10.00					# 
-closeLoopDepthTimeout: 15.00				#
-gateTimeout: 20.00							# Time at which the planner will switch from the gate task to the planner task.
-											# IMPORTANT parameter to tweak to avoid doing line too early(before finishing gate) or too late(no longer seeing line)
-laneTimeout: 20.00							# Time at which the planner will switch from the line task to either the hydrophones (if we do it) or stopping the competion
+yawTimeout: 5.00                            # 
+openLoopDepthTimeout: 10.00                 # 
+closeLoopDepthTimeout: 15.00                #
+gateTimeout: 20.00                          # Time at which the planner will switch from the gate task to the planner task.
+                                            # IMPORTANT parameter to tweak to avoid doing line too early(before finishing gate) or too late(no longer seeing line)
+laneTimeout: 20.00                          # Time at which the planner will switch from the line task to either the hydrophones (if we do it) or stopping the competion
 
 ################################################################################
 # Bounds for close loop setPoints for lane
@@ -36,4 +36,3 @@ laneTimeout: 20.00							# Time at which the planner will switch from the line t
 xBound: 0.1;
 yBound: 0.1;
 yawBound: 0.1;
-pitchBound: 0.1;
