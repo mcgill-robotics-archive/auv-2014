@@ -1,5 +1,6 @@
 image_feed/left: simulator/camera1/image_raw
 image_feed/right: simulator/camera2/image_raw
+image_feed/down: simulator/camera3/image_raw
 camera_sensor_height: 0.04
 camera_focal_length: 0.02
 # Gate-related parameters:

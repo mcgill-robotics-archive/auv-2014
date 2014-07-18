@@ -33,6 +33,35 @@ Line::Line(const CVNode& _parent, CVNode::LineParameters& _params) : VisibleObje
 	yDistance = 0.0;
 	zDistance = 0.0;
 	//yaw = 0.0;
+
+	// Printing all the parameters of all the filters:
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range1_begin=" + boost::lexical_cast<std::string>(params.hue_range1_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range1_end=" + boost::lexical_cast<std::string>(params.hue_range1_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range1_begin=" + boost::lexical_cast<std::string>(params.sat_range1_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range1_end=" + boost::lexical_cast<std::string>(params.sat_range1_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range1_begin=" + boost::lexical_cast<std::string>(params.value_range1_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range1_end=" + boost::lexical_cast<std::string>(params.value_range1_end)).c_str());
+
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range2_begin=" + boost::lexical_cast<std::string>(params.hue_range2_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range2_end=" + boost::lexical_cast<std::string>(params.hue_range2_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range2_begin=" + boost::lexical_cast<std::string>(params.sat_range2_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range2_end=" + boost::lexical_cast<std::string>(params.sat_range2_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range2_begin=" + boost::lexical_cast<std::string>(params.value_range2_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range2_end=" + boost::lexical_cast<std::string>(params.value_range2_end)).c_str());
+
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range3_begin=" + boost::lexical_cast<std::string>(params.hue_range3_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range3_end=" + boost::lexical_cast<std::string>(params.hue_range3_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range3_begin=" + boost::lexical_cast<std::string>(params.sat_range3_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range3_end=" + boost::lexical_cast<std::string>(params.sat_range3_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range3_begin=" + boost::lexical_cast<std::string>(params.value_range3_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range3_end=" + boost::lexical_cast<std::string>(params.value_range3_end)).c_str());
+
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range4_begin=" + boost::lexical_cast<std::string>(params.hue_range4_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.hue_range4_end=" + boost::lexical_cast<std::string>(params.hue_range4_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range4_begin=" + boost::lexical_cast<std::string>(params.sat_range4_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range4_end=" + boost::lexical_cast<std::string>(params.sat_range4_end)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range4_begin=" + boost::lexical_cast<std::string>(params.value_range4_begin)).c_str());
+	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range4_end=" + boost::lexical_cast<std::string>(params.value_range4_end)).c_str());
 }
 
 std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(
