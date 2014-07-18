@@ -6,7 +6,7 @@
 # Variable initialization
 command_arguments=''
 nameOfRosBag=bag-$(date +%s)
-targetDirectory=/media/DATA
+targetDirectory=/media/DATA/
 checkingForFileName=false
 
 # Displays the usage of this script.
