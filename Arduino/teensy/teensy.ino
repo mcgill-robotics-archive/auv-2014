@@ -11,10 +11,10 @@
   //PWM MOTOR
   #define MOTOR_PIN_SU_ST 4
   #define MOTOR_PIN_SU_PO 5
-  #define MOTOR_PIN_SW_BO 2
-  #define MOTOR_PIN_SW_ST 3
-  #define MOTOR_PIN_HE_BO 0
-  #define MOTOR_PIN_HE_ST 1
+  #define MOTOR_PIN_SW_BO 0
+  #define MOTOR_PIN_SW_ST 1
+  #define MOTOR_PIN_HE_BO 2
+  #define MOTOR_PIN_HE_ST 3
 
   //SOLENOID  
   #define SOLENOID_PIN_D_1 6 
@@ -40,11 +40,9 @@
   #define MOTOR_TIMEOUT 4000          //amount of no signal required to start to reset motors 
   #define TEMPERATURE_INTERVAL 1000   //amount of delay between each temeperatures read
   #define VOLTAGE_INTERVAL 1000       //amount of delay between each voltages read
-  #define DEPTH_INTERVAL 200          //amount of delay between each depth read
+  #define DEPTH_INTERVAL 20          //amount of delay between each depth read
   
-const double TEMP_RATIO = 0.322265625;    
 const double VOLT_RATIO = (3.3*30.9 * 24.12) / (3.9 * 1024.0 * 23.46); //(teensy voltage * totoal resistance / (single resisitance * max bit))
-  
   
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
@@ -117,7 +115,7 @@ ros::Publisher temperaturePub4("/electrical_interface/temperature4", &temperatur
 ros::Publisher temperaturePub5("/electrical_interface/temperature5", &temperature5_msg);
 */
 
-ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
+//ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motorSub("/electrical_interface/motor", &motorCb );
 
 
@@ -131,13 +129,14 @@ void setup(){
 
   resetMotor();
 
+  /*
   pinMode(SOLENOID_PIN_T_1,OUTPUT);
   pinMode(SOLENOID_PIN_T_2,OUTPUT);
   pinMode(SOLENOID_PIN_D_1,OUTPUT);
   pinMode(SOLENOID_PIN_D_2,OUTPUT);
   pinMode(SOLENOID_PIN_G_1,OUTPUT);
   pinMode(SOLENOID_PIN_G_2,OUTPUT);
-
+  */
 
     
   //ros node initialization
@@ -157,7 +156,7 @@ void setup(){
   
   //ros subscribe initialization
   nh.subscribe(motorSub);  
-  nh.subscribe(solenoidSub);
+  //nh.subscribe(solenoidSub);
 
   resetMotor();
 
