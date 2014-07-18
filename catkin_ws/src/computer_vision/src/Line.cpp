@@ -27,7 +27,11 @@ cv::RotatedRect thresh_callback(int, void*);
 //double calculateApproxDistanceToLine (double yaw, double sizeLong, double sizeWide, cv::Mat& currentFrame);
 //double convertFromPixelsToMetres(int distance, double longSize);
 bool visibility = false;
+const std::string TRACKBARS_WINDOW = "trackbars_window";
 
+/**
+ * Constructor.
+ */
 Line::Line(const CVNode& _parent, CVNode::LineParameters& _params) : VisibleObject(_parent), params(_params) {
 	xDistance = 0.0;
 	yDistance = 0.0;
@@ -62,6 +66,25 @@ Line::Line(const CVNode& _parent, CVNode::LineParameters& _params) : VisibleObje
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.sat_range4_end=" + boost::lexical_cast<std::string>(params.sat_range4_end)).c_str());
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range4_begin=" + boost::lexical_cast<std::string>(params.value_range4_begin)).c_str());
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": params.value_range4_end=" + boost::lexical_cast<std::string>(params.value_range4_end)).c_str());
+
+	if (parent.get_down_using_helpers()) {
+		cv::namedWindow(TRACKBARS_WINDOW, CV_WINDOW_KEEPRATIO);
+		cv::createTrackbar("Hue range 4 begin", TRACKBARS_WINDOW, &(params.hue_range4_begin), MAX_HSV_HUE);
+		cv::createTrackbar("Hue range 4 end", TRACKBARS_WINDOW, &(params.hue_range4_end), MAX_HSV_HUE);
+		cv::createTrackbar("Sat range 4 begin", TRACKBARS_WINDOW, &(params.sat_range4_begin), MAX_HSV_SAT);
+		cv::createTrackbar("Sat range 4 end", TRACKBARS_WINDOW, &(params.sat_range4_end), MAX_HSV_SAT);
+		cv::createTrackbar("Value range 4 begin", TRACKBARS_WINDOW, &(params.value_range4_begin), MAX_HSV_VALUE);
+		cv::createTrackbar("Value range 4 end", TRACKBARS_WINDOW, &(params.value_range4_end), MAX_HSV_VALUE);
+	}
+}
+
+/**
+ * Destructor.
+ */
+Line::~Line() {
+	if (parent.get_down_using_helpers()) {
+		cv::destroyWindow(TRACKBARS_WINDOW);
+	}
 }
 
 std::vector<computer_vision::VisibleObjectData*> Line::retrieveObjectData(

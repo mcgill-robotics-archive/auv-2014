@@ -15,11 +15,11 @@ using namespace cv;
 using namespace std;
 
 double camera_focal_length;
-
 double camera_sensor_height;
 
-
-
+const int MAX_HSV_HUE = 179; //In OpenCV, hue can take 180 values (0 to 179)
+const int MAX_HSV_SAT = 255;
+const int MAX_HSV_VALUE = 255;
 
 class Line : public VisibleObject {
 
@@ -30,6 +30,7 @@ class Line : public VisibleObject {
 
 	public:
 	Line(const CVNode& _parent, CVNode::LineParameters& _params);
+	~Line();
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 	double convertFromPixelsToMetres(int distance, double longSize);

@@ -63,6 +63,8 @@ DownCVNode::DownCVNode(ros::NodeHandle& nodeHandle, std::string topicName, int r
 		ROS_INFO("%s", "The 'cv_down_detect_object' parameter is empty, the CV will be looking for no object.");
 	}
 
+	ROS_INFO("%s%i", "The 'down_using_helpers' variable is equal to ", down_using_helpers);
+
 	if (down_using_helpers) {
 		cv::namedWindow(CAMERA3_CV_TOPIC_NAME, CV_WINDOW_KEEPRATIO);
 	}
