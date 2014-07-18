@@ -15,7 +15,9 @@ export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH
 export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 
 # ALIASES
+alias asimosh-wifi='mosh robotics@10.0.0.2'
 alias asimosh='mosh robotics@10.0.0.1'
+alias asimov-wifi='ssh -Y robotics@10.0.0.2'
 alias asimov='ssh -Y robotics@10.0.0.1'
 alias bag='$ROBOTIC_PATH/scripts/rosbagHelper.sh'
 alias catkin_alert='catkin_make; blinky_alert'
