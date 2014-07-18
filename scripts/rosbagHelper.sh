@@ -6,13 +6,13 @@
 # Variable initialization
 command_arguments=''
 nameOfRosBag=bag-$(date +%s)
-targetDirectory=~/
+targetDirectory=/media/DATA
 checkingForFileName=false
 
 # Displays the usage of this script.
 usage() {
     echo USAGE: rosbagHelper.sh OPTION
-    echo "options: -a : all topics specified below except for hydrophones"
+    echo "options: -a : all topics specified"
     echo "         -i : imu pose and raw data"
     echo "         -t : data from all temperature sensors"
     echo "         -c : camera data; i.e. camera info, image rectified and color image from up and down cameras"
@@ -37,7 +37,7 @@ addImuTopics() {
 }
 
 addTemperatureTopics() {
-	command_arguments="${command_arguments} electrical_interface/batteryVoltage1 electrical_interface/batteryVoltage2"
+	command_arguments="${command_arguments} status/temperature"
 }
 
 addCameraTopics() {
@@ -46,7 +46,7 @@ addCameraTopics() {
 }
 
 addDepthTopic() {
-	command_arguments="${command_arguments} electrical_interface/depth"
+	command_arguments="${command_arguments} electrical_interface/depth state_estimation/filteredDepth"
 }
 
 addVoltageTopics() {
@@ -86,13 +86,13 @@ handleInputParameters() {
 			then
 				case ${arg} in
 					'-a' )
-						addImuTopics
+						addStateEstimationTopics
 						addTemperatureTopics
 						addCameraTopics
 						addDepthTopic
 						addVoltageTopics
 						addElectricalInterfaceTopics
-						# addHydrophonesTopics
+						addHydrophonesTopics
 						;;
 					'-i' )
 						addImuTopics
