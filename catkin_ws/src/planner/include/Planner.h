@@ -53,6 +53,17 @@ class Planner{
 	double getGateTimeout();
 	double getLaneTimeout();
 
+	// Newly added getters for the multiple competition scenarios:
+	bool getUseHardcodedLineAngleAfterGate();
+	double getHardcodedRelativeLineAngleAfterGate();
+	bool getUseDistanceWithLineThreshold();
+	double getRelativeDistanceWithLineThreshold();
+	bool getDoHydrophonesAfterLine();
+	double getEstimatedRelativeAngleForThePinger();
+	bool getUsingTimerForHydrophonesInsteadOfDistance();
+	double getRelativeDistanceForHydrophonesTask();
+	double getTimerForHydrophonesTask();
+
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
 	void setPosition(std::vector<double> desired, std::string referenceFrame);
@@ -67,7 +78,7 @@ class Planner{
 	geometry_msgs::PoseStamped getRelativePose(std::string referenceFrame);
 
 	Planner(ros::NodeHandle& nodeHandle);
-	//~Planner();
+	~Planner();
 
 	private:
 	void setTransform(std::string referenceFrame);
@@ -83,6 +94,17 @@ class Planner{
 	double openLoopDepthTimeout;
 	double gateTimeout;
 	double laneTimeout;
+
+	// Newly added parameters for the multiple competition scenario
+	bool useHardcodedLineAngleAfterGate;
+	double hardcodedRelativeLineAngleAfterGate;
+	bool useDistanceWithLineThreshold;
+	double relativeDistanceWithLineThreshold;
+	bool doHydrophonesAfterLine;
+	double estimatedRelativeAngleForThePinger;
+	bool usingTimerForHydrophonesInsteadOfDistance;
+	double relativeDistanceForHydrophonesTask;
+	double timerForHydrophonesTask;
 
 	ros::NodeHandle nodeHandle;
 	int go;

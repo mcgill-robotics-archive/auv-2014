@@ -86,6 +86,8 @@ void Task_Gate::phase1() {
 		ROS_INFO("CLOSE LOOP DEPTH and close loop yaw and pitch for %f seconds", closeLoopDepthTimeout);
 		start_time = ros::Time::now();
 		timeout = ros::Duration(closeLoopDepthTimeout);
+
+		// Sets the robot at the given depth and waits before moving forward.
 		while (ros::Time::now() - start_time < timeout) {
 	        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge. %f seconds left", (timeout - (ros::Time::now() - start_time)).toSec());
 			myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, 0, 0, myPlanner->getCloseLoopDepth(), frame);
@@ -96,6 +98,7 @@ void Task_Gate::phase1() {
 		myStatusUpdater->updateStatus(myStatusUpdater->gate3);
 		loop_rate.sleep();
 
+		// Start moving forward with the given speed and keep the depth for the duration of the timeout
 		double gateTimeout = myPlanner -> getGateTimeout();
 		ROS_INFO("Surge for %f seconds", gateTimeout);
 		start_time = ros::Time::now();

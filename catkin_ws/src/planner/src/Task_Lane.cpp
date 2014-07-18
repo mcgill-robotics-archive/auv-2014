@@ -19,6 +19,7 @@ void Task_Lane::execute() {
 	loop_rate.sleep();
     ROS_INFO("looking for the lane");
 
+    // Move straight until we detect something
     while (!myPlanner->getSeeObject()) {
 		myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), startFrame);
         loop_rate.sleep();
@@ -33,10 +34,42 @@ void Task_Lane::execute() {
     ROS_INFO("Got the transform");
 	myStatusUpdater->updateStatus(myStatusUpdater->lane2);
 	loop_rate.sleep();
-	//position above the lane marker
-	double myPoints[5] = {0.0, 0.0, 0.0, 0.0, myPlanner->getCloseLoopDepth()};
+	
+	// From here we can turn right now (right after we detected the line), or
+	// wait for the distance threshold to be reached.
+    if (myPlanner->getUseDistanceWithLineThreshold()) {
+    	// While our relative distance with the line is bigger than the threshold continue moving forward.
+    	// TODO (ejeadry) get the relative distance with the line and wait for the threshold to be reached
+
+    	// while() {
+    	// 	// wait for the distance to be smaller than the specified threshold
+    	// }
+    }
+
+	// Commented out this so that we can use an hardcoded relative angle
+	// double myPoints[5] = {0.0, 0.0, 0.0, 0.0, myPlanner->getCloseLoopDepth()};
+
+	// From here we can either take the value given by cv or the hardcoded one:
+	double myPoints[5];
+	if (myPlanner->getUseHardcodedLineAngleAfterGate()) {
+		// TODO (ejeadry) set the desired relative yaw to be the one set in 'hardcodedRelativeLineAngleAfterGate'
+		myPoints[0] = 0.0;
+		myPoints[1] = 0.0;
+		myPoints[2] = 0.0;
+		myPoints[3] = 0.0;
+		myPoints[4] = myPlanner->getCloseLoopDepth();
+	} else {
+		myPoints[0] = 0.0;
+		myPoints[1] = 0.0;
+		myPoints[2] = 0.0;
+		myPoints[3] = 0.0;
+		myPoints[4] = myPlanner->getCloseLoopDepth();
+	}
+
 	std::vector<double> desired(myPoints, myPoints + sizeof(myPoints) / sizeof(myPoints[0]));
 
+
+	// Rotate the robot to the desired angle
 	while (!myPlanner->areWeThereYet(frame, desired)) {
 		ROS_DEBUG("Task_Lane::setPoints published");		
 		myPlanner->setPosition(desired, frame);
@@ -75,5 +108,16 @@ void Task_Lane::goStraightFromCurrentPosition(std::string frame) {
 			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), yaw, pitch, myPlanner->getCloseLoopDepth(), frame);
 	        loop_rate.sleep();
 	        ros::spinOnce();
+	}
+
+	// We have the possibility of executing the hydrophones task after the linet task is completed.
+	if (myPlanner->getDoHydrophonesAfterLine()) {
+		// TODO (ejeadry) Implement the hydrophones task
+		double estimatedRelativeAngleOfPinger = myPlanner->getEstimatedRelativeAngleForThePinger();
+
+
+		// TODO (ejeadry) set the angle to the approximated pinger position
+	} else {
+		// TODO (ejeadry) If we are not doing the hydrophones then we should stop the robot after the timeout period
 	}
 }

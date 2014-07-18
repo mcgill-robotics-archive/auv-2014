@@ -67,6 +67,50 @@ double Planner::getLaneTimeout() {
 	return laneTimeout;
 }
 
+
+//##############################################################################
+// Newly added parameters for the multiple competition scenario:         [START]
+//##############################################################################
+bool Planner::getUseHardcodedLineAngleAfterGate() {
+	return useHardcodedLineAngleAfterGate;
+}
+
+double Planner::getHardcodedRelativeLineAngleAfterGate() {
+	return hardcodedRelativeLineAngleAfterGate;
+}
+
+bool Planner::getUseDistanceWithLineThreshold() {
+	return useDistanceWithLineThreshold;
+}
+
+double Planner::getRelativeDistanceWithLineThreshold() {
+	return relativeDistanceWithLineThreshold;
+}
+
+bool Planner::getDoHydrophonesAfterLine() {
+	return doHydrophonesAfterLine;
+}
+
+double Planner::getEstimatedRelativeAngleForThePinger() {
+	return estimatedRelativeAngleForThePinger;
+}
+
+bool Planner::getUsingTimerForHydrophonesInsteadOfDistance() {
+	return usingTimerForHydrophonesInsteadOfDistance;
+}
+
+double Planner::getRelativeDistanceForHydrophonesTask() {
+	return relativeDistanceForHydrophonesTask;
+}
+
+double Planner::getTimerForHydrophonesTask() {
+	return timerForHydrophonesTask;
+}
+
+//##############################################################################
+// Newly added parameters for the multiple competition scenario:           [END]
+//##############################################################################
+
 int get_task_id(std::string name) {
 	if (name == "gate") return 1;
 	if (name == "lane") return 2;
@@ -116,7 +160,6 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
 	switch (task_id) {
 		case (1) :
 			setRobotInitialPosition(n, 1.58725, -3.98664, 4.5, 0, -0, -3.14159);
-
 			break;
 		case (2) :
 			setRobotInitialPosition(n, 1.102, 2.15, 1, 0, 0, 0);
@@ -425,6 +468,9 @@ Planner::Planner(ros::NodeHandle& n) {
 	checkpoints_pub = n.advertise<std_msgs::String>("planner/task", 1000);
 	control_pub = n.advertise<planner::setPoints>("setPoints", 1000);
 
+	//##########################################################################
+	// Fetching the parameter file:
+	//##########################################################################
 	nodeHandle.param<bool>("openLoopDepth", openLoopDepth, 0);
 	nodeHandle.param<double>("openLoopDepthSpeed", openLoopDepthSpeed, 0);
 	nodeHandle.param<double>("closeLoopDepth", closeLoopDepth, 0);
@@ -438,6 +484,23 @@ Planner::Planner(ros::NodeHandle& n) {
 	nodeHandle.param<double>("yBound", yBound, 0);
 	nodeHandle.param<double>("yawBound", yawBound, 0);
 	nodeHandle.param<double>("pitchBound", pitchBound, 0);
+
+
+	//##############################################################################
+	// Newly added parameters for the multiple competition scenario:         [START]
+	//##############################################################################
+	nodeHandle.param<bool>("useHardcodedLineAngleAfterGate", useHardcodedLineAngleAfterGate, false);
+	nodeHandle.param<double>("hardcodedRelativeLineAngleAfterGate", hardcodedRelativeLineAngleAfterGate, 0.0);
+	nodeHandle.param<bool>("useDistanceWithLineThreshold", useDistanceWithLineThreshold, false);
+	nodeHandle.param<double>("relativeDistanceWithLineThreshold", relativeDistanceWithLineThreshold, 0.0);
+	nodeHandle.param<bool>("doHydrophonesAfterLine", doHydrophonesAfterLine, false);
+	nodeHandle.param<double>("estimatedRelativeAngleForThePinger", estimatedRelativeAngleForThePinger, 0.0);
+	nodeHandle.param<bool>("usingTimerForHydrophonesInsteadOfDistance", usingTimerForHydrophonesInsteadOfDistance, false);
+	nodeHandle.param<double>("relativeDistanceForHydrophonesTask", relativeDistanceForHydrophonesTask, 0.0);
+	nodeHandle.param<double>("timerForHydrophonesTask", timerForHydrophonesTask, 0.0);
+	//##############################################################################
+	// Newly added parameters for the multiple competition scenario:           [END]
+	//##############################################################################
 
 	myStatusUpdater = new StatusUpdater(checkpoints_pub, btClient);
 	currentTask = new Task(this, myStatusUpdater, 0);
@@ -495,4 +558,9 @@ Planner::Planner(ros::NodeHandle& n) {
 	//Set const wait time in header file so diver has time to disconnect Ethernet cable
 	ros::Duration(WAIT_TIME_AFTER_GO).sleep();
 	*/
+}
+
+
+Planner::~Planner() {
+
 }
