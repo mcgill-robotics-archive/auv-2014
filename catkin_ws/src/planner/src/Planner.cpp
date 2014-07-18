@@ -63,6 +63,10 @@ double Planner::getGateTimeout() {
 	return gateTimeout;
 }
 
+double Planner::getLaneTimeout() {
+	return laneTimeout;
+}
+
 int get_task_id(std::string name) {
 	if (name == "gate") return 1;
 	if (name == "lane") return 2;
@@ -127,6 +131,10 @@ void setRobotInitialPosition(ros::NodeHandle n, int task_id) {
  * gets the position/heading of robot relative to chosen object
  */
 void Planner::setTransform(std::string referenceFrame) {
+	relativePose = getRelativePose(referenceFrame);
+}
+
+geometry_msgs::PoseStamped Planner::getRelativePose(std::string referenceFrame) {
 	tf::TransformListener listener;
 	geometry_msgs::PoseStamped emptyPose;
 	emptyPose.header.frame_id = referenceFrame;
@@ -137,34 +145,19 @@ void Planner::setTransform(std::string referenceFrame) {
 	emptyPose.pose.orientation.y = 0.0;
 	emptyPose.pose.orientation.z = 0.0;
 	emptyPose.pose.orientation.w = 1.0;
+
+	geometry_msgs::PoseStamped pose;
 	try {
 		listener.waitForTransform("/robot/rotation_center", emptyPose.header.frame_id,
 				ros::Time(0), ros::Duration(0.4));
-		listener.transformPose("/robot/rotation_center", emptyPose, relativePose);
+		listener.transformPose("/robot/rotation_center", emptyPose, pose);
 	} catch (tf::TransformException ex) {
 		ROS_ERROR("%s", ex.what());
 	}
+	return pose;
 }
 
 bool Planner::areWeThereYet(std::string referenceFrame, std::vector<double> desired) {
-	//has two sets of bound, one set for the simulator, one for real life
-		//both sets still need to be experimentally determined
-	/* SPECIFIED IN YAML FILE JULY 16
-	if(inSim) {
-		xBound = .1;
-		yBound = .1;
-		zBound = 2; //not used june 6
-		yawBound = .1;
-		pitchBound = .1;
-	}
-	else {
-		xBound = .1;
-		yBound = .1;
-		zBound = 2;
-		yawBound = .1;
-		pitchBound = .1;
-	}
-	*/
 	setTransform(referenceFrame);
 	//positional bounds
 	bool xBounded = fabs(relativePose.pose.position.x - desired.at(0)) < xBound;
@@ -440,6 +433,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	nodeHandle.param<double>("closeLoopDepthTimeout", closeLoopDepthTimeout, 0);
 	nodeHandle.param<double>("openLoopDepthTimeout", openLoopDepthTimeout, 0);
 	nodeHandle.param<double>("gateTimeout", gateTimeout, 0);
+	nodeHandle.param<double>("laneTimeout", laneTimeout, 0);
 	nodeHandle.param<double>("xBound", xBound, 0);
 	nodeHandle.param<double>("yBound", yBound, 0);
 	nodeHandle.param<double>("yawBound", yawBound, 0);

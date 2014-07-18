@@ -7,6 +7,8 @@ class Task_Lane: public Task{
 	public:
 		Task_Lane(Planner* planner, StatusUpdater* mSU, int newPhase);
 		void execute();
+	private:
+		void goStraightFromCurrentPosition(std::string frame);
 };
 
 #endif

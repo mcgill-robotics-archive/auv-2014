@@ -45,6 +45,35 @@ void Task_Lane::execute() {
 	myStatusUpdater->updateStatus(myStatusUpdater->lane3);
 	loop_rate.sleep();
 
-	//end the routine
-	//myPlanner->switchToTask(myPlanner->Kill);
+	goStraightFromCurrentPosition(frame);
+}
+
+void Task_Lane::goStraightFromCurrentPosition(std::string frame) {
+	ros::Rate loop_rate(50);
+
+	geometry_msgs::PoseStamped pose = myPlanner->getRelativePose(frame);
+	double x = pose.pose.orientation.x;
+	double y = pose.pose.orientation.y;
+	double z = pose.pose.orientation.z;
+	double w = pose.pose.orientation.w;
+	double pitch = 1
+			* -atan(
+					(2.0f * (x * z + w * y))
+							/ sqrt(
+									1.0f
+											- pow((2.0f * x * z + 2.0f * w * y),
+													2.0f))); // multiply by 57.2957795130823f to convert to degrees
+	double yaw = 1
+			* atan2(2.0f * (x * y - w * z), 2.0f * w * w - 1.0f + 2.0f * x * x);
+
+	double laneTimeout = myPlanner -> getLaneTimeout();
+	ROS_INFO("Follow lane using frame %s for %f seconds", frame.c_str(), laneTimeout);
+	ros::Time start_time = ros::Time::now();
+	ros::Duration timeout(laneTimeout);
+	while(ros::Time::now() - start_time < timeout) {
+	        ROS_INFO_THROTTLE(1, "Sending yaw = %f, pitch = %f, depth = %f", yaw, pitch, myPlanner->getCloseLoopDepth());
+			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), yaw, pitch, myPlanner->getCloseLoopDepth(), frame);
+	        loop_rate.sleep();
+	        ros::spinOnce();
+	}
 }

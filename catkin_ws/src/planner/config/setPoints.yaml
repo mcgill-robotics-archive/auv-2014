@@ -9,6 +9,7 @@ yawTimeout: 5.0
 openLoopDepthTimeout: 10.0
 closeLoopDepthTimeout: 15.0
 gateTimeout: 20.0      #IMPORTANT parameter to tweak to avoid doing line too early(before finishing gate) or too late(no longer seeing line)
+laneTimeout: 20.0
 
 #Bounds for close loop setPoints for lane
 xBound: 0.1;

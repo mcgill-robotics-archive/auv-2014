@@ -51,6 +51,7 @@ class Planner{
 	double getCloseLoopDepthTimeout();
 	double getOpenLoopDepthTimeout();
 	double getGateTimeout();
+	double getLaneTimeout();
 
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
@@ -62,6 +63,9 @@ class Planner{
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();
+
+	geometry_msgs::PoseStamped getRelativePose(std::string referenceFrame);
+
 	Planner(ros::NodeHandle& nodeHandle);
 	//~Planner();
 
@@ -78,6 +82,7 @@ class Planner{
 	double closeLoopDepthTimeout;
 	double openLoopDepthTimeout;
 	double gateTimeout;
+	double laneTimeout;
 
 	ros::NodeHandle nodeHandle;
 	int go;
