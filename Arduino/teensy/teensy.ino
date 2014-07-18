@@ -80,7 +80,7 @@ void motorCb( const controls::motorCommands& msg){
   myservo[2].writeMicroseconds(1471 + boundCheck(msg.cmd_sway_bow));
   myservo[3].writeMicroseconds(1476 + boundCheck(msg.cmd_sway_stern));
   myservo[4].writeMicroseconds(1489 + boundCheck(msg.cmd_heave_bow));
-  myservo[5].writeMicroseconds(1488 + boundCheck(msg.cmd_heave_stern));
+  myservo[5].writeMicroseconds(1508 + boundCheck(msg.cmd_heave_stern));
 }
 
 void resetMotor(){
@@ -89,7 +89,7 @@ void resetMotor(){
   myservo[2].writeMicroseconds(1471);
   myservo[3].writeMicroseconds(1476);
   myservo[4].writeMicroseconds(1489);
-  myservo[5].writeMicroseconds(1488);
+  myservo[5].writeMicroseconds(1508);
 }
 
 
@@ -118,7 +118,6 @@ ros::Publisher temperaturePub5("/electrical_interface/temperature5", &temperatur
 */
 
 ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
-
 ros::Subscriber<controls::motorCommands> motorSub("/electrical_interface/motor", &motorCb );
 
 
@@ -129,7 +128,9 @@ void setup(){
   myservo[3].attach(MOTOR_PIN_SW_ST);
   myservo[4].attach(MOTOR_PIN_HE_BO);
   myservo[5].attach(MOTOR_PIN_HE_ST);
-  
+
+  resetMotor();
+
   pinMode(SOLENOID_PIN_T_1,OUTPUT);
   pinMode(SOLENOID_PIN_T_2,OUTPUT);
   pinMode(SOLENOID_PIN_D_1,OUTPUT);

@@ -91,7 +91,7 @@ def countdown(time_counter, incomplete_color, complete_color, steps):
 
         # PRINT
         if previous_blinky_step != incomplete_blinky_steps and incomplete_blinky_steps > 0:
-            rospy.logwarn('%d blinkies left', incomplete_blinky_steps)
+            rospy.logwarn('%d blinkies', incomplete_blinky_steps)
             previous_blinky_step = incomplete_blinky_steps
         else:
             pass

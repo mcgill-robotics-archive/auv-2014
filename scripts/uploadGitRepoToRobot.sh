@@ -41,7 +41,7 @@ compile() {
 
 uploadRepository
 
-if [ $# -eq 1 ] && [ "$1" = "python" ]; then
+if [ $# -eq 1 ] && [ "$1" = "--no-compile" ]; then
     echo "Skipping compilation."
 else
     compile
