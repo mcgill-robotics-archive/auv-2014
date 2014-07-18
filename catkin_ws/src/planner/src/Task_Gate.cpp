@@ -51,6 +51,9 @@ void Task_Gate::phase1() {
 	        ros::spinOnce();
 	}
 
+	myStatusUpdater->updateStatus(myStatusUpdater->gate2);
+	loop_rate.sleep();
+
 	if (myPlanner->isOpenLoopDepth()) {
 		//Wait some time before sending surge
 		double openLoopDepthTimeout = myPlanner -> getOpenLoopDepthTimeout();
@@ -63,6 +66,9 @@ void Task_Gate::phase1() {
 	        loop_rate.sleep();
 	        ros::spinOnce();
 		}		
+
+		myStatusUpdater->updateStatus(myStatusUpdater->gate3);
+		loop_rate.sleep();
 
 		//Start sending surge
 		double gateTimeout = myPlanner -> getGateTimeout();
@@ -87,6 +93,9 @@ void Task_Gate::phase1() {
 			ros::spinOnce();
 		}
 
+		myStatusUpdater->updateStatus(myStatusUpdater->gate3);
+		loop_rate.sleep();
+
 		double gateTimeout = myPlanner -> getGateTimeout();
 		ROS_INFO("Surge for %f seconds", gateTimeout);
 		start_time = ros::Time::now();
@@ -102,6 +111,7 @@ void Task_Gate::phase1() {
 	myPlanner->switchToTask(myPlanner->Lane);
 }
 
+/*
 //after finding the gate, approach it even more using CV data
 void Task_Gate::phase2() {
 	frame = "/target/gate";
@@ -147,4 +157,7 @@ void Task_Gate::phase3() {
 
 	//next task
 	myPlanner->switchToTask(myPlanner->Lane);
+
+
 }
+	*/
