@@ -17,8 +17,9 @@ export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 # ALIASES
 alias asimosh='mosh robotics@10.0.0.1'
 alias asimov='ssh -Y robotics@10.0.0.1'
-alias catkin_alert='catkin_make; blinky_alert'
 alias bag='$ROBOTIC_PATH/scripts/rosbagHelper.sh'
+alias catkin_alert='catkin_make; blinky_alert'
+alias controls='rostopic echo /controls/debug'
 alias glances='glances -yet 5'
 alias go='rosparam set /go 1'
 alias main='tmux attach -t MAIN'
