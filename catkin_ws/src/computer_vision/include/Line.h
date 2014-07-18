@@ -29,7 +29,7 @@ class Line : public VisibleObject {
 	double yaw;
 
 	public:
-	Line(const CVNode& _parent);
+	Line(const CVNode& _parent, CVNode::LineParameters& _params);
 	std::vector<computer_vision::VisibleObjectData*> retrieveObjectData(cv::Mat& currentFrame);
 
 	double convertFromPixelsToMetres(int distance, double longSize);
@@ -39,6 +39,9 @@ class Line : public VisibleObject {
 	bool isVisible(cv::RotatedRect line);
 	int add(int x, int y);
 	double calculateApproxDistanceToLine (double yaw, double sizeLong, double sizeWide, cv::Mat& currentFrame);
+
+	private:
+	CVNode::LineParameters params;
 };
 
 #endif /* LINE_H */

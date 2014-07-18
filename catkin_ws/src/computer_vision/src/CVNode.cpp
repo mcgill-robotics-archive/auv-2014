@@ -39,7 +39,7 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 	nodeHandle.param<double>("camera_focal_length", camera_focal_length, 0);
 	nodeHandle.param<double>("camera_sensor_height", camera_sensor_height, 0);
 
-	//Gate parameters
+	// Gate parameters
 	nodeHandle.param<int>("gate_min_number_points_contour", gp.min_number_points_contour, 0);
 	nodeHandle.param<int>("gate_pole_desired_angle_deg", gp.pole_desired_angle_deg, 0);
 	nodeHandle.param<int>("gate_pole_angle_error_deg", gp.pole_angle_error_deg, 0);
@@ -55,6 +55,35 @@ CVNode::CVNode(ros::NodeHandle& nodeHandle, std::string topicName, int reception
 	nodeHandle.param<int>("gate_hue_range2_end", gp.hue_range2_end, 0);
 	nodeHandle.param<int>("gate_value_start", gp.value_range_begin, 0);
 	nodeHandle.param<int>("gate_value_end", gp.value_range_end, 0);
+
+	// Line parameters:
+	nodeHandle.param<int>("line_hue_range1_begin", lp.hue_range1_begin, 0);
+	nodeHandle.param<int>("line_hue_range1_end", lp.hue_range1_end, 0);
+	nodeHandle.param<int>("line_sat_range1_begin", lp.sat_range1_begin, 0);
+	nodeHandle.param<int>("line_sat_range1_end", lp.sat_range1_end, 0);
+	nodeHandle.param<int>("line_value_range1_begin", lp.value_range1_begin, 0);
+	nodeHandle.param<int>("line_value_range1_end", lp.value_range1_end, 0);
+
+	nodeHandle.param<int>("line_hue_range2_begin", lp.hue_range2_begin, 0);
+	nodeHandle.param<int>("line_hue_range2_end", lp.hue_range2_end, 0);
+	nodeHandle.param<int>("line_sat_range2_begin", lp.sat_range2_begin, 0);
+	nodeHandle.param<int>("line_sat_range2_end", lp.sat_range2_end, 0);
+	nodeHandle.param<int>("line_value_range2_begin", lp.value_range2_begin, 0);
+	nodeHandle.param<int>("line_value_range2_end", lp.value_range2_end, 0);
+
+	nodeHandle.param<int>("line_hue_range3_begin", lp.hue_range3_begin, 0);
+	nodeHandle.param<int>("line_hue_range3_end", lp.hue_range3_end, 0);
+	nodeHandle.param<int>("line_sat_range3_begin", lp.sat_range3_begin, 0);
+	nodeHandle.param<int>("line_sat_range3_end", lp.sat_range3_end, 0);
+	nodeHandle.param<int>("line_value_range3_begin", lp.value_range3_begin, 0);
+	nodeHandle.param<int>("line_value_range3_end", lp.value_range3_end, 0);
+
+	nodeHandle.param<int>("line_hue_range4_begin", lp.hue_range4_begin, 0);
+	nodeHandle.param<int>("line_hue_range4_end", lp.hue_range4_end, 0);
+	nodeHandle.param<int>("line_sat_range4_begin", lp.sat_range4_begin, 0);
+	nodeHandle.param<int>("line_sat_range4_end", lp.sat_range4_end, 0);
+	nodeHandle.param<int>("line_value_range4_begin", lp.value_range4_begin, 0);
+	nodeHandle.param<int>("line_value_range4_end", lp.value_range4_end, 0);
 
 	ROS_INFO("%s", (std::string(__PRETTY_FUNCTION__) + ": CVNode (the parent of FrontCVNode and DownCVNode) has been initialized.").c_str());
 }
