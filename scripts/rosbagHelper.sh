@@ -5,9 +5,11 @@
 
 # Variable initialization
 command_arguments=''
-nameOfRosBag=bag-$(date +%s)
-targetDirectory=/media/DATA/
+nameOfRosBag=split
+nameOfFolder=run_$(date +20%y_%m_%d_%H_%M_%S)
+targetDirectory=/media/DATA/$nameOfFolder/
 checkingForFileName=false
+mkdir $targetDirectory
 
 # Displays the usage of this script.
 usage() {
@@ -29,7 +31,7 @@ usage() {
 
 # Starts ROSBag with the given parameters.
 startRosBagWithParameters() {
-	rosbag record $command_arguments -O ${targetDirectory}${nameOfRosBag}
+	rosbag record --split --duration=15 $command_arguments -O ${targetDirectory}${nameOfRosBag}
 }
 
 addImuTopics() {
