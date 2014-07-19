@@ -5,6 +5,7 @@ import roslib
 import rospy
 import time
 import tf
+import os
 import numpy as np
 from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion
@@ -188,7 +189,7 @@ if __name__ == '__main__':
         # BAG EVERYTHING IF NEEDED
         if ready_to_go(go_signal):
             rospy.logwarn('Starting rosbags')
-            os.system("bash -ic 'bag -a' &")
+            os.system("bash -ic 'bag -a >& /dev/null' &")
 
         # WARN BEFORE START
         rospy.logwarn('Ready...')
