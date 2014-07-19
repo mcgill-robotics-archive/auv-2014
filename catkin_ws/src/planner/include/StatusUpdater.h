@@ -9,7 +9,7 @@
 class StatusUpdater {
 	public:
 		enum PossibleStates {ready, error, end, gate1, gate2, gate3, lane1, lane2, lane3, buoy1, buoy2, buoy3, hydro1, hydro2, hydro3,
-												lost_gate1, lost_gate2, lost_gate3, lost_lane1};
+												lost_gate1, lost_gate2, lost_gate3, lost_lane1, flash1, flash2};
 		void updateStatus(PossibleStates newState);
 		StatusUpdater(ros::Publisher frontEndPub, ros::ServiceClient btClient);
 
@@ -23,6 +23,7 @@ class StatusUpdater {
 		blinky::RGB lane;
 		blinky::RGB buoy;
 		blinky::RGB hydro;
+		blinky::RGB white;
 };
 
 #endif

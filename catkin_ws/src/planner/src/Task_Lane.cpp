@@ -76,8 +76,19 @@ void Task_Lane::execute() {
 			loop_rate.sleep();
 		}
 	}
-	myStatusUpdater->updateStatus(myStatusUpdater->lane3);
+
 	ROS_INFO("ALIGNED WITH LANE");
+	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->line3);
 	loop_rate.sleep();
 
 	goStraightFromCurrentPosition(frame);

@@ -14,21 +14,21 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 			color3 = ready_color;
 			break;
 		case gate1:
-			msg.data = "Looking for the gate";
+			msg.data = "Sending Yaw Control";
 			//all green
 			color1 = gate;
 			color2 = gate;
 			color3 = gate;
 			break;
 		case gate2:
-			msg.data = "Found the gate!";
+			msg.data = "Sending Depth Control";
 			//2 green, 1 base
 			color1 = gate;
 			color2 = gate;
 			color3 = base;
 			break;
 		case gate3:
-			msg.data = "going through the gate";
+			msg.data = "Sending Surge";
 			//1 green, 2 base
 			color1 = gate;
 			color2 = base;
@@ -105,6 +105,18 @@ void StatusUpdater::updateStatus(PossibleStates newState) {
 			color2 = base;
 			color3 = base;
 			break;
+		case flash1:
+			msg.data = "Line completion flashing";
+			color1 = white;
+			color2 = white;
+			color3 = white;
+			break;
+		case flash2:
+			msg.data = "Line completion flashing";
+			color1 = off;
+			color2 = off;
+			color3 = off;
+			break;
 	}
 	frontEndPublisher.publish(msg);
 
@@ -164,4 +176,8 @@ StatusUpdater::StatusUpdater(ros::Publisher frontEndPub, ros::ServiceClient btCl
 	lane.r = 255;
 	lane.g = 0;
 	lane.b = 125;
+	//white
+	white.r = 255;
+	white.g = 255;
+	white.b = 255;
 }

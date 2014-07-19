@@ -45,10 +45,10 @@ void Task_Gate::phase1() {
 	ros::Time start_time = ros::Time::now();
 	ros::Duration timeout(yawTimeout);
 	while(ros::Time::now() - start_time < timeout) {
-	        ROS_INFO_THROTTLE(1, "Sending yaw = 0");
-	        myPlanner->setYaw(0, frame);
-	        loop_rate.sleep();
-	        ros::spinOnce();
+        ROS_INFO_THROTTLE(1, "Sending yaw = 0");
+        myPlanner->setYaw(0, frame);
+        loop_rate.sleep();
+        ros::spinOnce();
 	}
 
 	myStatusUpdater->updateStatus(myStatusUpdater->gate2);
