@@ -12,39 +12,38 @@
 
 # Uploads all the required folder on the onboard computer.
 uploadRepository() {
-    echo "Removing old files from Asimov..."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "cd ~/McGill_RoboSub_2014/ && rm -rf catkin_ws/src catkin_src/launch Arduino scripts setup" >& /dev/null
+    echo "$(tput setaf 1)Removing old files from Asimov...$(tput sgr 0)"
+    ssh robotics@10.0.0.1 -t "cd ~/McGill_RoboSub_2014/ && rm -rf catkin_ws/src catkin_src/launch Arduino scripts setup" >& /dev/null
 
-    echo -e "\rUploading all the required files..."
+    echo -e "\r$(tput setaf 4)Uploading all the required files...$(tput sgr 0)"
 
-    echo "Uploading the 'catkin/src' folder..."
-    sshpass -p 'elgordo21' scp -r $ROBOTIC_PATH/catkin_ws/src robotics@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
-    echo "Uploading the 'catkin/launch' folder..."
-    sshpass -p 'elgordo21' scp -r $ROBOTIC_PATH/catkin_ws/launch robotics@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
-    echo "Uploading the 'Arduino' folder..."
-    sshpass -p 'elgordo21' scp -r $ROBOTIC_PATH/Arduino robotics@10.0.0.1:~/McGill_RoboSub_2014
-    echo "Uploading the 'scripts' folder..."
-    sshpass -p 'elgordo21' scp -r $ROBOTIC_PATH/scripts robotics@10.0.0.1:~/McGill_RoboSub_2014
-    echo "Uploading the 'setup' folder..."
-    sshpass -p 'elgordo21' scp -r $ROBOTIC_PATH/setup robotics@10.0.0.1:~/McGill_RoboSub_2014
-    echo "Upload complete."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic blinky_alert" >& /dev/null
-
+    echo "$(tput setaf 3)Uploading the 'catkin/src' folder...$(tput sgr 0)"
+    scp -r $ROBOTIC_PATH/catkin_ws/src robotics@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
+    echo "$(tput setaf 7)Uploading the 'catkin/launch' folder...$(tput sgr 0)"
+    scp -r $ROBOTIC_PATH/catkin_ws/launch robotics@10.0.0.1:~/McGill_RoboSub_2014/catkin_ws
+    echo "$(tput setaf 4)Uploading the 'Arduino' folder...$(tput sgr 0)"
+    scp -r $ROBOTIC_PATH/Arduino robotics@10.0.0.1:~/McGill_RoboSub_2014
+    echo "$(tput setaf 3)Uploading the 'scripts' folder...$(tput sgr 0)"
+    scp -r $ROBOTIC_PATH/scripts robotics@10.0.0.1:~/McGill_RoboSub_2014
+    echo "$(tput setaf 7)Uploading the 'setup' folder...$(tput sgr 0)"
+    scp -r $ROBOTIC_PATH/setup robotics@10.0.0.1:~/McGill_RoboSub_2014
+    echo "$(tput setaf 4)Upload complete.$(tput sgr 0)"
+    ssh robotics@10.0.0.1 -t "bash -ic blinky_alert" >& /dev/null
 }
 
 # Runs catkin_make remotely
 compile() {
-    echo "Compiling..."
-    sshpass -p 'elgordo21' ssh robotics@10.0.0.1 -t "bash -ic 'cd ~/McGill_RoboSub_2014/catkin_ws/ && catkin_alert'"
-    echo "Compilation complete."
+    echo "$(tput setaf 1)Compiling...$(tput sgr 0)"
+    ssh robotics@10.0.0.1 -t "bash -ic 'cd ~/McGill_RoboSub_2014/catkin_ws/ && catkin_alert'"
+    echo "$(tput setaf 1)Compilation complete.$(tput sgr 0)"
 }
 
 uploadRepository
 
 if [ $# -eq 1 ] && [ "$1" = "--no-compile" ]; then
-    echo "Skipping compilation."
+    echo "$(tput setaf 1)Skipping compilation.$(tput sgr 0)"
 else
     compile
 fi
 
-echo "Done."
+echo "$(tput setaf 4)Done.$(tput sgr 0)"
