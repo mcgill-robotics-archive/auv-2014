@@ -186,8 +186,9 @@ if __name__ == '__main__':
         time.sleep(timeout)
 
         # BAG EVERYTHING IF NEEDED
-        if ready_to_go(go_signal):
-            os.system("bash -ic 'bag -a'")
+        # if ready_to_go(go_signal):
+            # FIX ME
+            # os.system("bash -ic 'bag -a' &")
 
         # WARN BEFORE START
         rospy.logwarn('Ready...')
