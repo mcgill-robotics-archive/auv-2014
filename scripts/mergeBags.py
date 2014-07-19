@@ -4,13 +4,28 @@
 import rosbag
 import sys
 import getopt
-from os import walk
+from os import path, walk
+
+# PARSING
+prefix = "split"
+delimiter = "_"
+extension = ".bag"
+
+
+class colors:
+    """ Color codes for printing """
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
 
 
 def sos():
     """ Print out usage """
-    print "usage: mergeBags.py OPTION"
-    print "options: -a : all topics specified"
+    print colors.FAIL + "usage: mergeBags.py OPTION" + colors.ENDC
+    print colors.WARNING + "options: -a : all topics specified"
     print "         -i : imu pose and raw data"
     print "         -t : data from all temperature sensors"
     print "         -c : camera data; i.e. camera info, image rectified and color image from up and down cameras"
@@ -19,7 +34,7 @@ def sos():
     print "         -e : motor message, usb, solenoid, and pressure inside main pressure vessel"
     print "         -h : all hydrophones topics (including state estimation specific topics)"
     print "         -s : all state estimation topics (including IMU specific topics)"
-    print "         --help : prints this menu"
+    print "         --help : prints this menu" + colors.ENDC
 
 
 def add_imu_topics(topic_list):
@@ -87,15 +102,15 @@ def add_all_topics(topic_list):
 
 def bag_we_are_looking_for(filename):
     """ Checks if the file is a bag """
-    starts_correctly = filename.startswith('split_')
-    ends_correctly = filename.endswith('.bag')
-    not_incorrect = ('orig' not in filename) and ('active' not in filename)
+    starts_correctly = filename.startswith(prefix + delimiter)
+    ends_correctly = filename.endswith(extension)
+    not_incorrect = ("orig" not in filename) and ("active" not in filename)
     return starts_correctly and ends_correctly and not_incorrect
 
 
 def get_bag_count(filename):
     """ Parses filename for correct order """
-    return int(filename.split('_')[1].split('.')[0])
+    return int(filename.split(delimiter)[1].split(".")[0])
 
 
 def get_bags(folder):
@@ -118,14 +133,19 @@ def sort_bags(all_bags):
     bag_numbers.sort()
     bags_to_merge = []
     for i in bag_numbers:
-        bags_to_merge.append('split_%d.bag' % i)
+        bags_to_merge.append("%s%s%d%s" % (prefix, delimiter, i, extension))
     return bags_to_merge
 
 
 def append_bag(input, output, topic_list):
     """ Appends bag data """
     try:
-        current_bag = rosbag.Bag(input, 'r')
+        current_bag = rosbag.Bag(input, "r")
+    except rosbag.ROSBagUnindexedException:
+        print colors.FAIL + "%s unindexed. Run rosbag reindex." % (input) + colors.ENDC
+        output.close()
+        sys.exit(2)
+    try:
         for topic, msg, time in current_bag.read_messages(topics=topic_list):
             output.write(topic, msg, time)
     finally:
@@ -135,7 +155,7 @@ def append_bag(input, output, topic_list):
 def merge_bags(bags_to_merge, output, topic_list, folder):
     """ Merges all bags into one """
     number_of_bags = len(bags_to_merge)
-    print "%d bags to merge" % (number_of_bags)
+    print colors.OKBLUE + "%d bags to merge in %s" % (number_of_bags, folder) + colors.ENDC
     counter = 1
     for bag in bags_to_merge:
         print "Merging %d of %d..." % (counter, number_of_bags)
@@ -145,24 +165,28 @@ def merge_bags(bags_to_merge, output, topic_list, folder):
 
 def main(folder, name, topic_list):
     """ Set up and merge topics from bags in folder """
-    output_bag = rosbag.Bag(folder + name, 'w')
     all_bags = get_bags(folder)
     bags_to_merge = sort_bags(all_bags)
+    if len(topic_list) == 0:
+        print colors.FAIL + "Please specify at least one topic to subscribe to..." + colors.ENDC
+        sos()
+        sys.exit(1)
     if len(bags_to_merge) >= 1:
         try:
+            output_bag = rosbag.Bag(folder + name, "w")
             merge_bags(bags_to_merge, output_bag, topic_list, folder)
         finally:
             output_bag.close()
-        print "Merged bag saved to %s%s" % (folder, name)
+        print colors.OKGREEN + "Merged bag saved to %s%s" % (folder, name) + colors.ENDC
     else:
-        print "No bags to merge."
+        print colors.FAIL + "No bags to merge in %s" % (folder) + colors.ENDC
         sys.exit(1)
 
 
 def get_arguments(args):
     """ Parse arguments """
     folder = "."
-    name = "merge"
+    name = ""
     topic_list = []
 
     if len(args) == 0:
@@ -180,52 +204,52 @@ def get_arguments(args):
             sos()
             sys.exit(1)
         elif opt == "-a":
-            print "Subscribing to all topics..."
+            print colors.WARNING + "Subscribing to all topics..." + colors.ENDC
             add_all_topics(topic_list)
             name += "_all"
         elif opt == "-i":
-            print "Subscribing to IMU topics..."
+            print colors.WARNING + "Subscribing to IMU topics..." + colors.ENDC
             add_imu_topics(topic_list)
             name += "_imu"
         elif opt == "-t":
-            print "Subscribing to temperature topics..."
+            print colors.WARNING + "Subscribing to temperature topics..." + colors.ENDC
             add_temperature_topics(topic_list)
             name += "_temp"
         elif opt == "-c":
-            print "Subscribing to camera topics..."
+            print colors.WARNING + "Subscribing to camera topics..." + colors.ENDC
             add_camera_topics(topic_list)
             name += "_cam"
         elif opt == "-d":
-            print "Subscribing to depth topics..."
+            print colors.WARNING + "Subscribing to depth topics..." + colors.ENDC
             add_depth_topics(topic_list)
             name += "_depth"
         elif opt == "-b":
-            print "Subscribing to battery voltages topics..."
+            print colors.WARNING + "Subscribing to battery voltages topics..." + colors.ENDC
             add_battery_topics(topic_list)
             name += "_batt"
         elif opt == "-e":
-            print "Subscribing to electrical interface topics..."
+            print colors.WARNING + "Subscribing to electrical interface topics..." + colors.ENDC
             add_electrical_interface_topics(topic_list)
             name += "_elec"
         elif opt == "-h":
-            print "Subscribing to hydrophones and state estimation topics..."
+            print colors.WARNING + "Subscribing to hydrophones and state estimation topics..." + colors.ENDC
             add_hydrophones_topics(topic_list)
             name += "_hydro"
         elif opt == "-s":
-            print "Subscribing to state estimation and IMU topics..."
+            print colors.WARNING + "Subscribing to state estimation and IMU topics..." + colors.ENDC
             add_state_estimation_topics(topic_list)
             name += "_state"
         elif opt in ("-f", "--folder"):
-            if arg.endswith('/'):
-                folder = arg
-            else:
-                folder = arg + "/"
+            folder = arg
 
-    name += ".bag"
+    folder = path.abspath(folder)
+    name = path.basename(path.normpath(folder)) + name + ".bag"
+    if not folder.endswith("/"):
+        folder = folder + "/"
 
     return folder, name, topic_list
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     folder, name, topic_list = get_arguments(sys.argv[1:])
     main(folder, name, topic_list)
