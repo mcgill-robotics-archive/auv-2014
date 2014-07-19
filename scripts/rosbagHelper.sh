@@ -19,7 +19,7 @@ usage() {
     echo "         -t : data from all temperature sensors"
     echo "         -c : camera data; i.e. camera info, image rectified and color image from up and down cameras"
     echo "         -d : depth sensor data"
-    echo "         -v : voltages from both batteries"
+    echo "         -b : voltages from both batteries"
     echo "         -e : motor message, usb, solenoid, and pressure inside main pressure vessel"
     echo "         -h : all hydrophones topics"
     echo "         -s : all state estimation topics (including IMU specific topics)"
@@ -52,7 +52,7 @@ addDepthTopic() {
 	command_arguments="${command_arguments} electrical_interface/depth state_estimation/filteredDepth"
 }
 
-addVoltageTopics() {
+addBatteryTopics() {
 	command_arguments="${command_arguments} electrical_interface/batteryVoltage1 electrical_interface/batteryVoltage2"
 }
 
@@ -67,7 +67,8 @@ addStateEstimationTopics() {
 }
 
 addHydrophonesTopics() {
-	command_arguments="${command_arguments} hydrophones/audio hydrophones/freq hydrophones/magn hydrophones/peak hydrophones/sol hydrophones/tdoa"
+	addStateEstimationTopics
+	command_arguments="${command_arguments} hydrophones/audio"
 }
 
 # Changes the name of the ROS bag to what the user specified. Does some check on the name and will use a timestamp if rejected.
@@ -93,7 +94,7 @@ handleInputParameters() {
 						addTemperatureTopics
 						addCameraTopics
 						addDepthTopic
-						addVoltageTopics
+						addBatteryTopics
 						addElectricalInterfaceTopics
 						addHydrophonesTopics
 						;;
@@ -111,10 +112,9 @@ handleInputParameters() {
 						;;
 					'-h' )
 						addHydrophonesTopics
-						addImuTopics
 						;;
-					'-v' )
-						addVoltageTopics
+					'-b' )
+						addBatteryTopics
 						;;
 					'-e' )
 						addElectricalInterfaceTopics
