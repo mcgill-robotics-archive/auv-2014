@@ -24,5 +24,7 @@ alias go='rosparam set /go 1'
 alias main='tmux attach -t MAIN'
 alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
-alias uri='export ROS_MASTER_URI=http://10.0.0.1:11311'
+
+alias ip="export ROS_IP=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
+alias uri="export ROS_MASTER_URI=http://10.0.0.1:11311"
 alias watch_usb="watch --interval=2 --no-title \"lsusb | grep '16c0\\|0403\\|1e10\\|1d50' \""
