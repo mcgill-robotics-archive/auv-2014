@@ -15,19 +15,16 @@ export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH
 export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 
 # ALIASES
-alias asimosh-wifi='mosh robotics@10.0.0.2'
 alias asimosh='mosh robotics@10.0.0.1'
-alias asimov-wifi='ssh -Y robotics@10.0.0.2'
 alias asimov='ssh -Y robotics@10.0.0.1'
 alias bag='$ROBOTIC_PATH/scripts/rosbagHelper.sh'
 alias catkin_alert='catkin_make; blinky_alert'
 alias controls='rostopic echo /controls/debug'
 alias glances='glances -yet 5'
 alias go='rosparam set /go 1'
+alias ip="export ROS_IP=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
 alias main='tmux attach -t MAIN'
 alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
-
-alias ip="export ROS_IP=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
 alias uri="export ROS_MASTER_URI=http://10.0.0.1:11311"
 alias watch_usb="watch --interval=2 --no-title \"lsusb | grep '16c0\\|0403\\|1e10\\|1d50' \""
