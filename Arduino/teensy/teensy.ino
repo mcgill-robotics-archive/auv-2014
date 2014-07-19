@@ -1,4 +1,4 @@
-#include <Servo.h> 
+#include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/String.h>
@@ -6,7 +6,7 @@
 #include <controls/motorCommands.h>
 #include <robosub_msg/solenoid.h>
 
-//Pin definitions 
+//Pin definitions
 
   //PWM MOTOR
   #define MOTOR_PIN_SU_ST 4
@@ -16,8 +16,8 @@
   #define MOTOR_PIN_HE_BO 0
   #define MOTOR_PIN_HE_ST 1
 
-  //SOLENOID  
-  #define SOLENOID_PIN_D_1 6 
+  //SOLENOID
+  #define SOLENOID_PIN_D_1 6
   #define SOLENOID_PIN_D_2 7
   #define SOLENOID_PIN_G_1 8
   #define SOLENOID_PIN_G_2 9
@@ -34,18 +34,16 @@
   #define TEMPERATURE_PIN_2 A6
   #define TEMPERATURE_PIN_3 A7
   #define TEMPERATURE_PIN_4 A8
-  #define TEMPERATURE_PIN_5 A9 
-  
+  #define TEMPERATURE_PIN_5 A9
+
 //TIME INTERVAL(unit microsecond)
-  #define MOTOR_TIMEOUT 4000          //amount of no signal required to start to reset motors 
+  #define MOTOR_TIMEOUT 4000          //amount of no signal required to start to reset motors
   #define TEMPERATURE_INTERVAL 1000   //amount of delay between each temeperatures read
   #define VOLTAGE_INTERVAL 1000       //amount of delay between each voltages read
-  #define DEPTH_INTERVAL 200          //amount of delay between each depth read
-  
-const double TEMP_RATIO = 0.322265625;    
+  #define DEPTH_INTERVAL 20          //amount of delay between each depth read
+
 const double VOLT_RATIO = (3.3*30.9 * 24.12) / (3.9 * 1024.0 * 23.46); //(teensy voltage * totoal resistance / (single resisitance * max bit))
-  
-  
+
 ros::NodeHandle nh;
 std_msgs::Int16 depth_msg;
 std_msgs::Float32 batteryVoltage1_msg;
@@ -68,7 +66,7 @@ int boundCheck(int x){
     char msg[70];
     String("Motor Speed out of bound: " + String(x) +" !").toCharArray(msg,70);
     nh.logerror(msg);
-    return 0;  
+    return 0;
   }
   return x;
 }
@@ -117,7 +115,7 @@ ros::Publisher temperaturePub4("/electrical_interface/temperature4", &temperatur
 ros::Publisher temperaturePub5("/electrical_interface/temperature5", &temperature5_msg);
 */
 
-ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
+//ros::Subscriber<robosub_msg::solenoid> solenoidSub("/electrical_interface/solenoid", &solenoidCb );
 ros::Subscriber<controls::motorCommands> motorSub("/electrical_interface/motor", &motorCb );
 
 
@@ -131,18 +129,19 @@ void setup(){
 
   resetMotor();
 
+  /*
   pinMode(SOLENOID_PIN_T_1,OUTPUT);
   pinMode(SOLENOID_PIN_T_2,OUTPUT);
   pinMode(SOLENOID_PIN_D_1,OUTPUT);
   pinMode(SOLENOID_PIN_D_2,OUTPUT);
   pinMode(SOLENOID_PIN_G_1,OUTPUT);
   pinMode(SOLENOID_PIN_G_2,OUTPUT);
+  */
 
 
-    
   //ros node initialization
   nh.initNode();
-  
+
   //ros publisher initialization
   nh.advertise(depthPub);        //depth sensor
   nh.advertise(voltagePub1);     //battery level
@@ -154,53 +153,53 @@ void setup(){
   nh.advertise(temperaturePub4);
   nh.advertise(temperaturePub5);
   */
-  
+
   //ros subscribe initialization
-  nh.subscribe(motorSub);  
-  nh.subscribe(solenoidSub);
+  nh.subscribe(motorSub);
+  //nh.subscribe(solenoidSub);
 
   resetMotor();
 
 }
 
 void loop(){
-  
+
   long currentTime = millis();
   /*
   //temperature sensing
   if(temperatureSechedule < currentTime){
-   temperature1_msg.data = analogRead(TEMPERATURE_PIN_1) * TEMP_RATIO -50; 
+   temperature1_msg.data = analogRead(TEMPERATURE_PIN_1) * TEMP_RATIO -50;
    temperaturePub1.publish(&temperature1_msg);
-   temperature2_msg.data = analogRead(TEMPERATURE_PIN_2) * TEMP_RATIO -50; 
+   temperature2_msg.data = analogRead(TEMPERATURE_PIN_2) * TEMP_RATIO -50;
    temperaturePub2.publish(&temperature2_msg);
-   temperature3_msg.data = analogRead(TEMPERATURE_PIN_3) * TEMP_RATIO -50; 
+   temperature3_msg.data = analogRead(TEMPERATURE_PIN_3) * TEMP_RATIO -50;
    temperaturePub3.publish(&temperature3_msg);
-   temperature4_msg.data = analogRead(TEMPERATURE_PIN_4) * TEMP_RATIO -50; 
+   temperature4_msg.data = analogRead(TEMPERATURE_PIN_4) * TEMP_RATIO -50;
    temperaturePub4.publish(&temperature4_msg);
-   temperature5_msg.data = analogRead(TEMPERATURE_PIN_5) * TEMP_RATIO -50; 
+   temperature5_msg.data = analogRead(TEMPERATURE_PIN_5) * TEMP_RATIO -50;
    temperaturePub5.publish(&temperature5_msg);
    temperatureSechedule += TEMPERATURE_INTERVAL;
   }
   */
-  
-  //depth sensing  
+
+  //depth sensing
   if(depthSensorSchedule < currentTime){
     depth_msg.data = analogRead(DEPTH_SENSOR_PIN);
     depthPub.publish(&depth_msg);
-    depthSensorSchedule += DEPTH_INTERVAL;   
+    depthSensorSchedule += DEPTH_INTERVAL;
   }
 
   //voltages sensing
   if(batteryVoltageSchedule < currentTime){
     batteryVoltage1_msg.data = analogRead(VOLTAGE_PIN_1) * VOLT_RATIO;
     batteryVoltage2_msg.data = analogRead(VOLTAGE_PIN_2) * VOLT_RATIO;
-    
+
     voltagePub1.publish(&batteryVoltage1_msg);
     voltagePub2.publish(&batteryVoltage2_msg);
-    
+
     batteryVoltageSchedule += VOLTAGE_INTERVAL;
-  }  
-  
+  }
+
   if(lastMotorCommand + MOTOR_TIMEOUT < currentTime){
     resetMotor();
     lastMotorCommand = currentTime;

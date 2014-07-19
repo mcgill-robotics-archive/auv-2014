@@ -22,7 +22,7 @@ function motor {
         echo heave-bow: $5
         echo heave-stern: $6
         echo -e '\nRotating motors...'
-        rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $2, cmd_sway_bow: $3, cmd_sway_stern: $4, cmd_heave_bow: $5, cmd_heave_stern: $6}"
+        rostopic pub -r 2 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $2, cmd_sway_bow: $3, cmd_sway_stern: $4, cmd_heave_bow: $5, cmd_heave_stern: $6}"
     elif [[ $# -eq 1 ]]; then
         echo surge-starboard: $1
         echo surge-port: $1
@@ -31,7 +31,7 @@ function motor {
         echo heave-bow: $1
         echo heave-stern: $1
         echo -e '\nRotating motors...'
-        rostopic pub -r 1 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $1, cmd_sway_bow: $1, cmd_sway_stern: $1, cmd_heave_bow: $1, cmd_heave_stern: $1}"
+        rostopic pub -r 2 /electrical_interface/motor controls/motorCommands "{cmd_surge_starboard: $1, cmd_surge_port: $1, cmd_sway_bow: $1, cmd_sway_stern: $1, cmd_heave_bow: $1, cmd_heave_stern: $1}"
     else
         echo 'Usage: motor
                      surge-starboard

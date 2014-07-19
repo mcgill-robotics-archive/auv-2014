@@ -183,9 +183,14 @@ if __name__ == '__main__':
         # HEADER
         rospy.logwarn('Initializing IMU in %d sec', timeout)
         rospy.Subscriber('original_planner_colors', RGBArray, planner_callback)
+        time.sleep(timeout)
+
+        # BAG EVERYTHING IF NEEDED
+        # if ready_to_go(go_signal):
+            # FIX ME
+            # os.system("bash -ic 'bag -a' &")
 
         # WARN BEFORE START
-        time.sleep(timeout)
         rospy.logwarn('Ready...')
         while not got_original_colors:
             pass
