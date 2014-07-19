@@ -45,6 +45,7 @@ addTemperatureTopics() {
 addCameraTopics() {
 	command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect"
 	command_arguments="${command_arguments} camera_front_left/camera_out/camera_info camera_front_left/image_rect"
+	command_arguments="${command_arguments} camera_front_right/camera_out/camera_info camera_front_right/image_rect"
 }
 
 addDepthTopic() {
