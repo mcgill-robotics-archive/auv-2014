@@ -126,7 +126,7 @@ def imu_callback(pose):
         pass
 
 
-def planner_callback(data):
+def planner_lights_callback(data):
     """ Gets colors currently displayed on the planner BlinkyTape """
     global original_colors, got_original_colors
 
@@ -182,13 +182,13 @@ if __name__ == '__main__':
 
         # HEADER
         rospy.logwarn('Initializing IMU in %d sec', timeout)
-        rospy.Subscriber('original_planner_colors', RGBArray, planner_callback)
         time.sleep(timeout)
+        rospy.Subscriber('original_planner_colors', RGBArray, planner_lights_callback)
 
         # BAG EVERYTHING IF NEEDED
-        # if ready_to_go(go_signal):
-            # FIX ME
-            # os.system("bash -ic 'bag -a' &")
+        if ready_to_go(go_signal):
+            rospy.logwarn('Starting rosbags')
+            os.system("bash -ic 'bag -a' &")
 
         # WARN BEFORE START
         rospy.logwarn('Ready...')
