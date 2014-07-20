@@ -40,20 +40,20 @@ def sizeof_file(size):
 
 def sos():
     """ Print out usage """
-    print colors.FAIL + "usage: mergeBags.py OPTION" + colors.ENDC
-    print colors.WARNING + "options: -a : all topics specified"
-    print "         -i : imu pose and raw data"
-    print "         -t : data from all temperature sensors"
-    print "         -c : camera data; i.e. camera info, image rectified and color image from up and down cameras"
-    print "         -d : depth sensor data"
-    print "         -b : voltages from both batteries"
-    print "         -e : motor message, usb, solenoid, and pressure inside main pressure vessel"
-    print "         -h : all hydrophones topics (including state estimation specific topics)"
-    print "         -s : all state estimation topics (including IMU specific topics)"
-    print "         -f | -folder : folder containing bags"
-    print "         -F | --from : bag number to start merging from"
-    print "         -T | --to : bag number to end merging at"
-    print "         --help : prints this menu" + colors.ENDC
+    print colors.WARNING + "usage:     bag_merge OPTION"
+    print "options:   -a : all topics specified"
+    print "           -i : IMU pose and raw data"
+    print "           -t : data from all temperature sensors"
+    print "           -c : front and downward facing camera rectified images and info"
+    print "           -d : depth sensor data"
+    print "           -b : voltages from both batteries"
+    print "           -e : motor messages, usb, solenoid, and pressure inside main PV"
+    print "           -h : all hydrophones topics, including state estimation topics"
+    print "           -s : all state estimation topics, including IMU topics"
+    print "-f | --folder : folder containing bags             (default: current directory)"
+    print "  -F | --from : bag number to start merging from   (default: 0)"
+    print "    -T | --to : bag number to end merging at       (default: -1)"
+    print "       --help : prints this menu" + colors.ENDC
 
 
 def add_imu_topics(topic_list):
