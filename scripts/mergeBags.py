@@ -7,7 +7,7 @@ import getopt
 import time
 from os import path, popen, walk
 
-# PARSING
+# PARSING CONDITIONS
 prefix = "split"
 delimiter = "_"
 extension = ".bag"
@@ -30,7 +30,6 @@ def format_progress(first, second, delimiter):
     return first + second.rjust(length_of_delimiter,delimiter)
 
 
-
 def sizeof_file(size):
     """ Gets size of bag in human readable format """
     for x in ['bytes','KB','MB','GB','TB']:
@@ -51,6 +50,9 @@ def sos():
     print "         -e : motor message, usb, solenoid, and pressure inside main pressure vessel"
     print "         -h : all hydrophones topics (including state estimation specific topics)"
     print "         -s : all state estimation topics (including IMU specific topics)"
+    print "         -f | -folder : folder containing bags"
+    print "         -F | --from : bag number to start merging from"
+    print "         -T | --to : bag number to end merging at"
     print "         --help : prints this menu" + colors.ENDC
 
 
@@ -119,9 +121,11 @@ def add_all_topics(topic_list):
 
 def bag_we_are_looking_for(filename):
     """ Checks if the file is a bag """
+    # CHECK PARSING CONDITIONS
     starts_correctly = filename.startswith(prefix + delimiter)
     ends_correctly = filename.endswith(extension)
     not_incorrect = ("orig" not in filename) and ("active" not in filename)
+
     return starts_correctly and ends_correctly and not_incorrect
 
 
@@ -130,40 +134,70 @@ def get_bag_count(filename):
     return int(filename.split(delimiter)[1].split(".")[0])
 
 
-def get_bags(folder):
-    """ Gets list of bags in folder """
-    all_bags, all_files = [], []
-    for (dirpath, dirnames, filenames) in walk(folder):
-        all_files.extend(filenames)
-        break
-    for filename in all_files:
-        if bag_we_are_looking_for(filename):
-            all_bags.append(filename)
-    return all_bags
-
-
 def sort_bags(all_bags):
     """ Sorts bags in the correct order """
     bag_numbers = []
+    bags_to_merge = []
+
+    # PARSE FILENAMES TO SORT PROPERLY
     for filename in all_bags:
         bag_numbers.append(get_bag_count(filename))
     bag_numbers.sort()
-    bags_to_merge = []
+
+    # FIX FILENAMES
     for i in bag_numbers:
         bags_to_merge.append("%s%s%d%s" % (prefix, delimiter, i, extension))
+
     return bags_to_merge
 
 
-def append_bag(input, output, topic_list):
+def get_bags(folder, t0, t1):
+    """ Gets list of bags in range from folder """
+    all_bags = []
+    all_files = []
+
+    # GET FILES IN DIRECTORY
+    for (dirpath, dirnames, filenames) in walk(folder):
+        all_files.extend(filenames)
+        break
+
+    # GET BAGS FROM FILE LIST
+    for filename in all_files:
+        if bag_we_are_looking_for(filename):
+            all_bags.append(filename)
+
+    # SORT LIST
+    bags_to_merge = sort_bags(all_bags)
+
+   # CHECK IF BAG LIST IS IN RANGE
+    if t0 >= len(bags_to_merge) or t1 > len(bags_to_merge):
+        print colors.FAIL + "Bags out of range" + colors.ENDC
+        sos()
+        sys.exit(1)
+
+    # GET FILES IN RANGE
+    bags_to_merge_in_range = []
+    for index in range(len(bags_to_merge)):
+        bag_number = get_bag_count(bags_to_merge[index])
+        if bag_number >= t0 and (t1 == -1 or bag_number <= t1):
+             bags_to_merge_in_range.append(bags_to_merge[index])
+
+    return bags_to_merge_in_range
+
+
+def append_bag(input, output, topic_list, counter):
     """ Appends bag data """
+    # OPEN BAG
     try:
         current_bag = rosbag.Bag(input, "r")
-        progress = "Merging %d of %d" % (get_bag_count(path.basename(input)) + 1, number_of_bags)
+        progress = "Merging %s (%d of %d)" % (path.basename(path.normpath(input)), counter, number_of_bags)
         print format_progress(progress,sizeof_file(current_bag.size),".")
     except rosbag.ROSBagUnindexedException:
         print colors.FAIL + "%s unindexed. Run rosbag reindex." % (input) + colors.ENDC
         output.close()
         sys.exit(2)
+
+    # APPEND MESSAGES
     try:
         for topic, msg, time in current_bag.read_messages(topics=topic_list):
             output.write(topic, msg, time)
@@ -175,10 +209,12 @@ def merge_bags(bags_to_merge, output, topic_list, folder):
     """ Merges all bags into one """
     global number_of_bags
     number_of_bags = len(bags_to_merge)
-    print colors.OKBLUE + "%d bags to merge in %s" % (number_of_bags, folder) + colors.ENDC
+    print colors.HEADER + "%d bags to merge in %s" % (number_of_bags, folder) + colors.ENDC
+
+    # MERGE
     counter = 1
     for bag in bags_to_merge:
-        append_bag(folder + bag, output, topic_list)
+        append_bag(folder + bag, output, topic_list, counter)
         counter += 1
 
 
@@ -187,17 +223,21 @@ def get_arguments(args):
     folder = "."
     name = ""
     topic_list = []
+    t0, t1 = 0, -1
 
+    # CHECK IF ARGUMENTS WERE SPECIFIED
     if len(args) == 0:
         sos()
         sys.exit(1)
 
+    # GET ARGUMENTS
     try:
-        opts, args = getopt.getopt(args,"aitcdbehsf:",["help=","folder="])
+        opts, args = getopt.getopt(args,"aitcdbehsf:F:T:",["help=","folder=","from=","to="])
     except getopt.GetoptError:
         sos()
         sys.exit(2)
 
+    # PARSE ARGUMENTS
     for opt, arg in opts:
         if opt == "--help":
             sos()
@@ -240,40 +280,72 @@ def get_arguments(args):
             name += "_state"
         elif opt in ("-f", "--folder"):
             folder = arg
+        elif opt in ("-F", "--from"):
+            try:
+                t0 = int(arg)
+            except ValueError:
+                print colors.FAIL + "Invalid arguments. Expected integer." + colors.ENDC
+                sos()
+                sys.exit(1)
+        elif opt in ("-T", "--to"):
+            try:
+                t1 = int(arg)
+            except ValueError:
+                print colors.FAIL + "Invalid arguments. Expected integer." + colors.ENDC
+                sos()
+                sys.exit(1)
 
+    # CHECK IF RANGE OF BAGS IS REASONABLE
+    if t1 != -1 and t1 < t0:
+        print colors.FAIL + "Invalid bag range" + colors.ENDC
+        sos()
+        sys.exit(1)
+
+    # CHECK IF TOPICS WERE SPECIFIED PROPERLY
+    if len(topic_list) == 0:
+        print colors.FAIL + "Please specify at least one topic to subscribe to..." + colors.ENDC
+        sos()
+        sys.exit(1)
+
+    # FIX FOLDER AND FILE NAMES
     folder = path.abspath(folder)
     name = path.basename(path.normpath(folder)) + name + ".bag"
     if not folder.endswith("/"):
         folder = folder + "/"
 
-    return folder, name, topic_list
+    return folder, name, topic_list, t0, t1
 
 
-def main(folder, name, topic_list):
+def main():
     """ Set up and merge topics from bags in folder """
     start_time = time.time()
-    all_bags = get_bags(folder)
-    bags_to_merge = sort_bags(all_bags)
-    if len(topic_list) == 0:
-        print colors.FAIL + "Please specify at least one topic to subscribe to..." + colors.ENDC
-        sos()
-        sys.exit(1)
+
+    # GET ARGUMENTS
+    folder, name, topic_list, t0, t1 = get_arguments(sys.argv[1:])
+
+    # GET BAGS FROM t0 TO t1
+    bags_to_merge = get_bags(folder, t0, t1)
+
+    # CHECK IF ENOUGH BAGS TO MERGE EXIST
     if len(bags_to_merge) >= 1:
+        # CREATE AND MERGE BAGS
         try:
-            output_bag = rosbag.Bag(folder + name, "w")
-            merge_bags(bags_to_merge, output_bag, topic_list, folder)
+            output = rosbag.Bag(folder + name, "w")
+            merge_bags(bags_to_merge, output, topic_list, folder)
+
+        # PRINT FOOTER AND CLOSE BAG
         finally:
             end_time = time.time()
             delta_time = "%ds" % (round(end_time - start_time))
-            print colors.WARNING + format_progress("Merged",sizeof_file(output_bag.size),".") + colors.ENDC
-            print colors.WARNING + format_progress("Time",delta_time,".") + colors.ENDC
+            print colors.OKBLUE + format_progress("Merged",sizeof_file(output.size),".") + colors.ENDC
+            print colors.OKBLUE + format_progress("Time",delta_time,".") + colors.ENDC
             print colors.OKGREEN + "Bag saved to %s%s" % (folder, name) + colors.ENDC
-            output_bag.close()
+            output.close()
     else:
-        print colors.FAIL + "No bags to merge in %s" % (folder) + colors.ENDC
+        print colors.FAIL + "No bags in range to merge in %s" % (folder) + colors.ENDC
         sys.exit(1)
 
 
+# START HERE
 if __name__ == "__main__":
-    folder, name, topic_list = get_arguments(sys.argv[1:])
-    main(folder, name, topic_list)
+    main()
