@@ -1,31 +1,17 @@
 #!/bin/bash
 
-# DETERMINE SHELL
-if [ $SHELL = "/bin/bash" ]; then
-    extension='bash'
-elif [ $SHELL = "/bin/sh" ]; then
-    extension='sh'
-elif [ $SHELL = "/bin/zsh" ]; then
-    extension='zsh'
-fi
-
 # SOURCES
-if [ -f /opt/ros/indigo/setup.$extension ];
+if [ -f /opt/ros/hydro/setup.bash ];
 then
-    source /opt/ros/indigo/setup.$extension
+    source /opt/ros/hydro/setup.bash
 else
-    source /opt/ros/hydro/setup.$extension
+    source /opt/ros/indigo/setup.bash
 fi
-source $ROBOTIC_PATH/catkin_ws/devel/setup.$extension
+source $ROBOTIC_PATH/catkin_ws/devel/setup.bash
 source $ROBOTIC_PATH/setup/functionrc
 
 # EXPORTS
-if [ -f /opt/ros/indigo/setup.$extension ];
-then
-    export ROS_PACKAGE_PATH=/opt/ros/indigo/stacks:/opt/ros/indigo/share:$ROBOTIC_PATH/catkin_ws
-else
-    export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
-fi
+export ROS_PACKAGE_PATH=/opt/ros/hydro/stacks:/opt/ros/hydro/share:$ROBOTIC_PATH/catkin_ws
 export ROS_WORKSPACE=$ROBOTIC_PATH/catkin_ws
 
 # ALIASES
@@ -35,7 +21,7 @@ alias asipull='$ROBOTIC_PATH/scripts/downloadBagsFromRobot.sh'
 alias asipush='$ROBOTIC_PATH/scripts/uploadGitRepoToRobot.sh'
 alias bag='$ROBOTIC_PATH/scripts/rosbagHelper.sh'
 alias bag_merge='$ROBOTIC_PATH/scripts/mergeBags.py'
-alias catkin_alert='catkin_make && blinky_alert'
+alias catkin_alert='catkin_make; blinky_alert'
 alias controls='rostopic echo /controls/debug'
 alias glances='glances -yet 5'
 alias go='rosparam set /go 1'
