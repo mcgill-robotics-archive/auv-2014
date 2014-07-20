@@ -3,7 +3,6 @@
 # .make.sh
 # This script creates symlinks from the home directory to any desired dotfiles in ~/dotfiles
 ############################
-source /opt/ros/hydro/setup.bash
 ########## Variables
 echo "$(tput setaf 3)Copy udev.rules for serial devices$(tput sgr 0)"
 sudo cp -fv 48-RoboSub.rules /etc/udev/rules.d/48-RoboSub.rules
@@ -16,7 +15,7 @@ cp -fv controls.yml ~/.teamocil/controls.yml
 
 dir=$PWD   # dotfiles directory
 olddir=~/dotfiles_old                 # old dotfiles backup directory
-files="vimrc tmux.conf roboticrc"    # list of files/folders to symlink in homedir
+files="roboticrc"    # list of files/folders to symlink in homedir
 
 ##########
 
@@ -36,14 +35,23 @@ done
 cd $dir
 cd ..
 
-# Makes sure that the environment variables are in the ~./bashrc file.
-if [[ `grep "export ROBOTIC_PATH" ~/.bashrc | wc -l` -eq 0 ]]; then
-    echo "$(tput setaf 3)ROBOTIC_PATH does not exist in bashrc, adding... $(tput sgr 0)"
-    echo "export ROBOTIC_PATH=$PWD" >> ~/.bashrc
+# DETERMINE SHELL
+if [ $SHELL = "/bin/bash" ]; then
+    shellrc='bashrc'
+    echo "$(tput setaf 5)Detected BASH$(tput sgr 0)"
+elif [ $SHELL = "/bin/zsh" ]; then
+    shellrc='zshrc'
+    echo "$(tput setaf 5)Detected ZSHELL$(tput sgr 0)"
 fi
 
-if [[ `grep "source ~/.roboticrc" ~/.bashrc | wc -l` -eq 0 ]]; then
-    echo 'roboticrc does not exist in bashrc, adding...'
-    echo "$(tput setaf 3)roboticrc is not sourced in bashrc, adding... $(tput sgr 0)"
-    echo "source ~/.roboticrc" >> ~/.bashrc
+# Makes sure that the environment variables are in the shellrc file.
+if [[ `grep "export ROBOTIC_PATH" ~/.$shellrc | wc -l` -eq 0 ]]; then
+    echo "$(tput setaf 3)ROBOTIC_PATH does not exist in $shellrc, adding... $(tput sgr 0)"
+    echo "export ROBOTIC_PATH=$PWD" >> ~/.$shellrc
+fi
+
+if [[ `grep "source ~/.roboticrc" ~/.$shellrc | wc -l` -eq 0 ]]; then
+    echo "roboticrc does not exist in $shellrc, adding..."
+    echo "$(tput setaf 3)roboticrc is not sourced in $shellrc, adding... $(tput sgr 0)"
+    echo "source ~/.roboticrc" >> ~/.$shellrc
 fi
