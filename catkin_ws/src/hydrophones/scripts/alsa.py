@@ -7,6 +7,7 @@ import alsaaudio
 import numpy as np
 import rospy
 import roslib
+import os
 from hydrophones.msg import *
 import param
 
@@ -29,16 +30,18 @@ signal = channels()
 def setup():
     """ Sets up audio streams """
     global inputs
-    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:1,0')
-    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:1,2')
+    card_number = os.popen("arecord -l | grep 'HDA Intel'").read().split()[1][0]
+
+    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='plughw:%s,0' % card_number)
+    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='plughw:%s,2' % card_number)
     inputs = {'mic':mic, 'lin':lin}
 
     for card in inputs:
-        inputs[card].setchannels(2)
-        inputs[card].setrate(SAMPLING_FREQUENCY)
-        inputs[card].setperiodsize(PERIOD)
-        inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE)
-
+        print ""
+        rospy.logwarn("%s channels: %d", card.upper(), inputs[card].setchannels(2))
+        rospy.logwarn("%s rate: %d", card.upper(), inputs[card].setrate(SAMPLING_FREQUENCY))
+        rospy.logwarn("%s period: %d", card.upper(), inputs[card].setperiodsize(PERIOD))
+        rospy.logwarn("%s format: %d", card.upper(), inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE))
 
 def read():
     """ Reads and parses audio streams """

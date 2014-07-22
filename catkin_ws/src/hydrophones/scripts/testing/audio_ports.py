@@ -23,5 +23,6 @@ for i in range(audio.get_device_count()):
     if device['maxInputChannels'] > 0:
         print 'Index: %d' % device['index']
         print 'Name: %s' % device['name']
+        print 'Sampling frequency: %d Hz' % device['defaultSampleRate']
         print 'Channels: %d' % device['maxInputChannels']
         print ''
