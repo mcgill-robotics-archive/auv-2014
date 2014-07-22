@@ -31,17 +31,21 @@ def setup():
     """ Sets up audio streams """
     global inputs
     card_number = os.popen("arecord -l | grep 'Intel'").read().split()[1][0]
+    cards = ['plughw:%s,0' % card_number, 'plughw:%s,2' % card_number]
 
-    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='plughw:%s,0' % card_number)
-    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='plughw:%s,2' % card_number)
+    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card=cards[0])
+    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card=cards[1])
     inputs = {'mic':mic, 'lin':lin}
 
     for card in inputs:
         print ""
-        rospy.logwarn("%s channels: %d", card.upper(), inputs[card].setchannels(2))
-        rospy.logwarn("%s rate: %d", card.upper(), inputs[card].setrate(SAMPLING_FREQUENCY))
-        rospy.logwarn("%s period: %d", card.upper(), inputs[card].setperiodsize(PERIOD))
-        rospy.logwarn("%s format: %d", card.upper(), inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE))
+        rospy.logwarn("%s cardname:   %s", card.upper(), inputs[card].cardname())
+        rospy.logwarn("%s channels:   %d", card.upper(), inputs[card].setchannels(2))
+        rospy.logwarn("%s sampling:   %d", card.upper(), inputs[card].setrate(SAMPLING_FREQUENCY))
+        rospy.logwarn("%s period:     %d", card.upper(), inputs[card].setperiodsize(PERIOD))
+        rospy.logwarn("%s format:     %d", card.upper(), inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE))
+    print ""
+
 
 def read():
     """ Reads and parses audio streams """
