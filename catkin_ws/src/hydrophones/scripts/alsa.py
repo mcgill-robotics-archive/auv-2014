@@ -30,7 +30,7 @@ signal = channels()
 def setup():
     """ Sets up audio streams """
     global inputs
-    card_number = os.popen("arecord -l | grep 'HDA Intel'").read().split()[1][0]
+    card_number = os.popen("arecord -l | grep 'Intel'").read().split()[1][0]
 
     mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='plughw:%s,0' % card_number)
     lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='plughw:%s,2' % card_number)
