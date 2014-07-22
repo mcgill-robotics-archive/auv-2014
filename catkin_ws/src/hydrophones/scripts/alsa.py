@@ -44,6 +44,7 @@ def setup():
         rospy.logwarn("%s sampling:   %d", card.upper(), inputs[card].setrate(SAMPLING_FREQUENCY))
         rospy.logwarn("%s period:     %d", card.upper(), inputs[card].setperiodsize(PERIOD))
         rospy.logwarn("%s format:     %d", card.upper(), inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE))
+
     print ""
 
 
@@ -74,7 +75,12 @@ def close():
 
 if __name__ == '__main__':
     try:
-        setup()
+        try:
+            setup()
+        except:
+            rospy.logfatal('AUDIO STREAMS COULD NOT BE OPENED')
+            exit(1)
+
         while not rospy.is_shutdown():
             read()
     except rospy.ROSInterruptException:
