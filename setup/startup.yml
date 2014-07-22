@@ -6,23 +6,32 @@ windows:
     panes:
       - cmd:
         - "tmux rename-session MAIN"
-        - "sleep 2 && set_pane_title ROSCORE & roscore"
+        - "(sleep 2 && set_pane_title ROSCORE) & roscore"
       - cmd:
-        - "sleep 2 && set_pane_title STATE ESTIMATION & roslaunch --wait state_estimation state_estimation.launch"
+        - "set_pane_title STATE ESTIMATION"
+        - "roslaunch --wait --disable-title state_estimation state_estimation.launch"
       - cmd:
-        - "sleep 2 && set_pane_title TEENSY & roslaunch --wait robosub_msg teensy.launch "
+        - "set_pane_title TEENSY"
+        - "roslaunch --wait --disable-title robosub_msg teensy.launch "
       - cmd:
-        - "sleep 2 && set_pane_title STATUS & roslaunch --wait status status.launch"
+        - "set_pane_title STATUS"
+        - "roslaunch --wait --disable-title status status.launch"
       - cmd:
-        - "sleep 2 && set_pane_title CAMERAS & roslaunch --wait computer_vision camera_all.launch "
+        - "set_pane_title CAMERAS"
+        - "roslaunch --wait --disable-title computer_vision camera_all.launch "
       - cmd:
-        - "sleep 2 && set_pane_title HYDROPHONES & roslaunch --wait hydrophones hydrophones.launch "
+        - "set_pane_title HYDROPHONES"
+        - "roslaunch --wait --disable-title hydrophones hydrophones.launch "
       - cmd:
-        - "sleep 2 && set_pane_title CONTROLS & roslaunch --wait controls controls.launch "
+        - "set_pane_title CONTROLS"
+        - "roslaunch --wait --disable-title controls controls.launch "
       - cmd:
-        - "sleep 2 && set_pane_title PLANNER & roslaunch --wait planner startup-sequence.launch "
+        - "set_pane_title PLANNER"
+        - "roslaunch --wait --disable-title planner startup-sequence.launch "
       - cmd:
-        - "set_pane_title GLANCES & glances"
+        - "set_pane_title GLANCES"
+        - "glances"
       - cmd:
-        - "set_pane_title USB & watch_usb"
+        - "set_pane_title USB"
+        - "watch_usb"
         focus: true

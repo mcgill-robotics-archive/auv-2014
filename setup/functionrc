@@ -193,7 +193,6 @@ function set_pane_title {
         export title=$@
     fi
     refresh_pane_title
-    trap refresh_pane_title SIGCHLD
 }
 
 # REFRESH PANE TITLE
