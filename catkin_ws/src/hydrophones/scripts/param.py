@@ -165,9 +165,12 @@ def set_parameters():
     rospy.set_param('/hydrophones/pos/3/x',0)
     rospy.set_param('/hydrophones/pos/3/y',HEIGHT)
 
+    rospy.logwarn('PARAMETERS WERE SET')
+
 
 if __name__ == '__main__':
     try:
+        rospy.init_node('param')
         set_parameters()
     except:
         print 'ROS NOT RUNNING'

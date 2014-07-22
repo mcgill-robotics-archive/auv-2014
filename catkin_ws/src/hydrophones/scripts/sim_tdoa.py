@@ -9,7 +9,6 @@ import param
 
 # PARAMETERS
 try:
-    param.set_simulation_parameters()
     NUMBER_OF_MICS = param.get_number_of_mics()
     POS = param.get_mic_positions()
     SPEED = param.get_speed()

@@ -81,6 +81,7 @@ def simulate():
 
 if __name__ == '__main__':
     try:
+        rospy.logwarn('SIMULATION RUNNING')
         while not rospy.is_shutdown():
             simulate()
             rate.sleep()
