@@ -53,7 +53,6 @@ def analyze(frequencies):
     for channel in range(NUMBER_OF_MICS):
         magn[channel], peak[channel] = analyze_channel(freq[channel])
 
-
     # PUBLISH MAGNITUDES
     magnitudes.channel_0 = magn[0]
     magnitudes.channel_1 = magn[1]
