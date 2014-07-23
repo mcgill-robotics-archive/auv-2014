@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: MAKE SURE LINE IN AND MIC WORK AS EXPECTED
-
 # IMPORTS
 import alsaaudio
 import numpy as np

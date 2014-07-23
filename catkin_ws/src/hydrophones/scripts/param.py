@@ -92,6 +92,14 @@ def get_mic_positions():
     return pos
 
 
+def get_practice_pool_side_or_not():
+    """ Returns True if robot is in the practice pool, false otherwise """
+    while not rospy.has_param('/hydrophones/practice_pool'):
+        pass
+
+    return rospy.get_param('/hydrophones/practice_pool')
+
+
 def get_simulation_target():
     """ Returns (x,y) coordinates of the simulated target pinger """
     while not rospy.has_param('/hydrophones/sim/target'):

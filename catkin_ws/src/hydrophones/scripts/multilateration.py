@@ -53,7 +53,7 @@ def solve(data):
     sol.cartesian.y = y
     sol.polar.r = np.sqrt(x**2 + y**2)
     sol.polar.theta = np.degrees(np.arctan2(y,x))
-    sol.target = True
+    sol.target = data.target
     solver_topic.publish(sol)
 
 

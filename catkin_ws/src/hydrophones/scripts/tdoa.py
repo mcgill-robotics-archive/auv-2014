@@ -12,6 +12,7 @@ import rospy
 import roslib
 from hydrophones.msg import *
 import param
+import time
 
 # PARAMETERS
 try:
@@ -19,6 +20,7 @@ try:
     NUMBER_OF_MICS = param.get_number_of_mics()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
     TARGET_FREQUENCY = param.get_target_frequency()
+    PRACTICE = param.get_practice_pool_side_or_not()
 except:
     print 'ROS NOT RUNNING'
     exit(1)
@@ -31,16 +33,21 @@ THRESHOLD = 0.1
 
 # VARIABLES
 crunching = False
-rospy.init_node('tdoa')
-tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
-freq_topic = rospy.Publisher('/hydrophones/freq',freq)
+target = False
+last_ping_time = time.time()
 signal = channels()
 frequencies = freq()
 dt = tdoa()
 
+# NODE AND PUBLISHERS
+rospy.init_node('tdoa')
+tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
+freq_topic = rospy.Publisher('/hydrophones/freq',freq)
+
 
 def acquire_target():
     """ Searches for target frequency in signal """
+    global last_ping_time, target
     freq = [np.zeros(BUFFERSIZE/2+1,np.float)
             for i in range(NUMBER_OF_MICS)]
 
@@ -65,6 +72,15 @@ def acquire_target():
     for i in range(NUMBER_OF_MICS):
         magnitude = np.absolute(freq[i][TARGET_INDEX])
         if magnitude > THRESHOLD:
+            # CHECK IF TARGET PING OR DUMMY PING
+            current_time = time.time()
+            if current_time - last_ping_time > 1:
+                target = not PRACTICE
+            else:
+                target = PRACTICE
+
+            last_ping_time = current_time
+
             return True
 
     return False
@@ -129,7 +145,7 @@ def gccphat():
     dt.tdoa_1 = diff[1]
     dt.tdoa_2 = diff[2]
     dt.tdoa_3 = diff[3]
-    dt.target = True
+    dt.target = target
     tdoa_topic.publish(dt)
 
 
