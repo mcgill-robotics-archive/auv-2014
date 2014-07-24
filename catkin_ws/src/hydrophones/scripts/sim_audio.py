@@ -17,6 +17,7 @@ try:
     param.set_simulation_parameters()
     BUFFERSIZE = param.get_buffersize()
     LENGTH_OF_PULSE = param.get_pulse_length()
+    LINEAR_CHIRP = param.get_linear_chirp_or_not()
     NUMBER_OF_MICS = param.get_number_of_mics()
     POS = param.get_mic_positions()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
@@ -37,15 +38,26 @@ time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 def create_signal(dt):
     """ Creates time shifted signal """
-    global SNR, TARGET_FREQUENCY
+    global SNR, TARGET_FREQUENCY, LINEAR_CHIRP
     SNR = param.get_snr()
     TARGET_FREQUENCY = param.get_target_frequency()
+    LINEAR_CHIRP = param.get_linear_chirp_or_not()
 
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
     signal = np.zeros(BUFFERSIZE,np.float32)
-    for i in range(int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))):
+    ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
+    bandwidth = 200
+    f = TARGET_FREQUENCY - bandwidth
+    for i in range(ping):
         t = time[i+delta] - dt
-        signal[i+delta+200] = SNR*np.sin(2*np.pi*TARGET_FREQUENCY*t)
+        if i <= ping/2:
+            f += 4*bandwidth/ping
+        else:
+            f -= 4*bandwidth/ping
+        if LINEAR_CHIRP:
+            signal[i+delta+200] = SNR*np.sin(2*np.pi*min(f, TARGET_FREQUENCY)*t)
+        else:
+            signal[i+delta+200] = SNR*np.sin(2*np.pi*TARGET_FREQUENCY*t)
 
     return signal
 

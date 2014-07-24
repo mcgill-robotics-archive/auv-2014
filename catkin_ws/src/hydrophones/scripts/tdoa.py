@@ -45,6 +45,13 @@ tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
 freq_topic = rospy.Publisher('/hydrophones/freq',freq)
 
 
+def update_params():
+    """ Updates target frequency """
+    global TARGET_FREQUENCY, TARGET_INDEX
+    TARGET_FREQUENCY = param.get_target_frequency()
+    TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
+
+
 def acquire_target():
     """ Searches for target frequency in signal """
     global last_ping_time, target
@@ -90,6 +97,7 @@ def parse(data):
     """ Deals with subscribed audio data """
     global crunching, signal
     if not crunching:
+        update_params()
         signal = data
         if acquire_target():
             crunching = True
