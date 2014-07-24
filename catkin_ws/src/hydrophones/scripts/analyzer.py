@@ -21,7 +21,9 @@ except:
 rospy.init_node('analyzer')
 magn_topic = rospy.Publisher('/hydrophones/magn',channels)
 peak_topic = rospy.Publisher('/hydrophones/peak',peaks)
+peak_magn_topic = rospy.Publisher('/hydrophones/peak_magn',peaks)
 magnitudes = channels()
+peak_magn = peaks()
 peaks = peaks()
 
 
@@ -66,6 +68,13 @@ def analyze(frequencies):
     peaks.channel_2 = peak[2]
     peaks.channel_3 = peak[3]
     peak_topic.publish(peaks)
+
+    # PUBLISH PEAK MAGNITUDES
+    peak_magn.channel_0 = magn[0][int(peak[0]/FREQUENCY_PER_INDEX)]
+    peak_magn.channel_1 = magn[1][int(peak[1]/FREQUENCY_PER_INDEX)]
+    peak_magn.channel_2 = magn[2][int(peak[2]/FREQUENCY_PER_INDEX)]
+    peak_magn.channel_3 = magn[3][int(peak[3]/FREQUENCY_PER_INDEX)]
+    peak_magn_topic.publish(peak_magn)
 
 
 if __name__ == '__main__':

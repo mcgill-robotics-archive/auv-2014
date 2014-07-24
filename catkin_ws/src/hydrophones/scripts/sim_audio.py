@@ -9,6 +9,7 @@
 import numpy as np
 import rospy
 import roslib
+from scipy import signal as sp
 from hydrophones.msg import *
 import param
 
@@ -46,18 +47,11 @@ def create_signal(dt):
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
     signal = np.zeros(BUFFERSIZE,np.float32)
     ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
-    bandwidth = 200
-    f = TARGET_FREQUENCY - bandwidth
+
+    t = np.arange(ping)/float(SAMPLING_FREQUENCY)
+    chirp = sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
-        t = time[i+delta] - dt
-        if i <= ping/2:
-            f += 4*bandwidth/ping
-        else:
-            f -= 4*bandwidth/ping
-        if LINEAR_CHIRP:
-            signal[i+delta+200] = SNR*np.sin(2*np.pi*min(f, TARGET_FREQUENCY)*t)
-        else:
-            signal[i+delta+200] = SNR*np.sin(2*np.pi*TARGET_FREQUENCY*t)
+        signal[i+delta+BUFFERSIZE/2] = chirp[i]
 
     return signal
 
