@@ -6,18 +6,17 @@
 import rospy
 
 # DEFAULT PARAMETERS
-BUFFERSIZE = 1024           # SIZE OF FFT BUFFER
+BUFFERSIZE = 4096           # SIZE OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
 TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
-LENGTH_OF_PULSE = 1.3e-3    # LENGTH OF PING                s
+LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
 
 # SIMULATION PARAMETERS
-LINEAR_CHIRP = False        # TYPE OF SIGNAL TO CREATE
 TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
 DUMMY_PINGER = (-69, 83)    # DUMMY PINGER COORDINATES      m
 SNR = 20                    # SIGNAL TO NOISE RATIO         dB
@@ -101,14 +100,6 @@ def get_practice_pool_side_or_not():
     return rospy.get_param('/hydrophones/practice_pool')
 
 
-def get_linear_chirp_or_not():
-    """ Returns True if linear chirp, false for pure sine wave """
-    while not rospy.has_param('/hydrophones/linear_chirp'):
-        pass
-
-    return rospy.get_param('/hydrophones/linear_chirp')
-
-
 def get_simulation_target():
     """ Returns (x,y) coordinates of the simulated target pinger """
     while not rospy.has_param('/hydrophones/sim/target'):
@@ -156,7 +147,6 @@ def set_simulation_parameters():
     rospy.set_param('/hydrophones/sim/dummy/x',DUMMY_PINGER[0])
     rospy.set_param('/hydrophones/sim/dummy/y',DUMMY_PINGER[1])
     rospy.set_param('/hydrophones/sim/SNR',SNR)
-    rospy.set_param('/hydrophones/linear_chirp', LINEAR_CHIRP)
 
 
 def set_parameters():

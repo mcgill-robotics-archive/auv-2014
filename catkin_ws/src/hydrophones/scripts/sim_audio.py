@@ -18,7 +18,6 @@ try:
     param.set_simulation_parameters()
     BUFFERSIZE = param.get_buffersize()
     LENGTH_OF_PULSE = param.get_pulse_length()
-    LINEAR_CHIRP = param.get_linear_chirp_or_not()
     NUMBER_OF_MICS = param.get_number_of_mics()
     POS = param.get_mic_positions()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
@@ -39,10 +38,8 @@ time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 def create_signal(dt):
     """ Creates time shifted signal """
-    global SNR, TARGET_FREQUENCY, LINEAR_CHIRP
-    SNR = param.get_snr()
+    global TARGET_FREQUENCY
     TARGET_FREQUENCY = param.get_target_frequency()
-    LINEAR_CHIRP = param.get_linear_chirp_or_not()
 
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
     signal = np.zeros(BUFFERSIZE,np.float32)
