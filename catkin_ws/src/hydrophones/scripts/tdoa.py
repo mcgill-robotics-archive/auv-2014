@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-# TODO: FIX NOT WORKING WITH TARGET OTHER THAN 30kHz
-#       MOVE TO PEAK DETECTION INSTEAD OF THRESHOLD
-#       MAKE SURE SIGNAL ALWAYS WITHIN BUFFERSIZE
+# TODO: MOVE TO PEAK DETECTION INSTEAD OF THRESHOLD
 #       IMPLEMENT BANDPASS FILTER
-#       DISTINGUISH PRACTICE FROM COMPETITION
+#       DOUBLE CHECK TDOA SIGNS AND INTERPOLATION!!!
 
 # IMPORTS
 import numpy as np
@@ -82,7 +80,7 @@ def acquire_target():
 
     # DETERMINE IF TARGET FREQUENCY APPEARS
     for i in range(NUMBER_OF_MICS):
-        magnitude = np.absolute(freq[i][TARGET_INDEX])
+        magnitude = 20*np.log10(np.abs(freq[i][TARGET_INDEX]))
         if magnitude > THRESHOLD:
             # CHECK IF TARGET PING OR DUMMY PING
             current_time = time.time()
@@ -91,6 +89,8 @@ def acquire_target():
             else:
                 target = PRACTICE
 
+            rospy.logwarn("Triggered on %s at %3.2f dB",
+                          'TARGET' if target else 'DUMMY ', magnitude)
             last_ping_time = current_time
 
             return True
@@ -157,6 +157,7 @@ def gccphat():
         top = np.argmax(phat_interp)
 
         # TIME DIFFERENCE
+        # DOUBLE CHECK THIS!!!
         if index < FINAL_BUFFERSIZE/4:
             diff[i] = -u[top] / SAMPLING_FREQUENCY
         else:
