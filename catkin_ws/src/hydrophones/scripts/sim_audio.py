@@ -23,6 +23,7 @@ try:
     POS = param.get_mic_positions()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
     SPEED = param.get_speed()
+    SNR = param.get_snr()
 except:
     print 'ROS NOT RUNNING'
     exit(1)
@@ -39,7 +40,8 @@ time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 def create_signal(dt):
     """ Creates time shifted signal """
-    global TARGET_FREQUENCY
+    global SNR, TARGET_FREQUENCY
+    SNR = param.get_snr()
     TARGET_FREQUENCY = param.get_target_frequency()
 
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
@@ -47,7 +49,7 @@ def create_signal(dt):
     ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
 
     t = np.arange(ping)/float(SAMPLING_FREQUENCY)
-    chirp = sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
+    chirp = SNR * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
         signal[i+delta+BUFFERSIZE/4] = chirp[i]
 
