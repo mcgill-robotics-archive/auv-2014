@@ -60,7 +60,7 @@ def solve(data):
     solver_topic.publish(sol)
 
     # PUBLISH IF THE PINGER BELOW US
-    if sol.target and sol.polar.r <= 0.5:
+    if sol.target and sol.polar.r <= 1.0:
         yes.data = True
     else:
         yes.data = False
