@@ -6,7 +6,7 @@
 import rospy
 
 # DEFAULT PARAMETERS
-BUFFERSIZE = 2048           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
+BUFFERSIZE = 1024           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
 TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
@@ -16,12 +16,14 @@ SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
 LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
-THRESHOLD = 0.1             # THRESHOLD FOR PING            dB      (experimental)
+THRESHOLD = 50              # THRESHOLD FOR PING            dB      (experimental)
 
 # SIMULATION PARAMETERS
 TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
 DUMMY_PINGER = (-69, 83)    # DUMMY PINGER COORDINATES      m
 SNR = 20                    # SIGNAL TO NOISE RATIO         dB
+SWITCHING = True            # SWITCH BETWEEN PINGERS
+CONTINUOUS = False          # GENERATE CONTINUOUS SIGNAL
 
 
 def get_buffersize():
@@ -164,17 +166,25 @@ def get_simulation_state():
     return rospy.get_param('/hydrophones/sim/state')
 
 
-def get_active_pinger():
-    """ Returns TRUE if override pinger switching is active, FALSE otherwise """
-    while not rospy.has_param('/hydrophones/sim/override_active'):
+def get_switching():
+    """ Returns TRUE if pinger switching is active, FALSE otherwise """
+    while not rospy.has_param('/hydrophones/sim/switching'):
         pass
 
-    return rospy.get_param('/hydrophones/sim/override_active')
+    return rospy.get_param('/hydrophones/sim/switching')
 
 
-def set_active_pinger(state):
+def get_continuous():
+    """ Returns TRUE if continuous signal is active, FALSE otherwise """
+    while not rospy.has_param('/hydrophones/sim/continuous'):
+        pass
+
+    return rospy.get_param('/hydrophones/sim/continuous')
+
+
+def set_switching(state):
     """ TRUE to override active pinger, FALSE to alternate between target and dummy """
-    rospy.set_param('/hydrophones/sim/override_active',state)
+    rospy.set_param('/hydrophones/sim/switching',state)
 
 
 def set_simulation_parameters():
@@ -186,7 +196,8 @@ def set_simulation_parameters():
     rospy.set_param('/hydrophones/sim/dummy/x',DUMMY_PINGER[0])
     rospy.set_param('/hydrophones/sim/dummy/y',DUMMY_PINGER[1])
     rospy.set_param('/hydrophones/sim/SNR',SNR)
-    rospy.set_param('/hydrophones/sim/override_active',False)
+    rospy.set_param('/hydrophones/sim/switching',SWITCHING)
+    rospy.set_param('/hydrophones/sim/continuous',CONTINUOUS)
 
 
 def set_parameters():

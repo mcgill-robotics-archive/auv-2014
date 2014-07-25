@@ -83,7 +83,7 @@ def simulate():
     if time.time() - last_ping >= delta_time:
         last_ping = time.time()
         new_signal_notification.publish(Bool(target))
-        override = param.get_active_pinger()
+        override = not param.get_switching()
         if target or override:
             (x,y) = param.get_simulation_target()
             if override:
@@ -120,7 +120,9 @@ def simulate():
         signal.channel_1 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_2 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_3 = np.random.normal(0,1,BUFFERSIZE)
-        # audio_topic.publish(signal)
+
+        if param.get_continuous():
+            audio_topic.publish(signal)
 
 
 if __name__ == '__main__':
