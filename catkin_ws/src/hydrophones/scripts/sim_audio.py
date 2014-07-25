@@ -46,13 +46,13 @@ def create_signal(dt):
     TARGET_FREQUENCY = param.get_target_frequency()
 
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
-    signal = np.zeros(FINAL_BUFFERSIZE,np.float32)
+    signal = np.random.normal(0,1,FINAL_BUFFERSIZE)
     ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
 
     t = np.arange(ping)/float(SAMPLING_FREQUENCY)
     chirp = SNR * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
-        signal[i+delta+FINAL_BUFFERSIZE/4] = chirp[i]
+        signal[i+delta+FINAL_BUFFERSIZE/4] += chirp[i]
 
     return signal
 
