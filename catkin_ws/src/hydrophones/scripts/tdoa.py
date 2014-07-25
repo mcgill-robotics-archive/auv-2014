@@ -132,18 +132,20 @@ def gccphat():
                   first_signal.channel_2, first_signal.channel_3]
     second_time = [second_signal.channel_0, second_signal.channel_1,
                    second_signal.channel_2, second_signal.channel_3]
-    time = first_time + second_time
+    time = [[] for channel in range(NUMBER_OF_MICS)]
+    for channel in range(NUMBER_OF_MICS):
+        time[channel] = first_time[channel] + second_time[channel]
 
     # FFT
-    freq = [[] for i in range(NUMBER_OF_MICS)]
-    for i in range(NUMBER_OF_MICS):
-        freq[i] = np.fft.fft(time[i])
+    freq = [[] for channel in range(NUMBER_OF_MICS)]
+    for channel in range(NUMBER_OF_MICS):
+        freq[channel] = np.fft.fft(time[channel])
 
     # COMPUTE TDOA
-    diff = [0 for i in range(NUMBER_OF_MICS)]
-    for i in range(1,NUMBER_OF_MICS):
+    diff = [0 for channel in range(NUMBER_OF_MICS)]
+    for channel in range(1,NUMBER_OF_MICS):
         # ORDINARY GCC-PHAT
-        gcc = np.multiply(freq[0],np.conj(freq[i]))
+        gcc = np.multiply(freq[0],np.conj(freq[channel]))
         phat = np.fft.ifft(np.divide(gcc,np.absolute(gcc)))
         phat = np.absolute(phat)
         index = np.argmax(phat)
@@ -159,9 +161,9 @@ def gccphat():
         # TIME DIFFERENCE
         # DOUBLE CHECK THIS!!!
         if index < FINAL_BUFFERSIZE/4:
-            diff[i] = -u[top] / SAMPLING_FREQUENCY
+            diff[channel] = -u[top] / SAMPLING_FREQUENCY
         else:
-            diff[i] = (FINAL_BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
+            diff[channel] = (FINAL_BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
 
     # PUBLISH
     dt.tdoa_1 = diff[1]
