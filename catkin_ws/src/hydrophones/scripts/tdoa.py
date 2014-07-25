@@ -34,8 +34,10 @@ THRESHOLD = 0.1
 # VARIABLES
 crunching = False
 target = False
+waiting = False
 last_ping_time = time.time()
-signal = channels()
+first_signal = channels()
+second_signal = channels()
 frequencies = freq()
 dt = tdoa()
 
@@ -53,16 +55,16 @@ def update_params():
 
 
 def acquire_target():
-    """ Searches for target frequency in signal """
+    """ Searches for target frequency in first signal """
     global last_ping_time, target
     freq = [np.zeros(BUFFERSIZE/2+1,np.float)
             for i in range(NUMBER_OF_MICS)]
 
     # FFT
-    freq[0] = np.fft.rfft(signal.channel_0)
-    freq[1] = np.fft.rfft(signal.channel_1)
-    freq[2] = np.fft.rfft(signal.channel_2)
-    freq[3] = np.fft.rfft(signal.channel_3)
+    freq[0] = np.fft.rfft(first_signal.channel_0)
+    freq[1] = np.fft.rfft(first_signal.channel_1)
+    freq[2] = np.fft.rfft(first_signal.channel_2)
+    freq[3] = np.fft.rfft(first_signal.channel_3)
 
     # PUBLISH
     frequencies.channel_0.real = np.real(freq[0])
@@ -95,14 +97,19 @@ def acquire_target():
 
 def parse(data):
     """ Deals with subscribed audio data """
-    global crunching, signal
+    global crunching, waiting, first_signal, second_signal
     if not crunching:
         update_params()
-        signal = data
-        if acquire_target():
+        if not waiting:
+            first_signal = data
+            if acquire_target():
+                waiting = True
+        else:
+            second_signal = data
             crunching = True
             gccphat()
             crunching = False
+            waiting = False
 
 
 def interpolate(x,s,u):
@@ -118,8 +125,11 @@ def interpolate(x,s,u):
 def gccphat():
     """ Computes Time Difference of Arrival """
     # PARSE
-    time = [signal.channel_0, signal.channel_1,
-            signal.channel_2, signal.channel_3]
+    first_time = [first_signal.channel_0, first_signal.channel_1,
+                  first_signal.channel_2, first_signal.channel_3]
+    second_time = [second_signal.channel_0, second_signal.channel_1,
+                   second_signal.channel_2, second_signal.channel_3]
+    time = first_time + second_time
 
     # FFT
     freq = [[] for i in range(NUMBER_OF_MICS)]
@@ -137,17 +147,17 @@ def gccphat():
 
         # INTERPOLATION
         begin = max(0,index-5)
-        end = min(index+5,BUFFERSIZE)
+        end = min(index+5,2*BUFFERSIZE)
         s = np.arange(begin,end)
         u = np.arange(begin,end,INTERPOLATION)
         phat_interp = interpolate(phat[begin:end],s,u)
         top = np.argmax(phat_interp)
 
         # TIME DIFFERENCE
-        if index < BUFFERSIZE/4:
+        if index < 2*BUFFERSIZE/4:
             diff[i] = -u[top] / SAMPLING_FREQUENCY
         else:
-            diff[i] = (BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
+            diff[i] = (2*BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
 
     # PUBLISH
     dt.tdoa_1 = diff[1]

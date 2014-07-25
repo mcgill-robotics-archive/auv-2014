@@ -16,7 +16,7 @@ import param
 # PARAMETERS
 try:
     param.set_simulation_parameters()
-    BUFFERSIZE = param.get_buffersize()
+    BUFFERSIZE = 2 * param.get_buffersize()
     LENGTH_OF_PULSE = param.get_pulse_length()
     NUMBER_OF_MICS = param.get_number_of_mics()
     POS = param.get_mic_positions()
@@ -48,7 +48,7 @@ def create_signal(dt):
     t = np.arange(ping)/float(SAMPLING_FREQUENCY)
     chirp = sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
-        signal[i+delta+BUFFERSIZE/2] = chirp[i]
+        signal[i+delta+BUFFERSIZE/4] = chirp[i]
 
     return signal
 
@@ -74,10 +74,22 @@ def simulate():
     dt = compute_tdoa()
     signal = channels()
 
-    signal.channel_0 = create_signal(dt[0])
-    signal.channel_1 = create_signal(dt[1])
-    signal.channel_2 = create_signal(dt[2])
-    signal.channel_3 = create_signal(dt[3])
+    channel_0 = create_signal(dt[0])
+    channel_1 = create_signal(dt[1])
+    channel_2 = create_signal(dt[2])
+    channel_3 = create_signal(dt[3])
+
+    signal.channel_0 = channel_0[:BUFFERSIZE]
+    signal.channel_1 = channel_1[:BUFFERSIZE]
+    signal.channel_2 = channel_2[:BUFFERSIZE]
+    signal.channel_3 = channel_3[:BUFFERSIZE]
+
+    audio_topic.publish(signal)
+
+    signal.channel_0 = channel_0[BUFFERSIZE:]
+    signal.channel_1 = channel_1[BUFFERSIZE:]
+    signal.channel_2 = channel_2[BUFFERSIZE:]
+    signal.channel_3 = channel_3[BUFFERSIZE:]
 
     audio_topic.publish(signal)
 
