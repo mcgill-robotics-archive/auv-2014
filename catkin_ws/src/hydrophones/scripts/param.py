@@ -119,7 +119,7 @@ def get_threshold():
 
 
 def get_practice_pool_side_or_not():
-    """ Returns True if robot is in the practice pool, false otherwise """
+    """ Returns TRUE if robot is in the practice pool, FALSE otherwise """
     while not rospy.has_param('/hydrophones/practice_pool'):
         pass
 
@@ -164,6 +164,19 @@ def get_simulation_state():
     return rospy.get_param('/hydrophones/sim/state')
 
 
+def get_active_pinger():
+    """ Returns TRUE if override pinger switching is active, FALSE otherwise """
+    while not rospy.has_param('/hydrophones/sim/override_active'):
+        pass
+
+    return rospy.get_param('/hydrophones/sim/override_active')
+
+
+def set_active_pinger(state):
+    """ TRUE to override active pinger, FALSE to alternate between target and dummy """
+    rospy.set_param('/hydrophones/sim/override_active',state)
+
+
 def set_simulation_parameters():
     """ Creates and sets ROS simulation parameters """
     rospy.set_param('/hydrophones/sim/state',True)
@@ -173,6 +186,7 @@ def set_simulation_parameters():
     rospy.set_param('/hydrophones/sim/dummy/x',DUMMY_PINGER[0])
     rospy.set_param('/hydrophones/sim/dummy/y',DUMMY_PINGER[1])
     rospy.set_param('/hydrophones/sim/SNR',SNR)
+    rospy.set_param('/hydrophones/sim/override_active',False)
 
 
 def set_parameters():

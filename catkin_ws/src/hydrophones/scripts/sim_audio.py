@@ -9,8 +9,10 @@
 import numpy as np
 import rospy
 import roslib
+import time
 from scipy import signal as sp
 from hydrophones.msg import *
+from std_msgs.msg import Bool
 import param
 
 # PARAMETERS
@@ -32,11 +34,13 @@ except:
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
 audio_topic = rospy.Publisher('/hydrophones/audio', channels)
+new_signal_notification = rospy.Publisher('/hydrophones/sim/target_active', Bool)
 signal = channels()
-rate = rospy.Rate(0.5)
 
 # VARIABLES
-time = np.arange(FINAL_BUFFERSIZE) / float(SAMPLING_FREQUENCY)
+last_ping = time.time()
+delta_time = 0.9
+target = False
 
 
 def create_signal(dt):
@@ -49,7 +53,7 @@ def create_signal(dt):
     signal = np.random.normal(0,1,FINAL_BUFFERSIZE)
     ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
 
-    t = np.arange(ping)/float(SAMPLING_FREQUENCY)
+    t = np.arange(ping) / float(SAMPLING_FREQUENCY)
     chirp = SNR * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
         signal[i+delta+FINAL_BUFFERSIZE/4] += chirp[i]
@@ -57,10 +61,8 @@ def create_signal(dt):
     return signal
 
 
-def compute_tdoa():
+def compute_tdoa(x,y):
     """ Computes expected TDOA """
-    (x,y) = param.get_simulation_target()
-
     times = []
     for i in range(NUMBER_OF_MICS):
         magnitude = np.sqrt((POS[i][0]-x)**2 + (POS[i][1]-y)**2)
@@ -75,27 +77,50 @@ def compute_tdoa():
 
 def simulate():
     ''' Simulates microphone signals '''
-    dt = compute_tdoa()
+    global delta_time, last_ping, target
     signal = channels()
 
-    channel_0 = create_signal(dt[0])
-    channel_1 = create_signal(dt[1])
-    channel_2 = create_signal(dt[2] + LIN_TO_MIC_OFFSET)
-    channel_3 = create_signal(dt[3] + LIN_TO_MIC_OFFSET)
+    if time.time() - last_ping >= delta_time:
+        last_ping = time.time()
+        new_signal_notification.publish(Bool(target))
+        override = param.get_active_pinger()
+        if target or override:
+            (x,y) = param.get_simulation_target()
+            if override:
+                delta_time = 1.10
+            else:
+                delta_time = 0.90
+        else:
+            (x,y) = param.get_simulation_dummy()
+            delta_time = 1.10
 
-    signal.channel_0 = channel_0[:BUFFERSIZE]
-    signal.channel_1 = channel_1[:BUFFERSIZE]
-    signal.channel_2 = channel_2[:BUFFERSIZE]
-    signal.channel_3 = channel_3[:BUFFERSIZE]
+        if not override:
+            target = not target
 
-    audio_topic.publish(signal)
+        dt = compute_tdoa(x,y)
+        channel_0 = create_signal(dt[0])
+        channel_1 = create_signal(dt[1])
+        channel_2 = create_signal(dt[2] + LIN_TO_MIC_OFFSET)
+        channel_3 = create_signal(dt[3] + LIN_TO_MIC_OFFSET)
 
-    signal.channel_0 = channel_0[BUFFERSIZE:]
-    signal.channel_1 = channel_1[BUFFERSIZE:]
-    signal.channel_2 = channel_2[BUFFERSIZE:]
-    signal.channel_3 = channel_3[BUFFERSIZE:]
+        signal.channel_0 = channel_0[:BUFFERSIZE]
+        signal.channel_1 = channel_1[:BUFFERSIZE]
+        signal.channel_2 = channel_2[:BUFFERSIZE]
+        signal.channel_3 = channel_3[:BUFFERSIZE]
+        audio_topic.publish(signal)
 
-    audio_topic.publish(signal)
+        signal.channel_0 = channel_0[BUFFERSIZE:]
+        signal.channel_1 = channel_1[BUFFERSIZE:]
+        signal.channel_2 = channel_2[BUFFERSIZE:]
+        signal.channel_3 = channel_3[BUFFERSIZE:]
+        audio_topic.publish(signal)
+
+    else:
+        signal.channel_0 = np.random.normal(0,1,BUFFERSIZE)
+        signal.channel_1 = np.random.normal(0,1,BUFFERSIZE)
+        signal.channel_2 = np.random.normal(0,1,BUFFERSIZE)
+        signal.channel_3 = np.random.normal(0,1,BUFFERSIZE)
+        # audio_topic.publish(signal)
 
 
 if __name__ == '__main__':
@@ -103,7 +128,6 @@ if __name__ == '__main__':
         rospy.logwarn('SIMULATION RUNNING')
         while not rospy.is_shutdown():
             simulate()
-            rate.sleep()
     except rospy.ROSInterruptException:
         pass
 
