@@ -54,7 +54,7 @@ def create_signal(dt):
 
     # CREATE LINEAR CHIRP
     t = np.arange(ping) / float(SAMPLING_FREQUENCY)
-    chirp = SNR * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
+    chirp = 10**(SNR/20) * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
         signal[i+delta+FINAL_BUFFERSIZE/4] += chirp[i]
 
@@ -138,6 +138,7 @@ def simulate():
 
     rate.sleep()
 
+
 if __name__ == '__main__':
     try:
         rospy.logwarn('SIMULATION RUNNING')
@@ -145,4 +146,3 @@ if __name__ == '__main__':
             simulate()
     except rospy.ROSInterruptException:
         pass
-
