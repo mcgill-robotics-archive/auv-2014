@@ -191,7 +191,7 @@ def tdoa_table():
 
     for channel in range(NUMBER_OF_MICS-1):
         state = 0
-        if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 2e-6:
+        if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 3e-6:
             state = 2
 
         string = ' %s\t\t\t%+1.9f\t\n' % (LABELS[channel], dt[channel])
@@ -204,10 +204,10 @@ def solution_table():
     """ Draws table of solutions """
     x, y, r, theta = [], [], [], []
     for pinger in range(NUMBER_OF_PINGERS):
-        x.append(' X\t\t\t%+4.3f\t\t\n' % (sol[pinger]['x']))
-        y.append(' Y\t\t\t%+4.3f\t\t\n' % (sol[pinger]['y']))
-        r.append(' R\t\t\t%+4.3f\t\t\n' % (sol[pinger]['r']))
-        theta.append(' THETA\t\t\t%+4.3f\t\t\n' % (sol[pinger]['theta']))
+        x.append(' X\t\t\t%+4.2f\t\t\n' % (sol[pinger]['x']))
+        y.append(' Y\t\t\t%+4.2f\t\t\n' % (sol[pinger]['y']))
+        r.append(' R\t\t\t%+4.2f\t\t\n' % (sol[pinger]['r']))
+        theta.append(' THETA\t\t\t%+4.2f\t\t\n' % (sol[pinger]['theta']))
 
     header = ['\n TARGET PINGER\t\t', '\n DUMMY PINGER\t\t']
 
