@@ -6,7 +6,7 @@ import numpy as np
 import rospy
 import roslib
 from hydrophones.msg import *
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Float64
 import param
 
 # PARAMETERS
@@ -22,8 +22,10 @@ except:
 rospy.init_node('solver')
 solver_topic = rospy.Publisher('/hydrophones/sol',solution)
 are_we_there_yet_topic = rospy.Publisher('/hydrophones/are_we_there_yet',Bool)
+yaw_topic = rospy.Publisher('/hydrophones/target',Float64)
 sol = solution()
 yes = Bool()
+yaw = Float64()
 
 
 def solve(data):
@@ -63,6 +65,14 @@ def solve(data):
     else:
         yes.data = False
     are_we_there_yet_topic.publish(yes)
+
+    # PUBLISH YAW WITH FIX FOR COORDINATE SYSTEM
+    if sol.target:
+        theta = 90 - sol.polar.theta
+        if theta > 180:
+            theta -= 360
+        yaw.data = np.radians(theta)
+        yaw_topic.publish(yaw)
 
 
 if __name__ == '__main__':
