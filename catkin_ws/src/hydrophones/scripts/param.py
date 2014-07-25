@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE PARAMETERS FROM COMPETITION
-
 # IMPORTS
 import rospy
 

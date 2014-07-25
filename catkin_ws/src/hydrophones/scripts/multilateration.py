@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE FROM COMPETITION
-
 # IMPORTS
 from ctypes import *
 import numpy as np

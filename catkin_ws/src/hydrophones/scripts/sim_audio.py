@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-# TODO: ADD NOISE
-#       USE SNR CORRECTLY
-#       3 DIMENSIONS
-#       SIMULATE BOTH PRACTICE AND COMPETITION
+# TODO: 3 DIMENSIONS (RPY)
 
 # IMPORTS
 import numpy as np
