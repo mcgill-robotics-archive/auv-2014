@@ -31,8 +31,8 @@ def compute_tdoa(target):
         (x,y) = param.get_simulation_dummy()
 
     times = []
-    for i in range(NUMBER_OF_MICS):
-        magnitude = np.sqrt((POS[i][0]-x)**2 + (POS[i][1]-y)**2)
+    for channel in range(NUMBER_OF_MICS):
+        magnitude = np.sqrt((POS[channel][0]-x)**2 + (POS[channel][1]-y)**2)
         times.append(magnitude/SPEED)
 
     dt.tdoa_1 = times[1] - times[0]

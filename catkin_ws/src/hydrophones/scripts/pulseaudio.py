@@ -51,7 +51,7 @@ def setup():
 
 
 def read():
-    ''' Reads signal from microphones '''
+    """ Reads signal from microphones """
     stream = []
     for card in inputs:
         data = np.fromstring(inputs[card].read(BUFFERSIZE),
@@ -67,7 +67,7 @@ def read():
 
 
 def close():
-    ''' Closes audio streams '''
+    """ Closes audio streams """
     audio.close(mic)
     audio.close(lin)
     audio.terminate()

@@ -114,6 +114,7 @@ def update_solution(data):
 
 
 def update_parameters():
+    """ Updates parameters on the fly """
     global SIMULATION, SNR, TARGET_FREQUENCY, TARGET_INDEX
     SIMULATION = param.get_simulation_state()
     TARGET_FREQUENCY = param.get_target_frequency()

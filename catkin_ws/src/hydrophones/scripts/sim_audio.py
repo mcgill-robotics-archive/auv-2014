@@ -46,10 +46,12 @@ def create_signal(dt):
     SNR = param.get_snr()
     TARGET_FREQUENCY = param.get_target_frequency()
 
+    # SETUP
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
     signal = np.random.normal(0,1,FINAL_BUFFERSIZE)
     ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
 
+    # CREATE LINEAR CHIRP
     t = np.arange(ping) / float(SAMPLING_FREQUENCY)
     chirp = SNR * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
@@ -61,12 +63,12 @@ def create_signal(dt):
 def compute_tdoa(x,y):
     """ Computes expected TDOA """
     times = []
-    for i in range(NUMBER_OF_MICS):
-        magnitude = np.sqrt((POS[i][0]-x)**2 + (POS[i][1]-y)**2)
+    for channel in range(NUMBER_OF_MICS):
+        magnitude = np.sqrt((POS[channel][0]-x)**2 + (POS[channel][1]-y)**2)
         times.append(magnitude/SPEED)
 
-    for i in range(1,NUMBER_OF_MICS):
-        times[i] -= times[0]
+    for channel in range(1,NUMBER_OF_MICS):
+        times[channel] -= times[0]
     times[0] = 0
 
     return times
@@ -77,7 +79,9 @@ def simulate():
     global delta_time, last_ping, target
     signal = channels()
 
+    # CHECK IF TIME FOR PING
     if time.time() - last_ping >= delta_time:
+        # SETUP AND DETERMINE PINGER
         last_ping = time.time()
         new_signal_notification.publish(Bool(target))
         override = not param.get_switching()
@@ -90,22 +94,24 @@ def simulate():
         else:
             (x,y) = param.get_simulation_dummy()
             delta_time = 1.10
-
         if not override:
             target = not target
 
+        # COMPUTE TDOA AND CREATE SIGNALS
         dt = compute_tdoa(x,y)
         channel_0 = create_signal(dt[0])
         channel_1 = create_signal(dt[1])
         channel_2 = create_signal(dt[2] + LIN_TO_MIC_OFFSET)
         channel_3 = create_signal(dt[3] + LIN_TO_MIC_OFFSET)
 
+        # CREATE FIRST SIGNAL
         signal.channel_0 = channel_0[:BUFFERSIZE]
         signal.channel_1 = channel_1[:BUFFERSIZE]
         signal.channel_2 = channel_2[:BUFFERSIZE]
         signal.channel_3 = channel_3[:BUFFERSIZE]
         audio_topic.publish(signal)
 
+        # CREATE SECOND SIGNAL
         signal.channel_0 = channel_0[BUFFERSIZE:]
         signal.channel_1 = channel_1[BUFFERSIZE:]
         signal.channel_2 = channel_2[BUFFERSIZE:]
@@ -113,11 +119,13 @@ def simulate():
         audio_topic.publish(signal)
 
     else:
+        # CREATE NOISY SOUND OTHERWISE
         signal.channel_0 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_1 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_2 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_3 = np.random.normal(0,1,BUFFERSIZE)
 
+        # CHECK OVERRIDE
         if param.get_continuous():
             audio_topic.publish(signal)
 

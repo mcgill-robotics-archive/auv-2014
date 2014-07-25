@@ -79,8 +79,8 @@ def acquire_target():
     freq_topic.publish(frequencies)
 
     # DETERMINE IF TARGET FREQUENCY APPEARS
-    for i in range(NUMBER_OF_MICS):
-        magnitude = 20*np.log10(np.abs(freq[i][TARGET_INDEX]))
+    for channel in range(NUMBER_OF_MICS):
+        magnitude = 20*np.log10(np.abs(freq[channel][TARGET_INDEX]))
         if magnitude > THRESHOLD:
             # CHECK IF TARGET PING OR DUMMY PING
             current_time = time.time()
