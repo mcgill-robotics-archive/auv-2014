@@ -6,7 +6,7 @@
 import rospy
 
 # DEFAULT PARAMETERS
-BUFFERSIZE = 4096           # SIZE OF FFT BUFFER
+BUFFERSIZE = 2048           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
 TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
@@ -26,10 +26,18 @@ SNR = 20                    # SIGNAL TO NOISE RATIO         dB
 
 def get_buffersize():
     """ Returns buffersize """
-    while not rospy.has_param('/hydrophones/buffersize'):
+    while not rospy.has_param('/hydrophones/buffersize/initial'):
         pass
 
-    return int(rospy.get_param('/hydrophones/buffersize'))
+    return int(rospy.get_param('/hydrophones/buffersize/initial'))
+
+
+def get_final_buffersize():
+    """ Returns buffersize """
+    while not rospy.has_param('/hydrophones/buffersize/final'):
+        pass
+
+    return int(rospy.get_param('/hydrophones/buffersize/final'))
 
 
 def get_number_of_mics():
@@ -171,7 +179,8 @@ def set_parameters():
     """ Creates and sets default ROS parameters """
     rospy.set_param('/hydrophones/sim/state',False)
 
-    rospy.set_param('/hydrophones/buffersize',BUFFERSIZE)
+    rospy.set_param('/hydrophones/buffersize/initial',BUFFERSIZE)
+    rospy.set_param('/hydrophones/buffersize/final',2*BUFFERSIZE)
     rospy.set_param('/hydrophones/number_of_mics',NUMBER_OF_MICS)
     rospy.set_param('/hydrophones/speed',SPEED)
     rospy.set_param('/hydrophones/fs',SAMPLING_FREQUENCY)

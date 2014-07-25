@@ -16,7 +16,8 @@ import param
 # PARAMETERS
 try:
     param.set_simulation_parameters()
-    BUFFERSIZE = 2 * param.get_buffersize()
+    BUFFERSIZE = param.get_buffersize()
+    FINAL_BUFFERSIZE = param.get_final_buffersize()
     LIN_TO_MIC_OFFSET = param.get_line_in_offset()
     LENGTH_OF_PULSE = param.get_pulse_length()
     NUMBER_OF_MICS = param.get_number_of_mics()
@@ -35,7 +36,7 @@ signal = channels()
 rate = rospy.Rate(0.5)
 
 # VARIABLES
-time = np.arange(BUFFERSIZE) / float(SAMPLING_FREQUENCY)
+time = np.arange(FINAL_BUFFERSIZE) / float(SAMPLING_FREQUENCY)
 
 
 def create_signal(dt):
@@ -45,13 +46,13 @@ def create_signal(dt):
     TARGET_FREQUENCY = param.get_target_frequency()
 
     delta = np.ceil(dt*SAMPLING_FREQUENCY)
-    signal = np.zeros(BUFFERSIZE,np.float32)
+    signal = np.zeros(FINAL_BUFFERSIZE,np.float32)
     ping = int(round(LENGTH_OF_PULSE*SAMPLING_FREQUENCY))
 
     t = np.arange(ping)/float(SAMPLING_FREQUENCY)
     chirp = SNR * sp.chirp(t, TARGET_FREQUENCY - 200, t[ping/4], TARGET_FREQUENCY, phi=90)
     for i in range(ping):
-        signal[i+delta+BUFFERSIZE/4] = chirp[i]
+        signal[i+delta+FINAL_BUFFERSIZE/4] = chirp[i]
 
     return signal
 

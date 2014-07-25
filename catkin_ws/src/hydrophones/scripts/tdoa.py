@@ -17,6 +17,7 @@ import time
 # PARAMETERS
 try:
     BUFFERSIZE = param.get_buffersize()
+    FINAL_BUFFERSIZE = param.get_final_buffersize()
     LIN_TO_MIC_OFFSET = param.get_line_in_offset()
     NUMBER_OF_MICS = param.get_number_of_mics()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
@@ -149,17 +150,17 @@ def gccphat():
 
         # INTERPOLATION
         begin = max(0,index-5)
-        end = min(index+5,2*BUFFERSIZE)
+        end = min(index+5,FINAL_BUFFERSIZE)
         s = np.arange(begin,end)
         u = np.arange(begin,end,INTERPOLATION)
         phat_interp = interpolate(phat[begin:end],s,u)
         top = np.argmax(phat_interp)
 
         # TIME DIFFERENCE
-        if index < 2*BUFFERSIZE/4:
+        if index < FINAL_BUFFERSIZE/4:
             diff[i] = -u[top] / SAMPLING_FREQUENCY
         else:
-            diff[i] = (2*BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
+            diff[i] = (FINAL_BUFFERSIZE - u[top]) / SAMPLING_FREQUENCY
 
     # PUBLISH
     dt.tdoa_1 = diff[1]
