@@ -8,6 +8,7 @@ import numpy as np
 import rospy
 import roslib
 from hydrophones.msg import *
+from std_msgs.msg import Bool
 import param
 
 # PARAMETERS
@@ -22,7 +23,9 @@ except:
 # SET UP NODE AND TOPIC
 rospy.init_node('solver')
 solver_topic = rospy.Publisher('/hydrophones/sol',solution)
+are_we_there_yet_topic = rospy.Publisher('/hydrophones/are_we_there_yet',Bool)
 sol = solution()
+yes = Bool()
 
 
 def solve(data):
@@ -48,13 +51,20 @@ def solve(data):
     # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
-    # PUBLISH
+    # PUBLISH SOLUTION
     sol.cartesian.x = x
     sol.cartesian.y = y
     sol.polar.r = np.sqrt(x**2 + y**2)
     sol.polar.theta = np.degrees(np.arctan2(y,x))
     sol.target = data.target
     solver_topic.publish(sol)
+
+    # PUBLISH IF THE PINGER BELOW US
+    if sol.target and sol.polar.r <= 0.5:
+        yes.data = True
+    else:
+        yes.data = False
+    are_we_there_yet_topic.publish(yes)
 
 
 if __name__ == '__main__':
