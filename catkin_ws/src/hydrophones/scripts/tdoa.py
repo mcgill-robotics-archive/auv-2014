@@ -10,7 +10,6 @@ import rospy
 import roslib
 from hydrophones.msg import *
 import param
-import time
 
 # PARAMETERS
 try:
@@ -31,21 +30,20 @@ FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 INTERPOLATION = 0.001
 
+# NODE AND PUBLISHERS
+rospy.init_node('tdoa')
+tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
+freq_topic = rospy.Publisher('/hydrophones/freq',freq, tcp_nodelay=True, queue_size=0)
+
 # VARIABLES
 crunching = False
 target = False
 waiting = False
-last_ping_time = time.time()
+last_ping_time = rospy.Time.now()
 first_signal = channels()
 second_signal = channels()
 frequencies = freq()
 dt = tdoa()
-
-# NODE AND PUBLISHERS
-rospy.init_node('tdoa')
-tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
-freq_topic = rospy.Publisher('/hydrophones/freq',freq)
-
 
 def update_params():
     """ Updates target frequency """
@@ -83,14 +81,14 @@ def acquire_target():
         magnitude = 20*np.log10(np.abs(freq[channel][TARGET_INDEX]))
         if magnitude > THRESHOLD:
             # CHECK IF TARGET PING OR DUMMY PING
-            current_time = time.time()
-            if current_time - last_ping_time > 1:
+            current_time = first_signal.stamp
+            delta_time = current_time - last_ping_time
+            if delta_time > rospy.Duration(1):
                 target = not PRACTICE
             else:
                 target = PRACTICE
-
-            rospy.logwarn("Triggered on %s at %3.2f dB",
-                          'TARGET' if target else 'DUMMY ', magnitude)
+            rospy.logwarn("Triggered on %s at %3.2f dB after %1.3f s",
+                          'TARGET' if target else 'DUMMY ', magnitude, delta_time.to_sec())
             last_ping_time = current_time
 
             return True

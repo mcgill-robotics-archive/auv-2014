@@ -21,7 +21,7 @@ except:
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
-audio_topic = rospy.Publisher('/hydrophones/audio', channels)
+audio_topic = rospy.Publisher('/hydrophones/audio', channels, tcp_nodelay=True, queue_size=0)
 signal = channels()
 
 
@@ -61,6 +61,7 @@ def read():
     signal.channel_1 = stream[1]
     signal.channel_2 = stream[2]
     signal.channel_3 = stream[3]
+    signal.stamp = rospy.Time.now()
 
     audio_topic.publish(signal)
 
@@ -81,6 +82,7 @@ if __name__ == '__main__':
 
         while not rospy.is_shutdown():
             read()
+            rospy.spin
     except rospy.ROSInterruptException:
         pass
 

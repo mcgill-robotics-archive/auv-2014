@@ -19,9 +19,9 @@ except:
 
 # SET UP NODE AND TOPIC
 rospy.init_node('analyzer')
-magn_topic = rospy.Publisher('/hydrophones/magn',channels)
-peak_topic = rospy.Publisher('/hydrophones/peak',peaks)
-peak_magn_topic = rospy.Publisher('/hydrophones/peak_magn',peaks)
+magn_topic = rospy.Publisher('/hydrophones/magn',channels, tcp_nodelay=True, queue_size=0)
+peak_topic = rospy.Publisher('/hydrophones/peak',peaks, tcp_nodelay=True, queue_size=0)
+peak_magn_topic = rospy.Publisher('/hydrophones/peak_magn',peaks, tcp_nodelay=True, queue_size=0)
 magnitudes = channels()
 peak_magn = peaks()
 peaks = peaks()

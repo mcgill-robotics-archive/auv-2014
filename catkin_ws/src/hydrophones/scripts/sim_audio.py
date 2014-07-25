@@ -30,8 +30,9 @@ except:
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
-audio_topic = rospy.Publisher('/hydrophones/audio', channels)
+audio_topic = rospy.Publisher('/hydrophones/audio', channels, tcp_nodelay=True, queue_size=0)
 new_signal_notification = rospy.Publisher('/hydrophones/sim/target_active', Bool)
+rate = rospy.Rate(SAMPLING_FREQUENCY/float(BUFFERSIZE))
 signal = channels()
 
 # VARIABLES
@@ -80,7 +81,8 @@ def simulate():
     signal = channels()
 
     # CHECK IF TIME FOR PING
-    if time.time() - last_ping >= delta_time:
+    dt = time.time() - last_ping
+    if dt >= delta_time:
         # SETUP AND DETERMINE PINGER
         last_ping = time.time()
         new_signal_notification.publish(Bool(target))
@@ -109,13 +111,17 @@ def simulate():
         signal.channel_1 = channel_1[:BUFFERSIZE]
         signal.channel_2 = channel_2[:BUFFERSIZE]
         signal.channel_3 = channel_3[:BUFFERSIZE]
+        signal.stamp = rospy.Time.now()
         audio_topic.publish(signal)
+
+        rate.sleep()
 
         # CREATE SECOND SIGNAL
         signal.channel_0 = channel_0[BUFFERSIZE:]
         signal.channel_1 = channel_1[BUFFERSIZE:]
         signal.channel_2 = channel_2[BUFFERSIZE:]
         signal.channel_3 = channel_3[BUFFERSIZE:]
+        signal.stamp = rospy.Time.now()
         audio_topic.publish(signal)
 
     else:
@@ -124,11 +130,13 @@ def simulate():
         signal.channel_1 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_2 = np.random.normal(0,1,BUFFERSIZE)
         signal.channel_3 = np.random.normal(0,1,BUFFERSIZE)
+        signal.stamp = rospy.Time.now()
 
         # CHECK OVERRIDE
         if param.get_continuous():
             audio_topic.publish(signal)
 
+    rate.sleep()
 
 if __name__ == '__main__':
     try:
