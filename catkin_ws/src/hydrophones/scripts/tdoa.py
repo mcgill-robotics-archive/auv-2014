@@ -32,8 +32,8 @@ INTERPOLATION = 0.001
 
 # NODE AND PUBLISHERS
 rospy.init_node('tdoa')
-tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa)
-freq_topic = rospy.Publisher('/hydrophones/freq',freq, tcp_nodelay=True, queue_size=0)
+tdoa_topic = rospy.Publisher('/hydrophones/tdoa',tdoa,tcp_nodelay=True,queue_size=0)
+freq_topic = rospy.Publisher('/hydrophones/freq',freq)
 
 # VARIABLES
 crunching = False
@@ -108,9 +108,9 @@ def parse(data):
         else:
             second_signal = data
             crunching = True
+            waiting = False
             gccphat()
             crunching = False
-            waiting = False
 
 
 def interpolate(x,s,u):

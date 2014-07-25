@@ -37,7 +37,7 @@ signal = channels()
 
 # VARIABLES
 last_ping = time.time()
-delta_time = 0.9
+delta_time = 0.90
 target = False
 
 
