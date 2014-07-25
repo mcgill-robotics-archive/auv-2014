@@ -17,10 +17,12 @@ import time
 # PARAMETERS
 try:
     BUFFERSIZE = param.get_buffersize()
+    LIN_TO_MIC_OFFSET = param.get_line_in_offset()
     NUMBER_OF_MICS = param.get_number_of_mics()
     SAMPLING_FREQUENCY = param.get_sampling_frequency()
     TARGET_FREQUENCY = param.get_target_frequency()
     PRACTICE = param.get_practice_pool_side_or_not()
+    THRESHOLD = param.get_threshold()
 except:
     print 'ROS NOT RUNNING'
     exit(1)
@@ -29,7 +31,6 @@ except:
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 INTERPOLATION = 0.001
-THRESHOLD = 0.1
 
 # VARIABLES
 crunching = False
@@ -49,9 +50,10 @@ freq_topic = rospy.Publisher('/hydrophones/freq',freq)
 
 def update_params():
     """ Updates target frequency """
-    global TARGET_FREQUENCY, TARGET_INDEX
+    global TARGET_FREQUENCY, TARGET_INDEX, THRESHOLD
     TARGET_FREQUENCY = param.get_target_frequency()
     TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
+    THRESHOLD = param.get_threshold()
 
 
 def acquire_target():
@@ -161,8 +163,8 @@ def gccphat():
 
     # PUBLISH
     dt.tdoa_1 = diff[1]
-    dt.tdoa_2 = diff[2]
-    dt.tdoa_3 = diff[3]
+    dt.tdoa_2 = diff[2] - LIN_TO_MIC_OFFSET
+    dt.tdoa_3 = diff[3] - LIN_TO_MIC_OFFSET
     dt.target = target
     tdoa_topic.publish(dt)
 

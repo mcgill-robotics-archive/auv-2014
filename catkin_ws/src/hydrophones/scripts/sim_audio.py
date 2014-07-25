@@ -17,6 +17,7 @@ import param
 try:
     param.set_simulation_parameters()
     BUFFERSIZE = 2 * param.get_buffersize()
+    LIN_TO_MIC_OFFSET = param.get_line_in_offset()
     LENGTH_OF_PULSE = param.get_pulse_length()
     NUMBER_OF_MICS = param.get_number_of_mics()
     POS = param.get_mic_positions()
@@ -76,8 +77,8 @@ def simulate():
 
     channel_0 = create_signal(dt[0])
     channel_1 = create_signal(dt[1])
-    channel_2 = create_signal(dt[2])
-    channel_3 = create_signal(dt[3])
+    channel_2 = create_signal(dt[2] + LIN_TO_MIC_OFFSET)
+    channel_3 = create_signal(dt[3] + LIN_TO_MIC_OFFSET)
 
     signal.channel_0 = channel_0[:BUFFERSIZE]
     signal.channel_1 = channel_1[:BUFFERSIZE]

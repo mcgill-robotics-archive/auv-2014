@@ -15,6 +15,8 @@ DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
+LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
+THRESHOLD = 0.1             # THRESHOLD FOR PING            dB      (experimental)
 
 # SIMULATION PARAMETERS
 TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
@@ -92,6 +94,22 @@ def get_mic_positions():
     return pos
 
 
+def get_line_in_offset():
+    """ Returns LINE IN to MIC offset in seconds """
+    while not rospy.has_param('/hydrophones/offset'):
+        pass
+
+    return rospy.get_param('/hydrophones/offset')
+
+
+def get_threshold():
+    """ Returns threshold determining ping """
+    while not rospy.has_param('/hydrophones/threshold'):
+        pass
+
+    return rospy.get_param('/hydrophones/threshold')
+
+
 def get_practice_pool_side_or_not():
     """ Returns True if robot is in the practice pool, false otherwise """
     while not rospy.has_param('/hydrophones/practice_pool'):
@@ -160,6 +178,9 @@ def set_parameters():
     rospy.set_param('/hydrophones/target',TARGET_FREQUENCY)
     rospy.set_param('/hydrophones/depth',DEPTH_OF_PINGER)
     rospy.set_param('/hydrophones/ping_length',LENGTH_OF_PULSE)
+
+    rospy.set_param('/hydrophones/offset',LIN_TO_MIC_OFFSET)
+    rospy.set_param('/hydrophones/threshold',THRESHOLD)
 
     rospy.set_param('/hydrophones/pos/0/x',0)
     rospy.set_param('/hydrophones/pos/0/y',0)
