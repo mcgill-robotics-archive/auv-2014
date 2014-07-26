@@ -35,12 +35,12 @@ void Task_Lane::execute() {
 	myStatusUpdater->updateStatus(myStatusUpdater->lane2);
 	loop_rate.sleep();
 	
-	// From here we can turn right now (right after we detected the line), or
+	// From here we can turn right now (right after we detected the Lane), or
 	// wait for the distance threshold to be reached.
-    if (myPlanner->getUseDistanceWithLineThreshold()) {
-    	// While our relative distance with the line is bigger than the threshold continue moving forward.
-
-    	while(myPlanner->getCurrentX(imuFrame) > myPlanner->getRelativeDistanceWithLineThreshold()) {
+    if (myPlanner->getUseDistanceToLaneThreshold()) {
+    	ROS_INFO("Going to use distance to lane threshold");
+    	// While our relative distance with the Lane is bigger than the threshold continue moving forward.
+    	while(myPlanner->getCurrentX(imuFrame) > myPlanner->getRelativeDistanceToLaneThreshold()) {
     		myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), imuFrame);
         	loop_rate.sleep();
     	}
@@ -51,9 +51,9 @@ void Task_Lane::execute() {
 
 	// From here we can either take the value given by cv or the hardcoded one:
 	
-	if (myPlanner->getUseHardcodedLineAngleAfterGate()) {
-		// TODO (ejeadry) set the desired relative yaw to be the one set in 'hardcodedRelativeLineAngleAfterGate'
-		double hardcodedYaw = myPlanner->getHardcodedRelativeLineAngleAfterGate();
+	if (myPlanner->getUseHardcodedLaneAngleAfterGate()) {
+		// TODO (ejeadry) set the desired relative yaw to be the one set in 'hardcodedRelativeLaneAngleAfterGate'
+		double hardcodedYaw = myPlanner->getHardcodedRelativeLaneAngleAfterGate();
 
 		while (!(fabs(myPlanner->getCurrentYaw(imuFrame) - hardcodedYaw) < myPlanner->getYawBound())) {
 			myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, hardcodedYaw, 0, myPlanner->getCloseLoopDepth(), imuFrame);
@@ -110,8 +110,8 @@ void Task_Lane::goStraightFromCurrentPosition(std::string frame) {
 	        ros::spinOnce();
 	}
 
-	// We have the possibility of executing the hydrophones task after the linet task is completed.
-	if (myPlanner->getDoHydrophonesAfterLine()) {
+	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
+	if (myPlanner->getDoHydrophonesAfterLane()) {
 		// TODO (ejeadry) Implement the hydrophones task
 		double estimatedRelativeAngleOfPinger = myPlanner->getEstimatedRelativeAngleForThePinger();
 

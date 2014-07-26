@@ -104,24 +104,24 @@ double Planner::getCurrentYaw(std::string referenceFrame) {
 //##############################################################################
 // Newly added parameters for the multiple competition scenario:         [START]
 //##############################################################################
-bool Planner::getUseHardcodedLineAngleAfterGate() {
-	return useHardcodedLineAngleAfterGate;
+bool Planner::getUseHardcodedLaneAngleAfterGate() {
+	return useHardcodedLaneAngleAfterGate;
 }
 
-double Planner::getHardcodedRelativeLineAngleAfterGate() {
-	return hardcodedRelativeLineAngleAfterGate;
+double Planner::getHardcodedRelativeLaneAngleAfterGate() {
+	return hardcodedRelativeLaneAngleAfterGate;
 }
 
-bool Planner::getUseDistanceWithLineThreshold() {
-	return useDistanceWithLineThreshold;
+bool Planner::getUseDistanceToLaneThreshold() {
+	return useDistanceToLaneThreshold;
 }
 
-double Planner::getRelativeDistanceWithLineThreshold() {
-	return relativeDistanceWithLineThreshold;
+double Planner::getRelativeDistanceToLaneThreshold() {
+	return relativeDistanceToLaneThreshold;
 }
 
-bool Planner::getDoHydrophonesAfterLine() {
-	return doHydrophonesAfterLine;
+bool Planner::getDoHydrophonesAfterLane() {
+	return doHydrophonesAfterLane;
 }
 
 double Planner::getEstimatedRelativeAngleForThePinger() {
@@ -483,11 +483,11 @@ Planner::Planner(ros::NodeHandle& n) {
 	//##############################################################################
 	// Newly added parameters for the multiple competition scenario:         [START]
 	//##############################################################################
-	nodeHandle.param<bool>("useHardcodedLineAngleAfterGate", useHardcodedLineAngleAfterGate, false);
-	nodeHandle.param<double>("hardcodedRelativeLineAngleAfterGate", hardcodedRelativeLineAngleAfterGate, 0.0);
-	nodeHandle.param<bool>("useDistanceWithLineThreshold", useDistanceWithLineThreshold, false);
-	nodeHandle.param<double>("relativeDistanceWithLineThreshold", relativeDistanceWithLineThreshold, 0.0);
-	nodeHandle.param<bool>("doHydrophonesAfterLine", doHydrophonesAfterLine, false);
+	nodeHandle.param<bool>("useHardcodedLaneAngleAfterGate", useHardcodedLaneAngleAfterGate, false);
+	nodeHandle.param<double>("hardcodedRelativeLaneAngleAfterGate", hardcodedRelativeLaneAngleAfterGate, 0.0);
+	nodeHandle.param<bool>("useDistanceToLaneThreshold", useDistanceToLaneThreshold, false);
+	nodeHandle.param<double>("relativeDistanceToLaneThreshold", relativeDistanceToLaneThreshold, 0.0);
+	nodeHandle.param<bool>("doHydrophonesAfterLane", doHydrophonesAfterLane, false);
 	nodeHandle.param<double>("estimatedRelativeAngleForThePinger", estimatedRelativeAngleForThePinger, 0.0);
 	nodeHandle.param<bool>("usingTimerForHydrophonesInsteadOfDistance", usingTimerForHydrophonesInsteadOfDistance, false);
 	nodeHandle.param<double>("relativeDistanceForHydrophonesTask", relativeDistanceForHydrophonesTask, 0.0);
@@ -545,7 +545,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	 * so that the diver doesn't have to unplug the Ethernet cable, which can be hard to do with the new connectors.
 	 */
 	while (!n.getParam("/go", go) || go != 1) {
-		//wait for "go" command from command line
+		//wait for "go" command from command Lane
     	ROS_INFO_ONCE("Waiting for the 'go' command: rosparam set /go 1");
 	}
 	/*

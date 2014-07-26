@@ -59,11 +59,11 @@ class Planner{
 	double getYawBound();
 
 	// Newly added getters for the multiple competition scenarios:
-	bool getUseHardcodedLineAngleAfterGate();
-	double getHardcodedRelativeLineAngleAfterGate();
-	bool getUseDistanceWithLineThreshold();
-	double getRelativeDistanceWithLineThreshold();
-	bool getDoHydrophonesAfterLine();
+	bool getUseHardcodedLaneAngleAfterGate();
+	double getHardcodedRelativeLaneAngleAfterGate();
+	bool getUseDistanceToLaneThreshold();
+	double getRelativeDistanceToLaneThreshold();
+	bool getDoHydrophonesAfterLane();
 	double getEstimatedRelativeAngleForThePinger();
 	bool getUsingTimerForHydrophonesInsteadOfDistance();
 	double getRelativeDistanceForHydrophonesTask();
@@ -107,11 +107,11 @@ class Planner{
 	double laneTimeout;
 
 	// Newly added parameters for the multiple competition scenario
-	bool useHardcodedLineAngleAfterGate;
-	double hardcodedRelativeLineAngleAfterGate;
-	bool useDistanceWithLineThreshold;
-	double relativeDistanceWithLineThreshold;
-	bool doHydrophonesAfterLine;
+	bool useHardcodedLaneAngleAfterGate;
+	double hardcodedRelativeLaneAngleAfterGate;
+	bool useDistanceToLaneThreshold;
+	double relativeDistanceToLaneThreshold;
+	bool doHydrophonesAfterLane;
 	double estimatedRelativeAngleForThePinger;
 	bool usingTimerForHydrophonesInsteadOfDistance;
 	double relativeDistanceForHydrophonesTask;
