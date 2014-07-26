@@ -88,7 +88,7 @@ void Task_Lane::execute() {
 	loop_rate.sleep();
 	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
 	loop_rate.sleep();
-	myStatusUpdater->updateStatus(myStatusUpdater->line3);
+	myStatusUpdater->updateStatus(myStatusUpdater->lane3);
 	loop_rate.sleep();
 
 	goStraightFromCurrentPosition(frame);

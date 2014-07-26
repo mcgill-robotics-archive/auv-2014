@@ -7,9 +7,9 @@ closeLoopDepth: 1.00                                # Only used when openLoopDep
 surgeSpeed: -3.00                                   # The surge speed
 
                                                     # Newly added parameters for the multiple competition scenario:
-useHardcodedLineAngleAfterGate: false               # Are we using the hardcoded relative angle or the one given by CV?
+useHardcodedLineAngleAfterGate: true                # Are we using the hardcoded relative angle or the one given by CV?
 hardcodedRelativeLineAngleAfterGate: -30.00         # Only used if 'useHardcodedLineAngleAfterGate' is set to 'true'
-useDistanceWithLineThreshold: false                 # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
+useDistanceWithLineThreshold: true                  # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
 relativeDistanceWithLineThreshold: 1.00             # Only used if 'useDistanceWithLineThreshold' is set to 'true'
 doHydrophonesAfterLine: false                       # Do we execute the hydrophones task after the line task is completed?
 estimatedRelativeAngleForThePinger: 0.00            # Only used if 'doHydrophonesAfterLine' is set to 'true'
