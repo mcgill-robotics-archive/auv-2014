@@ -59,10 +59,16 @@ void Task_Lane::execute() {
 	if (myPlanner->getUseHardcodedLaneAngleAfterGate()) {
 		double hardcodedYaw = myPlanner->getHardcodedRelativeLaneAngleAfterGate();
 
-		ROS_INFO("Using hardcoded yaw for lane: %f", hardcodedYaw);
+		ROS_INFO("Using hardcoded yaw for lane: %f radians", hardcodedYaw);
 
-		while (!(fabs(myPlanner->getCurrentYaw(imuFrame) - hardcodedYaw) < myPlanner->getYawBound())) {
+		double currentYaw = myPlanner->getCurrentYaw(imuFrame);
+		while (!(fabs(currentYaw - hardcodedYaw) < myPlanner->getYawBound())) {
 			myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, hardcodedYaw, 0, myPlanner->getCloseLoopDepth(), imuFrame);
+			currentYaw = myPlanner->getCurrentYaw(imuFrame);
+
+			ROS_INFO_THROTTLE(1, "ORIENTATION:");
+			ROS_INFO_THROTTLE(1, "Current yaw: %f    Desired yaw: %f", currentYaw, hardcodedYaw);
+			ROS_INFO_THROTTLE(1, "Current - Desired: %f", currentYaw - hardcodedYaw);
 		}
 
 	} else { //use relative angle from CV
