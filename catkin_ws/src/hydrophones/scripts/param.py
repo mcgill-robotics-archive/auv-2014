@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE PARAMETERS FROM COMPETITION
-
 # IMPORTS
 import rospy
 
 # DEFAULT PARAMETERS
-BUFFERSIZE = 1024           # SIZE OF FFT BUFFER
+BUFFERSIZE = 1024           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
 TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
-LENGTH_OF_PULSE = 1.3e-3    # LENGTH OF PING                s
+LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
@@ -24,10 +22,18 @@ SNR = 20                    # SIGNAL TO NOISE RATIO         dB
 
 def get_buffersize():
     """ Returns buffersize """
-    while not rospy.has_param('/hydrophones/buffersize'):
+    while not rospy.has_param('/hydrophones/buffersize/initial'):
         pass
 
-    return int(rospy.get_param('/hydrophones/buffersize'))
+    return int(rospy.get_param('/hydrophones/buffersize/initial'))
+
+
+def get_final_buffersize():
+    """ Returns buffersize """
+    while not rospy.has_param('/hydrophones/buffersize/final'):
+        pass
+
+    return int(rospy.get_param('/hydrophones/buffersize/final'))
 
 
 def get_number_of_mics():
@@ -145,7 +151,8 @@ def set_parameters():
     """ Creates and sets default ROS parameters """
     rospy.set_param('/hydrophones/sim/state',False)
 
-    rospy.set_param('/hydrophones/buffersize',BUFFERSIZE)
+    rospy.set_param('/hydrophones/buffersize/initial',BUFFERSIZE)
+    rospy.set_param('/hydrophones/buffersize/final',2*BUFFERSIZE)
     rospy.set_param('/hydrophones/number_of_mics',NUMBER_OF_MICS)
     rospy.set_param('/hydrophones/speed',SPEED)
     rospy.set_param('/hydrophones/fs',SAMPLING_FREQUENCY)
@@ -165,10 +172,14 @@ def set_parameters():
     rospy.set_param('/hydrophones/pos/3/x',0)
     rospy.set_param('/hydrophones/pos/3/y',HEIGHT)
 
+    rospy.logwarn('PARAMETERS WERE SET')
+
 
 if __name__ == '__main__':
     try:
+        rospy.init_node('hydroparam')
         set_parameters()
+
     except:
         print 'ROS NOT RUNNING'
         exit(1)
