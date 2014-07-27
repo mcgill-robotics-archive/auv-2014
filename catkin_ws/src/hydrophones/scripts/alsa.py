@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
         while not rospy.is_shutdown():
             read()
-            rospy.spin
+
     except rospy.ROSInterruptException:
         pass
 
