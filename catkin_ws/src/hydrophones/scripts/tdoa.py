@@ -27,7 +27,7 @@ except:
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 INTERPOLATION = 0.001
-THRESHOLD = 0.1
+THRESHOLD = 50
 
 # VARIABLES
 crunching = False
@@ -63,7 +63,7 @@ def acquire_target():
 
     # DETERMINE IF TARGET FREQUENCY APPEARS
     for i in range(NUMBER_OF_MICS):
-        magnitude = np.absolute(freq[i][TARGET_INDEX])
+        magnitude = 20*np.log(np.abs(freq[i][TARGET_INDEX]))
         if magnitude > THRESHOLD:
             return True
 
