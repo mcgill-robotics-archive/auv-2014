@@ -104,6 +104,10 @@ double Planner::getCurrentYaw(std::string referenceFrame) {
 //##############################################################################
 // Newly added parameters for the multiple competition scenario:         [START]
 //##############################################################################
+bool Planner::getUseCvForLane() {
+	return useCvForLane;
+}
+
 bool Planner::getUseHardcodedLaneAngleAfterGate() {
 	return useHardcodedLaneAngleAfterGate;
 }
@@ -483,6 +487,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	//##############################################################################
 	// Newly added parameters for the multiple competition scenario:         [START]
 	//##############################################################################
+	nodeHandle.param<bool>("useCvForLane", useCvForLane, false);
 	nodeHandle.param<bool>("useHardcodedLaneAngleAfterGate", useHardcodedLaneAngleAfterGate, false);
 	nodeHandle.param<double>("hardcodedRelativeLaneAngleAfterGate", hardcodedRelativeLaneAngleAfterGate, 0.0);
 	nodeHandle.param<bool>("useDistanceToLaneThreshold", useDistanceToLaneThreshold, false);

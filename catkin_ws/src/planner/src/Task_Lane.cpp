@@ -12,39 +12,44 @@ void Task_Lane::execute() {
 
 	ros::Rate loop_rate(50);
 	loop_rate.sleep();
-	//look for the lane marker
-	myPlanner->setVisionObj(2);
+
 	myStatusUpdater->updateStatus(myStatusUpdater->lane1);
 
+	ROS_INFO("Started Lane Task");
+
 	loop_rate.sleep();
-    ROS_INFO("looking for the lane");
 
-    // Move straight until we detect something
-    while (!myPlanner->getSeeObject()) {
-		myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), imuFrame);
-        loop_rate.sleep();
-    }
+	if (myPlanner -> getUseCvForLane()) {
+			//look for the lane marker
+		myPlanner->setVisionObj(2);
+		ROS_INFO("looking for the lane");
+	    // Move straight until we detect something
+	    while (!myPlanner->getSeeObject()) {
+			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), imuFrame);
+	        loop_rate.sleep();
+	    }
+		ROS_INFO("FOUND THE LANE. Going to wait for transform");
 
-	ROS_INFO("FOUND THE LANE. Going to wait for transform");
+		tf::TransformListener listener;
+		listener.waitForTransform(frame, "/robot/rotation_center",
+				ros::Time(0), ros::Duration(0.4));
+	 
+	    ROS_INFO("Got the transform");
+		myStatusUpdater->updateStatus(myStatusUpdater->lane2);
+		loop_rate.sleep();
 
-	tf::TransformListener listener;
-	listener.waitForTransform(frame, "/robot/rotation_center",
-			ros::Time(0), ros::Duration(0.4));
- 
-    ROS_INFO("Got the transform");
-	myStatusUpdater->updateStatus(myStatusUpdater->lane2);
-	loop_rate.sleep();
-	
-	// From here we can turn right now (right after we detected the Lane), or
-	// wait for the distance threshold to be reached.
-    if (myPlanner->getUseDistanceToLaneThreshold()) {
-    	ROS_INFO("Going to use distance to lane threshold");
-    	// While our relative distance with the Lane is bigger than the threshold continue moving forward.
-    	while(myPlanner->getCurrentX(imuFrame) > myPlanner->getRelativeDistanceToLaneThreshold()) {
-    		myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), imuFrame);
-        	loop_rate.sleep();
-    	}
-    }
+
+		// From here we can turn right now (right after we detected the Lane), or
+		// wait for the distance threshold to be reached.
+	    if (myPlanner->getUseDistanceToLaneThreshold()) {
+	    	ROS_INFO("Going to use distance to lane threshold");
+	    	// While our relative distance with the Lane is bigger than the threshold continue moving forward.
+	    	while(myPlanner->getCurrentX(imuFrame) > myPlanner->getRelativeDistanceToLaneThreshold()) {
+	    		myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0, 0, myPlanner->getCloseLoopDepth(), imuFrame);
+	        	loop_rate.sleep();
+	    	}
+	    }
+	}
 
 	// Commented out this so that we can use an hardcoded relative angle
 	// double myPoints[5] = {0.0, 0.0, 0.0, 0.0, myPlanner->getCloseLoopDepth()};
@@ -52,14 +57,17 @@ void Task_Lane::execute() {
 	// From here we can either take the value given by cv or the hardcoded one:
 	
 	if (myPlanner->getUseHardcodedLaneAngleAfterGate()) {
-		// TODO (ejeadry) set the desired relative yaw to be the one set in 'hardcodedRelativeLaneAngleAfterGate'
 		double hardcodedYaw = myPlanner->getHardcodedRelativeLaneAngleAfterGate();
+
+		ROS_INFO("Using hardcoded yaw for lane: %f", hardcodedYaw);
 
 		while (!(fabs(myPlanner->getCurrentYaw(imuFrame) - hardcodedYaw) < myPlanner->getYawBound())) {
 			myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, hardcodedYaw, 0, myPlanner->getCloseLoopDepth(), imuFrame);
 		}
 
 	} else { //use relative angle from CV
+		ROS_INFO("Using relative angle from CV");
+
 		double myPoints[5];
 		myPoints[0] = 0.0;
 		myPoints[1] = 0.0;
@@ -77,7 +85,7 @@ void Task_Lane::execute() {
 		}
 	}
 
-	ROS_INFO("ALIGNED WITH LANE");
+	ROS_INFO("ALIGNED WITH LANE.");
 	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
 	loop_rate.sleep();
 	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
@@ -95,6 +103,8 @@ void Task_Lane::execute() {
 }
 
 void Task_Lane::goStraightFromCurrentPosition(std::string frame) {
+	ROS_INFO("Going forward from current position using frame %s", frame.c_str());
+
 	ros::Rate loop_rate(50);
 
 	double yaw = myPlanner->getCurrentYaw(frame);

@@ -7,10 +7,11 @@ closeLoopDepth: 1.00                                # Only used when openLoopDep
 surgeSpeed: -3.00                                   # The surge speed
 
                                                     # Newly added parameters for the multiple competition scenario:
+useCvForLane: false                                 # Use CV to detect lane or not
 useHardcodedLaneAngleAfterGate: true                # Are we using the hardcoded relative angle or the one given by CV?
 hardcodedRelativeLaneAngleAfterGate: -30.00         # Only used if 'useHardcodedLaneAngleAfterGate' is set to 'true'
-useDistanceToLaneThreshold: true                  # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
-relativeDistanceToLaneThreshold: 1.00             # Only used if 'useDistanceToLaneThreshold' is set to 'true'
+useDistanceToLaneThreshold: true                    # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
+relativeDistanceToLaneThreshold: 1.00               # Only used if 'useDistanceToLaneThreshold' is set to 'true'
 doHydrophonesAfterLane: false                       # Do we execute the hydrophones task after the Lane task is completed?
 estimatedRelativeAngleForThePinger: 0.00            # Only used if 'doHydrophonesAfterLane' is set to 'true'
                                                     # An approximation of where the hydrophones are relative to the robot yaw angle1

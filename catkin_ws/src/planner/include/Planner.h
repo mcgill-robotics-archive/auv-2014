@@ -59,6 +59,7 @@ class Planner{
 	double getYawBound();
 
 	// Newly added getters for the multiple competition scenarios:
+	bool getUseCvForLane();
 	bool getUseHardcodedLaneAngleAfterGate();
 	double getHardcodedRelativeLaneAngleAfterGate();
 	bool getUseDistanceToLaneThreshold();
@@ -107,6 +108,7 @@ class Planner{
 	double laneTimeout;
 
 	// Newly added parameters for the multiple competition scenario
+	bool useCvForLane;
 	bool useHardcodedLaneAngleAfterGate;
 	double hardcodedRelativeLaneAngleAfterGate;
 	bool useDistanceToLaneThreshold;
