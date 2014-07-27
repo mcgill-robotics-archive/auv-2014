@@ -102,6 +102,18 @@ def get_mic_positions():
     return pos
 
 
+def get_mic_dimensions():
+    """ Returns width and height of hydrophone array """
+    while not rospy.has_param('/hydrophones/size/'):
+        pass
+
+    width = '/hydrophones/size/width'
+    height = '/hydrophones/size/height'
+    size = (rospy.get_param(width),rospy.get_param(height))
+
+    return size
+
+
 def get_line_in_offset():
     """ Returns LINE IN to MIC offset in seconds """
     while not rospy.has_param('/hydrophones/offset'):
@@ -213,6 +225,9 @@ def set_parameters():
 
     rospy.set_param('/hydrophones/offset',LIN_TO_MIC_OFFSET)
     rospy.set_param('/hydrophones/threshold',THRESHOLD)
+
+    rospy.set_param('/hydrophones/size/width',WIDTH)
+    rospy.set_param('/hydrophones/size/height',HEIGHT)
 
     rospy.set_param('/hydrophones/pos/0/x',0)
     rospy.set_param('/hydrophones/pos/0/y',0)
