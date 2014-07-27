@@ -192,7 +192,7 @@ def tdoa_table():
 
     for channel in range(NUMBER_OF_MICS-1):
         state = 0
-        if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 3e-6:
+        if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 5e-6:
             state = 2
 
         string = ' %s\t\t\t%+1.9f\t\n' % (LABELS[channel], dt[channel])
@@ -222,13 +222,13 @@ def solution_table():
         header[pinger] += '   %s s \n\n' % (timer.rjust(10))
 
         if SIMULATION:
-            if np.abs(sol[pinger]['x'] - sim_sol[pinger]['x']) <= 1:
+            if np.abs(sol[pinger]['x'] - sim_sol[pinger]['x']) <= 2:
                 state[1] = 2
-            if np.abs(sol[pinger]['y'] - sim_sol[pinger]['y']) <= 1:
+            if np.abs(sol[pinger]['y'] - sim_sol[pinger]['y']) <= 2:
                 state[2] = 2
             if np.abs(sol[pinger]['r'] - sim_sol[pinger]['r']) <= 5:
                 state[3] = 2
-            if np.abs(sol[pinger]['theta'] - sim_sol[pinger]['theta']) <= 1:
+            if np.abs(sol[pinger]['theta'] - sim_sol[pinger]['theta']) <= 3:
                 state[4] = 2
 
         right_column.addstr(header[pinger], curses.color_pair(state[0]))
