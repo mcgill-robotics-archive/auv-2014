@@ -11,8 +11,8 @@ TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
 LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
-HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
-WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
+HEIGHT = 0.50               # HEIGHT OF RECEIVER ARRAY      m
+WIDTH = 0.32                # WIDTH OF RECEIVER ARRAY       m
 LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
 THRESHOLD = 50              # THRESHOLD FOR PING            dB      (experimental)
 
