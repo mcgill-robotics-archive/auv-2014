@@ -4,7 +4,7 @@
 openLoopDepth: false                                # Are we using closed loop or open loop depth control?
 openLoopDepthSpeed: -6.0                            # Only used when openLoopDepth = true
 closeLoopDepth: 1.00                                # Only used when openLoopDepth = false
-surgeSpeed: -3.00                                   # The surge speed. Should be -0.3 for sim
+surgeSpeed: -3.00  #-0.3 for sim                    # The surge speed.
 
                                                     # Newly added parameters for the multiple competition scenario:
 useCvForLane: false                                 # Use CV to detect lane or not
@@ -27,7 +27,7 @@ timerForHydrophonesTask: 60.00                      # Only used if 'usingTimerFo
 yawTimeout: 5.00                            # 
 openLoopDepthTimeout: 10.00                 # 
 closeLoopDepthTimeout: 15.00                #
-gateTimeout: 20.00                          # Time at which the planner will switch from the gate task to the planner task.
+gateTimeout: 20.00  # 10.0 for sim          # Time at which the planner will switch from the gate task to the planner task.
                                             # IMPORTANT parameter to tweak to avoid doing Lane too early(before finishing gate) or too late(no longer seeing Lane)
 laneTimeout: 20.00                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
 

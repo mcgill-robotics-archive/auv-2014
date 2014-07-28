@@ -70,7 +70,7 @@ double Planner::getYawBound() {
 	return yawBound;
 }
 
-double Planner::getXYYawFromIMU(std::string frame) {
+void Planner::getXYYawFromIMU(std::string frame) {
 	tf::StampedTransform transform = getStampedTransform(frame);
 
 	currentX = transform.getOrigin().x();

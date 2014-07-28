@@ -78,7 +78,7 @@ class Planner{
 	void setVelocityWithCloseLoopYawPitchOpenLoopDepth(double x_speed, double yaw, double pitch, double depthSpeed, std::string referenceFrame);
 	void setYaw(double yaw, std::string referenceFrame);
 
-	double getXYYawFromIMU(std::string frame);
+	void getXYYawFromIMU(std::string frame);
 	void switchToTask(Tasks newTask);
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();
