@@ -61,14 +61,15 @@ void Task_Lane::execute() {
 
 		ROS_INFO("Using hardcoded yaw for lane: %f radians", hardcodedYaw);
 
-		double currentYaw = myPlanner->getCurrentYaw(imuFrame);
-		while (!(fabs(currentYaw - hardcodedYaw) < myPlanner->getYawBound())) {
-			myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, hardcodedYaw, 0, myPlanner->getCloseLoopDepth(), imuFrame);
-			currentYaw = myPlanner->getCurrentYaw(imuFrame);
-
-			ROS_INFO_THROTTLE(1, "ORIENTATION:");
-			ROS_INFO_THROTTLE(1, "Current yaw: %f    Desired yaw: %f", currentYaw, hardcodedYaw);
-			ROS_INFO_THROTTLE(1, "Current - Desired: %f", currentYaw - hardcodedYaw);
+		double yawTimeout = myPlanner -> getYawTimeout();
+		ROS_INFO("Sending Yaw = %f for %f seconds", hardcodedYaw, yawTimeout);
+		ros::Time start_time = ros::Time::now();
+		ros::Duration timeout(yawTimeout);
+		while(ros::Time::now() - start_time < timeout) {
+	        ROS_INFO_THROTTLE(1, "Sending yaw = %f", hardcodedYaw);
+	        myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, hardcodedYaw, 0, myPlanner->getCloseLoopDepth(), imuFrame);
+	        loop_rate.sleep();
+	        ros::spinOnce();
 		}
 
 	} else { //use relative angle from CV
