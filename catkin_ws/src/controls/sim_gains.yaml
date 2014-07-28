@@ -14,13 +14,15 @@ gains/kp_Depth: 4
 gains/ki_Depth: 0
 gains/kd_Depth: 20
 
-gains/kp_Pitch: .2
+# Later we should figure out why negative parameters work for gazebo. These 
+# should definitely be positive.
+gains/kp_Pitch: -0.05
 gains/ki_Pitch: 0
-gains/kd_Pitch: 1
+gains/kd_Pitch: -1
 
-gains/kp_Yaw: 0.2 #.02
+gains/kp_Yaw: -0.05 #.02
 gains/ki_Yaw: 0
-gains/kd_Yaw: 1 #.1
+gains/kd_Yaw: -1 #.1
 
 gains/OL_coef_x: 5
 gains/OL_coef_y: 5
