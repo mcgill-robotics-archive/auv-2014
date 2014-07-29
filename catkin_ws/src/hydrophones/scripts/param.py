@@ -15,6 +15,7 @@ HEIGHT = 0.50               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.32                # WIDTH OF RECEIVER ARRAY       m
 LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
 THRESHOLD = 50              # THRESHOLD FOR PING            dB      (experimental)
+PRACTICE = True
 
 # SIMULATION PARAMETERS
 TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
@@ -222,6 +223,7 @@ def set_parameters():
     rospy.set_param('/hydrophones/target',TARGET_FREQUENCY)
     rospy.set_param('/hydrophones/depth',DEPTH_OF_PINGER)
     rospy.set_param('/hydrophones/ping_length',LENGTH_OF_PULSE)
+    rospy.set_param('/hydrophones/practice_pool',PRACTICE)
 
     rospy.set_param('/hydrophones/offset',LIN_TO_MIC_OFFSET)
     rospy.set_param('/hydrophones/threshold',THRESHOLD)
