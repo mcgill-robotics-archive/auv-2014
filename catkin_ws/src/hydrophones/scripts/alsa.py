@@ -76,6 +76,7 @@ if __name__ == '__main__':
     try:
         try:
             setup()
+
         except:
             rospy.logfatal('AUDIO STREAMS COULD NOT BE OPENED')
             exit(1)

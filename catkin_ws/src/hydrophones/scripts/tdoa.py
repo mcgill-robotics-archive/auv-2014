@@ -31,6 +31,7 @@ except:
 FREQUENCY_PER_INDEX = SAMPLING_FREQUENCY / float(BUFFERSIZE)
 TARGET_INDEX = int(round(TARGET_FREQUENCY / FREQUENCY_PER_INDEX))
 INTERPOLATION = 0.001
+THRESHOLD = 50
 
 # NODE AND PUBLISHERS
 rospy.init_node('tdoa')
@@ -82,6 +83,7 @@ def acquire_target():
     # DETERMINE IF TARGET FREQUENCY APPEARS
     for channel in range(NUMBER_OF_MICS):
         magnitude = 20*np.log10(np.abs(freq[channel][TARGET_INDEX]))
+
         if magnitude > THRESHOLD:
             # CHECK IF TARGET PING OR DUMMY PING
             current_time = first_signal.stamp

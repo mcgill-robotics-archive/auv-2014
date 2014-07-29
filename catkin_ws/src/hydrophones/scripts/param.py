@@ -7,7 +7,7 @@ import rospy
 BUFFERSIZE = 1024           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
-TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
+TARGET_FREQUENCY = 25000    # FREQUENCY OF PINGER           Hz
 LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
@@ -248,6 +248,7 @@ if __name__ == '__main__':
     try:
         rospy.init_node('param')
         set_parameters()
+
     except:
         print 'ROS NOT RUNNING'
         exit(1)
