@@ -1,33 +1,43 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE PARAMETERS FROM COMPETITION
-
 # IMPORTS
 import rospy
 
 # DEFAULT PARAMETERS
-BUFFERSIZE = 1024           # SIZE OF FFT BUFFER
+BUFFERSIZE = 1024           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
 TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
-LENGTH_OF_PULSE = 1.3e-3    # LENGTH OF PING                s
+LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
 HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
+LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
+THRESHOLD = 50              # THRESHOLD FOR PING            dB      (experimental)
 
 # SIMULATION PARAMETERS
 TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
 DUMMY_PINGER = (-69, 83)    # DUMMY PINGER COORDINATES      m
 SNR = 20                    # SIGNAL TO NOISE RATIO         dB
+SWITCHING = True            # SWITCH BETWEEN PINGERS
+CONTINUOUS = False          # GENERATE CONTINUOUS SIGNAL
 
 
 def get_buffersize():
     """ Returns buffersize """
-    while not rospy.has_param('/hydrophones/buffersize'):
+    while not rospy.has_param('/hydrophones/buffersize/initial'):
         pass
 
-    return int(rospy.get_param('/hydrophones/buffersize'))
+    return int(rospy.get_param('/hydrophones/buffersize/initial'))
+
+
+def get_final_buffersize():
+    """ Returns buffersize """
+    while not rospy.has_param('/hydrophones/buffersize/final'):
+        pass
+
+    return int(rospy.get_param('/hydrophones/buffersize/final'))
 
 
 def get_number_of_mics():
@@ -92,6 +102,30 @@ def get_mic_positions():
     return pos
 
 
+def get_line_in_offset():
+    """ Returns LINE IN to MIC offset in seconds """
+    while not rospy.has_param('/hydrophones/offset'):
+        pass
+
+    return rospy.get_param('/hydrophones/offset')
+
+
+def get_threshold():
+    """ Returns threshold determining ping """
+    while not rospy.has_param('/hydrophones/threshold'):
+        pass
+
+    return rospy.get_param('/hydrophones/threshold')
+
+
+def get_practice_pool_side_or_not():
+    """ Returns TRUE if robot is in the practice pool, FALSE otherwise """
+    while not rospy.has_param('/hydrophones/practice_pool'):
+        pass
+
+    return rospy.get_param('/hydrophones/practice_pool')
+
+
 def get_simulation_target():
     """ Returns (x,y) coordinates of the simulated target pinger """
     while not rospy.has_param('/hydrophones/sim/target'):
@@ -130,6 +164,27 @@ def get_simulation_state():
     return rospy.get_param('/hydrophones/sim/state')
 
 
+def get_switching():
+    """ Returns TRUE if pinger switching is active, FALSE otherwise """
+    while not rospy.has_param('/hydrophones/sim/switching'):
+        pass
+
+    return rospy.get_param('/hydrophones/sim/switching')
+
+
+def get_continuous():
+    """ Returns TRUE if continuous signal is active, FALSE otherwise """
+    while not rospy.has_param('/hydrophones/sim/continuous'):
+        pass
+
+    return rospy.get_param('/hydrophones/sim/continuous')
+
+
+def set_switching(state):
+    """ TRUE to override active pinger, FALSE to alternate between target and dummy """
+    rospy.set_param('/hydrophones/sim/switching',state)
+
+
 def set_simulation_parameters():
     """ Creates and sets ROS simulation parameters """
     rospy.set_param('/hydrophones/sim/state',True)
@@ -139,19 +194,25 @@ def set_simulation_parameters():
     rospy.set_param('/hydrophones/sim/dummy/x',DUMMY_PINGER[0])
     rospy.set_param('/hydrophones/sim/dummy/y',DUMMY_PINGER[1])
     rospy.set_param('/hydrophones/sim/SNR',SNR)
+    rospy.set_param('/hydrophones/sim/switching',SWITCHING)
+    rospy.set_param('/hydrophones/sim/continuous',CONTINUOUS)
 
 
 def set_parameters():
     """ Creates and sets default ROS parameters """
     rospy.set_param('/hydrophones/sim/state',False)
 
-    rospy.set_param('/hydrophones/buffersize',BUFFERSIZE)
+    rospy.set_param('/hydrophones/buffersize/initial',BUFFERSIZE)
+    rospy.set_param('/hydrophones/buffersize/final',2*BUFFERSIZE)
     rospy.set_param('/hydrophones/number_of_mics',NUMBER_OF_MICS)
     rospy.set_param('/hydrophones/speed',SPEED)
     rospy.set_param('/hydrophones/fs',SAMPLING_FREQUENCY)
     rospy.set_param('/hydrophones/target',TARGET_FREQUENCY)
     rospy.set_param('/hydrophones/depth',DEPTH_OF_PINGER)
     rospy.set_param('/hydrophones/ping_length',LENGTH_OF_PULSE)
+
+    rospy.set_param('/hydrophones/offset',LIN_TO_MIC_OFFSET)
+    rospy.set_param('/hydrophones/threshold',THRESHOLD)
 
     rospy.set_param('/hydrophones/pos/0/x',0)
     rospy.set_param('/hydrophones/pos/0/y',0)
@@ -165,9 +226,12 @@ def set_parameters():
     rospy.set_param('/hydrophones/pos/3/x',0)
     rospy.set_param('/hydrophones/pos/3/y',HEIGHT)
 
+    rospy.logwarn('PARAMETERS WERE SET')
+
 
 if __name__ == '__main__':
     try:
+        rospy.init_node('param')
         set_parameters()
     except:
         print 'ROS NOT RUNNING'

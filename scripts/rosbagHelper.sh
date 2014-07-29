@@ -5,19 +5,21 @@
 
 # Variable initialization
 command_arguments=''
-nameOfRosBag=bag-$(date +%s)
-targetDirectory=~/
+nameOfRosBag=split
+nameOfFolder=run_$(date +20%y_%m_%d_%H_%M_%S)
+targetDirectory=/media/DATA/$nameOfFolder/
 checkingForFileName=false
+mkdir $targetDirectory
 
 # Displays the usage of this script.
 usage() {
     echo USAGE: rosbagHelper.sh OPTION
-    echo "options: -a : all topics specified below except for hydrophones"
+    echo "options: -a : all topics specified"
     echo "         -i : imu pose and raw data"
     echo "         -t : data from all temperature sensors"
     echo "         -c : camera data; i.e. camera info, image rectified and color image from up and down cameras"
     echo "         -d : depth sensor data"
-    echo "         -v : voltages from both batteries"
+    echo "         -b : voltages from both batteries"
     echo "         -e : motor message, usb, solenoid, and pressure inside main pressure vessel"
     echo "         -h : all hydrophones topics"
     echo "         -s : all state estimation topics (including IMU specific topics)"
@@ -29,7 +31,7 @@ usage() {
 
 # Starts ROSBag with the given parameters.
 startRosBagWithParameters() {
-	rosbag record $command_arguments -O ${targetDirectory}${nameOfRosBag}
+	rosbag record --split --duration=15 $command_arguments -O ${targetDirectory}${nameOfRosBag}
 }
 
 addImuTopics() {
@@ -37,19 +39,20 @@ addImuTopics() {
 }
 
 addTemperatureTopics() {
-	command_arguments="${command_arguments} electrical_interface/batteryVoltage1 electrical_interface/batteryVoltage2"
+	command_arguments="${command_arguments} status/temperature"
 }
 
 addCameraTopics() {
 	command_arguments="${command_arguments} camera_down/camera_out/camera_info camera_down/image_rect"
 	command_arguments="${command_arguments} camera_front_left/camera_out/camera_info camera_front_left/image_rect"
+	command_arguments="${command_arguments} camera_front_right/camera_out/camera_info camera_front_right/image_rect"
 }
 
 addDepthTopic() {
-	command_arguments="${command_arguments} electrical_interface/depth"
+	command_arguments="${command_arguments} electrical_interface/depth state_estimation/filteredDepth"
 }
 
-addVoltageTopics() {
+addBatteryTopics() {
 	command_arguments="${command_arguments} electrical_interface/batteryVoltage1 electrical_interface/batteryVoltage2"
 }
 
@@ -64,7 +67,8 @@ addStateEstimationTopics() {
 }
 
 addHydrophonesTopics() {
-	command_arguments="${command_arguments} hydrophones/audio hydrophones/freq hydrophones/magn hydrophones/peak hydrophones/sol hydrophones/tdoa"
+	addStateEstimationTopics
+	command_arguments="${command_arguments} hydrophones/audio"
 }
 
 # Changes the name of the ROS bag to what the user specified. Does some check on the name and will use a timestamp if rejected.
@@ -86,13 +90,13 @@ handleInputParameters() {
 			then
 				case ${arg} in
 					'-a' )
-						addImuTopics
+						addStateEstimationTopics
 						addTemperatureTopics
 						addCameraTopics
 						addDepthTopic
-						addVoltageTopics
+						addBatteryTopics
 						addElectricalInterfaceTopics
-						# addHydrophonesTopics
+						addHydrophonesTopics
 						;;
 					'-i' )
 						addImuTopics
@@ -108,10 +112,9 @@ handleInputParameters() {
 						;;
 					'-h' )
 						addHydrophonesTopics
-						addImuTopics
 						;;
-					'-v' )
-						addVoltageTopics
+					'-b' )
+						addBatteryTopics
 						;;
 					'-e' )
 						addElectricalInterfaceTopics

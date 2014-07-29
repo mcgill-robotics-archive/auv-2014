@@ -7,4 +7,3 @@ TEAMOCIL_PATH=/home/robotics/McGill_RoboSub_2014/setup/
 
 # START HERE
 tmux new -d -x 185 -y 52 'teamocil startup'
-sleep 12 && tmux move-window -s 2 -t 1

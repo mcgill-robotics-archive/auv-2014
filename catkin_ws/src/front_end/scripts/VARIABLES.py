@@ -41,6 +41,7 @@ class misc_vars(object):
     GUI_UPDATE_PERIOD = 10 #ms
     length_plot = 50
     depth_max = 0
+    depth_min = 0
     max_temp=40
     CPU_max_temp = 90
     SSD_max_temp = 60

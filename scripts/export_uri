@@ -1,0 +1,19 @@
+usage() {
+    printf "usage: ./export_uri [port] \nYou must specify a port.\n\n"
+    exit
+}
+
+if [ "$#" -ge "1" ] 
+then
+    IP=`ifconfig $1 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`
+    export ROS_IP=$IP
+    echo $ROS_IP
+    
+    export ROS_MASTER_URI=http://10.0.0.101:11311
+    echo $ROS_MASTER_URI
+    
+else
+    usage
+fi
+
+

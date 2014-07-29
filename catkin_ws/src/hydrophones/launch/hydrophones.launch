@@ -1,7 +1,14 @@
 <launch>
+    <!--
+        TRUE means we're in the practice pool
+        FALSE means we're in the competition pool
+    -->
+    <arg name="practice_pool" default="false"/>
+
     <group ns="hydrophones">
         <!-- parameters -->
         <node name="param" pkg="hydrophones" type="param.py" respawn="false" output="screen"/>
+        <param name="practice_pool" type="bool" value="$(arg practice_pool)"/>
 
         <!-- audio -->
         <node name="audio" pkg="hydrophones" type="alsa.py" respawn="true" output="screen"/>

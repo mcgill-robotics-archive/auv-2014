@@ -19,9 +19,11 @@ except:
 
 # SET UP NODE AND TOPIC
 rospy.init_node('analyzer')
-magn_topic = rospy.Publisher('/hydrophones/magn',channels)
-peak_topic = rospy.Publisher('/hydrophones/peak',peaks)
+magn_topic = rospy.Publisher('/hydrophones/magn',channels, tcp_nodelay=True, queue_size=0)
+peak_topic = rospy.Publisher('/hydrophones/peak',peaks, tcp_nodelay=True, queue_size=0)
+peak_magn_topic = rospy.Publisher('/hydrophones/peak_magn',peaks, tcp_nodelay=True, queue_size=0)
 magnitudes = channels()
+peak_magn = peaks()
 peaks = peaks()
 
 
@@ -41,18 +43,17 @@ def analyze(frequencies):
     freq[0] = 1j * np.array(frequencies.channel_0.imag)
     freq[0] += frequencies.channel_0.real
     freq[1] = 1j * np.array(frequencies.channel_1.imag)
-    freq[0] += frequencies.channel_1.real
+    freq[1] += frequencies.channel_1.real
     freq[2] = 1j * np.array(frequencies.channel_2.imag)
-    freq[0] += frequencies.channel_2.real
+    freq[2] += frequencies.channel_2.real
     freq[3] = 1j * np.array(frequencies.channel_3.imag)
-    freq[0] += frequencies.channel_3.real
+    freq[3] += frequencies.channel_3.real
 
     # ANALYZE
     magn = [[] for channel in range(NUMBER_OF_MICS)]
     peak = np.zeros(NUMBER_OF_MICS)
     for channel in range(NUMBER_OF_MICS):
         magn[channel], peak[channel] = analyze_channel(freq[channel])
-
 
     # PUBLISH MAGNITUDES
     magnitudes.channel_0 = magn[0]
@@ -67,6 +68,13 @@ def analyze(frequencies):
     peaks.channel_2 = peak[2]
     peaks.channel_3 = peak[3]
     peak_topic.publish(peaks)
+
+    # PUBLISH PEAK MAGNITUDES
+    peak_magn.channel_0 = magn[0][int(peak[0]/FREQUENCY_PER_INDEX)]
+    peak_magn.channel_1 = magn[1][int(peak[1]/FREQUENCY_PER_INDEX)]
+    peak_magn.channel_2 = magn[2][int(peak[2]/FREQUENCY_PER_INDEX)]
+    peak_magn.channel_3 = magn[3][int(peak[3]/FREQUENCY_PER_INDEX)]
+    peak_magn_topic.publish(peak_magn)
 
 
 if __name__ == '__main__':

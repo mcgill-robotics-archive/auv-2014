@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-# TODO: DISTINGUISH PRACTICE FROM COMPETITION
-
 # IMPORTS
 from ctypes import *
 import numpy as np
 import rospy
 import roslib
 from hydrophones.msg import *
+from std_msgs.msg import Bool, Float64
 import param
 
 # PARAMETERS
@@ -22,7 +21,11 @@ except:
 # SET UP NODE AND TOPIC
 rospy.init_node('solver')
 solver_topic = rospy.Publisher('/hydrophones/sol',solution)
+are_we_there_yet_topic = rospy.Publisher('/hydrophones/are_we_there_yet',Bool)
+yaw_topic = rospy.Publisher('/hydrophones/target',Float64)
 sol = solution()
+yes = Bool()
+yaw = Float64()
 
 
 def solve(data):
@@ -48,13 +51,28 @@ def solve(data):
     # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
-    # PUBLISH
+    # PUBLISH SOLUTION
     sol.cartesian.x = x
     sol.cartesian.y = y
     sol.polar.r = np.sqrt(x**2 + y**2)
     sol.polar.theta = np.degrees(np.arctan2(y,x))
-    sol.target = True
+    sol.target = data.target
     solver_topic.publish(sol)
+
+    # PUBLISH IF THE PINGER BELOW US
+    if sol.target and sol.polar.r <= 1.0:
+        yes.data = True
+    else:
+        yes.data = False
+    are_we_there_yet_topic.publish(yes)
+
+    # PUBLISH YAW WITH FIX FOR COORDINATE SYSTEM
+    if sol.target:
+        theta = 90 - sol.polar.theta
+        if theta > 180:
+            theta -= 360
+        yaw.data = np.radians(theta)
+        yaw_topic.publish(yaw)
 
 
 if __name__ == '__main__':

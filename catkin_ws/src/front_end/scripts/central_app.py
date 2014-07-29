@@ -225,7 +225,7 @@ class CentralUi(QtGui.QMainWindow):
     #@param self the object pointer
     def start_ros_subscriber(self):
 
-        depth_topic = rospy.get_param("/depth")
+        depth_topic = rospy.get_param("/depth_topic")
         bat1_topic = rospy.get_param("/battery_1_voltage")
         bat2_topic = rospy.get_param("/battery_2_voltage")
         cam_raw_f_l_topic = rospy.get_param("/front_camera_left")
@@ -250,9 +250,9 @@ class CentralUi(QtGui.QMainWindow):
         rospy.Subscriber(cam_raw_d_topic, Image, self.down_pre_callback)
         rospy.Subscriber(cam_pro_f_l_topic, Image, self.front_post_left_callback)
         rospy.Subscriber(cam_pro_f_r_topic, Image, self.front_post_right_callback)
-        rospy.Subscriber(cam_pro_d_topic, Image, self.down_post_callback)
+        #rospy.Subscriber(cam_pro_d_topic, Image, self.down_post_callback)
         rospy.Subscriber(cv_data_f_topic, VisibleObjectData, self.front_cv_data_callback)
-        rospy.Subscriber(cv_data_d_topic, VisibleObjectData, self.down_cv_data_callback)
+        #rospy.Subscriber(cv_data_d_topic, VisibleObjectData, self.down_cv_data_callback)
         rospy.Subscriber(planner_messages_topic, String, self.planner_callback)
         rospy.Subscriber(temp_topic, temp, self.cpu_hdd_temp_callback)
         rospy.Subscriber(usb_topic, usb, self.usb_callback)
@@ -551,9 +551,12 @@ class CentralUi(QtGui.QMainWindow):
         self.depth_data.append(data_input)
         self.depth_data.pop(0)
         self.depth_curve.setData(self.depth_data)
-        if data_input < misc_vars.depth_max:
+        if data_input > misc_vars.depth_max:
             misc_vars.depth_max = data_input
-            self.depth_graph.setYRange(misc_vars.depth_max, 0)
+            self.depth_graph.setYRange(misc_vars.depth_min, misc_vars.depth_max)
+        if data_input < misc_vars.depth_min:
+            misc_vars.depth_min = data_input
+            self.depth_graph.setYRange(misc_vars.depth_min, misc_vars.depth_max)
 
     ##
     #appends the last message recieved from planner to a textbox in screen

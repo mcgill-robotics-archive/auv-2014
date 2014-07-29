@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
-# TODO: MAKE SURE LINE IN AND MIC WORK AS EXPECTED
-
 # IMPORTS
 import alsaaudio
 import numpy as np
 import rospy
 import roslib
+import os
 from hydrophones.msg import *
 import param
 
@@ -22,22 +21,29 @@ except:
 
 # SET UP NODE AND TOPIC
 rospy.init_node('audio')
-audio_topic = rospy.Publisher('/hydrophones/audio', channels)
+audio_topic = rospy.Publisher('/hydrophones/audio', channels, tcp_nodelay=True, queue_size=0)
 signal = channels()
 
 
 def setup():
     """ Sets up audio streams """
     global inputs
-    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:1,0')
-    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card='hw:1,2')
+    card_number = os.popen("arecord -l | grep 'Intel'").read().split()[1][0]
+    cards = ['plughw:%s,0' % card_number, 'plughw:%s,2' % card_number]
+
+    mic = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card=cards[0])
+    lin = alsaaudio.PCM(type=alsaaudio.PCM_CAPTURE,card=cards[1])
     inputs = {'mic':mic, 'lin':lin}
 
     for card in inputs:
-        inputs[card].setchannels(2)
-        inputs[card].setrate(SAMPLING_FREQUENCY)
-        inputs[card].setperiodsize(PERIOD)
-        inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE)
+        print ""
+        rospy.logwarn("%s cardname:   %s", card.upper(), inputs[card].cardname())
+        rospy.logwarn("%s channels:   %d", card.upper(), inputs[card].setchannels(2))
+        rospy.logwarn("%s sampling:   %d", card.upper(), inputs[card].setrate(SAMPLING_FREQUENCY))
+        rospy.logwarn("%s period:     %d", card.upper(), inputs[card].setperiodsize(PERIOD))
+        rospy.logwarn("%s format:     %d", card.upper(), inputs[card].setformat(alsaaudio.PCM_FORMAT_FLOAT_LE))
+
+    print ""
 
 
 def read():
@@ -55,6 +61,7 @@ def read():
     signal.channel_1 = stream[1]
     signal.channel_2 = stream[2]
     signal.channel_3 = stream[3]
+    signal.stamp = rospy.Time.now()
 
     audio_topic.publish(signal)
 
@@ -67,9 +74,15 @@ def close():
 
 if __name__ == '__main__':
     try:
-        setup()
+        try:
+            setup()
+        except:
+            rospy.logfatal('AUDIO STREAMS COULD NOT BE OPENED')
+            exit(1)
+
         while not rospy.is_shutdown():
             read()
+            rospy.spin
     except rospy.ROSInterruptException:
         pass
 
