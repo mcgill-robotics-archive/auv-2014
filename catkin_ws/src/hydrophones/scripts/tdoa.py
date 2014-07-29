@@ -9,6 +9,8 @@ import numpy as np
 import rospy
 import roslib
 from hydrophones.msg import *
+from scipy import signal
+import matplotlib.pyplot as plt
 import param
 
 # PARAMETERS
@@ -44,6 +46,7 @@ first_signal = channels()
 second_signal = channels()
 frequencies = freq()
 dt = tdoa()
+
 
 def update_params():
     """ Updates target frequency """
@@ -113,6 +116,30 @@ def parse(data):
             crunching = False
 
 
+def bandpass_filter(unfiltered):
+    ORDER = 100
+    BW = 100
+    lower = TARGET_FREQUENCY - BW/2
+    upper = TARGET_FREQUENCY + BW/2
+
+    # GENERATE COEFFICIENTS
+    coeff = signal.firwin(ORDER, [lower, upper], window='hamming',
+                          pass_zero=False, nyq=SAMPLING_FREQUENCY/2)
+
+    filtered = signal.lfilter(coeff, 1, unfiltered)
+
+    # FOR DEBUGGING
+    # w, h = signal.freqz(coeff)
+    # plt.plot(w * SAMPLING_FREQUENCY/2 / np.pi, 20*np.log(np.abs(h)), 'b')
+    # plt.show()
+    # plt.plot(np.arange(FINAL_BUFFERSIZE) / float(SAMPLING_FREQUENCY), unfiltered, 'r')
+    # plt.show()
+    # plt.plot(np.arange(FINAL_BUFFERSIZE) / float(SAMPLING_FREQUENCY), filtered, 'g')
+    # plt.show()
+
+    return filtered
+
+
 def interpolate(x,s,u):
     """ Interpolates x with a sinc function """
     T = s[1] - s[0]
@@ -133,6 +160,7 @@ def gccphat():
     time = [[] for channel in range(NUMBER_OF_MICS)]
     for channel in range(NUMBER_OF_MICS):
         time[channel] = first_time[channel] + second_time[channel]
+        # time[channel] = bandpass_filter(time[channel])
 
     # FFT
     freq = [[] for channel in range(NUMBER_OF_MICS)]

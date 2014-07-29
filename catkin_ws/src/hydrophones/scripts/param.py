@@ -11,8 +11,8 @@ TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
 LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
-HEIGHT = 1.83               # HEIGHT OF RECEIVER ARRAY      m
-WIDTH = 0.91                # WIDTH OF RECEIVER ARRAY       m
+HEIGHT = 0.50               # HEIGHT OF RECEIVER ARRAY      m
+WIDTH = 0.32                # WIDTH OF RECEIVER ARRAY       m
 LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
 THRESHOLD = 50              # THRESHOLD FOR PING            dB      (experimental)
 
@@ -100,6 +100,18 @@ def get_mic_positions():
         pos[i] = (rospy.get_param(x),rospy.get_param(y))
 
     return pos
+
+
+def get_mic_dimensions():
+    """ Returns width and height of hydrophone array """
+    while not rospy.has_param('/hydrophones/size/'):
+        pass
+
+    width = '/hydrophones/size/width'
+    height = '/hydrophones/size/height'
+    size = (rospy.get_param(width),rospy.get_param(height))
+
+    return size
 
 
 def get_line_in_offset():
@@ -213,6 +225,9 @@ def set_parameters():
 
     rospy.set_param('/hydrophones/offset',LIN_TO_MIC_OFFSET)
     rospy.set_param('/hydrophones/threshold',THRESHOLD)
+
+    rospy.set_param('/hydrophones/size/width',WIDTH)
+    rospy.set_param('/hydrophones/size/height',HEIGHT)
 
     rospy.set_param('/hydrophones/pos/0/x',0)
     rospy.set_param('/hydrophones/pos/0/y',0)

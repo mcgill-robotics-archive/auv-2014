@@ -51,6 +51,36 @@ def solve(data):
     # SOLVE BY QR
     (x,y) = -np.linalg.solve(np.transpose([A[2:],B[2:]]),C[2:])
 
+    # QUICK FIX FOR OVERFLOW
+    x_axis_delay = dt[1]
+    y_axis_delay = dt[3]
+    WIDTH, HEIGHT = param.get_mic_dimensions()
+    corrected = False
+    if x_axis_delay > 0 and y_axis_delay > 0:
+        if x > WIDTH/2 and y > HEIGHT/2:
+            x = -np.abs(x)
+            y = -np.abs(y)
+            corrected = True
+            rospy.logfatal('CORRECTED FOR QUADRANT III')
+    elif x_axis_delay < 0 and y_axis_delay < 0:
+        if x < WIDTH/2 and y < HEIGHT/2:
+            x = np.abs(x)
+            y = np.abs(y)
+            corrected = True
+            rospy.logfatal('CORRECTED FOR QUADRANT I')
+    elif x_axis_delay < 0 and y_axis_delay > 0:
+        if x < WIDTH/2 and y > HEIGHT/2:
+            x = np.abs(x)
+            y = -np.abs(y)
+            corrected = True
+            rospy.logfatal('CORRECTED FOR QUADRANT IV')
+    elif x_axis_delay > 0 and y_axis_delay < 0:
+        if x > WIDTH/2 and y < HEIGHT/2:
+            x = -np.abs(x)
+            y = np.abs(y)
+            corrected = True
+            rospy.logfatal('CORRECTED FOR QUADRANT II')
+
     # PUBLISH SOLUTION
     sol.cartesian.x = x
     sol.cartesian.y = y
@@ -60,7 +90,7 @@ def solve(data):
     solver_topic.publish(sol)
 
     # PUBLISH IF THE PINGER BELOW US
-    if sol.target and sol.polar.r <= 1.0:
+    if not corrected and sol.target and sol.polar.r <= 1.0:
         yes.data = True
     else:
         yes.data = False
