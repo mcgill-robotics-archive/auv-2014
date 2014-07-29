@@ -39,7 +39,8 @@ alias catkin_alert='catkin_make && blinky_alert'
 alias controls='rostopic echo /controls/debug'
 alias glances='glances -yet 5'
 alias go='rosparam set /go 1'
-alias ip="export ROS_IP=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
+alias ip_wlan="export ROS_IP=`ifconfig wlan0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
+alias ip_eth="export ROS_IP=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
 alias main='tmux attach -t MAIN'
 alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
