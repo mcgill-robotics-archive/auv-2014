@@ -117,6 +117,17 @@ void Task_Lane::execute() {
 	stopAndTurn(imuFrame, 0.087);
 	goStraightFromCurrentPosition(imuFrame, 20);
 
+	double openLoopDepthTimeout = myPlanner -> getOpenLoopDepthTimeout();
+	ROS_INFO("OPEN LOOP DEPTH and close loop yaw and pitch for %f seconds", openLoopDepthTimeout);
+	ros::Time start_time = ros::Time::now();
+	ros::Duration timeoutOL =ros::Duration(openLoopDepthTimeout);
+	while(ros::Time::now() - start_time < timeoutOL) {
+        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge. %f seconds left", (timeoutOL - (ros::Time::now() - start_time)).toSec());
+        myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, -1 * myPlanner->getOpenLoopDepthSpeed(), frame);
+        loop_rate.sleep();
+        ros::spinOnce();
+	}	
+
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
 	if (myPlanner->getDoHydrophonesAfterLane()) {
 		// TODO (ejeadry) Implement the hydrophones task
