@@ -49,7 +49,7 @@ def velocity_publisher(y_vel, ros_topic, set_null, depth_speed_control):
         msg.XSpeed.isActive = 1
         msg.YSpeed.isActive = 1
         msg.YawSpeed.isActive = 1
-
+        msg.Frame=rospy.get_param('/tf_frame_fe')
         vel_pub.publish(msg)
     else:
         # close down the channel for the planner to start
