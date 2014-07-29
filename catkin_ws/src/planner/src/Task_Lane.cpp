@@ -111,8 +111,11 @@ void Task_Lane::execute() {
 
 	
 	double laneTimeout = myPlanner -> getLaneTimeout();
-	goStraightFromCurrentPosition(frame, laneTimeout);
+	goStraightFromCurrentPosition(imuFrame, laneTimeout);
 
+	//stop and turn after first lane
+	stopAndTurn(imuFrame, 0.087);
+	goStraightFromCurrentPosition(imuFrame, 20);
 
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
 	if (myPlanner->getDoHydrophonesAfterLane()) {
@@ -158,4 +161,21 @@ void Task_Lane::stop(std::string frame, double timeout) {
 	        ros::spinOnce();
 	}
 	ROS_INFO("Stopped");
+}
+
+void Task_Lane::stopAndTurn(std::string frame, double yaw) {
+	ros::Rate loop_rate(50);
+
+	double yawTimeout = myPlanner -> getYawTimeout();
+	stop(frame, yawTimeout); //stop for a few seconds
+
+	ROS_INFO("Sending Yaw = %f for %f seconds", yaw, yawTimeout);
+	ros::Time start_time = ros::Time::now();
+	ros::Duration timeoutDuration(yawTimeout);
+	while(ros::Time::now() - start_time < timeoutDuration) {
+        ROS_INFO_THROTTLE(1, "Sending yaw = %f", yaw);
+        myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, yaw, 0, myPlanner->getCloseLoopDepth(), frame);
+        loop_rate.sleep();
+        ros::spinOnce();
+	}
 }

@@ -10,7 +10,7 @@ class Task_Lane: public Task{
 	private:
 		void goStraightFromCurrentPosition(std::string frame, double timeout);
 		void stop(std::string frame, double timeout);
-
+		void stopAndTurn(std::string frame, double yaw);
 };
 
 #endif
