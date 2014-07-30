@@ -3,7 +3,7 @@
 ################################################################################
 openLoopDepth: false                                # Are we using closed loop or open loop depth control?
 openLoopDepthSpeed: -6.0                            # Only used when openLoopDepth = true
-closeLoopDepth: 1.00                                # Only used when openLoopDepth = false
+closeLoopDepth: 2.80                                # Only used when openLoopDepth = false
 surgeSpeed: -3.00  #-0.3 for sim                    # The surge speed.
                                                     # Newly added parameters for the multiple competition scenario:
 useCvForLane: false                                 # Use CV to detect lane or not
