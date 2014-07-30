@@ -21,7 +21,7 @@ windows:
         - "roslaunch --wait --disable-title computer_vision camera_all.launch "
       - cmd:
         - "set_pane_title HYDROPHONES"
-        - "roslaunch --wait --disable-title hydrophones hydrophones.launch "
+        - "roslaunch --wait --disable-title hydrophones audio.launch "
       - cmd:
         - "set_pane_title CONTROLS"
         - "roslaunch --wait --disable-title controls controls.launch "
