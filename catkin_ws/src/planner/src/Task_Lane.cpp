@@ -33,7 +33,7 @@ void Task_Lane::execute() {
 		tf::TransformListener listener;
 		listener.waitForTransform(frame, "/robot/rotation_center",
 				ros::Time(0), ros::Duration(0.4));
-	 
+
 	    ROS_INFO("Got the transform");
 		myStatusUpdater->updateStatus(myStatusUpdater->lane2);
 		loop_rate.sleep();
@@ -55,11 +55,10 @@ void Task_Lane::execute() {
 	// double myPoints[5] = {0.0, 0.0, 0.0, 0.0, myPlanner->getCloseLoopDepth()};
 
 	// From here we can either take the value given by cv or the hardcoded one:
-	
+
 	if (myPlanner->getUseHardcodedLaneAngleAfterGate()) {
 		double yawTimeout = myPlanner -> getYawTimeout();
 		stop(frame, yawTimeout); //stop for a few seconds
-
 
 		double hardcodedYaw = myPlanner->getHardcodedRelativeLaneAngleAfterGate();
 
@@ -89,7 +88,7 @@ void Task_Lane::execute() {
 
 		// Rotate the robot to the desired angle
 		while (!myPlanner->areWeThereYet(frame, desired)) {
-			ROS_DEBUG("Task_Lane::setPoints published");		
+			ROS_DEBUG("Task_Lane::setPoints published");
 			myPlanner->setPosition(desired, frame);
 			loop_rate.sleep();
 		}
@@ -109,10 +108,13 @@ void Task_Lane::execute() {
 	myStatusUpdater->updateStatus(myStatusUpdater->lane3);
 	loop_rate.sleep();
 
-	
 	double laneTimeout = myPlanner -> getLaneTimeout();
-	goStraightFromCurrentPosition(frame, laneTimeout);
-
+	if (myPlanner->getUseHardcodedLaneAngleAfterGate()) {
+		double hardcodedYaw = myPlanner->getHardcodedRelativeLaneAngleAfterGate();
+		goStraightFromCurrentPosition(frame, hardcodedYaw, laneTimeout);
+	} else {
+		goStraightFromCurrentPosition(frame, 0.0, laneTimeout);
+	}
 
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
 	if (myPlanner->getDoHydrophonesAfterLane()) {
@@ -126,7 +128,7 @@ void Task_Lane::execute() {
 	}
 }
 
-void Task_Lane::goStraightFromCurrentPosition(std::string frame, double timeout) {
+void Task_Lane::goStraightFromCurrentPosition(std::string frame, double yaw, double timeout) {
 	ROS_INFO("Going forward from current position using frame %s", frame.c_str());
 
 	ros::Rate loop_rate(50);
@@ -135,8 +137,8 @@ void Task_Lane::goStraightFromCurrentPosition(std::string frame, double timeout)
 	ros::Time start_time = ros::Time::now();
 	ros::Duration timeoutDuration(timeout);
 	while(ros::Time::now() - start_time < timeoutDuration) {
-	        ROS_INFO_THROTTLE(1, "Sending yaw = %f, pitch = %f, depth = %f", 0.0, 0.0, myPlanner->getCloseLoopDepth());
-			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0.0, 0, myPlanner->getCloseLoopDepth(), frame);
+	        ROS_INFO_THROTTLE(1, "Sending yaw = %f, pitch = %f, depth = %f", yaw, 0.0, myPlanner->getCloseLoopDepth());
+			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), yaw, 0, myPlanner->getCloseLoopDepth(), frame);
 	        loop_rate.sleep();
 	        ros::spinOnce();
 	}
