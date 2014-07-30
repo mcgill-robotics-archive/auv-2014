@@ -8,9 +8,10 @@ class Task_Lane: public Task{
 		Task_Lane(Planner* planner, StatusUpdater* mSU, int newPhase);
 		void execute();
 	private:
-		void goStraightFromCurrentPosition(std::string frame, double timeout);
+		void goStraightFromCurrentPosition(std::string frame, double yaw, double timeout);
 		void stop(std::string frame, double timeout);
 		void stopAndTurn(std::string frame, double yaw);
+		void flash();
 };
 
 #endif

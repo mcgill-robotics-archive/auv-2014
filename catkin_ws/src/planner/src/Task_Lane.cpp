@@ -58,8 +58,7 @@ void Task_Lane::execute() {
 	
 	if (myPlanner->getUseHardcodedLaneAngleAfterGate()) {
 		double yawTimeout = myPlanner -> getYawTimeout();
-		stop(frame, yawTimeout); //stop for a few seconds
-
+		stop(imuFrame, yawTimeout); //stop for a few seconds
 
 		double hardcodedYaw = myPlanner->getHardcodedRelativeLaneAngleAfterGate();
 
@@ -96,26 +95,21 @@ void Task_Lane::execute() {
 	}
 
 	ROS_INFO("ALIGNED WITH LANE.");
-	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
-	loop_rate.sleep();
-	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
-	loop_rate.sleep();
-	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
-	loop_rate.sleep();
-	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
-	loop_rate.sleep();
-	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
-	loop_rate.sleep();
+    
+    flash();
 	myStatusUpdater->updateStatus(myStatusUpdater->lane3);
 	loop_rate.sleep();
 
 	
 	double laneTimeout = myPlanner -> getLaneTimeout();
-	goStraightFromCurrentPosition(imuFrame, laneTimeout);
+	goStraightFromCurrentPosition(imuFrame, myPlanner->getHardcodedRelativeLaneAngleAfterGate(), laneTimeout);
 
 	//stop and turn after first lane
-	stopAndTurn(imuFrame, 0.087);
-	goStraightFromCurrentPosition(imuFrame, 20);
+	// stopAndTurn(imuFrame, 0.087);
+	// goStraightFromCurrentPosition(imuFrame, 20);
+
+/////////////////////////// SURFACE/////////////////////////////
+	flash();
 
 	double openLoopDepthTimeout = myPlanner -> getOpenLoopDepthTimeout();
 	ROS_INFO("OPEN LOOP DEPTH and close loop yaw and pitch for %f seconds", openLoopDepthTimeout);
@@ -123,10 +117,11 @@ void Task_Lane::execute() {
 	ros::Duration timeoutOL =ros::Duration(openLoopDepthTimeout);
 	while(ros::Time::now() - start_time < timeoutOL) {
         ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge. %f seconds left", (timeoutOL - (ros::Time::now() - start_time)).toSec());
-        myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, -1 * myPlanner->getOpenLoopDepthSpeed(), frame);
+        myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, -1 * myPlanner->getOpenLoopDepthSpeed(), imuFrame);
         loop_rate.sleep();
         ros::spinOnce();
-	}	
+	}
+//////////////////////////////////////////////////////////////////
 
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
 	if (myPlanner->getDoHydrophonesAfterLane()) {
@@ -140,7 +135,7 @@ void Task_Lane::execute() {
 	}
 }
 
-void Task_Lane::goStraightFromCurrentPosition(std::string frame, double timeout) {
+void Task_Lane::goStraightFromCurrentPosition(std::string frame, double yaw, double timeout) {
 	ROS_INFO("Going forward from current position using frame %s", frame.c_str());
 
 	ros::Rate loop_rate(50);
@@ -149,14 +144,15 @@ void Task_Lane::goStraightFromCurrentPosition(std::string frame, double timeout)
 	ros::Time start_time = ros::Time::now();
 	ros::Duration timeoutDuration(timeout);
 	while(ros::Time::now() - start_time < timeoutDuration) {
-	        ROS_INFO_THROTTLE(1, "Sending yaw = %f, pitch = %f, depth = %f", 0.0, 0.0, myPlanner->getCloseLoopDepth());
-			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), 0.0, 0, myPlanner->getCloseLoopDepth(), frame);
+	        ROS_INFO_THROTTLE(1, "Sending yaw = %f, pitch = %f, depth = %f", yaw, 0.0, myPlanner->getCloseLoopDepth());
+			myPlanner->setVelocityWithCloseLoopYawPitchDepth(myPlanner->getSurgeSpeed(), yaw, 0, myPlanner->getCloseLoopDepth(), frame);
 	        loop_rate.sleep();
 	        ros::spinOnce();
 	}
 
 }
 
+//TODO: use get current angle
 void Task_Lane::stop(std::string frame, double timeout) {
 	ROS_INFO("Stopping");
 
@@ -189,4 +185,18 @@ void Task_Lane::stopAndTurn(std::string frame, double yaw) {
         loop_rate.sleep();
         ros::spinOnce();
 	}
+}
+
+void Task_Lane::flash() {
+	ros::Rate loop_rate(50);
+	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash2);
+	loop_rate.sleep();
+	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
+	loop_rate.sleep();
 }

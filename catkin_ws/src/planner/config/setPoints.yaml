@@ -8,7 +8,7 @@ surgeSpeed: -3.00  #-0.3 for sim                    # The surge speed.
                                                     # Newly added parameters for the multiple competition scenario:
 useCvForLane: false                                 # Use CV to detect lane or not
 useHardcodedLaneAngleAfterGate: true                # Are we using the hardcoded relative angle or the one given by CV?
-hardcodedRelativeLaneAngleAfterGate: 0.35 #-0.5           # Only used if 'useHardcodedLaneAngleAfterGate' is set to 'true'
+hardcodedRelativeLaneAngleAfterGate: 0.16 #for Course B #-0.5           # Only used if 'useHardcodedLaneAngleAfterGate' is set to 'true'
 useDistanceToLaneThreshold: true                    # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
 relativeDistanceToLaneThreshold: 1.00               # Only used if 'useDistanceToLaneThreshold' is set to 'true'
 doHydrophonesAfterLane: false                       # Do we execute the hydrophones task after the Lane task is completed?
@@ -30,7 +30,7 @@ gateTimeout: 58.00 #at lane
 #38.65 to gate # 10.0 for sim          # Time at which the planner will switch from the gate task to the planner task.
               #56.73 at buoy
               #61.00 at lane                              # IMPORTANT parameter to tweak to avoid doing Lane too early(before finishing gate) or too late(no longer seeing Lane)
-laneTimeout: 25.00                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
+laneTimeout: 30.00                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
 
 ################################################################################
 # Bounds for close loop setPoints for lane
