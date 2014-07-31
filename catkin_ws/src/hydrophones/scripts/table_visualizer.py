@@ -62,8 +62,8 @@ curses.init_pair(3,curses.COLOR_BLACK,curses.COLOR_WHITE)   # HEADING
 # STORE DATA
 magn = [np.zeros(BUFFERSIZE/2 + 1) for channel in range(NUMBER_OF_MICS)]
 peak = [0 for channel in range(NUMBER_OF_MICS)]
-dt = [0 for channel in range(NUMBER_OF_MICS-1)]
-sim_dt = [0 for channel in range(NUMBER_OF_MICS-1)]
+dt = [0 for channel in range(NUMBER_OF_MICS-2)]
+sim_dt = [0 for channel in range(NUMBER_OF_MICS-2)]
 sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(NUMBER_OF_PINGERS)]
 sim_sol = [{'x': 0, 'y': 0, 'r': 0, 'theta': 0, 'new': False} for pinger in range(NUMBER_OF_PINGERS)]
 last_ping = [time.time() for pinger in range(NUMBER_OF_PINGERS)]
@@ -89,14 +89,12 @@ def update_tdoas(data):
     """ Parses TDOAs """
     dt[0] = data.tdoa_1
     dt[1] = data.tdoa_2
-    dt[2] = data.tdoa_3
 
 
 def update_sim_tdoas(data):
     """ Parses simulation TDOAs """
     sim_dt[0] = data.tdoa_1
     sim_dt[1] = data.tdoa_2
-    sim_dt[2] = data.tdoa_3
 
 
 def update_solution(data):
@@ -190,7 +188,7 @@ def tdoa_table():
     header = '\n TIME DIFFERENCE OF ARRIVAL\t\t\n\n'
     right_column.addstr(header, curses.color_pair(3))
 
-    for channel in range(NUMBER_OF_MICS-1):
+    for channel in range(NUMBER_OF_MICS-2):
         state = 0
         if SIMULATION and np.abs(dt[channel] - sim_dt[channel]) <= 5e-6:
             state = 2

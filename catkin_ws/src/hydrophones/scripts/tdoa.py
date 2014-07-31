@@ -138,13 +138,13 @@ def gccphat():
         time[channel] = first_time[channel] + second_time[channel]
 
     # FFT
-    freq = [[] for channel in range(NUMBER_OF_MICS)]
-    for channel in range(NUMBER_OF_MICS):
+    freq = [[] for channel in range(NUMBER_OF_MICS-1)]
+    for channel in range(NUMBER_OF_MICS-1):
         freq[channel] = np.fft.fft(time[channel])
 
     # COMPUTE TDOA
-    diff = [0 for channel in range(NUMBER_OF_MICS)]
-    for channel in range(1,NUMBER_OF_MICS):
+    diff = [0 for channel in range(NUMBER_OF_MICS-1)]
+    for channel in range(1,NUMBER_OF_MICS-1):
         # ORDINARY GCC-PHAT
         gcc = np.multiply(freq[0],np.conj(freq[channel]))
         phat = np.fft.ifft(np.divide(gcc,np.absolute(gcc)))
@@ -169,7 +169,6 @@ def gccphat():
     # PUBLISH
     dt.tdoa_1 = diff[1]
     dt.tdoa_2 = diff[2] - LIN_TO_MIC_OFFSET
-    dt.tdoa_3 = diff[3] - LIN_TO_MIC_OFFSET
     dt.target = target
     tdoa_topic.publish(dt)
 
