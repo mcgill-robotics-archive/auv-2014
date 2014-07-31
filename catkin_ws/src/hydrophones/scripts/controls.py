@@ -4,12 +4,8 @@ import tf
 
 from tf.transformations import euler_from_quaternion
 from hydrophones.msg import *
+from hydrophones.srv import *
 from planner.msg import *
-
-# NODE AND PUBLISHERS
-rospy.init_node('hydrophone_controls')
-pub_setPoints = rospy.Publisher('/planner/setPoints', setPoints)
-start = rospy.Service('start_hydrophone_controls', StartHydrophoneTask, start_controller)
 
 # Constants
 openLoopSpeed = -2.0
@@ -22,11 +18,26 @@ integralError = 0
 desiredYaw = 0
 
 def start_controller(req):
+    global start_hydrophones
+    rospy.logwarn('This happened. %s', str(req.start))
     start_hydrophones = req.start
     return 0
 
+# NODE AND PUBLISHERS
+rospy.init_node('hydrophone_controls')
+pub_setPoints = rospy.Publisher('/setPoints', setPoints)
+start = rospy.Service('start_hydrophone_controls', StartHydrophoneTask, start_controller)
+
 def control(data):
+    global integralError
+    global desiredYaw
+    global openLoopSpeed
+    global kp
+    global ki
+    
+    rospy.logwarn('This also happened. %s' , str(start_hydrophones))
     if(start_hydrophones):
+
         desiredSetPoint = setPoints(ValueControl(0,0),
                                 ValueControl(0,0),
                                 ValueControl(1,desiredYaw),
@@ -37,6 +48,8 @@ def control(data):
                                 ValueControl(1,rospy.get_param('/closeLoopDepth')),
                                 ValueControl(0,0),
                                 '/sensors/IMU_global_reference')
+        
+        pub_setPoints.publish(desiredSetPoint)
         if(data.target):
             error = data.tdoa_1
             integralError = integralError + error
