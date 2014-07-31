@@ -9,6 +9,7 @@ project(planner)
    message_generation
    blinky
    robosub_msg
+   hydrophones
  )
 
 ################################################

@@ -108,23 +108,23 @@ void Task_Lane::execute() {
 	// stopAndTurn(imuFrame, 0.087);
 	// goStraightFromCurrentPosition(imuFrame, 20);
 
-/////////////////////////// SURFACE/////////////////////////////
-	flash();
-
-	resurface(imuFrame);
-
-//////////////////////////////////////////////////////////////////
-
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
 	if (myPlanner->getDoHydrophonesAfterLane()) {
-		// TODO (ejeadry) Implement the hydrophones task
-		double estimatedRelativeAngleOfPinger = myPlanner->getEstimatedRelativeAngleForThePinger();
-
+		// // TODO (ejeadry) Implement the hydrophones task
+		// double estimatedRelativeAngleOfPinger = myPlanner->getEstimatedRelativeAngleForThePinger();
+		myPlanner -> startHydrophones();
 
 		// TODO (ejeadry) set the angle to the approximated pinger position
 	} else {
 		// TODO (ejeadry) If we are not doing the hydrophones then we should stop the robot after the timeout period
 	}
+
+/////////////////////////// SURFACE/////////////////////////////
+	flash();
+
+	// resurface(imuFrame);
+
+//////////////////////////////////////////////////////////////////
 }
 
 void Task_Lane::goStraightFromCurrentPosition(std::string frame, double yaw, double timeout) {

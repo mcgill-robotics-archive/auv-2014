@@ -16,6 +16,7 @@
 #include "planner/CurrentCVTask.h"
 #include "blinky/RGB.h"
 #include "blinky/UpdatePlannerLights.h"
+#include "hydrophones/StartHydrophoneTask.h"
 #include "state_estimation/setInitialPose.h"
 #include <vector>
 #include <cmath>
@@ -83,6 +84,8 @@ class Planner{
 	void weAreLost(LostStates newTask, int lostPhase);
 	void resetIMU();
 
+    void startHydrophones();
+
 	tf::StampedTransform getStampedTransform(std::string referenceFrame);
 
 	Planner(ros::NodeHandle& nodeHandle);
@@ -125,6 +128,7 @@ class Planner{
 	ros::Subscriber seeObject_subscriber;
 
 	ros::ServiceClient btClient;
+	ros::ServiceClient startHydrophonesClient;
 
 	ros::Publisher wrench_pub;
 	ros::Publisher control_pub;

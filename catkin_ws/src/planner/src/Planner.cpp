@@ -14,6 +14,16 @@ void spinThread() {
 	ros::spin();
 }
 
+void Planner::startHydrophones() {
+	hydrophones::StartHydrophoneTask srv;
+	srv.request.start = true;
+	if(!startHydrophonesClient.call(srv)) {
+		ROS_ERROR("FAILED TO START HYDROPHONES");
+	} else {
+		ROS_INFO("CALLED START HYDROPHONES");
+	}
+}
+
 void estimatedDepth_callback(const std_msgs::Float64 msg) {
 	ourDepth = msg.data;
 }
@@ -461,6 +471,7 @@ Planner::Planner(ros::NodeHandle& n) {
 	seeObject_subscriber = n.subscribe("state_estimation/see_object", 1000, &Planner::seeObject_callback, this);
 
 	btClient = n.serviceClient<blinky::UpdatePlannerLights>("update_planner_lights");
+    startHydrophonesClient = n.serviceClient<hydrophones::StartHydrophoneTask>("start_hydrophone_controls");
 
 	taskPubFront = n.advertise<planner::CurrentCVTask>("currentCVTask_Front", 1000);
 	taskPubDown = n.advertise<planner::CurrentCVTask>("currentCVTask_Down", 1000);
