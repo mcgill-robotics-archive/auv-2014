@@ -111,16 +111,8 @@ void Task_Lane::execute() {
 /////////////////////////// SURFACE/////////////////////////////
 	flash();
 
-	double openLoopDepthTimeout = myPlanner -> getOpenLoopDepthTimeout();
-	ROS_INFO("OPEN LOOP DEPTH and close loop yaw and pitch for %f seconds", openLoopDepthTimeout);
-	ros::Time start_time = ros::Time::now();
-	ros::Duration timeoutOL =ros::Duration(openLoopDepthTimeout);
-	while(ros::Time::now() - start_time < timeoutOL) {
-        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge. %f seconds left", (timeoutOL - (ros::Time::now() - start_time)).toSec());
-        myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, -1 * myPlanner->getOpenLoopDepthSpeed(), imuFrame);
-        loop_rate.sleep();
-        ros::spinOnce();
-	}
+	resurface(imuFrame);
+
 //////////////////////////////////////////////////////////////////
 
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
@@ -199,4 +191,18 @@ void Task_Lane::flash() {
 	loop_rate.sleep();
 	myStatusUpdater->updateStatus(myStatusUpdater->flash1);
 	loop_rate.sleep();
+}
+
+void Task_Lane::resurface(std::string frame) {
+	ros::Rate loop_rate(50);
+	double openLoopDepthTimeout = myPlanner -> getOpenLoopDepthTimeout();
+	ROS_INFO("OPEN LOOP DEPTH and close loop yaw and pitch for %f seconds", openLoopDepthTimeout);
+	ros::Time start_time = ros::Time::now();
+	ros::Duration timeoutOL =ros::Duration(openLoopDepthTimeout);
+	while(ros::Time::now() - start_time < timeoutOL) {
+        ROS_INFO_THROTTLE(1, "Sending depth, yaw, pitch first, before surge. %f seconds left", (timeoutOL - (ros::Time::now() - start_time)).toSec());
+        myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, -1 * myPlanner->getOpenLoopDepthSpeed(), frame);
+        loop_rate.sleep();
+        ros::spinOnce();
+	}
 }

@@ -12,6 +12,7 @@ class Task_Lane: public Task{
 		void stop(std::string frame, double timeout);
 		void stopAndTurn(std::string frame, double yaw);
 		void flash();
+		void resurface(std::string frame);
 };
 
 #endif
