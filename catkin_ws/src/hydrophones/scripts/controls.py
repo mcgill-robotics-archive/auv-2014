@@ -11,6 +11,7 @@ from planner.msg import *
 openLoopSpeed = -2.0
 kp = 10
 ki = 0
+freq = 2
 
 # VARIABLES
 start_hydrophones = False
@@ -31,13 +32,32 @@ rospy.init_node('hydrophone_controls')
 pub_setPoints = rospy.Publisher('/setPoints', setPoints)
 start = rospy.Service('start_hydrophone_controls', StartHydrophoneTask, start_controller)
 
-def control(data):
+def update_control(data):
     global integralError
     global desiredYaw
-    global openLoopSpeed
-    global kp
-    global ki
     
+    rospy.logwarn('This also really happened. %s' , str(start_hydrophones))
+
+    if(data.target):
+        error = data.tdoa_1
+        integralError = integralError + error
+
+        try:
+            (trans,rot) = listener.lookupTransform(
+                # from
+                '/sensors/IMU_global_reference',
+                # to
+                '/robot/rotation_center',
+                rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            pass
+
+        # GET ROLL, PITCH, YAW FROM QUATERNION
+        (roll,pitch,yaw) = euler_from_quaternion(rot)
+
+        desiredYaw = yaw + kp*error + ki*integralError
+
+def control():
     rospy.logwarn('This also happened. %s' , str(start_hydrophones))
     if(start_hydrophones):
 
@@ -53,28 +73,15 @@ def control(data):
                                 '/sensors/IMU_global_reference')
         
         pub_setPoints.publish(desiredSetPoint)
-        if(data.target):
-            error = data.tdoa_1
-            integralError = integralError + error
-
-            try:
-                (trans,rot) = listener.lookupTransform(
-                    # from
-                    '/sensors/IMU_global_reference',
-                    # to
-                    '/robot/rotation_center',
-                    rospy.Time(0))
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                pass
-
-            # GET ROLL, PITCH, YAW FROM QUATERNION
-            (roll,pitch,yaw) = euler_from_quaternion(rot)
-
-            desiredYaw = yaw + kp*error + ki*integralError
     
 if __name__ == '__main__':
+    rate = rospy.rate(freq)
     try:
-        rospy.Subscriber('/hydrophones/tdoa',tdoa,control)
-        rospy.spin()
+        rospy.Subscriber('/hydrophones/tdoa',tdoa,update_control)
+        while not rospy.is_shutdown():
+            control()
+            rate.sleep()
+        except rospy.ROSInterruptException:
+            pass
     except rospy.ROSInterruptException:
         pass
