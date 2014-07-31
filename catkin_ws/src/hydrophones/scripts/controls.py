@@ -51,7 +51,7 @@ def control(data):
                                     ValueControl(1,openLoopSpeed),
                                     ValueControl(0,0),
                                     ValueControl(0,0),
-                                    ValueControl(1,rospy.get_param('/closedLoopDepth')),
+                                    ValueControl(1,rospy.get_param('/closeLoopDepth')),
                                     ValueControl(0,0),
                                     '/sensors/IMU_global_reference')
     
