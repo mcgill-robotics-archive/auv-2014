@@ -18,9 +18,6 @@ start_hydrophones = False
 integralError = 0
 desiredYaw = 0
 
-# TF LISTENER
-listener = tf.TransformListener()
-
 def start_controller(req):
     global start_hydrophones
     rospy.logwarn('This happened. %s', str(req.start))
@@ -36,13 +33,16 @@ def update_control(data):
     global integralError
     global desiredYaw
     
-    rospy.logwarn('This also really happened. %s' , str(start_hydrophones))
+    rospy.logwarn('This also really happened. %s:%s' , str(start_hydrophones), str(data.target))
 
     if(data.target):
         error = data.tdoa_1
+        rospy.logwarn('This also really fucking happened. %s' , str(start_hydrophones))
+
         integralError = integralError + error
 
         try:
+            listener = tf.TransformListener()
             (trans,rot) = listener.lookupTransform(
                 # from
                 '/sensors/IMU_global_reference',
@@ -75,13 +75,11 @@ def control():
         pub_setPoints.publish(desiredSetPoint)
     
 if __name__ == '__main__':
-    rate = rospy.rate(freq)
+    rate = rospy.Rate(freq)
     try:
         rospy.Subscriber('/hydrophones/tdoa',tdoa,update_control)
         while not rospy.is_shutdown():
             control()
             rate.sleep()
-        except rospy.ROSInterruptException:
-            pass
     except rospy.ROSInterruptException:
         pass
