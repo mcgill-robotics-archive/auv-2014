@@ -7,7 +7,7 @@ import rospy
 BUFFERSIZE = 1024           # SIZE OF AUDIO BUFFER AND 1/2 OF FFT BUFFER
 NUMBER_OF_MICS = 4          # RECEIVERS CONNECTED
 SAMPLING_FREQUENCY = 192e3  # SAMPLING FREQUENCY OF SIGNAL  Hz
-TARGET_FREQUENCY = 30000    # FREQUENCY OF PINGER           Hz
+TARGET_FREQUENCY = 25000    # FREQUENCY OF PINGER           Hz
 LENGTH_OF_PULSE = 4e-3      # LENGTH OF PING                s
 DEPTH_OF_PINGER = 4.2672    # DEPTH OF PINGER FROM SURFACE  m
 SPEED = 1500                # SPEED OF SOUND IN MEDIUM      m/s
@@ -15,6 +15,7 @@ HEIGHT = 0.50               # HEIGHT OF RECEIVER ARRAY      m
 WIDTH = 0.32                # WIDTH OF RECEIVER ARRAY       m
 LIN_TO_MIC_OFFSET = 0e-3    # LINE IN TO MIC OFFSET         s       (experimental)
 THRESHOLD = 50              # THRESHOLD FOR PING            dB      (experimental)
+PRACTICE = False            # WHETHER IN PRACTICE POOL OR NOT
 
 # SIMULATION PARAMETERS
 TARGET_PINGER = (169, 54)   # TARGET PINGER COORDINATES     m
@@ -223,6 +224,7 @@ def set_parameters():
     rospy.set_param('/hydrophones/depth',DEPTH_OF_PINGER)
     rospy.set_param('/hydrophones/ping_length',LENGTH_OF_PULSE)
 
+    rospy.set_param('/hydrophones/practice_pool',PRACTICE)
     rospy.set_param('/hydrophones/offset',LIN_TO_MIC_OFFSET)
     rospy.set_param('/hydrophones/threshold',THRESHOLD)
 
