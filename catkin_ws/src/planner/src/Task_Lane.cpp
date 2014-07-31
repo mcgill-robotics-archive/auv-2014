@@ -110,21 +110,23 @@ void Task_Lane::execute() {
 
 	// We have the possibility of executing the hydrophones task after the Lanet task is completed.
 	if (myPlanner->getDoHydrophonesAfterLane()) {
-		// // TODO (ejeadry) Implement the hydrophones task
-		// double estimatedRelativeAngleOfPinger = myPlanner->getEstimatedRelativeAngleForThePinger();
-		myPlanner -> startHydrophones();
-
-		// TODO (ejeadry) set the angle to the approximated pinger position
+		ROS_INFO("DOING HYDROPHONES TASK");
+		if (myPlanner-> getUsingTimerForHydrophonesInsteadOfDistance()) {
+			ROS_INFO("EXTRA AUTONOMOUS HYDROPHONES");
+			double pingerYaw = myPlanner -> getEstimatedRelativeAngleForThePinger();
+			stopAndTurn(imuFrame, pingerYaw);
+			goStraightFromCurrentPosition(imuFrame, pingerYaw, myPlanner->getTimerForHydrophonesTask());
+			flash();
+			resurface(imuFrame);
+		} else {
+			ROS_INFO("REGULAR AUTONOMOUS HYDROPHONES");
+			myPlanner -> startHydrophones();
+		}
 	} else {
-		// TODO (ejeadry) If we are not doing the hydrophones then we should stop the robot after the timeout period
+		ROS_INFO("NOT DOING HYDROPHONES, RESURFACING");
+		flash();
+		resurface(imuFrame);
 	}
-
-/////////////////////////// SURFACE/////////////////////////////
-	flash();
-
-	// resurface(imuFrame);
-
-//////////////////////////////////////////////////////////////////
 }
 
 void Task_Lane::goStraightFromCurrentPosition(std::string frame, double yaw, double timeout) {
@@ -155,7 +157,7 @@ void Task_Lane::stop(std::string frame, double timeout) {
 	ros::Duration timeoutDuration(timeout);
 	while(ros::Time::now() - start_time < timeoutDuration) {
 	        ROS_INFO_THROTTLE(1, "Sending yaw = %f, pitch = %f, depth = %f", 0.0, 0.0, myPlanner->getCloseLoopDepth());
-			myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, 0.0, 0, myPlanner->getCloseLoopDepth(), frame);
+			myPlanner->setVelocity(0.0, 0.0, 0.0, myPlanner->getCloseLoopDepth(), frame);
 	        loop_rate.sleep();
 	        ros::spinOnce();
 	}

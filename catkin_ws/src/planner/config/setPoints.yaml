@@ -12,12 +12,12 @@ hardcodedRelativeLaneAngleAfterGate: 0.16 #for Course B #-0.5           # Only u
 useDistanceToLaneThreshold: true                    # Do we start rotating as soon as we see the gate or we wait for a relative distance to be reached?
 relativeDistanceToLaneThreshold: 1.00               # Only used if 'useDistanceToLaneThreshold' is set to 'true'
 doHydrophonesAfterLane: true                       # Do we execute the hydrophones task after the Lane task is completed?
-estimatedRelativeAngleForThePinger: 0.00            # Only used if 'doHydrophonesAfterLane' is set to 'true'
+estimatedRelativeAngleForThePinger: 0.82 #47.0 degrees            # Only used if 'doHydrophonesAfterLane' is set to 'true'
                                                     # An approximation of where the hydrophones are relative to the robot yaw angle1
 usingTimerForHydrophonesInsteadOfDistance: true     # Are we using a timer or a distance to determine the completion of the hydrophones task
 relativeDistanceForHydrophonesTask: 1.00            # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'false'
                                                     # Determine the relative distance from the pinger at which the robot surfaces
-timerForHydrophonesTask: 60.00                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
+timerForHydrophonesTask: 128.00                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
                                                     # Determine the time at which the robot surgaces
 
 ################################################################################
