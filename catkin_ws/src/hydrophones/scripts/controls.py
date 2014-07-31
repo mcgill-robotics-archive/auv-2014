@@ -17,6 +17,9 @@ start_hydrophones = False
 integralError = 0
 desiredYaw = 0
 
+# TF LISTENER
+listener = tf.TransformListener()
+
 def start_controller(req):
     global start_hydrophones
     rospy.logwarn('This happened. %s', str(req.start))
