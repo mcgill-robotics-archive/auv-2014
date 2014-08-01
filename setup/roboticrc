@@ -42,6 +42,7 @@ alias go='rosparam set /go 1'
 alias ip_wlan="export ROS_IP=`ifconfig wlan0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
 alias ip_eth="export ROS_IP=`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`"
 alias main='tmux attach -t MAIN'
+alias mount_usb='sudo mount -t ext4 /dev/sdb1 /media/external'
 alias softkill='rostopic pub -1 /controls/softKill std_msgs/Bool "data: true"'
 alias softstart='rostopic pub -1 /controls/softKill std_msgs/Bool "data: false"'
 alias uri="export ROS_MASTER_URI=http://10.0.0.1:11311"
