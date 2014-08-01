@@ -1,13 +1,13 @@
 #TO TWEAK FOR FINAL RUN
 
-gateTimeout: 58.00 #at lane
+gateTimeout: 55.45 #at lane
 #38.65 to gate # 10.0 for sim          # Time at which the planner will switch from the gate task to the planner task.
               #56.73 at buoy
               #61.00 at lane                              # IMPORTANT parameter to tweak to avoid doing Lane too early(before finishing gate) or too late(no longer seeing Lane)
-hardcodedRelativeLaneAngleAfterGate: 0.16 #9.2 degrees #for Course B #-0.5           # Only used if 'useHardcodedLaneAngleAfterGate' is set to 'true'
-laneTimeout: 20.00                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
-estimatedRelativeAngleForThePinger: 0.92 #52.71 degrees            # Only used if 'doHydrophonesAfterLane' is set to 'true'
-timerForHydrophonesTask: 88.00                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
+hardcodedRelativeLaneAngleAfterGate: 0.07 #9.2 degrees #for Course B #-0.5           # Only used if 'useHardcodedLaneAngleAfterGate' is set to 'true'
+laneTimeout: 27.72                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
+estimatedRelativeAngleForThePinger: 0.88 #52.71 degrees            # Only used if 'doHydrophonesAfterLane' is set to 'true'
+timerForHydrophonesTask: 75.86                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
 
 ################################################################################
 # Planner state parameters
@@ -32,8 +32,8 @@ relativeDistanceForHydrophonesTask: 1.00            # Only used if 'usingTimerFo
 ################################################################################
 # Timeouts
 ################################################################################
-yawTimeout: 5.00                            # 
-openLoopDepthTimeout: 10.00                 # 
+yawTimeout: 5.00                            #
+openLoopDepthTimeout: 10.00                 #
 closeLoopDepthTimeout: 15.00                #
 
 ################################################################################
