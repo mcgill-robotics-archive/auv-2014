@@ -127,6 +127,7 @@ void Task_Lane::execute() {
 			flash();
 			goDown(imuFrame);
 			goStraightFromCurrentPosition(imuFrame, secondPingerYaw, myPlanner->getTimerForResurfacing());
+			resurface(imuFrame);
 
 		} else {
 			ROS_INFO("REGULAR AUTONOMOUS HYDROPHONES");
