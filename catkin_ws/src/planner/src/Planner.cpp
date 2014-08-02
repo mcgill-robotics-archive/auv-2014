@@ -154,6 +154,17 @@ double Planner::getTimerForHydrophonesTask() {
 	return timerForHydrophonesTask;
 }
 
+double Planner::getAngleForSecondPinger() {
+	return angleForSecondPinger;
+}
+
+double Planner::getTimerForSecondPinger() {
+	return timerForSecondPinger;
+}
+
+double Planner::getTimerForResurfacing() {
+	return timerForResurfacing;
+}
 //##############################################################################
 // Newly added parameters for the multiple competition scenario:           [END]
 //##############################################################################
@@ -508,6 +519,9 @@ Planner::Planner(ros::NodeHandle& n) {
 	nodeHandle.param<bool>("usingTimerForHydrophonesInsteadOfDistance", usingTimerForHydrophonesInsteadOfDistance, false);
 	nodeHandle.param<double>("relativeDistanceForHydrophonesTask", relativeDistanceForHydrophonesTask, 0.0);
 	nodeHandle.param<double>("timerForHydrophonesTask", timerForHydrophonesTask, 0.0);
+	nodeHandle.param<double>("angleForSecondPinger", angleForSecondPinger, 0.0);
+	nodeHandle.param<double>("timerForSecondPinger", timerForSecondPinger, 0.0);
+	nodeHandle.param<double>("timerForResurfacing", timerForResurfacing, 0.0);
 	//##############################################################################
 	// Newly added parameters for the multiple competition scenario:           [END]
 	//##############################################################################

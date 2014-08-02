@@ -13,6 +13,7 @@ class Task_Lane: public Task{
 		void stopAndTurn(std::string frame, double yaw);
 		void flash();
 		void resurface(std::string frame);
+		void goDown(std::string frame);
 };
 
 #endif

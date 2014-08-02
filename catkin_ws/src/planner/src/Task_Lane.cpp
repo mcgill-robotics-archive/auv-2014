@@ -116,8 +116,18 @@ void Task_Lane::execute() {
 			double pingerYaw = myPlanner -> getEstimatedRelativeAngleForThePinger();
 			stopAndTurn(imuFrame, pingerYaw);
 			goStraightFromCurrentPosition(imuFrame, pingerYaw, myPlanner->getTimerForHydrophonesTask());
-			flash();
 			resurface(imuFrame);
+			flash();
+			goDown(imuFrame);
+
+			double secondPingerYaw = myPlanner -> getAngleForSecondPinger();
+			stopAndTurn(imuFrame, secondPingerYaw);
+			goStraightFromCurrentPosition(imuFrame, secondPingerYaw, myPlanner->getTimerForSecondPinger());
+			resurface(imuFrame);
+			flash();
+			goDown(imuFrame);
+			goStraightFromCurrentPosition(imuFrame, secondPingerYaw, myPlanner->getTimerForResurfacing());
+
 		} else {
 			ROS_INFO("REGULAR AUTONOMOUS HYDROPHONES");
 			myPlanner -> startHydrophones();
@@ -206,5 +216,20 @@ void Task_Lane::resurface(std::string frame) {
         myPlanner->setVelocityWithCloseLoopYawPitchOpenLoopDepth(0, 0, 0, -1 * myPlanner->getOpenLoopDepthSpeed(), frame);
         loop_rate.sleep();
         ros::spinOnce();
+	}
+}
+
+void Task_Lane::goDown(std::string frame) {
+	ros::Rate loop_rate(50);
+
+	ros::Time start_time = ros::Time::now();
+	ros::Duration timeout = ros::Duration(5.0);
+
+	// Sets the robot at the given depth and waits before moving forward.
+	while (ros::Time::now() - start_time < timeout) {
+        ROS_INFO_THROTTLE(1, "GOING DOWN BEFORE RESURFACING. %f seconds left", (timeout - (ros::Time::now() - start_time)).toSec());
+		myPlanner->setVelocityWithCloseLoopYawPitchDepth(0, 0, 0, 1.0, frame);
+		loop_rate.sleep();
+		ros::spinOnce();
 	}
 }

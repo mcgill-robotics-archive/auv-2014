@@ -8,6 +8,9 @@ hardcodedRelativeLaneAngleAfterGate: 0.07 #9.2 degrees #for Course B #-0.5      
 laneTimeout: 27.72                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
 estimatedRelativeAngleForThePinger: 0.88 #52.71 degrees            # Only used if 'doHydrophonesAfterLane' is set to 'true'
 timerForHydrophonesTask: 75.86                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
+angleForSecondPinger: 0.90
+timerForSecondPinger: 10.0
+timerForResurfacing: 10.0
 
 ################################################################################
 # Planner state parameters

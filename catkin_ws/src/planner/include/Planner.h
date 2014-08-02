@@ -70,6 +70,9 @@ class Planner{
 	bool getUsingTimerForHydrophonesInsteadOfDistance();
 	double getRelativeDistanceForHydrophonesTask();
 	double getTimerForHydrophonesTask();
+	double getAngleForSecondPinger();
+	double getTimerForSecondPinger();
+	double getTimerForResurfacing();
 
 	bool areWeThereYet(std::string referenceFrame, std::vector<double> desired);
 	void setVisionObj(int objIndex);
@@ -121,6 +124,9 @@ class Planner{
 	bool usingTimerForHydrophonesInsteadOfDistance;
 	double relativeDistanceForHydrophonesTask;
 	double timerForHydrophonesTask;
+	double angleForSecondPinger;
+	double timerForSecondPinger;
+	double timerForResurfacing;
 
 	ros::NodeHandle nodeHandle;
 	int go;
