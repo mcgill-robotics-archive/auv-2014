@@ -6,10 +6,10 @@ gateTimeout: 48.0 #at lane
               #61.00 at lane                              # IMPORTANT parameter to tweak to avoid doing Lane too early(before finishing gate) or too late(no longer seeing Lane)
 hardcodedRelativeLaneAngleAfterGate: -0.327 #9.2 degrees #for Course B #-0.5           # Only used if 'useHardcodedLaneAngleAfterGate' is set to 'true'
 laneTimeout: 31.51                          # Time at which the planner will switch from the Lane task to either the hydrophones (if we do it) or stopping the competion
-estimatedRelativeAngleForThePinger: -1.094 #52.71 degrees            # Only used if 'doHydrophonesAfterLane' is set to 'true'
-timerForHydrophonesTask: 103.0                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
+estimatedRelativeAngleForThePinger: -1.024 #52.71 degrees            # Only used if 'doHydrophonesAfterLane' is set to 'true'
+timerForHydrophonesTask: 107.0                      # Only used if 'usingTimerForHydrophonesInsteadOfDistance' is set to 'true'
 angleForSecondPinger: -2.129
-timerForSecondPinger: 32.0
+timerForSecondPinger: 50.0
 timerForResurfacing: 5.0
 
 ################################################################################
