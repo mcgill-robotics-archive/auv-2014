@@ -1,10 +1,13 @@
-# ROS Hydrophones Package
+ROS Hydrophones Package
+=======================
 
-## Dependencies
+Dependencies
+------------
 This package requires the following libraries:
 * pyaudio
 
-## Launch
+Launch
+------
 ### Core
 The hydrophones package can be run either in simulated audio or in real audio modes.
 #### Real Audio
@@ -24,33 +27,53 @@ To monitor the hydrophones package in real-time in a Textual User Interface (TUI
 ```
 roslaunch hydrophones visualizer.launch
 ```
-## Nodes
+Nodes
+-----
 The hydrophones package can spawn the following nodes:
 ### Core
 The following nodes run regardless of the mode.
 #### Parameter Manager
-Wrapper to get all up to date parameters.
-N.B. This node does not stay up for long.
-Node name: /hydrophones/param
-Topics: None
-Subscribes to: None
+Wrapper to get all up to date parameters.  
+N.B. This node does not stay up for long.  
+**Name**: /hydrophones/param  
+**Topics**: None  
+**Subscribes to**: None  
 #### Audio
-Deals with acquiring audio data and publishing it.
-Node name: /hydrophones/audio
-Topics: /hydrophones/audio
-Subscribes to: None
+Deals with acquiring audio data and publishing it.  
+**Name**: /hydrophones/audio  
+**Topics**: /hydrophones/audio  
+**Subscribes to**: None  
 #### TDOA
-Analyzes the incoming audio data and measures TDOAs if necessary.
-Node name: /hydrophones/tdoa
-Topics: /hydrophones/tdoa
-Subscribes to: /hydrophones/audio
+Analyzes the incoming audio data and measures TDOAs if necessary.  
+**Name**: /hydrophones/tdoa  
+**Topics**: /hydrophones/tdoa  
+**Subscribes to**: /hydrophones/audio  
 #### Solver
-Estimates the location of the pinger given TDOAs.
-Node name: /hydrophones/solver
-Topics: /hydrophones/sol
-Subscribes to: /hydrophones/tdoa
+Estimates the location of the pinger given TDOAs.  
+**Name**: /hydrophones/solver  
+**Topics**: /hydrophones/sol  
+**Subscribes to**: /hydrophones/tdoa  
 
-## MESSAGES
+Topics
+------
+The hydrophones package publishes the following topics:
+### Core
+The following nodes run regardless of the mode.
+#### Audio
+Multichannel audio stream.  
+**Topic**: /hydrophones/audio  
+**Message type**: /hydrophones/channels  
+#### TDOA
+Time difference of arrival between channels.  
+**Topic**: /hydrophones/tdoa  
+**Message type**: /hydrophones/tdoa  
+#### Solution
+Estimate of the pinger's location.  
+**Topic**: /hydrophones/sol  
+**Message type**: /hydrophones/solution  
+
+Custom Messages
+---------------
 This package contains the following custom messages:
 ### channels
 Timestamped four-channel buffer of audio data.
