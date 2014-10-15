@@ -21,8 +21,7 @@ To run the package in simulated audio mode, run the following:
 roslaunch hydrophones sim-hydrophones.launch
 ```
 This creates new simulation parameters under `/hydrophones/sim` which can be manipulated in real-time.
-
-## Monitoring
+### Monitoring
 To monitor the hydrophones package in real-time in a Textual User Interface (TUI) run the following:
 ```
 roslaunch hydrophones visualizer.launch
