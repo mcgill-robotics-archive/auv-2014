@@ -5,6 +5,8 @@ Dependencies
 ------------
 This package requires the following libraries:
 * pyaudio
+* numpy
+* scipy
 
 Launch
 ------
