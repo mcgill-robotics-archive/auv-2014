@@ -1,6 +1,7 @@
 /**
  * @author Nick Speal
  * Test Node Publishes Inputs to Test Control Node
+ * Not sure if this program was ever tested or used
 */
 
 #include "ros/ros.h"
@@ -38,11 +39,7 @@ int main(int argc, char **argv)
 	const int8_t zero = 0;
 	while (ros::ok())
 	{
-		// process!
-		//define msg
-
 		planner::setPoints msg;
-
 
 		//parameters
 

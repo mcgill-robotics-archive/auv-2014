@@ -15,7 +15,7 @@ gains/ki_Depth: 0.5
 gains/kd_Depth: 0
 
 gains/kp_Pitch: 10
-gains/ki_Pitch: 0.1 #arbitrary
+gains/ki_Pitch: 0.1
 gains/kd_Pitch: 0
 
 gains/kp_Yaw: 5
@@ -28,5 +28,5 @@ gains/OL_coef_yaw: 1
 gains/OL_coef_depth: 1
 gains/OL_coef_balance: 0
 
-z_steady_force: 3 #4.2
-pitch_steady_torque: 0 #-0.4
+z_steady_force: 3 #open loop buoyancy offset # was 4.2 at one point
+pitch_steady_torque: 0 #open loop balance/buoyancy offset # was -0.4 at one point (likely before the integral controller was added)

@@ -1,3 +1,8 @@
+/*
+DEPRECATED - This was an initial controls prototype built for the simulator. It served its purpose and was integrated into controls.cpp. I doubt it still works without modification
+*/
+
+
 
 /*
 This is the first attempt at integrating a control system into the robosub simulation.
@@ -29,7 +34,7 @@ publishers
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Pose.h"
 #include "std_msgs/Float64.h"
-#include "depthController.h"
+//#include "depthController.h" //This was an empty file on Nov 6 2014, so I'm commenting this out and deleting the file. - Nick
 #include "gazebo_msgs/ModelStates.h"
 
 // using namespace std; //what does this do?!?!

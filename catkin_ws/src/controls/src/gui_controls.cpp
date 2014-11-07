@@ -6,6 +6,12 @@ Makes sliders for each gain appear with integer and decimal control
 Created by Matt Mayers Apr 2
 */
 
+//Written by Matt Mayers to live tune parameters with a little GUI of sliderbars but never tested or used
+//Look into built in ROS tools for this if you want to do something similar in the future - Dynamic parameters for example
+
+
+
+
 int main(int argc, char **argv)
 {
 	//Create ROS Node

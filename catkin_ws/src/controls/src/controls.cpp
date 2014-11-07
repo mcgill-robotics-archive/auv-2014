@@ -3,7 +3,7 @@
 /*
 5DOF control system for the McGill Robotics AUV
 Subscribes to setpoints and estimated states and publishes a net wrench to minimize error.
-Open Loop Speed Control.
+Closed loop position control, open loop speed control.
 
 Created by Nick Speal Jan 10 2014.
 */
@@ -62,7 +62,7 @@ Created by Nick Speal Jan 10 2014.
 	double YAW_MAX;
 	double PITCH_MAX;
 
-	//define and initialize error variables
+	//Error Variables
     double ep_XPos = 0; //error
     double ei_XPos = 0; //integral error
     double ed_XPos = 0; //derivative error
@@ -91,6 +91,9 @@ Created by Nick Speal Jan 10 2014.
 
 void soft_kill_callback(const std_msgs::Bool data)
 {
+	//catches softkill or softstart command
+	//if killed == True, then publish zero wrench instead of calculated values. Values are calculated anyway.
+
 	killed = data.data;
 }
 
@@ -113,6 +116,7 @@ void setPoints_callback(const planner::setPoints setPointsMsg)
 	double currentTime = timeOfLastSetPoint.toSec();
 	ROS_DEBUG("received setPoints - currentTime: %f", currentTime);
 
+	//save message data into global variables
 	setPoint_XPos = setPointsMsg.XPos.data;
 	setPoint_YPos = setPointsMsg.YPos.data;
 	setPoint_Depth = setPointsMsg.Depth.data;
@@ -143,7 +147,8 @@ void depth_callback(const std_msgs::Float64 data)
 	ROS_DEBUG("Received depth - currentTime: %f", currentTime);
 }
 
-float output_limit_check(float value, float min, float max, char* value_name ){ //can this be deleted?
+float output_limit_check(float value, float min, float max, char* value_name ){ 
+	//DEPRECATED FUNCTION? MIGHT BE ABLE TO DELETE THIS
 	//returns zero and warns if out of range
 	if (value > max | value < min) { //out of range
 		ROS_WARN("%s: value has been exceeded. Value is %f. Setting to 0.", value_name, value);
@@ -170,23 +175,13 @@ float saturate(float value, float max, char* value_name) {
 	return value;
 }
 
-void pitchHorizon_callback(){
-	/*
-	* Subscribe to pose from the IMU to get pitch WRT the horizon.
-	* But what about accounting for the placement of the IMU? Sure that should be defined in a TF...
-
-	//NO! TF IS BETTER!
-
-	*/
-}
-
 
 void getStateFromTF()
 {
 	/*
 	* Looks up the TF and saves local variables for estimated position.
-	* First looks up TF for x,y,yaw for arbitrary frame
-	* Then looks up TF for pitch
+	* First looks up TF for x,y,yaw between the robot/rotation_center and an arbitrary frame
+	* Then looks up TF for pitch seperately because the frame is not arbitrary - always want pitch with respect to the horizon
 	*/
 	if (frame == "")
 	{
@@ -215,7 +210,7 @@ void getStateFromTF()
 
 	estimated_XPos = transform.getOrigin().x();
 	estimated_YPos = transform.getOrigin().y();
-	//ignore depth. it comes in on a topic
+	//ignore depth. it comes in on its own topic
 
 	tf::Quaternion q = transform.getRotation(); //save the rotation as a quaternion
 	tf::Matrix3x3 m(q); //convert quaternion to matrix
@@ -224,17 +219,17 @@ void getStateFromTF()
 	double pitch_unused;
 
 
-	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused);
+	m.getEulerYPR(estimated_Yaw, pitch_unused, roll_unused); //in order to determine yaw, the method also needs to return roll and pitch. ignore those.
 
+	if (frame=="/target/lane"){ estimated_Yaw*=-1;} //At the last minute, Anass and Nick noticed that the sign convention was backwards somewhere only for the lane target. This was a quick fix right before comp.
 
-	//LOLLL im sorry anass made me do it
-	if (frame=="/target/lane"){ estimated_Yaw*=-1;}
 
 
 
 
 	//------------------------------------------------------------------------------------------------------------
 	//Pitch and not all other dimensions
+	//Repeat most of the first half of this method for the different coordinate frame
 
 	tf::TransformListener tf_listener_pitch;
 
@@ -254,13 +249,18 @@ void getStateFromTF()
 		ROS_ERROR("error looking up pitch transform: \n %s",ex.what());
 	}
 
-	q = transform.getRotation(); //save the rotation as a quaternion - overwrite
-	tf::Matrix3x3 matrix_for_pitch(q); //convert quaternion to matrix - overwrite
+	q = transform.getRotation(); //save the rotation as a quaternion - overwrite the one defined earlier because it is no longer needed
+	tf::Matrix3x3 matrix_for_pitch(q); //convert quaternion to matrix - overwrite this too, same reason.
 
 	double yaw_unused;
-
 	matrix_for_pitch.getEulerYPR(yaw_unused, estimated_Pitch, roll_unused);
 }
+
+
+
+
+
+
 int main(int argc, char **argv)
 {
 	//Create ROS Node
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 
 	//specify ROSCONSOLE verbosity level
-	//Fred Lafrance: temporarily commented because of compile error
+	//Fred Lafrance: temporarily commented because of compile error - not compatible with old ROS installations
 	//if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) )
 	//{
    	//	ros::console::notifyLoggerLevelsChanged();
@@ -276,13 +276,12 @@ int main(int argc, char **argv)
 
 	//define variables for Parameters
 		double m; //mass in kg
-		double g;
+		double g; //acceleration of gravity
 		double cd; // drag coefficient
-		double buoyancy; // %percent buoyancy
-		double dt; //temporary! TODO update this dynamically
+		double buoyancy; // percent buoyancy
+		double dt; //theoretical time elapsed between iterations through the main loop. TODO update this dynamically by measuring time elapsed. Currently parameterized
 
 		//Gains for the Proportional, Integral, and Derivative controllers
-
 	    double kp_xPos;
 	    double ki_xPos;
 	    double kd_xPos;
@@ -307,7 +306,7 @@ int main(int argc, char **argv)
 	    double OL_coef_y;
 	    double OL_coef_depth;
 	    double OL_coef_yaw;
-	    double OL_coef_balance; // used to balance surge thrusters, given as a whole number percent, off of evenly balanced
+	    double OL_coef_balance; // used to balance surge thrusters so the vehicle goes straight before yaw control, given as a whole number percent, off of evenly balanced
 
 		double z_steady_force;
 		double pitch_steady_torque;
@@ -329,8 +328,8 @@ int main(int argc, char **argv)
 
 	//ROS Publisher setup
 	ros::Publisher wrench_publisher = n.advertise<geometry_msgs::Wrench>("/controls/wrench", 100);
-	geometry_msgs::Wrench wrenchMsg; //define variable to publish
-	ros::Publisher debug_publisher = n.advertise<controls::DebugControls>("/controls/debug", 100); // debug publisher with custom debug msg
+	geometry_msgs::Wrench wrenchMsg; //define message variable to publish
+	ros::Publisher debug_publisher = n.advertise<controls::DebugControls>("/controls/debug", 100);
 	controls::DebugControls debugMsg;
 
 
@@ -343,7 +342,7 @@ int main(int argc, char **argv)
 		ros::Duration(0.5).sleep(); //sleep for this many seconds
 	}
 	timeOfLastSetPoint = ros::Time::now();
-	ROS_INFO("All Subscribers Live. Starting Controller!");
+	ROS_INFO("setPoints message has been detected. Starting Controller!");
 	ros::Rate loop_rate(1.0/dt);
 	while(ros::ok())
 	{
@@ -371,7 +370,7 @@ int main(int argc, char **argv)
 		    n.param<double>("gains/kd_Yaw", kd_Yaw, 0.0);
 
 
-		    n.param<double>("coefs/mass", m, -1); //defaut negative to check for proper loading
+		    n.param<double>("coefs/mass", m, -1); //default negative to check for proper loading
 		    n.param<double>("coefs/buoyancy", buoyancy, 0.02);
 		    n.param<double>("coefs/drag", cd, 0.0);
 		    n.param<double>("coefs/gravity", g, 9.81);
@@ -410,11 +409,11 @@ int main(int argc, char **argv)
 			if (m<0){ROS_ERROR("PARAMETERS DID NOT LOAD IN CONTROLS.CPP");}
 
 
-		//make sure all dimensions are not controlled unless setPoints says so. No control if
+		//make sure all DOF are not controlled unless setPoints says so. No control if no setPoints message recently received
 		durationSinceLastSetPoint = ros::Time::now() - timeOfLastSetPoint;
 		//ROS_INFO("Duration since last set point: %f", durationSinceLastSetPoint.toSec());
 		if (durationSinceLastSetPoint.toSec() > 3) {
-			if (durationSinceLastSetPoint.toSec() <6){ //nested if so that this message isn't repeated forever and ever
+			if (durationSinceLastSetPoint.toSec() <6){ //nested if so that this message isn't repeated forever and ever. TODO replace with ROS_INFO_ONCE or soemthing to that effect - look look it up
 				ROS_INFO("No recent setPoint. Pausing Controls.");
 			}
 			isActive_XPos = 0;
@@ -426,7 +425,7 @@ int main(int argc, char **argv)
 			isActive_YSpeed = 0;
 			isActive_YawSpeed = 0;
 			isActive_DepthSpeed = 0;
-			//frame = ""; no need to reset this. It just throws lots of warnings
+			//frame = ""; no need to reset the frame. 
 			/*
 			Reset integral errors - not sure if this should be done.
 			ei_XPos = 0;
@@ -462,9 +461,6 @@ int main(int argc, char **argv)
 				ed_XPos = (ep_XPos - ep_XPos_prev)/dt;
 				ed_XPos = saturate(ed_XPos, MAX_ERROR_X_D, "X Derivative Error");
 				Fx = kp_xPos*ep_XPos + ki_xPos*ei_XPos + kd_xPos*ed_XPos;
-				//Fx *= -1; //flip direction to account for relative coordinate system
-				//ROS_DEBUG("controlling xpos");
-				//ROS_DEBUG("proportional error: %f | Time: %f", ep_XPos, ros::Time::now().toSec());
 			}
 			else
 			{
@@ -477,7 +473,6 @@ int main(int argc, char **argv)
            	setPoint_XSpeed=saturate(setPoint_XSpeed, XSPEED_MAX, "X Speed");
         	Fx = OL_coef_x*setPoint_XSpeed;
         	Tz = OL_coef_balance*.01*setPoint_XSpeed; // add a small torque to balance surge thrusters
-        	//ROS_DEBUG("controlling xspeed");
         }
 
         //Y
@@ -491,7 +486,6 @@ int main(int argc, char **argv)
 				ei_YPos += ep_YPos*dt;
 				ed_YPos = (ep_YPos - ep_YPos_prev)/dt;
 				Fy = kp_yPos*ep_YPos + ki_yPos*ei_YPos + kd_yPos*ed_YPos;
-				//Fy *= -1; //flip direction to account for relative coordinate system TODO check with CV }
 			}
 			else
 			{
@@ -506,7 +500,6 @@ int main(int argc, char **argv)
 
         //Z
 		if (isActive_Depth)
-
 		{
 			if (depth_subscriber.getNumPublishers() > 0)
 			{
@@ -517,7 +510,7 @@ int main(int argc, char **argv)
 				ed_Depth = (ep_Depth - ep_Depth_prev)/dt;
 				Fz = kp_Depth*ep_Depth + ki_Depth*ei_Depth + kd_Depth*ed_Depth;
 				Fz += z_steady_force; //account for positive buoyancy bias
-                //Fz += buoyancy*m*g; //Account for positive buoyancy bias
+                //Fz += buoyancy*m*g; //Account for positive buoyancy bias, deprecated
 				Fz*=-1; //Depth is different from all the other coordinates. Depth increases as the surface moves upwards, which is the opposite to our NED convention
 
 			}
@@ -529,9 +522,8 @@ int main(int argc, char **argv)
 
 		if (isActive_DepthSpeed)
 		{
-        	Fz = OL_coef_depth*setPoint_DepthSpeed; //no saturation because it's not worth it
+        	Fz = OL_coef_depth*setPoint_DepthSpeed; 
 		}
-
 
 
 
@@ -549,7 +541,7 @@ int main(int argc, char **argv)
 		//Yaw
 		if (isActive_Yaw)
 		{
-	       	setPoint_Yaw=saturate(setPoint_Yaw, YAW_MAX, "Yaw"); //saturate yaw
+	       	setPoint_Yaw=saturate(setPoint_Yaw, YAW_MAX, "Yaw");
 			ep_Yaw_prev = ep_Yaw;
 			ep_Yaw = setPoint_Yaw - estimated_Yaw;
 			if (ep_Yaw > PI){
@@ -562,15 +554,13 @@ int main(int argc, char **argv)
 			ei_Yaw += ep_Yaw*dt;
 			ed_Yaw = (ep_Yaw - ep_Yaw_prev)/dt;
 			Tz = kp_Yaw*ep_Yaw + ki_Yaw*ei_Yaw + kd_Yaw*ed_Yaw;
-			//Tz *= -1; //yaw sign convenction
-			//ROS_INFO("Calculating Errors, SP: %f, est_yaw: %f, ep = %f, Tz: %f", setPoint_Yaw, estimated_Yaw, ep_Yaw, Tz);
 		}
 
 		if (isActive_YawSpeed)
         {
         	Tz = OL_coef_yaw*setPoint_YawSpeed;
         }
-		//Limit check for output force/torque values - not meaningful saturation as of July 11 because the limits are intentionally super high
+		//Limit check for output force/torque values - not meaningful saturation as of July 11 because the limits are intentionally super high. Thrusts will be saturated downstream.
 			Fx=saturate(Fx, F_MAX, "Force: X");
 			Fy=saturate(Fy, F_MAX, "Force: Y");
 			Fz=saturate(Fz, F_MAX, "Force: Z");
@@ -579,6 +569,7 @@ int main(int argc, char **argv)
 
 			if (killed == 1)
 			{
+				//See documentation on SoftKill. Overwrite forces and torques with zero if killed.
 				Fx = 0; Fy = 0; Fz = 0; Ty = 0; Tz = 0;
 				ROS_DEBUG("Controls Soft Kill Received - Publishing Zero Wrench");
 			}
@@ -599,7 +590,7 @@ int main(int argc, char **argv)
 				debugMsg.estimated_y = estimated_YPos;
 				debugMsg.estimated_depth = depth;
 				debugMsg.estimated_yaw = estimated_Yaw;
-				debugMsg.estimated_pitch = estimated_Pitch; //TODO add reference to var.
+				debugMsg.estimated_pitch = estimated_Pitch; //TODO add reference frame to var.
 
 			// Error
 				debugMsg.xError.proportional = ep_XPos;
@@ -644,4 +635,4 @@ int main(int argc, char **argv)
 		loop_rate.sleep();
 	} //end while ros ok
 	return 0;
-} //end int main}
+} //end int main

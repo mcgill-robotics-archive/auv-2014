@@ -21,8 +21,23 @@ double F_MAX;
 double T_MAX;
 boost::numeric::ublas::matrix<double> wrench2thrust (5,5);
 
+
+float saturate(float value, float max, char* value_name) {
+	//saturates if out of range
+	if (value > max) {
+		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
+		value=max;
+	}
+	else if (value < -1*max){
+		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
+		value=-1*max;
+	}
+	return value;
+}
+
+
 float limit_check(float value, float max, char* value_type, char* value_id){
-	//UNUSED AS OF JUNE 11 2014
+	//UNUSED METHOD AS OF JUNE 11 2014
 	if (value > max | value < -1*max) {
 		ROS_WARN("%s: %s value is %f. This exceeds the maximum allowable value of %f.", value_type, value_id, value, max);
 		value = 0; 
@@ -34,27 +49,15 @@ float limit_check(float value, float max, char* value_type, char* value_id){
 }
 
 
-float saturate(float value, float max, char* value_name) {
-	//saturates if out of range
-	if (value > max) {
-		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, max);
-		value=max;
-	}
-	else if (value < -1*max)
-	{
-		ROS_DEBUG("%s: value has been exceeded. Value was %f but has been set to %f", value_name, value, -1*max);
-		value=-1*max;
-	}
-
-	return value;
-}
 
 
-//update these values based on final characterization
 float thrust_voltage(float thrust){
 	/*
 	* Input: desired thrust from a certain thruster
 	* Output: voltage to send to that thruster
+
+	* Obtained from thruster characterization experiment with the force-torque sensor, after piecewise best-fit analysis
+	* Approximately the same for all the brushed Seabotix BTD150 thrusters
 	*/
 
 	float voltage;	
@@ -73,36 +76,18 @@ float thrust_voltage(float thrust){
         voltage = thrust + 3.6857;
     }
 	return voltage;
-	/* Matt's old code
-	    if (thrust<0.4641 & thrust>-0.01095 ) {
-	        voltage = 0;
-	    }
-	    else if (thrust>0.4641 & thrust<0.79423) {
-	        voltage = (-0.1419 + sqrt(0.1419*0.1419-4*0.0676*(-0.3668-thrust)))/(2*0.0676);
-	    }
-	    else if (thrust>0.79423) {
-	    	voltage=(thrust+3.2786)/1.047;
-	    }
-	    else if (thrust<-0.01095 & thrust>-1.179701){
-	        voltage = -0.0314 + sqrt(0.0314*0.0314-4*-0.0851*(0.0042-thrust));
-	    }
-	    else if (thrust<-1.179701) {
-	    	voltage = (thrust-2.5582)/0.9609;
-	    }
-	    	return voltage;
-	*/
 }
 
 void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 {	
 	/*
-	* Input: net wrench to apply to robot
+	* Input: net wrench to apply to robot (or that the robot applies on the environment)
 	* computes the desired thrust for each thruster
 	* calculates the corresponding voltage via function call
 	* calculates the corresponding motor command for these voltages
-	*	-Motor controller characterization is coded here
+	*	-Motor controller characterization results are applied here
 	*	-offsets are implemented on the arduino (adding or subtracting yintercept)	
-	* Output: motor commands saved in an array
+	* Output: motor commands in array form
 	*/
 
 	float thrust[6] = {0, 0, 0, 0, 0, 0};
@@ -120,7 +105,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	wrenchVector(3)=limit_check(wrenchMsg.torque.y, T_MAX, "Net Torque", "Y");
 	wrenchVector(4)=limit_check(wrenchMsg.torque.z, T_MAX, "Net Torque", "Z");
 
-	//thrust allocation - the wrench2thrust matrix is created in the main function, according to the geometry of the thrusters
+	//thrust allocation - the wrench2thrust matrix is created in the main function, according to the geometry of the thrusters, so that matrix inversion only has to happen once
 	thrustsVector = prod(wrench2thrust, wrenchVector); //matrix multiplication. Not sure where this is defined. I would have thought I would have needed the namespace prefix for boost...
 	thrust[0] = thrustsVector(0);			//surge-starbord
 	thrust[1] = thrustsVector(1);			//surge-port
@@ -130,6 +115,17 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	thrust[5] = thrustsVector(4);    		//heave-stern
 	
 	//Account for direction of mounting the thrusters	
+	/*
+	Directions of thrusters (As of April 14, 2014)
+		Surge thrusters positive forward
+		Heave thrusters positive upward (should be switched though to avoid splashing at the surface)
+		Sway-Bow points in the negative-y direction (applies a negative force and negative torque)
+		Sway-Stern points in the positive-y direction (applies a positive force and negative torque)
+		
+	Propeller shroud is in the direction of positive force (send positive motor command and the robot will move in the direction of the shroud)
+	I think this changed in May to keep up with the "world moving around the robot" convention
+	*/
+
 	int directions[] = {-1, -1, 1, -1, 1, 1}; //the math assumes thrusters apply force in their positive coordinate directions. -1 here if oriented otherwise. Note that cenvention dictates that the positive force is applied to the environment, not the robot.
 	for (int i=0; i<6; i++)
 	{
@@ -137,7 +133,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	}
 	
 	//for each thrust, map to a voltage, considering saturation
-	char* voltage_name[] {"one", "two", "three", "four", "five", "six"};
+	char* voltage_name[] {"one", "two", "three", "four", "five", "six"}; //for limit check error catching
  	for (int i=0; i<6; i++)
 	{
 		voltage[i] = thrust_voltage(thrust[i]);
@@ -147,7 +143,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 
 	//map voltages to motor commands
 	// y intercepts moved because the offsets will be done on the arduino
-	// based on experimental data processed in excel. Ask Bei.
+	// based on experimental data from motor controller characterization processed in excel. Ask Bei.
 	//Updated in May or April or something. NOT YET UPDATED FOR ASIMOV 2.0
 	motor_cmd[0] = 21.176*voltage[0];
 	motor_cmd[1] = 21.2*voltage[1];
@@ -159,7 +155,7 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	char* motor_name[] {"Motor 1: surge-starbord", "Motor 2: surge-port", "Motor 3: sway-bow", "Motor 4: sway-stern", "Motor 5: heave-bow", "Motor 6: heave-stern"};
 	for (int i=0; i<6; i++)
 	{	
-		motor_cmd[i] = saturate(motor_cmd[i], MOTOR_CMD_MAX, motor_name[i]);//TODO Find way to pass which motor into string, create and loop through enumerator
+		motor_cmd[i] = saturate(motor_cmd[i], MOTOR_CMD_MAX, motor_name[i]);
 	}
 
 	motorCommands.cmd_surge_starboard=motor_cmd[0];
@@ -172,6 +168,8 @@ void thrust_callback(geometry_msgs::Wrench wrenchMsg)
 	//publish
 	voltage_publisher.publish(motorCommands);
 }
+
+
 
 int main(int argc, char **argv)
 {
@@ -187,7 +185,7 @@ int main(int argc, char **argv)
 
 	if (VOLTAGE_MAX == 0.0){ROS_ERROR("PARAMETER FILE DID NOT LOAD IN THRUST_MAPPER");}
 	ros::Subscriber thrust_subscriber = n.subscribe("/controls/wrench", 1000, thrust_callback);
-	//add clock subscription (not sure why???)
+	
 
 	//ROS Publisher setup
 	voltage_publisher = n.advertise<controls::motorCommands>("/electrical_interface/motor", 100); 
@@ -195,15 +193,7 @@ int main(int argc, char **argv)
 	** Calculations for the allocation of thrust to each thruster **
 	----------------------------------------------------------------
 	- Accounts for the geometry of the robot and the thruster placement
-
-	Directions of thrusters (As of April 14, 2014)
-		Surge thrusters positive forward
-		Heave thrusters positive upward (should be switched though to avoid splashing at the surface)
-		Sway-Bow points in the negative-y direction (applies a negative force and negative torque)
-		Sway-Stern points in the positive-y direction (applies a positive force and negative torque)
-		
-		Propeller shroud is in the direction of positive force (send positive motor command and the robot will move in the direction of the shroud)
-		I think this changed in May to keep up with the "world moving around the robot" convention
+	- This is the most complicated part of the code, and is thoroughly explained on the wiki. Consult with Nick if you have questions
 
 	Order of thrust array
 		0,1,2,3,4,5  :  x1,x2,y1,y2,z1,z2 :  surge-starbord, surge-port, sway-bow, sway-stern, heave-bow, heave-stern
@@ -218,8 +208,10 @@ int main(int argc, char **argv)
 	double rz2 = -0.4;
 
 	boost::numeric::ublas::matrix<double> thrust2wrench (5,5);
-	//set up matrix for the case of 6 thrusters. Nick's design notebook pg 169
-	//NOTE WHEN CHANGING THIS MATRIX - MAKE SURE IT IS INVERTABLE! Might be able to use return value from InvertMatrix
+	//set up matrix for the case of 6 thrusters. See Nick's design notebook pg 169, scanned on the wiki
+	//NOTE WHEN CHANGING THIS MATRIX - MAKE SURE IT IS INVERTABLE!
+	//Multiplying this matrix by the thrust vector would return the wrench vector, hence the name
+	//We want the inverse so we can calculate the desired thrust vector
 	thrust2wrench(0,0) = 1; thrust2wrench(0,1) = 1; thrust2wrench(0,2) = 0; thrust2wrench(0,3) = 0; thrust2wrench(0,4) = 0;
 	thrust2wrench(1,0) = 0; thrust2wrench(1,1) = 0; thrust2wrench(1,2) = 2; thrust2wrench(1,3) = 0; thrust2wrench(1,4) = 0;
 	thrust2wrench(2,0) = 0; thrust2wrench(2,1) = 0; thrust2wrench(2,2) = 0; thrust2wrench(2,3) = 1; thrust2wrench(2,4) = 1;
@@ -227,7 +219,7 @@ int main(int argc, char **argv)
 	thrust2wrench(4,0) = -rx1; thrust2wrench(4,1) = -rx2; thrust2wrench(4,2) = ry1+ry2; thrust2wrench(4,3) = 0; thrust2wrench(4,4) = 0;
 
 	//wrench2thrust globally defined, for use in thrust_callback
-	InvertMatrix(thrust2wrench,wrench2thrust); //Invert the first matrix and save it as the second.
+	InvertMatrix(thrust2wrench,wrench2thrust); //Invert the first matrix argument and save it as the second.
 	//std::cout << wrench2thrust << std::endl;
 
 
