@@ -167,7 +167,24 @@ public:
 		torqueVector.z = -(KR * angularVelocity.z * ABS_FLOAT(angularVelocity.z));
 		return torqueVector;		
 	}	
-	
+		
+	/*
+	* Test method by Alex
+	*/
+	geometry_msgs::Wrench stitchWrenchs(const geometry_msgs::Wrench controls, const geometry_msgs::Wrench drag){
+		geometry_msgs::Wrench result;
+
+		result.force.x = controls.force.x + drag.force.x;
+		result.force.y = controls.force.y + drag.force.y;
+		result.force.z = controls.force.z + drag.force.z;
+		result.torque.x = controls.torque.x + drag.torque.x;
+		result.torque.y = controls.torque.y + drag.torque.y;
+		result.torque.z = controls.torque.z + drag.torque.z;
+
+		return result;
+	}
+
+
 	/**
 	 * Function to handle Wrench messages passed to topic 'controls/wrench/'
 	 * @param msg Wrench to be applied to robot
@@ -176,8 +193,17 @@ public:
 		adjustModelYaw();
 
 		// check if its worth trying to apply the wrench - e.g.: if everything is 0, just return.
-		if (!shouldApplyForce(msg.force.x, msg.force.y, msg.force.z, msg.torque.x, msg.torque.y, msg.torque.z))	return;
+		if (!shouldApplyForce(msg.force.x, msg.force.y, msg.force.z, msg.torque.x, msg.torque.y, msg.torque.z))
+			return;
 
+		geometry_msgs::Wrench wrench;
+
+		wrench.force = calculateDragForce(model->GetRelativeLinearVel());
+		wrench.torque = calculateDragTorque(model->GetRelativeAngularVel());;
+
+		wrench = stitchWrenchs(msg, wrench);		
+
+		//sned out the service
 		// apply the wrench
 		gazebo_msgs::ApplyBodyWrench applyBodyWrench;
 		
